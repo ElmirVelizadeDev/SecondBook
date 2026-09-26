@@ -1478,11 +1478,13 @@
 .sb-google-btn:focus-visible,
 .sb-forgot-link:focus-visible,
 .sb-register-link:focus-visible,
-.sb-login-brand-link:focus-visible,
-.sb-remember:focus-within {
-
+.sb-login-brand-link:focus-visible {
     outline: 2px solid rgba(139, 94, 60, 0.42);
+    outline-offset: 3px;
+}
 
+.sb-remember input:focus-visible + .sb-custom-checkbox {
+    outline: 2px solid rgba(139, 94, 60, 0.42);
     outline-offset: 3px;
 }
 

@@ -16,7 +16,7 @@
                     <div class="billboard-visual">
 
                         <img
-                            src="{{ asset('frontend/images/billboard-book-01.jpg') }}"
+                            src="{{ asset('frontend-assets/images/billboard-book-01.jpg') }}"
                             alt="SecondBook books"
                             class="billboard-image"
                         >
@@ -144,7 +144,7 @@
                     <div class="billboard-visual">
 
                         <img
-                            src="{{ asset('frontend/images/billboard-book-02.jpg') }}"
+                            src="{{ asset('frontend-assets/images/billboard-book-02.jpg') }}"
                             alt="SecondBook reading collection"
                             class="billboard-image"
                         >

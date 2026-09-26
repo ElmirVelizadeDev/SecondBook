@@ -3,7 +3,7 @@
 @section('title', 'Return Policy | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/return-policy.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/return-policy.css') }}">
 @endpush
 
 @section('content')

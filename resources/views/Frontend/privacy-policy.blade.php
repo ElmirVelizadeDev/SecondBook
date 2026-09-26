@@ -3,7 +3,7 @@
 @section('title', 'Privacy Policy | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/privacy-policy.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/privacy-policy.css') }}">
 @endpush
 
 @section('content')

@@ -3,7 +3,7 @@
 @section('title', 'Notifications | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/notifications.css') }}">
 @endpush
 
 @section('content')

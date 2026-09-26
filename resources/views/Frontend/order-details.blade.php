@@ -3,7 +3,7 @@
 @section('title', 'Order Details | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/order-details.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/order-details.css') }}">
 @endpush
 
 @section('content')
@@ -787,7 +787,7 @@
                 @if($paymentStatus !== 'paid')
 
                     <a
-                        href="{{ url('/frontend/payment/' . $order->id) }}"
+                        href="{{ url('/frontend-assets/payment/' . $order->id) }}"
                         class="order-action payment"
                     >
                         <i class="bi bi-credit-card"></i>

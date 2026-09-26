@@ -3,7 +3,7 @@
 @section('title', 'Edit Profile | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/edit-profile.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/edit-profile.css') }}">
 @endpush
 
 @php

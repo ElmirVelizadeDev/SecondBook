@@ -3,7 +3,7 @@
 @section('title', 'Become a Seller | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/seller-application.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/seller-application.css') }}">
 @endpush
 
 @section('content')

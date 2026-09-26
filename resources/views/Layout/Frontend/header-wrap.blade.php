@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ) {
 
         fetch(
-            "{{ url('/frontend/notifications') }}/" +
+            "{{ url('/frontend-assets/notifications') }}/" +
             notificationId,
             {
                 method: 'DELETE',

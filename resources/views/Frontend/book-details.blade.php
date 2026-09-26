@@ -3,7 +3,7 @@
 @section('title', $book->title . ' | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/book-details.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/book-details.css') }}">
 @endpush
 
 @section('content')
@@ -45,7 +45,7 @@
     } else {
 
         $coverUrl = asset(
-            'frontend/images/book-placeholder.jpg'
+            'frontend-assets/images/book-placeholder.jpg'
         );
 
     }

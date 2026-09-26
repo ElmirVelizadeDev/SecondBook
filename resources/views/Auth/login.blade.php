@@ -13,7 +13,7 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('frontend/css/auth-login.css') }}"
+        href="{{ asset('frontend-assets/css/auth-login.css') }}"
     >
 
 @endpush
@@ -366,26 +366,20 @@
                          GOOGLE
                     ================================================== --}}
 
-                    <button
-                        type="button"
+                    <a
+                        href="{{ route('frontend.auth.google.redirect') }}"
                         class="sb-google-btn"
                     >
-
                         <span class="sb-google-icon">
-
                             <i class="bi bi-google"></i>
-
                         </span>
-
 
                         <span>
                             Continue with Google
                         </span>
 
-
                         <i class="bi bi-arrow-up-right sb-google-arrow"></i>
-
-                    </button>
+                    </a>
 
                 </form>
 

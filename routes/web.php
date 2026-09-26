@@ -1200,6 +1200,14 @@ Route::prefix('frontend')
                     ->name('register.store');
 
 
+                // Google Login
+                
+                Route::get('/google', 'redirectToGoogle')
+                    ->name('google.redirect');
+
+                Route::get('/google/callback', 'handleGoogleCallback')
+                    ->name('google.callback');
+
                 // Forgot Password
 
                 Route::get('/password/request', function () {

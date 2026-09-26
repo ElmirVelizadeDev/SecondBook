@@ -3,7 +3,7 @@
 @section('title', 'Terms & Conditions | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/terms.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/terms.css') }}">
 @endpush
 
 @section('content')

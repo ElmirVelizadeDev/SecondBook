@@ -4,7 +4,7 @@
 
 @push('css')
 
-<link rel="stylesheet" href="{{ asset('frontend/css/help-center.css') }}">
+<link rel="stylesheet" href="{{ asset('frontend-assets/css/help-center.css') }}">
 @endpush
 
 @section('content')

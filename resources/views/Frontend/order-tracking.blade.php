@@ -3,7 +3,7 @@
 @section('title', 'Track Order | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend/css/order-tracking.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/order-tracking.css') }}">
 @endpush
 
 @section('content')

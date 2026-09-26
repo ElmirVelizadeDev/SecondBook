@@ -1,4 +1,4 @@
-<script src="{{ asset('frontend/js/jquery-1.11.0.min.js') }}"></script>
+<script src="{{ asset('frontend-assets/js/jquery-1.11.0.min.js') }}"></script>
 
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
@@ -6,9 +6,9 @@
     crossorigin="anonymous"
 ></script>
 
-<script src="{{ asset('frontend/js/plugins.js') }}"></script>
+<script src="{{ asset('frontend-assets/js/plugins.js') }}"></script>
 
-<script src="{{ asset('frontend/js/script.js') }}"></script>
+<script src="{{ asset('frontend-assets/js/script.js') }}"></script>
 
 
 <script>

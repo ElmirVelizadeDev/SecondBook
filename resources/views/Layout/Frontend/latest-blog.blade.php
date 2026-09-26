@@ -36,7 +36,7 @@
 
                 <a href="#" class="latest-blog-image image-hvr-effect">
                     <img
-                        src="{{ asset('frontend/images/post-img1.jpg') }}"
+                        src="{{ asset('frontend-assets/images/post-img1.jpg') }}"
                         alt="Reading books"
                         class="post-image"
                     >
@@ -83,7 +83,7 @@
 
                 <a href="#" class="latest-blog-image image-hvr-effect">
                     <img
-                        src="{{ asset('frontend/images/post-img2.jpg') }}"
+                        src="{{ asset('frontend-assets/images/post-img2.jpg') }}"
                         alt="Books and reading"
                         class="post-image"
                     >
@@ -130,7 +130,7 @@
 
                 <a href="#" class="latest-blog-image image-hvr-effect">
                     <img
-                        src="{{ asset('frontend/images/post-img3.jpg') }}"
+                        src="{{ asset('frontend-assets/images/post-img3.jpg') }}"
                         alt="Second-hand books"
                         class="post-image"
                     >

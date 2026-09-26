@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Throwable;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -341,6 +342,106 @@ class AuthController extends Controller
                     'remember'
                 )
             );
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback(Request $request)
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+
+            $email = strtolower(trim($googleUser->getEmail()));
+
+            $user = User::whereRaw(
+                'LOWER(email) = ?',
+                [$email]
+            )->first();
+
+            if (!$user) {
+                $name = trim($googleUser->getName() ?? '');
+
+                $nameParts = preg_split(
+                    '/\s+/',
+                    $name,
+                    2
+                );
+
+                $firstName = $nameParts[0] ?? 'Google';
+                $lastName = $nameParts[1] ?? 'User';
+
+                $baseUsername = strtolower(
+                    preg_replace(
+                        '/[^A-Za-z0-9_.-]/',
+                        '',
+                        $googleUser->getNickname()
+                            ?: $googleUser->getName()
+                            ?: 'user'
+                    )
+                );
+
+                if ($baseUsername === '') {
+                    $baseUsername = 'user';
+                }
+
+                $username = $baseUsername;
+                $counter = 1;
+
+                while (
+                    User::where('username', $username)->exists()
+                ) {
+                    $username =
+                        $baseUsername . $counter;
+
+                    $counter++;
+                }
+
+                $user = User::create([
+                    'name' => $firstName . ' ' . $lastName,
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => Hash::make(
+                        bin2hex(random_bytes(32))
+                    ),
+                    'role' => 'user',
+                    'status' => 'active',
+                    'email_verified_at' => now(),
+                ]);
+            }
+
+            Auth::login($user);
+
+            $request->session()->regenerate();
+
+            $user->update([
+                'last_login_at' => now(),
+            ]);
+
+            if ($user->isAdmin()) {
+                return redirect()->route(
+                    'admin.dashboard'
+                );
+            }
+
+            return redirect()->route(
+                'frontend.home'
+            );
+
+        } catch (Throwable $e) {
+            report($e);
+
+            return redirect()
+                ->route('frontend.auth.login')
+                ->with(
+                    'error',
+                    'Unable to sign in with Google. Please try again.'
+                );
+        }
     }
 
     /*
