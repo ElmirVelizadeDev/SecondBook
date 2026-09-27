@@ -3,7 +3,7 @@
 @section('title', 'FAQ | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/faq.css') }}">
+<link rel="stylesheet" href="{{ asset('frontend-assets/css/faq.css') }}">
 @endpush
 
 @section('content')
@@ -24,11 +24,13 @@
             <div class="sb-faq-hero-content">
 
                 <div class="sb-faq-eyebrow">
+
                     <span class="sb-faq-eyebrow-icon">
                         <i class="bi bi-question-circle"></i>
                     </span>
 
                     <span>SecondBook Help Center</span>
+
                 </div>
 
                 <h1>
@@ -92,6 +94,7 @@
             <div class="sb-faq-section-heading">
 
                 <div>
+
                     <span class="sb-faq-section-label">
                         <i class="bi bi-bookmark-star"></i>
                         Knowledge Base
@@ -101,6 +104,7 @@
                         Frequently asked
                         <span>questions</span>
                     </h2>
+
                 </div>
 
                 <p>
@@ -150,8 +154,11 @@
                 <div class="sb-faq-filter-row">
 
                     <div class="sb-faq-filter-title">
+
                         <i class="bi bi-funnel"></i>
+
                         <span>Browse by category</span>
+
                     </div>
 
                     <div class="sb-faq-categories">
@@ -350,8 +357,11 @@
                         </span>
 
                         <div>
+
                             <strong>{{ $faqs->count() }}</strong>
+
                             <span>Questions available</span>
+
                         </div>
 
                     </div>
@@ -421,16 +431,27 @@
      FAQ JAVASCRIPT
 ========================================================== --}}
 
+
 @push('js')
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function () {
 
-    const searchInput = document.getElementById('faqSearch');
-    const clearButton = document.getElementById('faqSearchClear');
-    const noResults = document.getElementById('faqNoResults');
-    const items = document.querySelectorAll('.sb-faq-item');
-    const categoryButtons = document.querySelectorAll('.sb-faq-category');
+    const searchInput =
+        document.getElementById('faqSearch');
+
+    const clearButton =
+        document.getElementById('faqSearchClear');
+
+    const noResults =
+        document.getElementById('faqNoResults');
+
+    const items =
+        document.querySelectorAll('.sb-faq-item');
+
+    const categoryButtons =
+        document.querySelectorAll('.sb-faq-category');
 
     let selectedCategory = 'all';
 
@@ -443,7 +464,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     items.forEach(function (item) {
 
-        const question = item.querySelector('.sb-faq-question');
+        const question =
+            item.querySelector('.sb-faq-question');
 
         if (!question) {
             return;
@@ -451,7 +473,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         question.addEventListener('click', function () {
 
-            const isOpen = item.classList.contains('active');
+            const isOpen =
+                item.classList.contains('active');
+
 
             items.forEach(function (otherItem) {
 
@@ -461,13 +485,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     otherItem.querySelector('.sb-faq-question');
 
                 if (otherQuestion) {
+
                     otherQuestion.setAttribute(
                         'aria-expanded',
                         'false'
                     );
+
                 }
 
             });
+
 
             if (!isOpen) {
 
@@ -487,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
-    | FILTER
+    | FILTER FAQS
     |--------------------------------------------------------------------------
     */
 
@@ -499,20 +526,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let visibleCount = 0;
 
+
         items.forEach(function (item) {
 
             const category =
-                item.dataset.category || '';
+                (item.dataset.category || '').toLowerCase();
 
             const question =
-                item.dataset.question || '';
+                (item.dataset.question || '').toLowerCase();
 
             const answer =
-                item.dataset.answer || '';
+                (item.dataset.answer || '').toLowerCase();
+
 
             const matchesCategory =
                 selectedCategory === 'all' ||
-                category === selectedCategory;
+                category === selectedCategory.toLowerCase();
+
 
             const matchesSearch =
                 !searchValue ||
@@ -520,14 +550,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 answer.includes(searchValue) ||
                 category.includes(searchValue);
 
+
             if (matchesCategory && matchesSearch) {
 
                 item.style.display = '';
+
                 visibleCount++;
 
             } else {
 
                 item.style.display = 'none';
+
                 item.classList.remove('active');
 
                 const questionButton =
@@ -546,10 +579,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
+
         if (noResults) {
 
             noResults.style.display =
-                visibleCount === 0 ? 'block' : 'none';
+                visibleCount === 0
+                    ? 'block'
+                    : 'none';
 
         }
 
@@ -558,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
-    | SEARCH
+    | SEARCH INPUT
     |--------------------------------------------------------------------------
     */
 
@@ -566,7 +602,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
         searchInput.addEventListener(
             'input',
-            filterFaqs
+            function () {
+
+                filterFaqs();
+
+
+                const url =
+                    new URL(window.location.href);
+
+                const value =
+                    searchInput.value.trim();
+
+
+                if (value) {
+
+                    url.searchParams.set(
+                        'search',
+                        value
+                    );
+
+                } else {
+
+                    url.searchParams.delete(
+                        'search'
+                    );
+
+                }
+
+
+                window.history.replaceState(
+                    {},
+                    '',
+                    url
+                );
+
+            }
         );
 
     }
@@ -588,7 +658,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
+
                 searchInput.value = '';
+
+
+                const url =
+                    new URL(window.location.href);
+
+
+                url.searchParams.delete(
+                    'search'
+                );
+
+
+                window.history.replaceState(
+                    {},
+                    '',
+                    url
+                );
+
 
                 filterFaqs();
 
@@ -612,16 +700,54 @@ document.addEventListener('DOMContentLoaded', function () {
             'click',
             function () {
 
+
                 categoryButtons.forEach(
                     function (btn) {
-                        btn.classList.remove('active');
+
+                        btn.classList.remove(
+                            'active'
+                        );
+
                     }
                 );
 
+
                 button.classList.add('active');
+
 
                 selectedCategory =
                     button.dataset.category || 'all';
+
+
+                const url =
+                    new URL(window.location.href);
+
+
+                if (
+                    selectedCategory.toLowerCase() ===
+                    'all'
+                ) {
+
+                    url.searchParams.delete(
+                        'category'
+                    );
+
+                } else {
+
+                    url.searchParams.set(
+                        'category',
+                        selectedCategory
+                    );
+
+                }
+
+
+                window.history.replaceState(
+                    {},
+                    '',
+                    url
+                );
+
 
                 filterFaqs();
 
@@ -630,7 +756,114 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | READ URL PARAMETERS
+    |--------------------------------------------------------------------------
+    */
+
+    const url =
+        new URL(window.location.href);
+
+
+    const urlSearch =
+        url.searchParams.get('search');
+
+
+    const urlCategory =
+        url.searchParams.get('category');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | APPLY SEARCH FROM URL
+    |--------------------------------------------------------------------------
+    */
+
+    if (urlSearch && searchInput) {
+
+        searchInput.value =
+            urlSearch;
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | APPLY CATEGORY FROM URL
+    |--------------------------------------------------------------------------
+    */
+
+    if (urlCategory) {
+
+        const normalizedCategory =
+            urlCategory
+                .trim()
+                .toLowerCase();
+
+
+        const matchingCategory =
+            Array.from(categoryButtons).find(
+                function (button) {
+
+                    const buttonCategory =
+                        (
+                            button.dataset.category ||
+                            ''
+                        )
+                        .trim()
+                        .toLowerCase();
+
+
+                    return (
+                        buttonCategory ===
+                        normalizedCategory
+                    );
+
+                }
+            );
+
+
+        if (matchingCategory) {
+
+            categoryButtons.forEach(
+                function (button) {
+
+                    button.classList.remove(
+                        'active'
+                    );
+
+                }
+            );
+
+
+            matchingCategory.classList.add(
+                'active'
+            );
+
+
+            selectedCategory =
+                matchingCategory.dataset.category ||
+                'all';
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | INITIAL FILTER
+    |--------------------------------------------------------------------------
+    */
+
+    filterFaqs();
+
 });
+
 </script>
 
 @endpush
+
+

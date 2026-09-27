@@ -33,7 +33,7 @@
 
 
         {{-- Products --}}
-        <div class="special-offer-products" data-aos="fade-up">
+        <div class="special-offer-products">
 
             <div class="special-offer-grid">
 
@@ -54,7 +54,8 @@
 
                         }
 
-                        $previousPrice = $book->price * 1.20;
+                        $originalPrice = (float) $book->price;
+                        $discountedPrice = (float) $book->discounted_price;
 
                     @endphp
 
@@ -88,19 +89,33 @@
 
                             {{-- Discount Badge --}}
                             <span class="special-offer-discount">
-                                20% OFF
+                                {{ $book->discount_label }}
                             </span>
 
 
                             {{-- Cart Button --}}
-                            <button
-                                type="button"
-                                class="add-to-cart special-offer-cart-btn"
-                                data-product-tile="add-to-cart"
+                            <form
+                                action="{{ route('frontend.cart.add', $book) }}"
+                                method="POST"
+                                class="add-to-cart-form"
                             >
-                                <i class="bi bi-cart3"></i>
-                                <span>Add to Cart</span>
-                            </button>
+                                @csrf
+
+                                <input
+                                    type="hidden"
+                                    name="quantity"
+                                    value="1"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="add-to-cart special-offer-cart-btn"
+                                >
+                                    <i class="bi bi-cart3"></i>
+                                    <span>Add to Cart</span>
+                                </button>
+
+                            </form>
 
                         </div>
 
@@ -123,12 +138,14 @@
 
                             <div class="special-offer-price">
 
+                                {{-- Original Price --}}
                                 <span class="special-offer-old-price">
-                                    ${{ number_format($previousPrice, 2) }}
+                                    ${{ number_format($originalPrice, 2) }}
                                 </span>
 
+                                {{-- Discounted Price --}}
                                 <span class="special-offer-current-price">
-                                    ${{ number_format($book->price, 2) }}
+                                    ${{ number_format($discountedPrice, 2) }}
                                 </span>
 
                             </div>
@@ -164,3 +181,4 @@
     </div>
 
 </section>
+

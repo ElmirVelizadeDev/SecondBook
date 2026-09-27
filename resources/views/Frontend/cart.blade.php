@@ -3,7 +3,9 @@
 @section('title', 'Your Books | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/cart.css') }}">
+
+<link rel="stylesheet" href="{{ asset('frontend-assets/css/cart.css') }}">
+
 @endpush
 
 @section('content')
@@ -35,8 +37,11 @@
                 </nav>
 
                 <span class="sb-cart-eyebrow">
+
                     <i class="bi bi-bag-heart"></i>
+
                     Ready When You Are
+
                 </span>
 
                 <h1>
@@ -53,11 +58,13 @@
                 href="{{ route('frontend.books') }}"
                 class="sb-continue-shopping"
             >
+
                 <i class="bi bi-arrow-left"></i>
 
                 <span>
                     Continue Shopping
                 </span>
+
             </a>
 
         </header>
@@ -148,6 +155,7 @@
 
             <div class="sb-cart-layout">
 
+
                 {{-- =================================================
                     LEFT SIDE
                 ================================================== --}}
@@ -178,8 +186,11 @@
                                 </h2>
 
                                 <span class="sb-cart-items-count">
+
                                     {{ $totalItems }}
+
                                     {{ $totalItems === 1 ? 'item' : 'items' }}
+
                                 </span>
 
                             </div>
@@ -244,15 +255,54 @@
 
                                 }
 
+
                                 /*
                                 |--------------------------------------------------------------------------
-                                | THIS PRODUCT TOTAL
+                                | CURRENT ITEM PRICE
+                                |--------------------------------------------------------------------------
+                                |
+                                | CartController should store the actual
+                                | selling price in $item['price'].
+                                |
+                                | If a discounted price was stored,
+                                | this is the price used for calculations.
+                                |
+                                */
+
+                                $itemPrice = (float) ($item['price'] ?? 0);
+
+                                $itemQuantity = (int) ($item['quantity'] ?? 1);
+
+                                $itemTotal = $itemPrice * $itemQuantity;
+
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | OPTIONAL ORIGINAL PRICE
+                                |--------------------------------------------------------------------------
+                                |
+                                | If CartController provides original_price,
+                                | the cart can show the original price as
+                                | crossed out.
+                                |
+                                */
+
+                                $originalPrice = isset($item['original_price'])
+                                    ? (float) $item['original_price']
+                                    : $itemPrice;
+
+                                $hasDiscount =
+                                    $originalPrice > $itemPrice &&
+                                    $itemPrice >= 0;
+
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | DISCOUNT LABEL
                                 |--------------------------------------------------------------------------
                                 */
 
-                                $itemTotal =
-                                    $item['price'] *
-                                    $item['quantity'];
+                                $discountLabel = $item['discount_label'] ?? null;
 
                             @endphp
 
@@ -287,13 +337,17 @@
                                             class="sb-cart-no-cover"
                                             style="display: none;"
                                         >
+
                                             <i class="bi bi-book"></i>
+
                                         </div>
 
                                     @else
 
                                         <div class="sb-cart-no-cover">
+
                                             <i class="bi bi-book"></i>
+
                                         </div>
 
                                     @endif
@@ -361,9 +415,36 @@
                                                 Unit Price
                                             </span>
 
-                                            <strong>
-                                                ${{ number_format($item['price'], 2) }}
-                                            </strong>
+
+                                            @if($hasDiscount)
+
+                                                <div class="sb-cart-price-wrap">
+
+                                                    <span class="sb-cart-old-price">
+                                                        ${{ number_format($originalPrice, 2) }}
+                                                    </span>
+
+                                                    <strong class="sb-cart-discounted-price">
+                                                        ${{ number_format($itemPrice, 2) }}
+                                                    </strong>
+
+                                                </div>
+
+                                                @if($discountLabel)
+
+                                                    <small class="sb-cart-discount-label">
+                                                        {{ $discountLabel }}
+                                                    </small>
+
+                                                @endif
+
+                                            @else
+
+                                                <strong>
+                                                    ${{ number_format($itemPrice, 2) }}
+                                                </strong>
+
+                                            @endif
 
                                         </div>
 
@@ -428,8 +509,11 @@
                                                     data-action="decrease"
                                                     aria-label="Decrease quantity"
                                                 >
+
                                                     <i class="bi bi-dash"></i>
+
                                                 </button>
+
 
                                                 <input
                                                     type="text"
@@ -441,13 +525,16 @@
                                                     aria-label="Quantity"
                                                 >
 
+
                                                 <button
                                                     type="button"
                                                     class="sb-quantity-btn"
                                                     data-action="increase"
                                                     aria-label="Increase quantity"
                                                 >
+
                                                     <i class="bi bi-plus"></i>
+
                                                 </button>
 
                                             </div>
@@ -536,8 +623,11 @@
                                 </span>
 
                                 <strong data-cart-total-items>
+
                                     {{ $totalItems }}
+
                                     {{ $totalItems === 1 ? 'item' : 'items' }}
+
                                 </strong>
 
                             </div>
@@ -788,11 +878,9 @@
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | MONEY FORMAT
-        |--------------------------------------------------------------------------
-        */
+        /* =========================================================
+           MONEY FORMAT
+        ========================================================= */
 
         function formatMoney(value) {
 
@@ -807,11 +895,9 @@
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE CART
-        |--------------------------------------------------------------------------
-        */
+        /* =========================================================
+           UPDATE CART
+        ========================================================= */
 
         function updateCart(
             form,
@@ -864,11 +950,14 @@
                     },
 
                     body: formData
+
                 }
             )
+
             .then(function (response) {
 
                 return response.json()
+
                     .then(function (data) {
 
                         if (!response.ok) {
@@ -885,6 +974,7 @@
                     });
 
             })
+
             .then(function (data) {
 
                 if (!data.success) {
@@ -897,11 +987,9 @@
                 }
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | ITEM TOTAL
-                |--------------------------------------------------------------------------
-                */
+                /* =================================================
+                   ITEM TOTAL
+                ================================================== */
 
                 const cartItem =
                     form.closest(
@@ -932,11 +1020,9 @@
                 }
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | TOTAL ITEMS
-                |--------------------------------------------------------------------------
-                */
+                /* =================================================
+                   TOTAL ITEMS
+                ================================================== */
 
                 const totalItems =
                     cartPage.querySelector(
@@ -960,11 +1046,9 @@
                 }
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | SUBTOTAL
-                |--------------------------------------------------------------------------
-                */
+                /* =================================================
+                   SUBTOTAL
+                ================================================== */
 
                 const subtotal =
                     cartPage.querySelector(
@@ -985,11 +1069,9 @@
                 }
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | SHIPPING
-                |--------------------------------------------------------------------------
-                */
+                /* =================================================
+                   SHIPPING
+                ================================================== */
 
                 const shipping =
                     cartPage.querySelector(
@@ -1012,6 +1094,7 @@
                         );
 
                     }
+
                     else if (
                         Number(data.shipping_fee) <= 0
                     ) {
@@ -1024,6 +1107,7 @@
                         );
 
                     }
+
                     else {
 
                         shipping.textContent =
@@ -1040,11 +1124,9 @@
                 }
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | GRAND TOTAL
-                |--------------------------------------------------------------------------
-                */
+                /* =================================================
+                   GRAND TOTAL
+                ================================================== */
 
                 const grandTotal =
                     cartPage.querySelector(
@@ -1065,11 +1147,9 @@
                 }
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | HEADER CART COUNT
-                |--------------------------------------------------------------------------
-                */
+                /* =================================================
+                   HEADER CART COUNT
+                ================================================== */
 
                 const headerCartCount =
                     document.querySelector(
@@ -1093,6 +1173,7 @@
                             '';
 
                     }
+
                     else {
 
                         headerCartCount.style.display =
@@ -1103,6 +1184,7 @@
                 }
 
             })
+
             .catch(function (error) {
 
                 console.error(error);
@@ -1115,6 +1197,7 @@
                 );
 
             })
+
             .finally(function () {
 
                 form.dataset.updating =
@@ -1133,11 +1216,9 @@
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | ERROR ALERT
-        |--------------------------------------------------------------------------
-        */
+        /* =========================================================
+           ERROR ALERT
+        ========================================================= */
 
         function showCartUpdateError(message) {
 
@@ -1161,6 +1242,7 @@
 
 
             alert.innerHTML = `
+
                 <span class="sb-cart-alert-icon">
                     <i class="bi bi-exclamation-lg"></i>
                 </span>
@@ -1168,6 +1250,7 @@
                 <span>
                     ${message || 'Unable to update your cart. Please try again.'}
                 </span>
+
             `;
 
 
@@ -1196,9 +1279,7 @@
                 setTimeout(function () {
 
                     if (alert.parentNode) {
-
                         alert.remove();
-
                     }
 
                 }, 250);
@@ -1208,11 +1289,9 @@
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | QUANTITY BUTTONS
-        |--------------------------------------------------------------------------
-        */
+        /* =========================================================
+           QUANTITY BUTTONS
+        ========================================================= */
 
         cartPage.addEventListener(
             'click',
@@ -1332,7 +1411,9 @@
                 if (
                     value === previousValue
                 ) {
+
                     return;
+
                 }
 
 
@@ -1340,11 +1421,9 @@
                     value;
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | DEBOUNCE
-                |--------------------------------------------------------------------------
-                */
+                /* =================================================
+                   DEBOUNCE
+                ================================================== */
 
                 clearTimeout(
                     form._quantityUpdateTimer
@@ -1368,11 +1447,9 @@
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | INITIALIZE
-    |--------------------------------------------------------------------------
-    */
+    /* =============================================================
+       INITIALIZE
+    ============================================================= */
 
     if (
         document.readyState ===
@@ -1385,6 +1462,7 @@
         );
 
     }
+
     else {
 
         initCartQuantity();
@@ -1396,3 +1474,4 @@
 </script>
 
 @endpush
+

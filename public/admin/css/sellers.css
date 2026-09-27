@@ -681,41 +681,82 @@
     font-size: 11px;
 }
 
-
 /* =========================================================
    INDEX — PAGINATION
    ========================================================= */
 
-.sellers-pagination,
-.seller-books-pagination {
+.sellers-pagination-wrapper,
+.seller-books-pagination-wrapper {
+    width: 100%;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
     margin-top: 20px;
 }
 
+/* Pagination info — LEFT */
+.sellers-pagination-info,
+.seller-books-pagination-info {
+    flex: 1;
+    min-width: 0;
+    color: #8a94a6;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* Pagination — RIGHT */
+.sellers-pagination,
+.seller-books-pagination {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 0;
+}
+
+/* Laravel pagination list */
 .sellers-pagination .pagination,
 .seller-books-pagination .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     margin: 0;
+    padding: 0;
     gap: 5px;
 }
 
+/* Pagination buttons */
 .sellers-pagination .page-link,
 .seller-books-pagination .page-link {
     min-width: 34px;
     height: 34px;
     padding: 0 9px;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     border: 1px solid #e2e7ee;
     border-radius: 8px !important;
+
     background: #fff;
     color: #64748b;
+
     font-size: 11px;
     font-weight: 650;
+    line-height: 1;
+
     box-shadow: none;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
 }
 
+/* Hover */
 .sellers-pagination .page-link:hover,
 .seller-books-pagination .page-link:hover {
     border-color: #bfd1f8;
@@ -723,11 +764,161 @@
     color: #2563eb;
 }
 
+/* Active */
 .sellers-pagination .page-item.active .page-link,
 .seller-books-pagination .page-item.active .page-link {
     border-color: #2563eb;
     background: #2563eb;
     color: #fff;
+}
+
+/* Disabled */
+.sellers-pagination .page-item.disabled .page-link,
+.seller-books-pagination .page-item.disabled .page-link {
+    background: #f8fafc;
+    border-color: #e2e7ee;
+    color: #c0c7d2;
+    cursor: not-allowed;
+}
+
+/* Remove Bootstrap focus shadow */
+.sellers-pagination .page-link:focus,
+.seller-books-pagination .page-link:focus {
+    box-shadow: none;
+}
+
+/* =========================================================
+   SELLERS PAGINATION — INFO LEFT / LINKS RIGHT
+   ========================================================= */
+
+.sellers-pagination {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.sellers-pagination > nav {
+    width: 100%;
+}
+
+.sellers-pagination > nav > div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Showing 1 to 10 of 16 results */
+.sellers-pagination > nav > div > div:first-child {
+    flex: 1;
+    color: #8a94a6;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Pagination buttons */
+.sellers-pagination > nav > div > div:last-child {
+    flex: 0 0 auto;
+}
+
+.sellers-pagination .pagination {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+
+/* =========================================================
+   DARK MODE — PAGINATION
+   ========================================================= */
+
+.dark-mode .sellers-pagination-info,
+.dark-theme .sellers-pagination-info,
+[data-theme="dark"] .sellers-pagination-info,
+.dark-mode .seller-books-pagination-info,
+.dark-theme .seller-books-pagination-info,
+[data-theme="dark"] .seller-books-pagination-info {
+    color: #8d98aa;
+}
+
+.dark-mode .sellers-pagination .page-link,
+.dark-theme .sellers-pagination .page-link,
+[data-theme="dark"] .sellers-pagination .page-link,
+.dark-mode .seller-books-pagination .page-link,
+.dark-theme .seller-books-pagination .page-link,
+[data-theme="dark"] .seller-books-pagination .page-link {
+    border-color: #303746;
+    background: #1b202a;
+    color: #9aa5b7;
+}
+
+.dark-mode .sellers-pagination .page-link:hover,
+.dark-theme .sellers-pagination .page-link:hover,
+[data-theme="dark"] .sellers-pagination .page-link:hover,
+.dark-mode .seller-books-pagination .page-link:hover,
+.dark-theme .seller-books-pagination .page-link:hover,
+[data-theme="dark"] .seller-books-pagination .page-link:hover {
+    border-color: #40516d;
+    background: #202735;
+    color: #9bbcff;
+}
+
+.dark-mode .sellers-pagination .page-item.active .page-link,
+.dark-theme .sellers-pagination .page-item.active .page-link,
+[data-theme="dark"] .sellers-pagination .page-item.active .page-link,
+.dark-mode .seller-books-pagination .page-item.active .page-link,
+.dark-theme .seller-books-pagination .page-item.active .page-link,
+[data-theme="dark"] .seller-books-pagination .page-item.active .page-link {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #fff;
+}
+
+.dark-mode .sellers-pagination .page-item.disabled .page-link,
+.dark-theme .sellers-pagination .page-item.disabled .page-link,
+[data-theme="dark"] .sellers-pagination .page-item.disabled .page-link,
+.dark-mode .seller-books-pagination .page-item.disabled .page-link,
+.dark-theme .seller-books-pagination .page-item.disabled .page-link,
+[data-theme="dark"] .seller-books-pagination .page-item.disabled .page-link {
+    background: #151922;
+    border-color: #303746;
+    color: #4f596b;
+}
+
+
+/* =========================================================
+   RESPONSIVE — PAGINATION
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .sellers-pagination-wrapper,
+    .seller-books-pagination-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .sellers-pagination-info,
+    .seller-books-pagination-info {
+        width: 100%;
+        flex: none;
+    }
+
+    .sellers-pagination,
+    .seller-books-pagination {
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+    }
+
+    .sellers-pagination .pagination,
+    .seller-books-pagination .pagination {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+    }
 }
 
 

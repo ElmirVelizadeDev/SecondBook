@@ -171,7 +171,7 @@
 
         @php
             $groupedPermissions = $role->permissions->groupBy(function ($permission) {
-                return $permission->module ?? 'General';
+                return $permission->group_name ?? 'General';
             });
         @endphp
 

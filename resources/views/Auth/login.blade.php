@@ -8,16 +8,12 @@
 
 @section('hideScripts', '1')
 
-
 @push('css')
-
     <link
         rel="stylesheet"
         href="{{ asset('frontend-assets/css/auth-login.css') }}"
     >
-
 @endpush
-
 
 @section('content')
 
@@ -29,12 +25,12 @@
 
             <section class="auth-card auth-card-login auth-card-login-pro sb-login-premium">
 
-
                 {{-- =====================================================
                      PREMIUM DECORATION
                 ====================================================== --}}
 
                 <div class="sb-login-card-glow sb-login-card-glow-one"></div>
+
                 <div class="sb-login-card-glow sb-login-card-glow-two"></div>
 
                 <div class="sb-login-card-line"></div>
@@ -87,6 +83,7 @@
                     <h1 class="sb-login-title">
 
                         Welcome
+
                         <span>back.</span>
 
                         <span
@@ -100,45 +97,11 @@
 
 
                     <p class="sb-login-subtitle">
-
                         Sign in to continue your reading journey
                         and discover your next great story.
-
                     </p>
 
                 </div>
-
-
-                {{-- =====================================================
-                     SESSION ERROR
-                ====================================================== --}}
-
-                @if(session('error'))
-
-                    <div class="sb-login-alert">
-
-                        <span class="sb-login-alert-icon">
-
-                            <i class="bi bi-exclamation-circle"></i>
-
-                        </span>
-
-
-                        <div class="sb-login-alert-content">
-
-                            <strong>
-                                Sign in unsuccessful
-                            </strong>
-
-                            <span>
-                                {{ session('error') }}
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                @endif
 
 
                 {{-- =====================================================
@@ -149,6 +112,7 @@
                     action="{{ route('frontend.auth.login.store') }}"
                     method="POST"
                     class="sb-login-form"
+                    id="loginForm"
                 >
 
                     @csrf
@@ -191,6 +155,7 @@
                                 placeholder="name@example.com"
                                 value="{{ old('email') }}"
                                 autocomplete="email"
+                                maxlength="254"
                             >
 
 
@@ -245,6 +210,7 @@
                                 class="sb-login-input sb-password-input"
                                 placeholder="Enter your password"
                                 autocomplete="current-password"
+                                maxlength="128"
                             >
 
 
@@ -269,7 +235,6 @@
                     ================================================== --}}
 
                     <div class="sb-login-options">
-
 
                         <label
                             class="sb-remember"
@@ -320,6 +285,7 @@
                     <button
                         type="submit"
                         class="sb-signin-btn"
+                        id="loginSubmitButton"
                     >
 
                         <span class="sb-signin-content">
@@ -355,7 +321,9 @@
 
                         <span></span>
 
-                        <em>or continue with</em>
+                        <em>
+                            or continue with
+                        </em>
 
                         <span></span>
 
@@ -370,15 +338,21 @@
                         href="{{ route('frontend.auth.google.redirect') }}"
                         class="sb-google-btn"
                     >
+
                         <span class="sb-google-icon">
+
                             <i class="bi bi-google"></i>
+
                         </span>
+
 
                         <span>
                             Continue with Google
                         </span>
 
+
                         <i class="bi bi-arrow-up-right sb-google-arrow"></i>
+
                     </a>
 
                 </form>
@@ -389,7 +363,6 @@
                 ====================================================== --}}
 
                 <div class="sb-login-benefits">
-
 
                     <div class="sb-benefit">
 
@@ -491,8 +464,14 @@
 @push('js')
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
+
+    /* =========================================================
+       ELEMENTS
+    ========================================================== */
+
+    const loginForm =
+        document.getElementById('loginForm');
 
     const toggleBtn =
         document.getElementById('toggleLoginPassword');
@@ -500,42 +479,365 @@ document.addEventListener('DOMContentLoaded', function () {
     const passwordInput =
         document.getElementById('loginPassword');
 
+    const submitButton =
+        document.getElementById('loginSubmitButton');
 
-    if (!toggleBtn || !passwordInput) {
+
+    /* =========================================================
+       PASSWORD SHOW / HIDE
+    ========================================================== */
+
+    if (toggleBtn && passwordInput) {
+
+        toggleBtn.addEventListener('click', function () {
+
+            const isPassword =
+                passwordInput.getAttribute('type') === 'password';
+
+
+            passwordInput.setAttribute(
+                'type',
+                isPassword ? 'text' : 'password'
+            );
+
+
+            toggleBtn.innerHTML = isPassword
+                ? '<i class="bi bi-eye-slash"></i>'
+                : '<i class="bi bi-eye"></i>';
+
+
+            toggleBtn.setAttribute(
+                'aria-label',
+                isPassword
+                    ? 'Hide password'
+                    : 'Show password'
+            );
+
+        });
+
+    }
+
+
+    /* =========================================================
+       AJAX LOGIN
+    ========================================================== */
+
+    if (!loginForm) {
         return;
     }
 
 
-    toggleBtn.addEventListener('click', function () {
+    loginForm.addEventListener('submit', async function (event) {
 
-        const isPassword =
-            passwordInput.getAttribute('type') === 'password';
-
-
-        passwordInput.setAttribute(
-            'type',
-            isPassword ? 'text' : 'password'
-        );
+        event.preventDefault();
 
 
-        toggleBtn.innerHTML = isPassword
+        /* -----------------------------------------------------
+           Remove ALL previous AJAX alerts
+        ------------------------------------------------------ */
 
-            ? '<i class="bi bi-eye-slash"></i>'
+        document
+            .querySelectorAll('.sb-login-ajax-alert')
+            .forEach(function (alert) {
+                alert.remove();
+            });
 
-            : '<i class="bi bi-eye"></i>';
+
+        /* -----------------------------------------------------
+           Disable submit button
+        ------------------------------------------------------ */
+
+        if (submitButton) {
+
+            submitButton.disabled = true;
+
+            submitButton.classList.add('is-loading');
+
+        }
 
 
-        toggleBtn.setAttribute(
-            'aria-label',
-            isPassword
-                ? 'Hide password'
-                : 'Show password'
-        );
+        const submitText =
+            submitButton
+                ? submitButton.querySelector('.sb-signin-text')
+                : null;
+
+
+        if (submitText) {
+
+            submitText.textContent =
+                'Signing in...';
+
+        }
+
+
+        /* -----------------------------------------------------
+           Form data
+        ------------------------------------------------------ */
+
+        const formData =
+            new FormData(loginForm);
+
+
+        try {
+
+            const response =
+                await fetch(
+                    loginForm.action,
+                    {
+                        method: 'POST',
+
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        },
+
+                        body: formData,
+
+                        credentials: 'same-origin'
+                    }
+                );
+
+
+            /* -------------------------------------------------
+               Read response safely
+            -------------------------------------------------- */
+
+            const contentType =
+                response.headers.get('content-type') || '';
+
+
+            if (!contentType.includes('application/json')) {
+
+                throw new Error(
+                    'Server returned an unexpected response.'
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            /* -------------------------------------------------
+               SUCCESS
+            -------------------------------------------------- */
+
+            if (response.ok && data.success) {
+
+                window.location.href =
+                    data.redirect;
+
+                return;
+
+            }
+
+
+            /* -------------------------------------------------
+               ERROR MESSAGE
+            -------------------------------------------------- */
+
+            let message =
+                data.message ||
+                'Invalid email or password.';
+
+
+            /* -------------------------------------------------
+               VALIDATION ERRORS
+            -------------------------------------------------- */
+
+            if (
+                data.errors &&
+                typeof data.errors === 'object'
+            ) {
+
+                const firstError =
+                    Object.values(data.errors)
+                        .flat()
+                        .find(function (error) {
+                            return error;
+                        });
+
+
+                if (firstError) {
+
+                    message =
+                        firstError;
+
+                }
+
+            }
+
+
+            /* -------------------------------------------------
+               CREATE ONE ALERT
+            -------------------------------------------------- */
+
+            showLoginAlert(
+                'Sign in unsuccessful',
+                message
+            );
+
+
+            /* -------------------------------------------------
+               FOCUS FIELD
+            -------------------------------------------------- */
+
+            if (response.status === 422) {
+
+                const emailInput =
+                    document.getElementById('loginEmail');
+
+
+                const currentPasswordInput =
+                    document.getElementById('loginPassword');
+
+
+                if (
+                    emailInput &&
+                    !emailInput.value.trim()
+                ) {
+
+                    emailInput.focus();
+
+                } else if (
+                    currentPasswordInput &&
+                    !currentPasswordInput.value.trim()
+                ) {
+
+                    currentPasswordInput.focus();
+
+                }
+
+            }
+
+
+        } catch (error) {
+
+            /* -------------------------------------------------
+               NETWORK / SERVER ERROR
+            -------------------------------------------------- */
+
+            showLoginAlert(
+                'Something went wrong',
+                'Please try again.'
+            );
+
+        } finally {
+
+            /* -------------------------------------------------
+               Restore submit button
+            -------------------------------------------------- */
+
+            if (submitButton) {
+
+                submitButton.disabled =
+                    false;
+
+                submitButton.classList.remove(
+                    'is-loading'
+                );
+
+            }
+
+
+            if (submitText) {
+
+                submitText.textContent =
+                    'Sign In';
+
+            }
+
+        }
 
     });
 
-});
 
+    /* =========================================================
+       LOGIN ALERT
+    ========================================================== */
+
+    function showLoginAlert(title, message) {
+
+        /* -----------------------------------------------------
+           Remove any existing AJAX alert first
+        ------------------------------------------------------ */
+
+        document
+            .querySelectorAll('.sb-login-ajax-alert')
+            .forEach(function (alert) {
+                alert.remove();
+            });
+
+
+        /* -----------------------------------------------------
+           Create alert
+        ------------------------------------------------------ */
+
+        const alert =
+            document.createElement('div');
+
+
+        alert.className =
+            'sb-login-alert sb-login-ajax-alert';
+
+
+        alert.innerHTML = `
+
+            <span class="sb-login-alert-icon">
+
+                <i class="bi bi-exclamation-circle"></i>
+
+            </span>
+
+
+            <div class="sb-login-alert-content">
+
+                <strong>
+                    ${escapeHtml(title)}
+                </strong>
+
+
+                <span>
+                    ${escapeHtml(message)}
+                </span>
+
+            </div>
+
+        `;
+
+
+        /* -----------------------------------------------------
+           Insert before form
+        ------------------------------------------------------ */
+
+        loginForm.parentNode.insertBefore(
+            alert,
+            loginForm
+        );
+
+    }
+
+
+    /* =========================================================
+       ESCAPE HTML
+    ========================================================== */
+
+    function escapeHtml(value) {
+
+        const div =
+            document.createElement('div');
+
+
+        div.textContent =
+            value ?? '';
+
+
+        return div.innerHTML;
+
+    }
+
+});
 </script>
 
 @endpush

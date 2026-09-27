@@ -28,6 +28,12 @@ class CheckoutController extends Controller
                 ->with('error', 'Your cart is empty.');
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Cart Subtotal
+        |--------------------------------------------------------------------------
+        */
+
         $subtotal = collect($cart)->sum(function ($item) {
             return (float) $item['price'] * (int) $item['quantity'];
         });
@@ -36,28 +42,47 @@ class CheckoutController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Shipping
+        | Shipping Settings
         |--------------------------------------------------------------------------
         */
 
-        $shippingEnabled = Setting::get('shipping_enabled', true);
+        $shippingEnabled = Setting::get(
+            'shipping_enabled',
+            true
+        );
 
         $freeShippingThreshold = (float) Setting::get(
             'free_shipping_threshold',
             0
         );
 
-        $defaultCountry = Setting::get('default_country');
+        $defaultShippingFee = (float) Setting::get(
+            'default_shipping_fee',
+            0
+        );
+
+        $defaultCountry = Setting::get(
+            'default_country'
+        );
 
         $estimatedDeliveryMessage = Setting::get(
             'estimated_delivery_message',
             ''
         );
 
+        /*
+        |--------------------------------------------------------------------------
+        | Shipping Methods
+        |--------------------------------------------------------------------------
+        */
+
         $shippingMethods = collect();
 
         if ($shippingEnabled) {
-            $shippingMethods = Shipping::where('status', true)
+            $shippingMethods = Shipping::where(
+                'status',
+                true
+            )
                 ->orderBy('price')
                 ->orderBy('name')
                 ->get();
@@ -71,17 +96,22 @@ class CheckoutController extends Controller
 
         $selectedShippingId = old('shipping_id');
 
-        if (!$selectedShippingId && $shippingMethods->isNotEmpty()) {
-            $selectedShippingId = $shippingMethods->first()->id;
+        if (
+            !$selectedShippingId &&
+            $shippingMethods->isNotEmpty()
+        ) {
+            $selectedShippingId =
+                $shippingMethods->first()->id;
         }
 
         $selectedShipping = null;
 
         if ($selectedShippingId) {
-            $selectedShipping = $shippingMethods->firstWhere(
-                'id',
-                (int) $selectedShippingId
-            );
+            $selectedShipping =
+                $shippingMethods->firstWhere(
+                    'id',
+                    (int) $selectedShippingId
+                );
         }
 
         /*
@@ -92,15 +122,17 @@ class CheckoutController extends Controller
 
         $shippingFee = 0;
 
-        if ($shippingEnabled && $selectedShipping) {
-
+        if (
+            $shippingEnabled &&
+            $selectedShipping
+        ) {
             if (
                 $freeShippingThreshold > 0 &&
                 $subtotal >= $freeShippingThreshold
             ) {
                 $shippingFee = 0;
             } else {
-                $shippingFee = (float) $selectedShipping->price;
+                $shippingFee = $defaultShippingFee;
             }
         }
 
@@ -110,25 +142,33 @@ class CheckoutController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $checkoutDeliveryEstimate = $selectedShipping?->delivery_time
+        $checkoutDeliveryEstimate =
+            $selectedShipping?->delivery_time
             ?: $estimatedDeliveryMessage;
 
-        $grandTotal = $subtotal + $shippingFee;
+        $grandTotal =
+            $subtotal + $shippingFee;
 
         /*
         |--------------------------------------------------------------------------
-        | Payments
+        | Payment Settings
         |--------------------------------------------------------------------------
         */
 
-        $paymentsEnabled = Setting::get('payments_enabled', true);
+        $paymentsEnabled = Setting::get(
+            'payments_enabled',
+            true
+        );
 
-        $paymentMethods = Setting::get('payment_methods', [
-            'cash_on_delivery',
-            'credit_card',
-            'debit_card',
-            'paypal',
-        ]);
+        $paymentMethods = Setting::get(
+            'payment_methods',
+            [
+                'cash_on_delivery',
+                'credit_card',
+                'debit_card',
+                'paypal',
+            ]
+        );
 
         if (!is_array($paymentMethods)) {
             $paymentMethods = [
@@ -144,25 +184,28 @@ class CheckoutController extends Controller
             'cash_on_delivery'
         );
 
-        return view('Frontend.checkout', compact(
-            'cart',
-            'subtotal',
-            'totalItems',
-            'shippingEnabled',
-            'shippingMethods',
-            'selectedShippingId',
-            'shippingFee',
-            'freeShippingThreshold',
-            'defaultCountry',
-            'estimatedDeliveryMessage',
-            'checkoutDeliveryEstimate',
-            'grandTotal',
-            'paymentsEnabled',
-            'paymentMethods',
-            'defaultPaymentMethod'
-        ));
+        return view(
+            'Frontend.checkout',
+            compact(
+                'cart',
+                'subtotal',
+                'totalItems',
+                'shippingEnabled',
+                'shippingMethods',
+                'defaultShippingFee',
+                'selectedShippingId',
+                'shippingFee',
+                'freeShippingThreshold',
+                'defaultCountry',
+                'estimatedDeliveryMessage',
+                'checkoutDeliveryEstimate',
+                'grandTotal',
+                'paymentsEnabled',
+                'paymentMethods',
+                'defaultPaymentMethod'
+            )
+        );
     }
-
 
     public function store(Request $request)
     {
@@ -175,7 +218,10 @@ class CheckoutController extends Controller
         if (empty($cart)) {
             return redirect()
                 ->route('frontend.cart')
-                ->with('error', 'Your cart is empty.');
+                ->with(
+                    'error',
+                    'Your cart is empty.'
+                );
         }
 
         /*
@@ -184,14 +230,20 @@ class CheckoutController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $paymentsEnabled = Setting::get('payments_enabled', true);
+        $paymentsEnabled = Setting::get(
+            'payments_enabled',
+            true
+        );
 
-        $allowedPaymentMethods = Setting::get('payment_methods', [
-            'cash_on_delivery',
-            'credit_card',
-            'debit_card',
-            'paypal',
-        ]);
+        $allowedPaymentMethods = Setting::get(
+            'payment_methods',
+            [
+                'cash_on_delivery',
+                'credit_card',
+                'debit_card',
+                'paypal',
+            ]
+        );
 
         if (!is_array($allowedPaymentMethods)) {
             $allowedPaymentMethods = [
@@ -209,13 +261,47 @@ class CheckoutController extends Controller
         */
 
         $validated = $request->validate([
-            'full_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:50'],
-            'country' => ['required', 'string', 'max:100'],
-            'city' => ['required', 'string', 'max:100'],
-            'postal_code' => ['nullable', 'string', 'max:20'],
-            'address' => ['required', 'string', 'max:1000'],
-            'note' => ['nullable', 'string', 'max:1000'],
+            'full_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'phone' => [
+                'required',
+                'string',
+                'max:50',
+            ],
+
+            'country' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+
+            'city' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+
+            'postal_code' => [
+                'nullable',
+                'string',
+                'max:20',
+            ],
+
+            'address' => [
+                'required',
+                'string',
+                'max:1000',
+            ],
+
+            'note' => [
+                'nullable',
+                'string',
+                'max:1000',
+            ],
 
             'payment_method' => [
                 'required',
@@ -224,7 +310,6 @@ class CheckoutController extends Controller
             ],
 
             'shipping_id' => [
-                'required_if:shipping_enabled,1',
                 'nullable',
                 'integer',
                 'exists:shippings,id',
@@ -240,14 +325,19 @@ class CheckoutController extends Controller
         if (!$paymentsEnabled) {
             return back()
                 ->withInput()
-                ->with('error', 'Payments are currently disabled.');
+                ->with(
+                    'error',
+                    'Payments are currently disabled.'
+                );
         }
 
-        if (!in_array(
-            $validated['payment_method'],
-            $allowedPaymentMethods,
-            true
-        )) {
+        if (
+            !in_array(
+                $validated['payment_method'],
+                $allowedPaymentMethods,
+                true
+            )
+        ) {
             return back()
                 ->withInput()
                 ->with(
@@ -272,6 +362,11 @@ class CheckoutController extends Controller
             0
         );
 
+        $defaultShippingFee = (float) Setting::get(
+            'default_shipping_fee',
+            0
+        );
+
         $estimatedDeliveryMessage = Setting::get(
             'estimated_delivery_message',
             ''
@@ -287,8 +382,21 @@ class CheckoutController extends Controller
 
         if ($shippingEnabled) {
 
-            $selectedShipping = Shipping::where('status', true)
-                ->find($validated['shipping_id'] ?? null);
+            if (empty($validated['shipping_id'])) {
+                return back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Please select a shipping method.'
+                    );
+            }
+
+            $selectedShipping = Shipping::where(
+                'status',
+                true
+            )->find(
+                $validated['shipping_id']
+            );
 
             if (!$selectedShipping) {
                 return back()
@@ -315,11 +423,21 @@ class CheckoutController extends Controller
         |--------------------------------------------------------------------------
         | Shipping Fee
         |--------------------------------------------------------------------------
+        |
+        | Below free shipping threshold:
+        |     default_shipping_fee
+        |
+        | At / above threshold:
+        |     FREE
+        |
         */
 
         $cartShippingFee = 0;
 
-        if ($shippingEnabled && $selectedShipping) {
+        if (
+            $shippingEnabled &&
+            $selectedShipping
+        ) {
 
             if (
                 $freeShippingThreshold > 0 &&
@@ -327,7 +445,8 @@ class CheckoutController extends Controller
             ) {
                 $cartShippingFee = 0;
             } else {
-                $cartShippingFee = (float) $selectedShipping->price;
+                $cartShippingFee =
+                    $defaultShippingFee;
             }
         }
 
@@ -337,7 +456,8 @@ class CheckoutController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $deliveryEstimate = $selectedShipping?->delivery_time
+        $deliveryEstimate =
+            $selectedShipping?->delivery_time
             ?: $estimatedDeliveryMessage;
 
         $createdOrders = [];
@@ -358,7 +478,15 @@ class CheckoutController extends Controller
 
                 foreach ($cart as $bookId => $item) {
 
-                    $book = Book::with('seller.store')
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Lock Book
+                    |--------------------------------------------------------------------------
+                    */
+
+                    $book = Book::with(
+                        'seller.store'
+                    )
                         ->whereKey($bookId)
                         ->lockForUpdate()
                         ->first();
@@ -368,6 +496,12 @@ class CheckoutController extends Controller
                             'One of the books in your cart no longer exists.'
                         );
                     }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Book Availability
+                    |--------------------------------------------------------------------------
+                    */
 
                     if ($book->status !== 'approved') {
                         throw new \Exception(
@@ -395,6 +529,12 @@ class CheckoutController extends Controller
                         );
                     }
 
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Quantity
+                    |--------------------------------------------------------------------------
+                    */
+
                     $quantity = (int) $item['quantity'];
 
                     if ($quantity <= 0) {
@@ -409,9 +549,22 @@ class CheckoutController extends Controller
                         );
                     }
 
-                    $bookPrice = (float) $book->price;
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Current Book Price
+                    |--------------------------------------------------------------------------
+                    |
+                    | IMPORTANT:
+                    | Always calculate the price from the fresh database
+                    | record. Never trust the session cart price.
+                    |
+                    */
 
-                    $bookTotal = $bookPrice * $quantity;
+                    $bookPrice =
+                        $this->getActiveBookPrice($book);
+
+                    $bookTotal =
+                        $bookPrice * $quantity;
 
                     /*
                     |--------------------------------------------------------------------------
@@ -419,10 +572,11 @@ class CheckoutController extends Controller
                     |--------------------------------------------------------------------------
                     */
 
-                    $minimumOrderAmount = (float) Setting::get(
-                        'minimum_order_amount',
-                        0
-                    );
+                    $minimumOrderAmount =
+                        (float) Setting::get(
+                            'minimum_order_amount',
+                            0
+                        );
 
                     $storeMinimumOrderAmount =
                         (float) $store->minimum_order_amount;
@@ -434,7 +588,8 @@ class CheckoutController extends Controller
 
                     if (
                         $effectiveMinimumOrderAmount > 0 &&
-                        $bookTotal < $effectiveMinimumOrderAmount
+                        $bookTotal <
+                        $effectiveMinimumOrderAmount
                     ) {
                         throw new \Exception(
                             'The minimum order amount is ₼' .
@@ -459,10 +614,12 @@ class CheckoutController extends Controller
                         $cartShippingFee > 0 &&
                         $orderIndex === 0
                     ) {
-                        $shippingFee = $cartShippingFee;
+                        $shippingFee =
+                            $cartShippingFee;
                     }
 
-                    $grandTotal = $bookTotal + $shippingFee;
+                    $grandTotal =
+                        $bookTotal + $shippingFee;
 
                     /*
                     |--------------------------------------------------------------------------
@@ -470,18 +627,24 @@ class CheckoutController extends Controller
                     |--------------------------------------------------------------------------
                     */
 
-                    $configuredOrderStatus = Setting::get(
-                        'default_order_status',
-                        null
-                    );
+                    $configuredOrderStatus =
+                        Setting::get(
+                            'default_order_status',
+                            null
+                        );
 
-                    $orderStatus = $store->auto_approve_orders
-                        ? 'processing'
-                        : ($configuredOrderStatus ?: 'pending');
+                    $orderStatus =
+                        $store->auto_approve_orders
+                            ? 'processing'
+                            : (
+                                $configuredOrderStatus
+                                ?: 'pending'
+                            );
 
-                    $processingDeadline = now()->addDays(
-                        $store->processing_time
-                    );
+                    $processingDeadline =
+                        now()->addDays(
+                            $store->processing_time
+                        );
 
                     /*
                     |--------------------------------------------------------------------------
@@ -489,66 +652,80 @@ class CheckoutController extends Controller
                     |--------------------------------------------------------------------------
                     */
 
-                    $orderNumberFormat = Setting::get(
-                        'order_number_format',
-                        '#SB-{YYYY}-{####}'
-                    );
+                    $orderNumberFormat =
+                        Setting::get(
+                            'order_number_format',
+                            '#SB-{YYYY}-{####}'
+                        );
 
-                    $orderNumber = str_replace(
-                        [
-                            '{YYYY}',
-                            '{YmdHis}',
-                            '{Y}',
-                            '{m}',
-                            '{d}',
-                            '{H}',
-                            '{i}',
-                            '{s}',
-                            '{random}',
-                        ],
-                        [
-                            now()->format('Y'),
-                            now()->format('YmdHis'),
-                            now()->format('Y'),
-                            now()->format('m'),
-                            now()->format('d'),
-                            now()->format('H'),
-                            now()->format('i'),
-                            now()->format('s'),
-                            strtoupper(Str::random(6)),
-                        ],
-                        $orderNumberFormat
-                    );
-
-                    $orderNumber = preg_replace_callback(
-                        '/#{2,}/',
-                        function ($matches) {
-
-                            $length = strlen($matches[0]);
-
-                            return str_pad(
-                                (string) random_int(
-                                    0,
-                                    (10 ** $length) - 1
+                    $orderNumber =
+                        str_replace(
+                            [
+                                '{YYYY}',
+                                '{YmdHis}',
+                                '{Y}',
+                                '{m}',
+                                '{d}',
+                                '{H}',
+                                '{i}',
+                                '{s}',
+                                '{random}',
+                            ],
+                            [
+                                now()->format('Y'),
+                                now()->format('YmdHis'),
+                                now()->format('Y'),
+                                now()->format('m'),
+                                now()->format('d'),
+                                now()->format('H'),
+                                now()->format('i'),
+                                now()->format('s'),
+                                strtoupper(
+                                    Str::random(6)
                                 ),
-                                $length,
-                                '0',
-                                STR_PAD_LEFT
-                            );
-                        },
-                        $orderNumber
-                    );
+                            ],
+                            $orderNumberFormat
+                        );
+
+                    $orderNumber =
+                        preg_replace_callback(
+                            '/#{2,}/',
+                            function ($matches) {
+
+                                $length =
+                                    strlen(
+                                        $matches[0]
+                                    );
+
+                                return str_pad(
+                                    (string) random_int(
+                                        0,
+                                        (10 ** $length) - 1
+                                    ),
+                                    $length,
+                                    '0',
+                                    STR_PAD_LEFT
+                                );
+                            },
+                            $orderNumber
+                        );
 
                     if (
-                        empty(trim($orderNumber)) ||
-                        $orderNumber === $orderNumberFormat
+                        empty(
+                            trim($orderNumber)
+                        ) ||
+                        $orderNumber ===
+                        $orderNumberFormat
                     ) {
                         $orderNumber =
                             '#SB-' .
                             now()->format('Y') .
                             '-' .
                             str_pad(
-                                (string) random_int(0, 9999),
+                                (string) random_int(
+                                    0,
+                                    9999
+                                ),
                                 4,
                                 '0',
                                 STR_PAD_LEFT
@@ -562,33 +739,46 @@ class CheckoutController extends Controller
                     */
 
                     $order = Order::create([
-                        'order_number' => $orderNumber,
+                        'order_number' =>
+                            $orderNumber,
 
-                        'user_id' => auth()->id(),
+                        'user_id' =>
+                            auth()->id(),
 
-                        'book_id' => $book->id,
+                        'book_id' =>
+                            $book->id,
 
-                        'book_price' => $bookPrice,
+                        'book_price' =>
+                            $bookPrice,
 
-                        'quantity' => $quantity,
+                        'quantity' =>
+                            $quantity,
 
-                        'total_price' => $grandTotal,
+                        'total_price' =>
+                            $grandTotal,
 
-                        'shipping_id' => $selectedShipping?->id,
+                        'shipping_id' =>
+                            $selectedShipping?->id,
 
-                        'shipping_fee' => $shippingFee,
+                        'shipping_fee' =>
+                            $shippingFee,
 
                         'payment_method' =>
-                            $validated['payment_method'],
+                            $validated[
+                                'payment_method'
+                            ],
 
-                        'payment_status' => 'pending',
+                        'payment_status' =>
+                            'pending',
 
-                        'order_status' => $orderStatus,
+                        'order_status' =>
+                            $orderStatus,
 
                         'processing_deadline' =>
                             $processingDeadline,
 
-                        'order_note' => $store->order_note,
+                        'order_note' =>
+                            $store->order_note,
 
                         'full_name' =>
                             $validated['full_name'],
@@ -603,7 +793,9 @@ class CheckoutController extends Controller
                             $validated['city'],
 
                         'postal_code' =>
-                            $validated['postal_code'] ?? null,
+                            $validated[
+                                'postal_code'
+                            ] ?? null,
 
                         'address' =>
                             $validated['address'],
@@ -623,7 +815,10 @@ class CheckoutController extends Controller
 
                     Payment::create([
                         'transaction_id' =>
-                            'TXN-' . strtoupper(Str::random(12)),
+                            'TXN-' .
+                            strtoupper(
+                                Str::random(12)
+                            ),
 
                         'order_id' =>
                             $order->id,
@@ -632,7 +827,9 @@ class CheckoutController extends Controller
                             $grandTotal,
 
                         'payment_method' =>
-                            $validated['payment_method'],
+                            $validated[
+                                'payment_method'
+                            ],
 
                         'payment_status' =>
                             'pending',
@@ -644,7 +841,14 @@ class CheckoutController extends Controller
                             null,
                     ]);
 
-                    $createdOrders[] = $order;
+                    $createdOrders[] =
+                        $order;
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Reduce Stock
+                    |--------------------------------------------------------------------------
+                    */
 
                     $book->decrement(
                         'stock',
@@ -655,26 +859,48 @@ class CheckoutController extends Controller
                 }
             });
 
+            /*
+            |--------------------------------------------------------------------------
+            | Clear Cart
+            |--------------------------------------------------------------------------
+            */
+
             session()->forget('cart');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Cash On Delivery
+            |--------------------------------------------------------------------------
+            */
 
             if (
                 $validated['payment_method'] ===
                 'cash_on_delivery'
             ) {
                 return redirect()
-                    ->route('frontend.orders')
+                    ->route(
+                        'frontend.orders'
+                    )
                     ->with(
                         'success',
                         'Your order has been placed successfully.'
                     );
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | Online Payment
+            |--------------------------------------------------------------------------
+            */
+
             $firstOrder =
                 $createdOrders[0] ?? null;
 
             if (!$firstOrder) {
                 return redirect()
-                    ->route('frontend.orders')
+                    ->route(
+                        'frontend.orders'
+                    )
                     ->with(
                         'error',
                         'Order could not be created.'
@@ -690,11 +916,129 @@ class CheckoutController extends Controller
         } catch (\Exception $e) {
 
             return redirect()
-                ->route('frontend.cart')
+                ->route(
+                    'frontend.cart'
+                )
                 ->with(
                     'error',
                     $e->getMessage()
                 );
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Active Book Price
+    |--------------------------------------------------------------------------
+    |
+    | This method makes sure future/expired discounts are not applied.
+    |
+    */
+
+    private function getActiveBookPrice(Book $book): float
+    {
+        $originalPrice =
+            (float) $book->price;
+
+        if (
+            ($book->discount_type ?? 'none') ===
+            'none'
+        ) {
+            return $originalPrice;
+        }
+
+        if (
+            (float) (
+                $book->discount_value ?? 0
+            ) <= 0
+        ) {
+            return $originalPrice;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Discount Start
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $book->discount_start_at &&
+            $book->discount_start_at->isFuture()
+        ) {
+            return $originalPrice;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Discount End
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $book->discount_end_at &&
+            $book->discount_end_at->isPast()
+        ) {
+            return $originalPrice;
+        }
+
+        $discountValue =
+            (float) $book->discount_value;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Percentage Discount
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $book->discount_type ===
+            'percentage'
+        ) {
+
+            $discountValue =
+                min(
+                    max(
+                        $discountValue,
+                        0
+                    ),
+                    100
+                );
+
+            $discountAmount =
+                $originalPrice *
+                ($discountValue / 100);
+
+            return round(
+                max(
+                    0,
+                    $originalPrice -
+                    $discountAmount
+                ),
+                2
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fixed Discount
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $book->discount_type ===
+            'fixed'
+        ) {
+            return round(
+                max(
+                    0,
+                    $originalPrice -
+                    $discountValue
+                ),
+                2
+            );
+        }
+
+        return $originalPrice;
+    }
 }
+

@@ -5,6 +5,7 @@
 @push('css')
 
 <link rel="stylesheet" href="{{ asset('frontend-assets/css/help-center.css') }}">
+
 @endpush
 
 @section('content')
@@ -27,11 +28,13 @@
         <div class="sb-help-hero-content">
 
             <div class="sb-help-eyebrow">
+
                 <span class="sb-help-eyebrow-icon">
                     <i class="bi bi-life-preserver"></i>
                 </span>
 
                 <span>SecondBook Help Center</span>
+
             </div>
 
             <h1>
@@ -80,15 +83,15 @@
 
                 <span>Popular:</span>
 
-                <a href="#helpCategories">
+                <a href="{{ route('frontend.faq', ['search' => 'buying']) }}#faqSearch">
                     Buying a book
                 </a>
 
-                <a href="#helpCategories">
+                <a href="{{ route('frontend.faq', ['search' => 'selling']) }}#faqSearch">
                     Selling a book
                 </a>
 
-                <a href="#helpCategories">
+                <a href="{{ route('frontend.faq', ['search' => 'order']) }}#faqSearch">
                     Track my order
                 </a>
 
@@ -99,6 +102,7 @@
     </div>
 
 </section>
+
 
 
 {{-- =========================================================
@@ -136,6 +140,7 @@
         </div>
 
 
+
         <div class="row g-4">
 
             {{-- BUYING --}}
@@ -143,7 +148,7 @@
             <div class="col-12 col-md-6 col-xl-4">
 
                 <a
-                    href="#"
+                    href="{{ route('frontend.faq', ['search' => 'buying']) }}#faqSearch"
                     class="sb-help-category-card"
                 >
 
@@ -178,12 +183,13 @@
             </div>
 
 
+
             {{-- SELLING --}}
 
             <div class="col-12 col-md-6 col-xl-4">
 
                 <a
-                    href="#"
+                    href="{{ route('frontend.faq', ['search' => 'selling']) }}#faqSearch"
                     class="sb-help-category-card"
                 >
 
@@ -218,12 +224,13 @@
             </div>
 
 
+
             {{-- ORDERS --}}
 
             <div class="col-12 col-md-6 col-xl-4">
 
                 <a
-                    href="#"
+                    href="{{ route('frontend.faq', ['search' => 'order']) }}#faqSearch"
                     class="sb-help-category-card"
                 >
 
@@ -258,12 +265,13 @@
             </div>
 
 
+
             {{-- PAYMENTS --}}
 
             <div class="col-12 col-md-6 col-xl-4">
 
                 <a
-                    href="#"
+                    href="{{ route('frontend.faq', ['search' => 'payment']) }}#faqSearch"
                     class="sb-help-category-card"
                 >
 
@@ -298,12 +306,13 @@
             </div>
 
 
+
             {{-- ACCOUNT --}}
 
             <div class="col-12 col-md-6 col-xl-4">
 
                 <a
-                    href="#"
+                    href="{{ route('frontend.faq', ['search' => 'account']) }}#faqSearch"
                     class="sb-help-category-card"
                 >
 
@@ -338,12 +347,13 @@
             </div>
 
 
+
             {{-- SHIPPING --}}
 
             <div class="col-12 col-md-6 col-xl-4">
 
                 <a
-                    href="#"
+                    href="{{ route('frontend.faq', ['search' => 'shipping']) }}#faqSearch"
                     class="sb-help-category-card"
                 >
 
@@ -384,6 +394,7 @@
 </section>
 
 
+
 {{-- =========================================================
      POPULAR QUESTIONS
 ========================================================== --}}
@@ -412,7 +423,7 @@
                 </p>
 
                 <a
-                    href="{{ route('frontend.faq') }}"
+                    href="{{ route('frontend.faq') }}#faqSearch"
                     class="sb-help-outline-btn"
                 >
                     <span>View All FAQs</span>
@@ -422,10 +433,11 @@
             </div>
 
 
+
             <div class="sb-help-question-list">
 
                 <a
-                    href="{{ route('frontend.faq') }}"
+                    href="{{ route('frontend.faq', ['search' => 'buying']) }}#faqSearch"
                     class="sb-help-question"
                 >
 
@@ -455,8 +467,9 @@
                 </a>
 
 
+
                 <a
-                    href="{{ route('frontend.faq') }}"
+                    href="{{ route('frontend.faq', ['search' => 'selling']) }}#faqSearch"
                     class="sb-help-question"
                 >
 
@@ -486,8 +499,9 @@
                 </a>
 
 
+
                 <a
-                    href="{{ route('frontend.faq') }}"
+                    href="{{ route('frontend.faq', ['search' => 'order']) }}#faqSearch"
                     class="sb-help-question"
                 >
 
@@ -517,8 +531,9 @@
                 </a>
 
 
+
                 <a
-                    href="{{ route('frontend.faq') }}"
+                    href="{{ route('frontend.faq', ['search' => 'payment']) }}#faqSearch"
                     class="sb-help-question"
                 >
 
@@ -556,6 +571,7 @@
 </section>
 
 
+
 {{-- =========================================================
      QUICK GUIDES
 ========================================================== --}}
@@ -586,6 +602,7 @@
             </p>
 
         </div>
+
 
 
         <div class="row g-4">
@@ -627,6 +644,7 @@
             </div>
 
 
+
             {{-- GUIDE 02 --}}
 
             <div class="col-12 col-md-4">
@@ -654,7 +672,7 @@
                         opportunities for other readers.
                     </p>
 
-                    <a href="#">
+                    <a href="{{ route('frontend.faq', ['search' => 'selling']) }}#faqSearch">
                         Learn About Selling
                         <i class="bi bi-arrow-right"></i>
                     </a>
@@ -662,6 +680,7 @@
                 </div>
 
             </div>
+
 
 
             {{-- GUIDE 03 --}}
@@ -692,15 +711,19 @@
                     </p>
 
                     @auth
-                        <a href="{{ route('my.profile') }}">
-                            View My Profile
+
+                        <a href="{{ route('frontend.account.settings') }}">
+                            View Account Settings
                             <i class="bi bi-arrow-right"></i>
                         </a>
+
                     @else
+
                         <a href="{{ route('frontend.auth.login') }}">
                             Sign In
                             <i class="bi bi-arrow-right"></i>
                         </a>
+
                     @endauth
 
                 </div>
@@ -714,6 +737,7 @@
 </section>
 
 
+
 {{-- =========================================================
      CONTACT CTA
 ========================================================== --}}
@@ -725,7 +749,6 @@
         <div class="sb-help-contact-box">
 
             <div class="sb-help-contact-decoration"></div>
-
             <div class="sb-help-contact-orbit"></div>
 
             <div class="sb-help-contact-icon">
@@ -773,45 +796,63 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const searchInput = document.getElementById('helpSearch');
+    const searchInput =
+        document.getElementById('helpSearch');
 
     if (!searchInput) {
         return;
     }
 
-    const searchButton = document.querySelector('.sb-help-search-button');
+    const searchButton =
+        document.querySelector('.sb-help-search-button');
 
     const performSearch = function () {
 
-        const value = searchInput.value.trim();
+        const value =
+            searchInput.value.trim();
 
         if (!value) {
             searchInput.focus();
             return;
         }
 
-        const faqUrl = @json(route('frontend.faq'));
+        const faqUrl =
+            @json(route('frontend.faq'));
 
         window.location.href =
-            faqUrl + '?search=' + encodeURIComponent(value);
+            faqUrl +
+            '?search=' +
+            encodeURIComponent(value) +
+            '#faqSearch';
     };
 
-    searchInput.addEventListener('keydown', function (event) {
 
-        if (event.key !== 'Enter') {
-            return;
+    searchInput.addEventListener(
+        'keydown',
+        function (event) {
+
+            if (event.key !== 'Enter') {
+                return;
+            }
+
+            event.preventDefault();
+
+            performSearch();
+
         }
+    );
 
-        event.preventDefault();
-
-        performSearch();
-    });
 
     if (searchButton) {
 
-        searchButton.addEventListener('click', function () {
-            performSearch();
-        });
+        searchButton.addEventListener(
+            'click',
+            function () {
+
+                performSearch();
+
+            }
+        );
 
     }
 

@@ -1,0 +1,1759 @@
+/* =========================================================
+SECOND BOOK — ACCOUNT DELETE VERIFY
+Premium Authentication Page
+========================================================= */
+
+.frontend-main {
+padding: 0 !important;
+}
+
+/* =========================================================
+BACKGROUND
+Same visual system as Password Verify
+========================================================= */
+
+.auth-delete-page-bg {
+position: relative;
+isolation: isolate;
+overflow: hidden;
+
+
+min-height: 100vh;
+width: 100%;
+
+background-image: none;
+
+
+}
+
+.auth-delete-page-bg::before {
+content: '';
+
+
+position: absolute;
+inset: -10px;
+
+z-index: -3;
+
+background-image: url('/arxaplan.jpg');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
+filter:
+    blur(3px)
+    saturate(90%)
+    contrast(1.08);
+
+transform: scale(1.03);
+
+
+}
+
+.auth-delete-page-bg::after {
+content: '';
+
+
+position: absolute;
+inset: 0;
+
+z-index: -2;
+
+background:
+    radial-gradient(
+        circle at 0% 0%,
+        rgba(243, 205, 140, 0.22) 0%,
+        rgba(243, 205, 140, 0.08) 28%,
+        transparent 60%
+    ),
+
+    radial-gradient(
+        circle at center,
+        transparent 48%,
+        rgba(0, 0, 0, 0.30) 100%
+    ),
+
+    linear-gradient(
+        140deg,
+        rgba(248, 245, 239, 0.12) 0%,
+        rgba(0, 0, 0, 0.40) 100%
+    );
+
+pointer-events: none;
+
+
+}
+
+.auth-delete-wrapper {
+min-height: 100vh;
+
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+position: relative;
+z-index: 1;
+
+
+}
+
+.auth-delete-wrapper::before {
+content: '';
+
+
+position: absolute;
+inset: 0;
+
+z-index: -1;
+
+background-image:
+
+    radial-gradient(
+        2px 2px at 10% 18%,
+        rgba(255, 244, 226, 0.22),
+        transparent 65%
+    ),
+
+    radial-gradient(
+        1.8px 1.8px at 30% 35%,
+        rgba(255, 244, 226, 0.17),
+        transparent 65%
+    ),
+
+    radial-gradient(
+        2px 2px at 70% 20%,
+        rgba(255, 244, 226, 0.14),
+        transparent 65%
+    ),
+
+    radial-gradient(
+        1.6px 1.6px at 85% 55%,
+        rgba(255, 244, 226, 0.16),
+        transparent 65%
+    ),
+
+    radial-gradient(
+        2px 2px at 55% 75%,
+        rgba(255, 244, 226, 0.15),
+        transparent 65%
+    );
+
+animation:
+    accountDeleteDustFloat 16s ease-in-out infinite alternate;
+
+pointer-events: none;
+
+
+}
+
+.auth-delete-grid {
+max-width: 460px;
+
+
+margin: 0 auto;
+
+position: relative;
+z-index: 1;
+
+
+}
+
+/* =========================================================
+CARD
+========================================================= */
+
+.sb-account-delete-verify-premium {
+--delete-brown: #8b5e3c;
+--delete-brown-dark: #674329;
+--delete-brown-deep: #3b2619;
+
+
+--delete-gold: #c59a5a;
+--delete-gold-light: #d9b77d;
+
+--delete-text: #241b16;
+--delete-muted: #776d65;
+--delete-light: #a69c94;
+
+--delete-border: #e7dfd8;
+--delete-border-light: #eee8e2;
+
+--delete-surface: #ffffff;
+--delete-surface-soft: #fbf8f5;
+
+position: relative;
+overflow: hidden;
+isolation: isolate;
+
+width: min(100%, 480px);
+
+margin: 0 auto;
+
+padding: 42px 43px 27px;
+
+border: 1px solid rgba(255, 255, 255, 0.78);
+border-radius: 27px;
+
+background:
+    linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.985),
+        rgba(250, 247, 243, 0.985)
+    );
+
+box-shadow:
+    0 35px 90px rgba(45, 30, 20, 0.18),
+    0 10px 30px rgba(45, 30, 20, 0.08);
+
+color: var(--delete-text);
+
+font-family:
+    "DM Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+
+}
+
+/* =========================================================
+CARD DECORATIONS
+========================================================= */
+
+.sb-account-delete-verify-premium::before {
+content: '';
+
+
+position: absolute;
+
+width: 310px;
+height: 310px;
+
+top: -215px;
+right: -145px;
+
+border-radius: 50%;
+
+background:
+    radial-gradient(
+        circle,
+        rgba(197, 154, 90, 0.14) 0%,
+        transparent 68%
+    );
+
+pointer-events: none;
+
+
+}
+
+.sb-account-delete-verify-premium::after {
+content: '';
+
+
+position: absolute;
+
+width: 230px;
+height: 230px;
+
+bottom: -175px;
+left: -125px;
+
+border-radius: 50%;
+
+background:
+    radial-gradient(
+        circle,
+        rgba(139, 94, 60, 0.09) 0%,
+        transparent 68%
+    );
+
+pointer-events: none;
+
+
+}
+
+/* =========================================================
+ORBS
+========================================================= */
+
+.sb-account-delete-orb {
+position: absolute;
+
+
+border-radius: 50%;
+
+pointer-events: none;
+z-index: 1;
+
+
+}
+
+.sb-account-delete-orb-one {
+width: 8px;
+height: 8px;
+
+
+top: 72px;
+right: 56px;
+
+background: var(--delete-gold);
+
+box-shadow:
+    0 0 0 5px rgba(197, 154, 90, 0.08);
+
+animation:
+    accountDeleteOrbPulse 3.5s ease-in-out infinite;
+
+
+}
+
+.sb-account-delete-orb-two {
+width: 5px;
+height: 5px;
+
+
+bottom: 108px;
+left: 34px;
+
+background: var(--delete-brown);
+
+opacity: 0.45;
+
+animation:
+    accountDeleteOrbPulse 4.5s ease-in-out infinite reverse;
+
+
+}
+
+/* =========================================================
+TOP CARD LINE
+========================================================= */
+
+.sb-account-delete-card-line {
+position: absolute;
+
+
+top: 0;
+left: 43px;
+right: 43px;
+
+height: 2px;
+
+background:
+    linear-gradient(
+        90deg,
+        transparent,
+        var(--delete-gold),
+        var(--delete-brown),
+        transparent
+    );
+
+opacity: 0.72;
+
+pointer-events: none;
+
+
+}
+
+/* =========================================================
+BRAND
+========================================================= */
+
+.sb-account-delete-brand {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+margin-bottom: 25px;
+
+
+}
+
+.sb-account-delete-brand-link {
+text-decoration: none;
+}
+
+.sb-account-delete-logo-wrap {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+min-width: 154px;
+min-height: 48px;
+
+padding: 8px 17px;
+
+border: 1px solid var(--delete-border);
+border-radius: 13px;
+
+background:
+    linear-gradient(
+        145deg,
+        #ffffff,
+        #faf6f1
+    );
+
+box-shadow:
+    0 8px 24px rgba(49, 34, 24, 0.06);
+
+
+}
+
+.sb-account-delete-logo {
+display: block;
+
+
+width: auto;
+
+max-width: 122px;
+max-height: 34px;
+
+object-fit: contain;
+
+
+}
+
+/* =========================================================
+HEADING
+========================================================= */
+
+.sb-account-delete-head {
+text-align: center;
+
+
+margin-bottom: 28px;
+
+
+}
+
+.sb-account-delete-kicker {
+display: inline-flex;
+align-items: center;
+
+
+gap: 8px;
+
+margin-bottom: 10px;
+
+color: var(--delete-brown);
+
+font-size: 9px;
+font-weight: 700;
+
+letter-spacing: 0.17em;
+
+text-transform: uppercase;
+
+
+}
+
+.sb-account-delete-kicker-line {
+width: 23px;
+height: 1px;
+
+
+background:
+    linear-gradient(
+        90deg,
+        transparent,
+        var(--delete-gold)
+    );
+
+
+}
+
+.sb-account-delete-kicker-dot {
+width: 4px;
+height: 4px;
+
+
+border-radius: 50%;
+
+background: var(--delete-gold);
+
+box-shadow:
+    0 0 0 4px rgba(197, 154, 90, 0.09);
+
+
+}
+
+.sb-account-delete-title {
+display: block;
+
+
+margin: 0;
+
+color: var(--delete-text);
+
+font-family:
+    "Playfair Display",
+    Georgia,
+    serif;
+
+font-size: 38px;
+font-weight: 600;
+
+line-height: 1.08;
+
+letter-spacing: -0.035em;
+
+white-space: nowrap;
+
+transform: translateX(-12px);
+
+
+}
+
+.sb-account-delete-title span:not(.sb-account-delete-wave) {
+color: var(--delete-brown);
+
+
+font-style: italic;
+
+
+}
+
+.sb-account-delete-wave {
+display: inline-block;
+
+
+margin-left: 4px;
+
+font-family:
+    "DM Sans",
+    sans-serif;
+
+/*
+ * Bigger than Password Verify because
+ * the security icon is an important part
+ * of this page.
+ */
+font-size: 26px;
+
+font-style: normal !important;
+
+transform-origin: 70% 80%;
+
+animation:
+    accountDeleteWave 3.2s ease-in-out infinite;
+
+
+}
+
+.sb-account-delete-subtitle {
+max-width: 350px;
+
+
+margin: 12px auto 0;
+
+color: var(--delete-muted);
+
+font-size: 12px;
+
+line-height: 1.75;
+
+
+}
+
+/* =========================================================
+ALERTS
+========================================================= */
+
+.sb-account-delete-alert-danger,
+.sb-account-delete-alert-success {
+position: relative;
+
+
+display: flex;
+align-items: flex-start;
+
+gap: 11px;
+
+margin-bottom: 20px;
+
+padding: 12px 13px;
+
+border-radius: 13px;
+
+font-size: 10px;
+
+line-height: 1.55;
+
+
+}
+
+.sb-account-delete-alert-danger {
+border: 1px solid rgba(177, 72, 72, 0.16);
+
+
+background:
+    linear-gradient(
+        145deg,
+        rgba(255, 247, 247, 0.98),
+        rgba(252, 240, 240, 0.98)
+    );
+
+color: #8b4545;
+
+
+}
+
+.sb-account-delete-alert-success {
+border: 1px solid rgba(78, 132, 88, 0.17);
+
+
+background:
+    linear-gradient(
+        145deg,
+        rgba(247, 252, 247, 0.98),
+        rgba(239, 248, 241, 0.98)
+    );
+
+color: #52755a;
+
+
+}
+
+.sb-account-delete-alert-danger .sb-login-alert-icon,
+.sb-account-delete-alert-success .sb-login-alert-icon {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+width: 30px;
+height: 30px;
+
+flex: 0 0 30px;
+
+border-radius: 9px;
+
+font-size: 14px;
+
+
+}
+
+.sb-account-delete-alert-danger .sb-login-alert-icon {
+background: rgba(177, 72, 72, 0.08);
+}
+
+.sb-account-delete-alert-success .sb-login-alert-icon {
+background: rgba(78, 132, 88, 0.09);
+}
+
+.sb-login-alert-content {
+display: flex;
+flex-direction: column;
+
+
+gap: 2px;
+
+min-width: 0;
+
+
+}
+
+.sb-login-alert-content strong {
+font-size: 10px;
+font-weight: 700;
+}
+
+.sb-login-alert-content span {
+font-size: 9px;
+opacity: 0.85;
+}
+
+/* =========================================================
+FORM
+========================================================= */
+
+.sb-login-form {
+position: relative;
+
+
+z-index: 2;
+
+
+}
+
+.sb-account-delete-field {
+margin-bottom: 19px;
+}
+
+.sb-field-label {
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+
+gap: 10px;
+
+margin-bottom: 8px;
+
+color: var(--delete-text);
+
+font-size: 11px;
+font-weight: 700;
+
+
+}
+
+.sb-field-label > span {
+color: #a89d94;
+
+
+font-size: 8px;
+font-weight: 600;
+
+letter-spacing: 0.04em;
+
+text-transform: uppercase;
+
+
+}
+
+/* =========================================================
+INPUT GROUP
+========================================================= */
+
+.sb-account-delete-field .sb-input-group {
+position: relative;
+
+
+display: flex;
+align-items: center;
+
+min-height: 52px;
+
+border: 1px solid var(--delete-border);
+border-radius: 14px;
+
+background:
+    linear-gradient(
+        145deg,
+        #ffffff,
+        #fcfaf8
+    );
+
+box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+
+
+}
+
+.sb-account-delete-field .sb-input-group:focus-within {
+border-color: rgba(139, 94, 60, 0.52);
+
+
+box-shadow:
+    0 0 0 4px rgba(139, 94, 60, 0.075),
+    0 8px 22px rgba(70, 45, 29, 0.055);
+
+transform: translateY(-1px);
+
+
+}
+
+/* =========================================================
+INPUT ICON
+Bigger and visually balanced
+========================================================= */
+
+.sb-account-delete-field .sb-input-icon {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+width: 52px;
+height: 52px;
+
+flex: 0 0 52px;
+
+color: var(--delete-brown);
+
+font-size: 17px;
+
+
+}
+
+.sb-account-delete-field .sb-input-icon i {
+display: block;
+
+
+line-height: 1;
+
+transform: translateY(1px);
+
+
+}
+
+/* =========================================================
+INPUT
+========================================================= */
+
+.sb-account-delete-field .sb-login-input {
+width: 100%;
+min-width: 0;
+
+
+height: 50px;
+
+padding: 0 10px 0 0;
+
+border: 0 !important;
+outline: 0 !important;
+
+background: transparent !important;
+
+color: var(--delete-text) !important;
+
+box-shadow: none !important;
+
+font-family:
+    "DM Sans",
+    sans-serif;
+
+font-size: 12px;
+font-weight: 500;
+
+
+}
+
+.sb-account-delete-field .sb-login-input::placeholder {
+color: #b6ada5;
+
+
+font-weight: 400;
+
+
+}
+
+.sb-account-delete-field .sb-login-input:-webkit-autofill,
+.sb-account-delete-field .sb-login-input:-webkit-autofill:hover,
+.sb-account-delete-field .sb-login-input:-webkit-autofill:focus {
+-webkit-text-fill-color: var(--delete-text);
+
+
+-webkit-box-shadow:
+    0 0 0 1000px #ffffff inset !important;
+
+transition:
+    background-color 5000s ease-in-out 0s;
+
+
+}
+
+/* =========================================================
+OTP
+========================================================= */
+
+.sb-account-delete-field .sb-otp-group {
+min-height: 55px;
+}
+
+.sb-account-delete-field .sb-otp-input {
+height: 53px;
+
+
+padding-right: 6px;
+
+letter-spacing: 0.25em;
+
+font-size: 14px;
+font-weight: 700;
+
+color: var(--delete-brown) !important;
+
+
+}
+
+.sb-account-delete-field .sb-otp-input::placeholder {
+letter-spacing: 0;
+
+
+font-size: 11px;
+
+font-weight: 400;
+
+
+}
+
+.sb-account-delete-field .sb-input-status {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+width: 45px;
+height: 45px;
+
+margin-right: 3px;
+
+flex: 0 0 45px;
+
+border-radius: 11px;
+
+background: rgba(139, 94, 60, 0.055);
+
+color: var(--delete-gold);
+
+font-size: 15px;
+
+
+}
+
+.sb-account-delete-field .sb-input-status i {
+line-height: 1;
+}
+
+/* =========================================================
+PASSWORD TOGGLE
+========================================================= */
+
+.sb-account-delete-field .sb-pass-toggle {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+width: 43px;
+height: 43px;
+
+margin-right: 4px;
+
+flex: 0 0 43px;
+
+border: 0;
+border-radius: 10px;
+
+background: transparent;
+
+color: #988d85;
+
+cursor: pointer;
+
+font-size: 16px;
+
+transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+
+
+}
+
+.sb-account-delete-field .sb-pass-toggle:hover {
+color: var(--delete-brown);
+
+
+background: rgba(139, 94, 60, 0.075);
+
+transform: scale(1.04);
+
+
+}
+
+/* =========================================================
+RESEND
+========================================================= */
+
+.sb-verify-resend {
+display: flex;
+align-items: center;
+
+
+gap: 9px;
+
+margin-top: 2px;
+margin-bottom: 18px;
+
+padding: 10px 12px;
+
+border: 1px solid var(--delete-border-light);
+border-radius: 12px;
+
+background:
+    linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.75),
+        rgba(250, 247, 243, 0.75)
+    );
+
+
+}
+
+.sb-verify-resend-icon {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+width: 32px;
+height: 32px;
+
+flex: 0 0 32px;
+
+border-radius: 9px;
+
+background: rgba(139, 94, 60, 0.07);
+
+color: var(--delete-brown);
+
+font-size: 14px;
+
+
+}
+
+.sb-verify-resend-icon i {
+line-height: 1;
+}
+
+.sb-verify-resend-content {
+display: flex;
+align-items: center;
+
+
+flex-wrap: wrap;
+
+gap: 5px;
+
+color: #948a82;
+
+font-size: 9px;
+
+
+}
+
+.sb-verify-resend-link {
+display: inline-flex;
+align-items: center;
+
+
+gap: 4px;
+
+color: var(--delete-brown);
+
+font-size: 9px;
+font-weight: 700;
+
+text-decoration: none;
+
+transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+
+
+}
+
+.sb-verify-resend-link:hover {
+color: var(--delete-brown-dark);
+
+
+transform: translateX(2px);
+
+
+}
+
+.sb-verify-resend-link i {
+font-size: 9px;
+}
+
+/* =========================================================
+DELETE / CONTINUE BUTTON
+========================================================= */
+
+.sb-account-delete-submit {
+position: relative;
+
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+width: 100%;
+
+min-height: 54px;
+
+padding: 5px 6px 5px 17px;
+
+border: 0;
+border-radius: 15px;
+
+background:
+    radial-gradient(
+        circle at 85% 10%,
+        rgba(255, 255, 255, 0.15),
+        transparent 28%
+    ),
+
+    linear-gradient(
+        110deg,
+        #5c3a26 0%,
+        #7b4f32 50%,
+        #9a6948 100%
+    );
+
+color: #ffffff;
+
+cursor: pointer;
+
+overflow: hidden;
+
+box-shadow:
+    0 14px 28px rgba(96, 59, 36, 0.20);
+
+font-family:
+    "DM Sans",
+    sans-serif;
+
+transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+
+
+}
+
+.sb-account-delete-submit:hover:not(:disabled) {
+transform: translateY(-2px);
+
+
+box-shadow:
+    0 18px 34px rgba(96, 59, 36, 0.25);
+
+
+}
+
+.sb-account-delete-submit:active:not(:disabled) {
+transform: translateY(0);
+}
+
+.sb-account-delete-submit:disabled {
+cursor: wait;
+
+
+opacity: 0.75;
+
+
+}
+
+.sb-account-delete-submit .sb-signin-content {
+display: flex;
+align-items: center;
+
+
+gap: 10px;
+
+
+}
+
+.sb-account-delete-submit .sb-signin-icon {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+width: 36px;
+height: 36px;
+
+border-radius: 10px;
+
+background: rgba(255, 255, 255, 0.12);
+
+font-size: 16px;
+
+
+}
+
+.sb-account-delete-submit .sb-signin-icon i {
+line-height: 1;
+}
+
+.sb-account-delete-submit .sb-signin-text {
+font-size: 11px;
+font-weight: 700;
+
+
+letter-spacing: 0.01em;
+
+
+}
+
+.sb-account-delete-submit .sb-signin-arrow {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+width: 41px;
+height: 41px;
+
+border: 1px solid rgba(255, 255, 255, 0.15);
+border-radius: 11px;
+
+background: rgba(255, 255, 255, 0.08);
+
+font-size: 13px;
+
+transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+
+
+}
+
+.sb-account-delete-submit:hover:not(:disabled) .sb-signin-arrow {
+transform: rotate(5deg);
+
+
+background: rgba(255, 255, 255, 0.14);
+
+
+}
+
+/* =========================================================
+SECURITY NOTE
+========================================================= */
+
+.sb-account-delete-security {
+display: flex;
+align-items: center;
+
+
+gap: 10px;
+
+margin-top: 20px;
+
+padding: 11px 12px;
+
+border: 1px solid var(--delete-border-light);
+border-radius: 13px;
+
+background:
+    linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.78),
+        rgba(250, 247, 243, 0.78)
+    );
+
+
+}
+
+.sb-account-delete-security-icon {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+width: 34px;
+height: 34px;
+
+flex: 0 0 34px;
+
+border-radius: 10px;
+
+background: rgba(197, 154, 90, 0.10);
+
+color: var(--delete-gold);
+
+font-size: 15px;
+
+
+}
+
+.sb-account-delete-security-icon i {
+line-height: 1;
+}
+
+.sb-account-delete-security-content {
+display: flex;
+flex-direction: column;
+
+
+gap: 2px;
+
+min-width: 0;
+
+
+}
+
+.sb-account-delete-security-content strong {
+color: var(--delete-text);
+
+
+font-size: 9px;
+font-weight: 700;
+
+
+}
+
+.sb-account-delete-security-content span {
+color: #948a82;
+
+
+font-size: 8px;
+
+line-height: 1.5;
+
+
+}
+
+/* =========================================================
+BOTTOM MARK
+========================================================= */
+
+.sb-account-delete-bottom-mark {
+display: flex;
+align-items: center;
+justify-content: center;
+
+
+gap: 8px;
+
+margin-top: 19px;
+
+
+}
+
+.sb-account-delete-bottom-mark span {
+width: 45px;
+height: 1px;
+
+
+background:
+    linear-gradient(
+        90deg,
+        transparent,
+        var(--delete-border)
+    );
+
+
+}
+
+.sb-account-delete-bottom-mark span:last-child {
+background:
+linear-gradient(
+90deg,
+var(--delete-border),
+transparent
+);
+}
+
+.sb-account-delete-bottom-mark i {
+color: var(--delete-gold);
+
+
+font-size: 12px;
+
+
+}
+
+/* =========================================================
+ANIMATIONS
+========================================================= */
+
+@keyframes accountDeleteWave {
+
+
+0%,
+100% {
+    transform: rotate(0deg);
+}
+
+8% {
+    transform: rotate(8deg);
+}
+
+16% {
+    transform: rotate(-5deg);
+}
+
+24% {
+    transform: rotate(5deg);
+}
+
+32% {
+    transform: rotate(0deg);
+}
+
+
+}
+
+@keyframes accountDeleteOrbPulse {
+
+
+0%,
+100% {
+    opacity: 0.45;
+
+    transform: scale(1);
+}
+
+50% {
+    opacity: 0.9;
+
+    transform: scale(1.3);
+}
+
+
+}
+
+@keyframes accountDeleteDustFloat {
+
+
+0% {
+    transform: translate3d(0, 0, 0);
+}
+
+100% {
+    transform: translate3d(0, -8px, 0);
+}
+
+
+}
+
+/* =========================================================
+RESPONSIVE — 991px
+========================================================= */
+
+@media (max-width: 991px) {
+
+
+.sb-account-delete-verify-premium {
+    width: min(100%, 465px);
+
+    padding: 39px 38px 25px;
+}
+
+.sb-account-delete-card-line {
+    left: 38px;
+    right: 38px;
+}
+
+
+}
+
+/* =========================================================
+RESPONSIVE — 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+
+.sb-account-delete-verify-premium {
+    width: min(100%, 440px);
+
+    padding: 35px 31px 24px;
+
+    border-radius: 23px;
+}
+
+.sb-account-delete-card-line {
+    left: 31px;
+    right: 31px;
+}
+
+.sb-account-delete-brand {
+    margin-bottom: 22px;
+}
+
+.sb-account-delete-title {
+    font-size: 35px;
+}
+
+.sb-account-delete-subtitle {
+    font-size: 11px;
+}
+
+
+}
+
+/* =========================================================
+RESPONSIVE — 575px
+========================================================= */
+
+@media (max-width: 575px) {
+
+
+.sb-account-delete-verify-premium {
+    width: calc(100% - 22px);
+
+    padding: 31px 22px 22px;
+
+    border-radius: 20px;
+}
+
+.sb-account-delete-card-line {
+    left: 23px;
+    right: 23px;
+}
+
+.sb-account-delete-logo-wrap {
+    min-width: 139px;
+    min-height: 44px;
+
+    padding: 7px 15px;
+
+    border-radius: 12px;
+}
+
+.sb-account-delete-logo {
+    max-width: 110px;
+    max-height: 31px;
+}
+
+.sb-account-delete-head {
+    margin-bottom: 24px;
+}
+
+.sb-account-delete-title {
+    font-size: 32px;
+
+    transform: translateX(-1px);
+}
+
+.sb-account-delete-wave {
+    font-size: 23px;
+}
+
+.sb-account-delete-subtitle {
+    max-width: 310px;
+
+    font-size: 10px;
+
+    line-height: 1.7;
+}
+
+.sb-account-delete-field {
+    margin-bottom: 17px;
+}
+
+.sb-account-delete-field .sb-input-group {
+    min-height: 50px;
+
+    border-radius: 13px;
+}
+
+.sb-account-delete-field .sb-login-input {
+    height: 48px;
+
+    font-size: 11px;
+}
+
+.sb-account-delete-field .sb-input-icon {
+    width: 47px;
+    height: 50px;
+
+    flex-basis: 47px;
+
+    font-size: 16px;
+}
+
+.sb-account-delete-field .sb-pass-toggle {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+
+    font-size: 15px;
+}
+
+.sb-account-delete-field .sb-otp-group {
+    min-height: 52px;
+}
+
+.sb-account-delete-field .sb-otp-input {
+    height: 50px;
+
+    font-size: 13px;
+}
+
+.sb-account-delete-field .sb-input-status {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+
+    font-size: 14px;
+}
+
+.sb-verify-resend {
+    padding: 9px 10px;
+}
+
+.sb-verify-resend-icon {
+    width: 31px;
+    height: 31px;
+
+    flex-basis: 31px;
+
+    font-size: 13px;
+}
+
+.sb-account-delete-submit {
+    min-height: 51px;
+
+    border-radius: 13px;
+}
+
+.sb-account-delete-submit .sb-signin-icon {
+    width: 34px;
+    height: 34px;
+
+    font-size: 15px;
+}
+
+.sb-account-delete-submit .sb-signin-text {
+    font-size: 10px;
+}
+
+.sb-account-delete-submit .sb-signin-arrow {
+    width: 39px;
+    height: 39px;
+
+    font-size: 12px;
+}
+
+.sb-account-delete-security {
+    margin-top: 17px;
+
+    padding: 10px;
+}
+
+.sb-account-delete-security-icon {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+
+    font-size: 14px;
+}
+
+.sb-account-delete-bottom-mark {
+    margin-top: 17px;
+}
+
+
+}
+
+/* =========================================================
+RESPONSIVE — 390px
+========================================================= */
+
+@media (max-width: 390px) {
+
+
+.sb-account-delete-verify-premium {
+    width: calc(100% - 16px);
+
+    padding: 27px 18px 20px;
+
+    border-radius: 18px;
+}
+
+.sb-account-delete-card-line {
+    left: 18px;
+    right: 18px;
+}
+
+.sb-account-delete-title {
+    font-size: 29px;
+}
+
+.sb-account-delete-kicker {
+    font-size: 8px;
+}
+
+.sb-account-delete-subtitle {
+    font-size: 9px;
+}
+
+.sb-field-label {
+    font-size: 10px;
+}
+
+.sb-field-label > span {
+    font-size: 7px;
+}
+
+.sb-account-delete-field .sb-input-icon {
+    width: 44px;
+    flex-basis: 44px;
+
+    font-size: 15px;
+}
+
+.sb-account-delete-field .sb-login-input {
+    font-size: 10px;
+}
+
+.sb-account-delete-field .sb-otp-input {
+    font-size: 12px;
+}
+
+.sb-account-delete-field .sb-input-status {
+    width: 37px;
+    height: 37px;
+
+    flex-basis: 37px;
+
+    font-size: 13px;
+}
+
+.sb-verify-resend-content {
+    font-size: 8px;
+}
+
+.sb-verify-resend-link {
+    font-size: 8px;
+}
+
+.sb-account-delete-submit .sb-signin-text {
+    font-size: 10px;
+}
+
+.sb-account-delete-security-content strong {
+    font-size: 8px;
+}
+
+.sb-account-delete-security-content span {
+    font-size: 7px;
+}
+
+
+}
+
+/* =========================================================
+REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+
+.sb-account-delete-wave,
+.sb-account-delete-orb-one,
+.sb-account-delete-orb-two,
+.auth-delete-wrapper::before {
+    animation: none !important;
+}
+
+.sb-account-delete-field .sb-input-group,
+.sb-account-delete-submit,
+.sb-account-delete-submit .sb-signin-arrow,
+.sb-account-delete-field .sb-pass-toggle,
+.sb-verify-resend-link {
+    transition: none !important;
+}
+
+
+}

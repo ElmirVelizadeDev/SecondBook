@@ -18,7 +18,7 @@
 
             <div class="quotation-divider"></div>
 
-            <blockquote data-aos="fade-up">
+            <blockquote>
 
                 <q>
                     The more that you read, the more things you will know.

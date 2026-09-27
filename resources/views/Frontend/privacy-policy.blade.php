@@ -111,7 +111,8 @@
 
             <div class="sb-privacy-card-grid">
 
-                <article class="sb-privacy-card">
+                <article class="sb-privacy-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'account']) }}#faqSearch">
 
                     <span class="sb-privacy-card-number">01</span>
 
@@ -130,7 +131,8 @@
                 </article>
 
 
-                <article class="sb-privacy-card">
+                <article class="sb-privacy-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'order']) }}#faqSearch">
 
                     <span class="sb-privacy-card-number">02</span>
 
@@ -148,7 +150,8 @@
                 </article>
 
 
-                <article class="sb-privacy-card">
+                <article class="sb-privacy-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'support']) }}#faqSearch">
 
                     <span class="sb-privacy-card-number">03</span>
 
@@ -167,7 +170,8 @@
                 </article>
 
 
-                <article class="sb-privacy-card">
+                <article class="sb-privacy-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'privacy']) }}#faqSearch">
 
                     <span class="sb-privacy-card-number">04</span>
 
@@ -430,7 +434,8 @@
 
             <div class="sb-privacy-card-grid">
 
-                <article class="sb-privacy-card">
+                <article class="sb-privacy-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'access']) }}#faqSearch">
 
                     <span class="sb-privacy-card-number">01</span>
 
@@ -448,7 +453,8 @@
                 </article>
 
 
-                <article class="sb-privacy-card">
+                <article class="sb-privacy-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'account']) }}#faqSearch">
 
                     <span class="sb-privacy-card-number">02</span>
 
@@ -466,7 +472,8 @@
                 </article>
 
 
-                <article class="sb-privacy-card">
+                <article class="sb-privacy-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'privacy']) }}#faqSearch">
 
                     <span class="sb-privacy-card-number">03</span>
 
@@ -484,7 +491,8 @@
                 </article>
 
 
-                <article class="sb-privacy-card">
+                <article class="sb-privacy-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'privacy']) }}#faqSearch">
 
                     <span class="sb-privacy-card-number">04</span>
 
@@ -593,3 +601,47 @@
 </main>
 
 @endsection
+
+
+@push('js')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const privacyCards = document.querySelectorAll(
+        '.sb-privacy-card[data-faq-url]'
+    );
+
+    privacyCards.forEach(function (card) {
+
+        card.addEventListener('click', function () {
+
+            const url = card.dataset.faqUrl;
+
+            if (url) {
+                window.location.href = url;
+            }
+
+        });
+
+        card.addEventListener('keydown', function (event) {
+
+            if (event.key === 'Enter' || event.key === ' ') {
+
+                event.preventDefault();
+
+                const url = card.dataset.faqUrl;
+
+                if (url) {
+                    window.location.href = url;
+                }
+
+            }
+
+        });
+
+    });
+
+});
+</script>
+@endpush
+```

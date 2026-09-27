@@ -374,3 +374,32 @@
         display: none;
     }
 }
+
+/* =========================================================
+   QUOTATION — SCROLL REVEAL
+========================================================= */
+
+#quotation blockquote {
+    opacity: 0;
+    transform: translateY(35px);
+    transition:
+        opacity 0.85s ease,
+        transform 0.85s ease;
+}
+
+#quotation.is-visible blockquote {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #quotation blockquote {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+}

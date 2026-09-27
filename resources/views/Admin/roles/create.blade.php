@@ -90,7 +90,101 @@
 @endsection
 
 @push('js')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-<script src="{{ asset('admin/js/roles.js') }}"></script>
+    const checkboxes = document.querySelectorAll(
+        '[data-permission-checkbox]'
+    );
 
+    const selectAllButton = document.querySelector(
+        '[data-select-all-permissions]'
+    );
+
+    const groupButtons = document.querySelectorAll(
+        '[data-select-group]'
+    );
+
+    if (!checkboxes.length) {
+        return;
+    }
+
+    // Select all permissions
+    if (selectAllButton) {
+        selectAllButton.addEventListener('click', function () {
+
+            const allChecked = Array.from(checkboxes).every(
+                checkbox => checkbox.checked
+            );
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = !allChecked;
+            });
+
+            updateGroupButtons();
+        });
+    }
+
+    // Select all permissions in a group
+    groupButtons.forEach(function (button) {
+
+        button.addEventListener('click', function () {
+
+            const group = button.closest(
+                '[data-permission-group]'
+            );
+
+            if (!group) {
+                return;
+            }
+
+            const groupCheckboxes = group.querySelectorAll(
+                '[data-permission-checkbox]'
+            );
+
+            const allChecked = Array.from(groupCheckboxes).every(
+                checkbox => checkbox.checked
+            );
+
+            groupCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = !allChecked;
+            });
+
+            updateGroupButtons();
+        });
+    });
+
+    // Update group button text
+    function updateGroupButtons() {
+
+        document
+            .querySelectorAll('[data-permission-group]')
+            .forEach(function (group) {
+
+                const groupCheckboxes = group.querySelectorAll(
+                    '[data-permission-checkbox]'
+                );
+
+                const button = group.querySelector(
+                    '[data-select-group]'
+                );
+
+                if (!button || !groupCheckboxes.length) {
+                    return;
+                }
+
+                const allChecked = Array.from(groupCheckboxes).every(
+                    checkbox => checkbox.checked
+                );
+
+                button.textContent = allChecked
+                    ? 'Clear'
+                    : 'All';
+            });
+    }
+
+    updateGroupButtons();
+
+});
+</script>
 @endpush

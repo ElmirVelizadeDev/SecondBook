@@ -15,7 +15,6 @@ class HomeController extends Controller
             ->latest()
             ->get();
 
-
         /*
         |--------------------------------------------------------------------------
         | FEATURED BOOKS
@@ -28,7 +27,6 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-
         /*
         |--------------------------------------------------------------------------
         | BASE BOOK QUERY
@@ -40,7 +38,6 @@ class HomeController extends Controller
                 ->where('status', 'approved');
         };
 
-
         /*
         |--------------------------------------------------------------------------
         | BEST SELLING
@@ -51,8 +48,8 @@ class HomeController extends Controller
             ->leftJoin(
                 DB::raw(
                     '(SELECT book_id, SUM(quantity) as total_sold
-                      FROM orders
-                      GROUP BY book_id) as sales'
+                     FROM orders
+                     GROUP BY book_id) as sales'
                 ),
                 'books.id',
                 '=',
@@ -62,7 +59,6 @@ class HomeController extends Controller
             ->orderByDesc(DB::raw('COALESCE(sales.total_sold, 0)'))
             ->take(8)
             ->get();
-
 
         /*
         |--------------------------------------------------------------------------
@@ -75,7 +71,6 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-
         /*
         |--------------------------------------------------------------------------
         | NEW ARRIVALS
@@ -86,7 +81,6 @@ class HomeController extends Controller
             ->latest('created_at')
             ->take(8)
             ->get();
-
 
         /*
         |--------------------------------------------------------------------------
@@ -99,7 +93,6 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-
         /*
         |--------------------------------------------------------------------------
         | MOST LOVED
@@ -110,7 +103,6 @@ class HomeController extends Controller
             ->latest()
             ->take(8)
             ->get();
-
 
         /*
         |--------------------------------------------------------------------------
@@ -123,21 +115,31 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-
         /*
         |--------------------------------------------------------------------------
         | SPECIAL OFFERS
         |--------------------------------------------------------------------------
-        | Currently showing the cheapest approved books.
+        | Only books with an active real discount are shown.
         |--------------------------------------------------------------------------
         */
 
+        $now = now();
+
         $specialOffers = Book::with('author')
             ->where('status', 'approved')
-            ->orderBy('price', 'asc')
+            ->where('discount_type', '!=', 'none')
+            ->where('discount_value', '>', 0)
+            ->where(function ($query) use ($now) {
+                $query->whereNull('discount_start_at')
+                    ->orWhere('discount_start_at', '<=', $now);
+            })
+            ->where(function ($query) use ($now) {
+                $query->whereNull('discount_end_at')
+                    ->orWhere('discount_end_at', '>=', $now);
+            })
+            ->latest()
             ->take(5)
             ->get();
-
 
         /*
         |--------------------------------------------------------------------------

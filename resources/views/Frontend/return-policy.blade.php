@@ -429,7 +429,8 @@
 
             <div class="sb-return-faq-grid">
 
-                <article class="sb-return-faq-card">
+                <article class="sb-return-faq-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'refund']) }}#faqSearch">
 
                     <div class="sb-return-faq-icon">
                         <i class="bi bi-clock-history"></i>
@@ -451,7 +452,8 @@
                 </article>
 
 
-                <article class="sb-return-faq-card">
+                <article class="sb-return-faq-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'photos']) }}#faqSearch">
 
                     <div class="sb-return-faq-icon">
                         <i class="bi bi-camera"></i>
@@ -473,7 +475,8 @@
                 </article>
 
 
-                <article class="sb-return-faq-card">
+                <article class="sb-return-faq-card"
+                         data-faq-url="{{ route('frontend.faq', ['search' => 'return']) }}#faqSearch">
 
                     <div class="sb-return-faq-icon">
                         <i class="bi bi-person-check"></i>
@@ -495,7 +498,8 @@
                 </article>
 
 
-                <article class="sb-return-faq-card">
+                <article class="sb-return-faq-card"
+                         data-faq-url="{{ route('frontend.faq') }}">
 
                     <div class="sb-return-faq-icon">
                         <i class="bi bi-question-circle"></i>
@@ -586,3 +590,47 @@
 </main>
 
 @endsection
+
+
+@push('js')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const faqCards = document.querySelectorAll(
+        '.sb-return-faq-card[data-faq-url]'
+    );
+
+    faqCards.forEach(function (card) {
+
+        card.addEventListener('click', function () {
+
+            const url = card.dataset.faqUrl;
+
+            if (url) {
+                window.location.href = url;
+            }
+
+        });
+
+        card.addEventListener('keydown', function (event) {
+
+            if (event.key === 'Enter' || event.key === ' ') {
+
+                event.preventDefault();
+
+                const url = card.dataset.faqUrl;
+
+                if (url) {
+                    window.location.href = url;
+                }
+
+            }
+
+        });
+
+    });
+
+});
+</script>
+@endpush
+

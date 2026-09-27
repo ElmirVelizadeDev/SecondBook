@@ -19,7 +19,7 @@
 
                 <span class="footer-legal-divider"></span>
 
-                <a href="#">
+                <a href="{{ route('frontend.cookies') }}">
                     Cookies
                 </a>
             </nav>

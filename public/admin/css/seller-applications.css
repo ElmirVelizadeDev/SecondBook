@@ -620,58 +620,169 @@
     transform: translateY(-1px);
 }
 
-
 /* =========================================================
    PAGINATION
 ========================================================= */
 
 .seller-application-pagination {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.seller-application-pagination > nav {
+    width: 100%;
+}
+
+.seller-application-pagination > nav > div {
+    width: 100%;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
 
-    padding: 18px 20px;
+/* Showing 1 to 10 of X results */
+.seller-application-pagination > nav > div > div:first-child {
+    flex: 1;
+    min-width: 0;
+    color: #8a94a6;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+}
 
-    border-top: 1px solid #eef0f3;
+/* Pagination buttons */
+.seller-application-pagination > nav > div > div:last-child {
+    flex: 0 0 auto;
 }
 
 .seller-application-pagination .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
     margin: 0;
+    padding: 0;
 }
 
 .seller-application-pagination .page-link {
     min-width: 34px;
     height: 34px;
+    padding: 0 9px;
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    margin: 0 2px;
-
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e7ee;
     border-radius: 8px !important;
 
-    background: #ffffff;
-    color: #4b5563;
+    background: #fff;
+    color: #64748b;
 
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 650;
+    line-height: 1;
+
+    box-shadow: none;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
 
 .seller-application-pagination .page-link:hover {
-    background: #eff6ff;
-    border-color: #bfdbfe;
-
+    border-color: #bfd1f8;
+    background: #f5f8ff;
     color: #2563eb;
 }
 
 .seller-application-pagination .page-item.active .page-link {
-    background: #2563eb;
     border-color: #2563eb;
-
-    color: #ffffff;
+    background: #2563eb;
+    color: #fff;
 }
 
+.seller-application-pagination .page-item.disabled .page-link {
+    background: #f8fafc;
+    border-color: #e2e7ee;
+    color: #c0c7d2;
+    cursor: not-allowed;
+}
+
+.seller-application-pagination .page-link:focus {
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+.dark-mode .seller-application-pagination > nav > div > div:first-child,
+.dark-theme .seller-application-pagination > nav > div > div:first-child,
+[data-theme="dark"] .seller-application-pagination > nav > div > div:first-child {
+    color: #8d98aa;
+}
+
+.dark-mode .seller-application-pagination .page-link,
+.dark-theme .seller-application-pagination .page-link,
+[data-theme="dark"] .seller-application-pagination .page-link {
+    border-color: #303746;
+    background: #1b202a;
+    color: #9aa5b7;
+}
+
+.dark-mode .seller-application-pagination .page-link:hover,
+.dark-theme .seller-application-pagination .page-link:hover,
+[data-theme="dark"] .seller-application-pagination .page-link:hover {
+    border-color: #40516d;
+    background: #202735;
+    color: #9bbcff;
+}
+
+.dark-mode .seller-application-pagination .page-item.active .page-link,
+.dark-theme .seller-application-pagination .page-item.active .page-link,
+[data-theme="dark"] .seller-application-pagination .page-item.active .page-link {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #fff;
+}
+
+.dark-mode .seller-application-pagination .page-item.disabled .page-link,
+.dark-theme .seller-application-pagination .page-item.disabled .page-link,
+[data-theme="dark"] .seller-application-pagination .page-item.disabled .page-link {
+    background: #151922;
+    border-color: #303746;
+    color: #4f596b;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .seller-application-pagination > nav > div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .seller-application-pagination > nav > div > div:first-child {
+        width: 100%;
+    }
+
+    .seller-application-pagination > nav > div > div:last-child {
+        width: 100%;
+    }
+
+    .seller-application-pagination .pagination {
+        justify-content: flex-start;
+    }
+}
 
 /* =========================================================
    EMPTY STATE

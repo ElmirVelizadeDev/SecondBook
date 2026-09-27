@@ -18,7 +18,7 @@
 
     @include('Layout.Frontend.quotation')
 
-    @include('Layout.Frontend.latest-blog')
+    @include('Layout.Frontend.latest-articles')
 
     @include('Layout.Frontend.subscribe')
 

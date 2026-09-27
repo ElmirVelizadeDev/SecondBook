@@ -414,3 +414,53 @@
         bottom: 20px;
     }
 }
+
+ /* =========================================================
+    WHY CHOOSE — SCROLL REVEAL
+ ========================================================= */
+
+#why-choose .why-choose-header,
+#why-choose .why-card {
+    opacity: 0;
+    transform: translateY(35px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+#why-choose.is-visible .why-choose-header,
+#why-choose.is-visible .why-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger cards */
+
+#why-choose.is-visible .why-card:nth-child(1) {
+    transition-delay: 0.05s;
+}
+
+#why-choose.is-visible .why-card:nth-child(2) {
+    transition-delay: 0.12s;
+}
+
+#why-choose.is-visible .why-card:nth-child(3) {
+    transition-delay: 0.19s;
+}
+
+#why-choose.is-visible .why-card:nth-child(4) {
+    transition-delay: 0.26s;
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #why-choose .why-choose-header,
+    #why-choose .why-card {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+}

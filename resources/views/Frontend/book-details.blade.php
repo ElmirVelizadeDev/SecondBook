@@ -39,7 +39,6 @@
             $coverUrl = asset(
                 'storage/' . ltrim($cover, '/')
             );
-
         }
 
     } else {
@@ -47,7 +46,6 @@
         $coverUrl = asset(
             'frontend-assets/images/book-placeholder.jpg'
         );
-
     }
 
 
@@ -90,6 +88,17 @@
 
     /*
     |--------------------------------------------------------------------------
+    | Pricing
+    |--------------------------------------------------------------------------
+    */
+
+    $originalPrice = (float) $book->price;
+
+    $discountedPrice = (float) $book->discounted_price;
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Wishlist
     |--------------------------------------------------------------------------
     */
@@ -102,7 +111,6 @@
             ->wishlists()
             ->where('book_id', $book->id)
             ->exists();
-
     }
 
 @endphp
@@ -199,6 +207,22 @@
                                 class="book-cover-image"
                             >
 
+
+                            {{-- DISCOUNT BADGE --}}
+
+                            @if($book->is_discount_active)
+
+                                <span class="book-details-discount">
+
+                                    {{ $book->discount_label }}
+
+                                </span>
+
+                            @endif
+
+
+                            {{-- CONDITION --}}
+
                             <div
                                 class="book-cover-condition {{ $conditionClass }}"
                             >
@@ -250,7 +274,9 @@
                     {{-- TITLE --}}
 
                     <h1 class="book-title">
+
                         {{ $book->title }}
+
                     </h1>
 
 
@@ -259,7 +285,9 @@
                     <div class="book-author">
 
                         <span class="author-icon">
+
                             <i class="bi bi-person"></i>
+
                         </span>
 
                         <span class="author-label">
@@ -314,9 +342,32 @@
                                     Current price
                                 </span>
 
-                                <strong class="book-price">
-                                    ${{ number_format($book->price, 2) }}
-                                </strong>
+
+                                @if($book->is_discount_active)
+
+                                    <div class="book-details-price-wrap">
+
+                                        <span class="book-details-old-price">
+                                            ${{ number_format($originalPrice, 2) }}
+                                        </span>
+
+                                        <strong class="book-price book-details-discounted-price">
+                                            ${{ number_format($discountedPrice, 2) }}
+                                        </strong>
+
+                                    </div>
+
+                                    <span class="book-details-discount-label">
+                                        {{ $book->discount_label }}
+                                    </span>
+
+                                @else
+
+                                    <strong class="book-price">
+                                        ${{ number_format($originalPrice, 2) }}
+                                    </strong>
+
+                                @endif
 
                             </div>
 
@@ -345,7 +396,12 @@
                                 <div>
 
                                     <strong>
-                                        {{ $stock > 0 ? 'In stock' : 'Out of stock' }}
+
+                                        {{ $stock > 0
+                                            ? 'In stock'
+                                            : 'Out of stock'
+                                        }}
+
                                     </strong>
 
 
@@ -355,7 +411,10 @@
 
                                             {{ $stock }}
 
-                                            {{ $stock === 1 ? 'copy' : 'copies' }}
+                                            {{ $stock === 1
+                                                ? 'copy'
+                                                : 'copies'
+                                            }}
 
                                             available
 
@@ -386,7 +445,8 @@
                                 <form
                                     action="{{ $isWishlisted
                                         ? route('frontend.wishlist.remove', $book->id)
-                                        : route('frontend.wishlist.add', $book->id) }}"
+                                        : route('frontend.wishlist.add', $book->id)
+                                    }}"
                                     method="POST"
                                     class="book-details-wishlist-form"
                                     data-book-wishlist
@@ -410,17 +470,22 @@
                                         data-wishlist-button
                                         title="{{ $isWishlisted
                                             ? 'Remove from wishlist'
-                                            : 'Add to wishlist' }}"
+                                            : 'Add to wishlist'
+                                        }}"
                                     >
 
                                         <i
                                             class="bi {{ $isWishlisted
                                                 ? 'bi-heart-fill'
-                                                : 'bi-heart' }}"
+                                                : 'bi-heart'
+                                            }}"
                                         ></i>
 
                                         <span>
-                                            {{ $isWishlisted ? 'Saved' : 'Wishlist' }}
+                                            {{ $isWishlisted
+                                                ? 'Saved'
+                                                : 'Wishlist'
+                                            }}
                                         </span>
 
                                     </button>
@@ -520,7 +585,9 @@
                         <div class="quick-info-item">
 
                             <span class="quick-info-icon">
+
                                 <i class="bi bi-upc-scan"></i>
+
                             </span>
 
                             <div>
@@ -543,7 +610,9 @@
                         <div class="quick-info-item">
 
                             <span class="quick-info-icon">
+
                                 <i class="bi bi-building"></i>
+
                             </span>
 
                             <div>
@@ -566,7 +635,9 @@
                         <div class="quick-info-item">
 
                             <span class="quick-info-icon">
+
                                 <i class="bi bi-calendar3"></i>
+
                             </span>
 
                             <div>
@@ -589,7 +660,9 @@
                         <div class="quick-info-item">
 
                             <span class="quick-info-icon">
+
                                 <i class="bi bi-file-earmark-text"></i>
+
                             </span>
 
                             <div>
@@ -612,7 +685,9 @@
                         <div class="quick-info-item">
 
                             <span class="quick-info-icon">
+
                                 <i class="bi bi-translate"></i>
+
                             </span>
 
                             <div>
@@ -635,7 +710,9 @@
                         <div class="quick-info-item">
 
                             <span class="quick-info-icon">
+
                                 <i class="bi bi-stars"></i>
+
                             </span>
 
                             <div>
@@ -668,7 +745,9 @@
                 <div class="seller-left">
 
                     <div class="seller-avatar">
+
                         <i class="bi bi-shop"></i>
+
                     </div>
 
                     <div class="seller-info">
@@ -761,6 +840,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const icon =
                     button.querySelector('i');
 
+
                 const text =
                     button.querySelector('span');
 
@@ -769,6 +849,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     icon
                         ? icon.className
                         : '';
+
 
                 const originalText =
                     text
@@ -880,7 +961,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
 
-
                     /* =================================================
                        RESET BUTTON
                     ================================================== */
@@ -922,7 +1002,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         'SecondBook Cart Error:',
                         error
                     );
-
 
 
                     button.disabled =
@@ -970,19 +1049,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     ? '99+'
                     : numericCount;
 
-            /*
-             * CSS badge sistemini pozmamaq üçün
-             * inline display istifadə etmirik.
-             */
 
             cartCount.classList.add(
                 'is-visible'
             );
 
+
         } else {
 
             cartCount.textContent =
                 '0';
+
 
             cartCount.classList.remove(
                 'is-visible'
@@ -1120,8 +1197,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 'div'
             );
 
+
         div.textContent =
             value;
+
 
         return div.innerHTML;
 
@@ -1166,15 +1245,18 @@ document.addEventListener('DOMContentLoaded', function () {
                         '[data-wishlist-button]'
                     );
 
+
                 const icon =
                     button
                         ? button.querySelector('i')
                         : null;
 
+
                 const text =
                     button
                         ? button.querySelector('span')
                         : null;
+
 
                 const token =
                     form.querySelector(
@@ -1221,6 +1303,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.disabled =
                     true;
 
+
                 button.classList.add(
                     'loading'
                 );
@@ -1232,7 +1315,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         await fetch(
                             url,
                             {
-
                                 method:
                                     method,
 
@@ -1251,7 +1333,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                                 credentials:
                                     'same-origin'
-
                             }
                         );
 
@@ -1303,6 +1384,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         form.dataset.action =
                             'add';
 
+
                         form.action =
                             form.dataset.addUrl;
 
@@ -1330,6 +1412,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             'bi-heart-fill'
                         );
 
+
                         icon.classList.add(
                             'bi-heart'
                         );
@@ -1353,6 +1436,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         form.dataset.action =
                             'remove';
+
 
                         form.action =
                             form.dataset.removeUrl;
@@ -1380,6 +1464,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         icon.classList.remove(
                             'bi-heart'
                         );
+
 
                         icon.classList.add(
                             'bi-heart-fill'
@@ -1427,3 +1512,4 @@ document.addEventListener('DOMContentLoaded', function () {
 @endpush
 
 @endsection
+

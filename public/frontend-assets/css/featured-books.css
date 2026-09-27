@@ -392,6 +392,103 @@
 }
 
 /* =========================================================
+DISCOUNT BADGE
+========================================================= */
+
+#featured-books .featured-book-discount {
+position: absolute;
+top: 15px;
+right: 15px;
+z-index: 4;
+display: inline-flex;
+align-items: center;
+min-height: 28px;
+padding: 6px 10px;
+border: 1px solid rgba(139, 94, 60, 0.28);
+border-radius: 20px;
+background: rgba(255, 250, 246, 0.94);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+color: #8b5e3c;
+font-family: var(--body-font);
+font-size: 9px;
+font-weight: 700;
+line-height: 1.2;
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+
+/* =========================================================
+PRICE WRAPPER
+========================================================= */
+
+#featured-books .featured-book-price-wrap {
+display: flex;
+align-items: baseline;
+flex-wrap: wrap;
+gap: 7px;
+min-width: 0;
+}
+
+/* =========================================================
+ORIGINAL / OLD PRICE
+========================================================= */
+
+#featured-books .featured-book-old-price {
+color: #a49b94;
+font-family: var(--body-font);
+font-size: 12px;
+font-weight: 500;
+line-height: 1.3;
+text-decoration: line-through;
+white-space: nowrap;
+}
+
+/* =========================================================
+DISCOUNTED PRICE
+========================================================= */
+
+#featured-books .featured-book-discounted-price {
+color: #8b5e3c;
+font-family: var(--body-font);
+font-size: 17px;
+font-weight: 700;
+line-height: 1.3;
+white-space: nowrap;
+}
+
+/* =========================================================
+MOBILE DISCOUNT
+========================================================= */
+
+@media screen and (max-width: 575px) {
+
+
+#featured-books .featured-book-discount {
+    top: 12px;
+    right: 12px;
+    min-height: 26px;
+    padding: 5px 9px;
+    font-size: 8px;
+}
+
+#featured-books .featured-book-price-wrap {
+    gap: 6px;
+}
+
+#featured-books .featured-book-old-price {
+    font-size: 11px;
+}
+
+#featured-books .featured-book-discounted-price {
+    font-size: 16px;
+}
+
+
+}
+
+
+/* =========================================================
    PRICE + ARROW
    ========================================================= */
 
@@ -660,4 +757,21 @@
     #featured-books .featured-book-price {
         font-size: 16px;
     }
+}
+
+/* =========================================================
+   FEATURED BOOKS — SCROLL REVEAL
+   ========================================================= */
+
+#featured-books .featured-books-list {
+    opacity: 0;
+    transform: translateY(35px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+#featured-books .featured-books-list.is-visible {
+    opacity: 1;
+    transform: translateY(0);
 }

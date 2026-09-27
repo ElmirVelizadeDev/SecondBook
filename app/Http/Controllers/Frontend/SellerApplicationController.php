@@ -26,6 +26,30 @@ class SellerApplicationController extends Controller
         $user = Auth::user();
 
         /*
+         * User is not authenticated.
+         */
+        if (!$user) {
+            return redirect()
+                ->route('frontend.auth.login')
+                ->with(
+                    'info',
+                    'Please sign in to become a seller.'
+                );
+        }
+
+        /*
+         * User email is not verified.
+         */
+        if (is_null($user->email_verified_at)) {
+            return redirect()
+                ->route('frontend.auth.email.verify')
+                ->with(
+                    'info',
+                    'Please verify your email address before becoming a seller.'
+                );
+        }
+
+        /*
          * User is already a seller.
          */
         if ($user->isSeller()) {
@@ -58,6 +82,30 @@ class SellerApplicationController extends Controller
         $user = Auth::user();
 
         /*
+         * User is not authenticated.
+         */
+        if (!$user) {
+            return redirect()
+                ->route('frontend.auth.login')
+                ->with(
+                    'info',
+                    'Please sign in to become a seller.'
+                );
+        }
+
+        /*
+         * User email is not verified.
+         */
+        if (is_null($user->email_verified_at)) {
+            return redirect()
+                ->route('frontend.auth.email.verify')
+                ->with(
+                    'info',
+                    'Please verify your email address before becoming a seller.'
+                );
+        }
+
+        /*
          * User is already a seller.
          */
         if ($user->isSeller()) {
@@ -88,7 +136,6 @@ class SellerApplicationController extends Controller
          * Validate seller application.
          */
         $validated = $request->validate([
-
             /*
              * Store name
              * Required
@@ -135,7 +182,6 @@ class SellerApplicationController extends Controller
                 'max:255',
             ],
         ], [
-
             /*
              * Custom validation messages.
              */
@@ -202,3 +248,4 @@ class SellerApplicationController extends Controller
             );
     }
 }
+

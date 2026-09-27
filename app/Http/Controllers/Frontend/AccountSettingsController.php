@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Otp;
+use App\Models\Setting;
 use App\Models\UserSetting;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Throwable;
 
 class AccountSettingsController extends Controller
 {
@@ -39,6 +43,7 @@ class AccountSettingsController extends Controller
             compact('user', 'settings')
         );
     }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -173,99 +178,214 @@ class AccountSettingsController extends Controller
         );
     }
 
+
     /*
     |--------------------------------------------------------------------------
     | Update Password
     |--------------------------------------------------------------------------
+    |
+    | Current password yoxlanılır.
+    | Sonra email-ə OTP göndərilir.
+    | Yeni password Verify Code səhifəsində daxil edilir.
+    |
     */
 
     public function updatePassword(
-    Request $request
-): RedirectResponse|JsonResponse {
-    $validator = Validator::make(
-        $request->all(),
-        [
-            'current_password' => [
-                'required',
-                'current_password',
-            ],
+        Request $request
+    ): RedirectResponse|JsonResponse {
+        /*
+        |--------------------------------------------------------------------------
+        | Validation
+        |--------------------------------------------------------------------------
+        |
+        | Burada artıq yalnız Current Password lazımdır.
+        |
+        */
 
-            'password' => [
-                'required',
-                'string',
-                'confirmed',
-                'different:current_password',
-                'min:8',
-                'max:128',
-                'regex:/[a-z]/',
-                'regex:/[0-9]/',
-            ],
-        ],
-        [
-            'current_password.required' =>
-                'Current password is required.',
-
-            'current_password.current_password' =>
-                'The current password is incorrect.',
-
-            'password.required' =>
-                'New password is required.',
-
-            'password.min' =>
-                'Password must be at least 8 characters.',
-
-            'password.max' =>
-                'Password must not exceed 128 characters.',
-
-            'password.confirmed' =>
-                'Password confirmation does not match.',
-
-            'password.different' =>
-                'New password must be different from your current password.',
-
-            'password.regex' =>
-                'Password must contain at least one lowercase letter and one number.',
-        ]
-    );
-
-    if ($validator->fails()) {
-        if ($request->expectsJson()) {
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => $validator->errors()->first(),
-                    'errors' => $validator->errors(),
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'current_password' => [
+                    'required',
+                    'current_password',
                 ],
-                422
-            );
+            ],
+            [
+                'current_password.required' =>
+                    'Current password is required.',
+
+                'current_password.current_password' =>
+                    'The current password is incorrect.',
+            ]
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validation Error
+        |--------------------------------------------------------------------------
+        */
+
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => $validator->errors()->first(),
+                        'errors' => $validator->errors(),
+                    ],
+                    422
+                );
+            }
+
+            return back()
+                ->withErrors(
+                    $validator,
+                    'passwordUpdate'
+                )
+                ->withInput();
         }
 
-        return back()
-            ->withErrors(
-                $validator,
-                'passwordUpdate'
-            )
-            ->withInput();
-    }
+        /*
+        |--------------------------------------------------------------------------
+        | Current User
+        |--------------------------------------------------------------------------
+        */
 
-    $user = Auth::user();
+        $user = Auth::user();
 
-    $user->update([
-        'password' => Hash::make(
-            $request->password
-        ),
-    ]);
+        $email = strtolower(
+            trim($user->email)
+        );
 
-    if ($request->expectsJson()) {
-        return response()->json([
-            'success' => true,
-            'message' => 'Password updated successfully.',
+        /*
+        |--------------------------------------------------------------------------
+        | Generate OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp = random_int(
+            100000,
+            999999
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store Password Change OTP
+        |--------------------------------------------------------------------------
+        */
+
+        Otp::updateOrCreate(
+            [
+                'email' => $email,
+                'purpose' => 'password_change',
+            ],
+            [
+                'otp_code' => $otp,
+                'expires_at' => Carbon::now()->addMinutes(10),
+            ]
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store Sensitive Action
+        |--------------------------------------------------------------------------
+        |
+        | Yeni password burada saxlanılmır.
+        | User onu Verify Code səhifəsində daxil edəcək.
+        |
+        */
+
+        session([
+            'sensitive_action' => 'password_change',
+            'sensitive_action_email' => $email,
         ]);
-    }
 
-    return back()->with(
-        'success',
-        'Password updated successfully.'
-    );
+        /*
+        |--------------------------------------------------------------------------
+        | Send OTP Email
+        |--------------------------------------------------------------------------
+        */
+
+        try {
+            Mail::raw(
+                "Your SecondBook password change verification code is: {$otp}",
+                function ($message) use ($user) {
+                    $message
+                        ->to($user->email)
+                        ->subject(
+                            'SecondBook Password Change Verification'
+                        );
+                }
+            );
+        } catch (Throwable $e) {
+            report($e);
+
+            Otp::where(
+                'email',
+                $email
+            )
+                ->where(
+                    'purpose',
+                    'password_change'
+                )
+                ->delete();
+
+            session()->forget([
+                'sensitive_action',
+                'sensitive_action_email',
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' =>
+                            'Unable to send the verification code. Please try again.',
+                    ],
+                    500
+                );
+            }
+
+            return back()
+                ->withErrors([
+                    'current_password' =>
+                        'Unable to send the verification code. Please try again.',
+                ])
+                ->withInput();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX Success
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' =>
+                    'Verification code sent successfully. Please check your email.',
+                'redirect' =>
+                    route(
+                        'frontend.auth.password.verify'
+                    ),
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Normal Request Success
+        |--------------------------------------------------------------------------
+        */
+
+        return redirect()
+            ->route(
+                'frontend.auth.password.verify'
+            )
+            ->with(
+                'status',
+                'Please enter the verification code sent to your email.'
+            );
+    }
 }
-}
+

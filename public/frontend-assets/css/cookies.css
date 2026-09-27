@@ -1,0 +1,960 @@
+/* =========================================================
+   SecondBook - Cookie Policy
+   Premium Light Design
+   ========================================================= */
+
+.sb-cookies-page {
+    position: relative;
+    padding: 95px 0 110px;
+    background: #fbf8f5;
+    overflow: hidden;
+}
+
+.sb-cookies-page::before {
+    content: "";
+    position: absolute;
+    top: -180px;
+    left: -180px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: rgba(139, 94, 60, 0.035);
+    pointer-events: none;
+}
+
+.sb-cookies-page::after {
+    content: "";
+    position: absolute;
+    right: -180px;
+    bottom: 220px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: rgba(139, 94, 60, 0.025);
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.sb-cookies-hero {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto 58px;
+    text-align: center;
+}
+
+.sb-cookies-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    color: #a07859;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+}
+
+.sb-cookies-eyebrow i {
+    font-size: 13px;
+}
+
+.sb-cookies-eyebrow-line {
+    width: 28px;
+    height: 1px;
+    background: #d9c5b4;
+}
+
+.sb-cookies-hero h1 {
+    margin: 18px 0 15px;
+    color: #29231f;
+    font-size: clamp(42px, 5vw, 62px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -2.5px;
+}
+
+.sb-cookies-hero h1 em {
+    color: #8b5e3c;
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.sb-cookies-hero > p {
+    max-width: 590px;
+    margin: 0 auto;
+    color: #877b72;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.sb-cookies-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 23px;
+    color: #9a8d83;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.sb-cookies-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sb-cookies-meta i {
+    color: #8b5e3c;
+    font-size: 11px;
+}
+
+.sb-cookies-meta-divider {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #cdb9a8;
+}
+
+
+/* =========================================================
+   INTRO / FEATURE BOX
+   ========================================================= */
+
+.sb-cookies-intro {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    max-width: 950px;
+    margin: 0 auto 35px;
+    padding: 25px 28px;
+    border: 1px solid #e7ddd5;
+    border-radius: 18px;
+    background:
+        linear-gradient(
+            135deg,
+            #fffdfa 0%,
+            #f8f0e9 100%
+        );
+    box-shadow:
+        0 15px 40px rgba(53, 39, 29, 0.045);
+}
+
+.sb-cookies-intro-icon {
+    width: 55px;
+    height: 55px;
+    flex: 0 0 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: #8b5e3c;
+    color: #fff;
+    font-size: 21px;
+    box-shadow: 0 10px 22px rgba(139, 94, 60, 0.18);
+}
+
+.sb-cookies-intro-label,
+.sb-cookies-section-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #a07859;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.sb-cookies-intro h2 {
+    margin: 0 0 5px;
+    color: #302923;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.sb-cookies-intro p {
+    max-width: 760px;
+    margin: 0;
+    color: #8c8178;
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+.sb-cookies-secondary-text {
+    margin-top: 8px !important;
+}
+
+
+/* =========================================================
+   GENERAL SECTION
+   ========================================================= */
+
+.sb-cookies-section {
+    position: relative;
+    z-index: 1;
+    max-width: 950px;
+    margin: 0 auto 58px;
+}
+
+.sb-cookies-section-heading {
+    max-width: 650px;
+    margin-bottom: 28px;
+}
+
+.sb-cookies-section-heading h2,
+.sb-cookies-types-heading h2 {
+    margin: 0 0 11px;
+    color: #302923;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.8px;
+}
+
+.sb-cookies-section-heading p,
+.sb-cookies-types-heading p {
+    max-width: 590px;
+    margin: 0;
+    color: #8b8179;
+    font-size: 10.5px;
+    line-height: 1.85;
+}
+
+
+/* =========================================================
+   CARD GRID
+   ========================================================= */
+
+.sb-cookies-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.sb-cookies-card {
+    position: relative;
+    min-height: 235px;
+    padding: 28px;
+    border: 1px solid #e9dfd7;
+    border-radius: 17px;
+    background: #fff;
+    box-shadow:
+        0 9px 30px rgba(53, 39, 29, 0.035);
+    overflow: hidden;
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.sb-cookies-card:hover {
+    border-color: #dbc8b8;
+    transform: translateY(-4px);
+    box-shadow:
+        0 17px 38px rgba(53, 39, 29, 0.07);
+}
+
+.sb-cookies-card-number {
+    position: absolute;
+    top: 20px;
+    right: 23px;
+    color: #eaded4;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.sb-cookies-card-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 17px;
+    border-radius: 11px;
+    background: #f6eee7;
+    color: #8b5e3c;
+    font-size: 16px;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+.sb-cookies-card:hover .sb-cookies-card-icon {
+    background: #8b5e3c;
+    color: #fff;
+}
+
+.sb-cookies-card h3 {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 10px;
+    color: #332c27;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.sb-cookies-card p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: #8b8179;
+    font-size: 10.5px;
+    line-height: 1.85;
+}
+
+
+/* =========================================================
+   USAGE FEATURE
+   ========================================================= */
+
+.sb-cookies-feature {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    max-width: 950px;
+    margin: 0 auto 58px;
+    padding: 28px;
+    border: 1px solid #e7ddd5;
+    border-radius: 18px;
+    background:
+        linear-gradient(
+            135deg,
+            #fffdfa 0%,
+            #f8f0e9 100%
+        );
+    box-shadow:
+        0 15px 40px rgba(53, 39, 29, 0.045);
+}
+
+.sb-cookies-feature-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: #8b5e3c;
+    color: #fff;
+    font-size: 18px;
+    box-shadow: 0 9px 20px rgba(139, 94, 60, 0.16);
+}
+
+.sb-cookies-feature-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.sb-cookies-feature-content h2 {
+    margin: 0 0 23px;
+    color: #302923;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.sb-cookies-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 28px;
+}
+
+.sb-cookies-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.sb-cookies-feature-number {
+    flex: 0 0 auto;
+    color: #c6aa93;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.8;
+}
+
+.sb-cookies-feature-item h3 {
+    margin: 0 0 5px;
+    color: #443932;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.sb-cookies-feature-item p {
+    margin: 0;
+    color: #8b8179;
+    font-size: 9.5px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   COOKIE TYPES
+   ========================================================= */
+
+.sb-cookies-types {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: start;
+    gap: 55px;
+}
+
+.sb-cookies-types-heading {
+    max-width: 430px;
+}
+
+.sb-cookies-types-list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.sb-cookies-types-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 19px;
+    border: 1px solid #e9dfd7;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow:
+        0 7px 24px rgba(53, 39, 29, 0.028);
+}
+
+.sb-cookies-types-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #f6eee7;
+    color: #8b5e3c;
+    font-size: 14px;
+}
+
+.sb-cookies-types-item h3 {
+    margin: 0 0 4px;
+    color: #443932;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.sb-cookies-types-item p {
+    margin: 0;
+    color: #8b8179;
+    font-size: 9.5px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   COOKIE MANAGEMENT
+   ========================================================= */
+
+.sb-cookies-management {
+    margin-bottom: 58px;
+}
+
+.sb-cookies-management p {
+    max-width: 800px;
+}
+
+
+/* =========================================================
+   POLICY NOTE
+   ========================================================= */
+
+.sb-cookies-note {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 950px;
+    margin: 0 auto 34px;
+    padding: 20px 23px;
+    border: 1px solid #e5d9d0;
+    border-radius: 15px;
+    background: #f8f1eb;
+}
+
+.sb-cookies-note-icon {
+    width: 39px;
+    height: 39px;
+    flex: 0 0 39px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #fff;
+    color: #8b5e3c;
+    font-size: 15px;
+}
+
+.sb-cookies-note h2 {
+    margin: 0 0 4px;
+    color: #443932;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.sb-cookies-note p {
+    max-width: 760px;
+    margin: 0;
+    color: #92857b;
+    font-size: 9px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   CONTACT CTA
+   ========================================================= */
+
+.sb-cookies-contact {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 24px 25px;
+    border: 1px solid #e3d5ca;
+    border-radius: 17px;
+    background:
+        linear-gradient(
+            135deg,
+            #fffdfa 0%,
+            #f7eee7 100%
+        );
+    box-shadow:
+        0 12px 32px rgba(53, 39, 29, 0.04);
+    overflow: hidden;
+}
+
+.sb-cookies-contact::after {
+    content: "";
+    position: absolute;
+    right: -80px;
+    top: -90px;
+    width: 210px;
+    height: 210px;
+    border-radius: 50%;
+    background: rgba(139, 94, 60, 0.035);
+    pointer-events: none;
+}
+
+.sb-cookies-contact-icon {
+    position: relative;
+    z-index: 1;
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #8b5e3c;
+    color: #fff;
+    font-size: 17px;
+    box-shadow: 0 8px 19px rgba(139, 94, 60, 0.16);
+}
+
+.sb-cookies-contact-content {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+}
+
+.sb-cookies-contact-content .sb-cookies-section-label {
+    margin-bottom: 4px;
+}
+
+.sb-cookies-contact-content h2 {
+    margin: 0 0 4px;
+    color: #3d332c;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.sb-cookies-contact-content p {
+    max-width: 650px;
+    margin: 0;
+    color: #8b8179;
+    font-size: 9.5px;
+    line-height: 1.7;
+}
+
+.sb-cookies-contact-btn {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 35px;
+    margin-left: auto;
+    padding: 0 14px;
+    flex: 0 0 auto;
+    border-radius: 8px;
+    background: #8b5e3c;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.sb-cookies-contact-btn i {
+    font-size: 10px;
+}
+
+.sb-cookies-contact-btn:hover {
+    background: #71482d;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   BOTTOM META
+   ========================================================= */
+
+.sb-cookies-bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 950px;
+    margin: 20px auto 0;
+    padding: 0 3px;
+    color: #a09288;
+    font-size: 8px;
+}
+
+.sb-cookies-bottom span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sb-cookies-bottom i {
+    color: #8b5e3c;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 991px) {
+
+    .sb-cookies-page {
+        padding: 75px 0 90px;
+    }
+
+    .sb-cookies-hero {
+        margin-bottom: 48px;
+    }
+
+    .sb-cookies-intro,
+    .sb-cookies-feature,
+    .sb-cookies-section,
+    .sb-cookies-note,
+    .sb-cookies-contact,
+    .sb-cookies-bottom {
+        max-width: 100%;
+    }
+
+    .sb-cookies-types {
+        gap: 35px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .sb-cookies-page {
+        padding: 60px 0 75px;
+    }
+
+    .sb-cookies-hero {
+        margin-bottom: 40px;
+    }
+
+    .sb-cookies-hero h1 {
+        font-size: 40px;
+        letter-spacing: -1.7px;
+    }
+
+    .sb-cookies-hero > p {
+        padding: 0 10px;
+        font-size: 12px;
+    }
+
+    .sb-cookies-meta {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .sb-cookies-meta-divider {
+        display: none;
+    }
+
+    .sb-cookies-intro {
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .sb-cookies-intro-icon {
+        width: 45px;
+        height: 45px;
+        flex-basis: 45px;
+        border-radius: 12px;
+        font-size: 17px;
+    }
+
+    .sb-cookies-intro h2 {
+        font-size: 14px;
+    }
+
+    .sb-cookies-intro p {
+        font-size: 9.5px;
+    }
+
+    .sb-cookies-section {
+        margin-bottom: 45px;
+    }
+
+    .sb-cookies-section-heading {
+        margin-bottom: 23px;
+    }
+
+    .sb-cookies-section-heading h2,
+    .sb-cookies-types-heading h2 {
+        font-size: 23px;
+        letter-spacing: -0.5px;
+    }
+
+    .sb-cookies-card-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .sb-cookies-card {
+        min-height: auto;
+        padding: 23px;
+    }
+
+    .sb-cookies-card-number {
+        top: 17px;
+        right: 18px;
+        font-size: 24px;
+    }
+
+    .sb-cookies-card h3 {
+        font-size: 13px;
+    }
+
+    .sb-cookies-card p {
+        font-size: 10px;
+        line-height: 1.8;
+    }
+
+    .sb-cookies-feature {
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 45px;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .sb-cookies-feature-icon {
+        width: 45px;
+        height: 45px;
+        flex-basis: 45px;
+        border-radius: 12px;
+        font-size: 17px;
+    }
+
+    .sb-cookies-feature-content h2 {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .sb-cookies-feature-grid {
+        grid-template-columns: 1fr;
+        gap: 17px;
+    }
+
+    .sb-cookies-feature-item {
+        gap: 10px;
+    }
+
+    .sb-cookies-feature-item h3 {
+        font-size: 10.5px;
+    }
+
+    .sb-cookies-feature-item p {
+        font-size: 9px;
+    }
+
+    .sb-cookies-types {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .sb-cookies-types-heading {
+        max-width: 100%;
+    }
+
+    .sb-cookies-types-list {
+        gap: 11px;
+    }
+
+    .sb-cookies-types-item {
+        padding: 17px;
+    }
+
+    .sb-cookies-note {
+        align-items: flex-start;
+        padding: 18px;
+        border-radius: 14px;
+    }
+
+    .sb-cookies-note h2 {
+        font-size: 11px;
+    }
+
+    .sb-cookies-note p {
+        font-size: 9px;
+    }
+
+    .sb-cookies-contact {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        padding: 19px;
+        border-radius: 15px;
+    }
+
+    .sb-cookies-contact-content {
+        flex: 1;
+    }
+
+    .sb-cookies-contact-content h2 {
+        font-size: 13px;
+    }
+
+    .sb-cookies-contact-btn {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 4px;
+    }
+
+    .sb-cookies-bottom {
+        align-items: center;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .sb-cookies-page {
+        padding-top: 50px;
+    }
+
+    .sb-cookies-eyebrow {
+        font-size: 8px;
+        letter-spacing: 2px;
+    }
+
+    .sb-cookies-eyebrow-line {
+        width: 20px;
+    }
+
+    .sb-cookies-hero h1 {
+        font-size: 34px;
+    }
+
+    .sb-cookies-hero > p {
+        font-size: 11.5px;
+    }
+
+    .sb-cookies-intro {
+        flex-direction: column;
+    }
+
+    .sb-cookies-intro-icon {
+        margin-bottom: 1px;
+    }
+
+    .sb-cookies-feature {
+        flex-direction: column;
+    }
+
+    .sb-cookies-feature-grid {
+        gap: 15px;
+    }
+
+    .sb-cookies-types-item {
+        gap: 12px;
+    }
+
+    .sb-cookies-types-icon {
+        width: 35px;
+        height: 35px;
+        flex-basis: 35px;
+        font-size: 13px;
+    }
+
+    .sb-cookies-note {
+        gap: 12px;
+    }
+
+    .sb-cookies-contact {
+        gap: 12px;
+    }
+
+    .sb-cookies-contact-icon {
+        width: 39px;
+        height: 39px;
+        flex-basis: 39px;
+    }
+
+    .sb-cookies-contact-content {
+        flex-basis: calc(100% - 51px);
+    }
+
+}
+

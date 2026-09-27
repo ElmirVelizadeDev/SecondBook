@@ -31,25 +31,35 @@
 
     </div>
 
+
     {{-- Form --}}
     <div class="dashboard-panel">
 
         @if ($errors->any())
+
             <div class="alert alert-danger mb-4">
+
                 <ul class="mb-0">
+
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
+
                 </ul>
+
             </div>
+
         @endif
+
 
         <form
             action="{{ route('admin.books.store') }}"
             method="POST"
             enctype="multipart/form-data"
         >
+
             @csrf
+
 
             <div class="row g-4">
 
@@ -80,6 +90,7 @@
 
                     </div>
 
+
                     {{-- ISBN --}}
                     <div class="mb-3">
 
@@ -103,6 +114,7 @@
 
                     </div>
 
+
                     <div class="row g-3">
 
                         {{-- Author --}}
@@ -116,6 +128,7 @@
                                 name="author_id"
                                 class="form-select @error('author_id') is-invalid @enderror"
                             >
+
                                 <option value="">
                                     Select author
                                 </option>
@@ -141,6 +154,7 @@
 
                         </div>
 
+
                         {{-- Category --}}
                         <div class="col-md-6">
 
@@ -152,6 +166,7 @@
                                 name="category_id"
                                 class="form-select @error('category_id') is-invalid @enderror"
                             >
+
                                 <option value="">
                                     Select category
                                 </option>
@@ -177,6 +192,7 @@
 
                         </div>
 
+
                         {{-- Publisher --}}
                         <div class="col-md-6">
 
@@ -188,6 +204,7 @@
                                 name="publisher_id"
                                 class="form-select @error('publisher_id') is-invalid @enderror"
                             >
+
                                 <option value="">
                                     Select publisher
                                 </option>
@@ -213,6 +230,7 @@
 
                         </div>
 
+
                         {{-- Condition --}}
                         <div class="col-md-6">
 
@@ -224,6 +242,7 @@
                                 name="condition"
                                 class="form-select"
                             >
+
                                 <option
                                     value="new"
                                     {{ old('condition') == 'new' ? 'selected' : '' }}
@@ -251,9 +270,11 @@
                                 >
                                     Fair
                                 </option>
+
                             </select>
 
                         </div>
+
 
                         {{-- Price --}}
                         <div class="col-md-4">
@@ -280,6 +301,7 @@
 
                         </div>
 
+
                         {{-- Stock --}}
                         <div class="col-md-4">
 
@@ -304,6 +326,7 @@
 
                         </div>
 
+
                         {{-- Language --}}
                         <div class="col-md-4">
 
@@ -320,6 +343,158 @@
                             >
 
                         </div>
+
+
+                        {{-- =====================================================
+                             DISCOUNT
+                        ====================================================== --}}
+                        <div class="col-12">
+
+                            <div class="border rounded-4 p-3">
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-semibold mb-1">
+                                        Discount
+                                    </label>
+
+                                    <p class="text-muted small mb-0">
+                                        Add a real discount to make this book appear in Special Offers.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="row g-3">
+
+                                    {{-- Discount Type --}}
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-semibold">
+                                            Discount Type
+                                        </label>
+
+                                        <select
+                                            name="discount_type"
+                                            id="discountType"
+                                            class="form-select @error('discount_type') is-invalid @enderror"
+                                        >
+
+                                            <option
+                                                value="none"
+                                                {{ old('discount_type', 'none') === 'none' ? 'selected' : '' }}
+                                            >
+                                                No Discount
+                                            </option>
+
+                                            <option
+                                                value="percentage"
+                                                {{ old('discount_type') === 'percentage' ? 'selected' : '' }}
+                                            >
+                                                Percentage (%)
+                                            </option>
+
+                                            <option
+                                                value="fixed"
+                                                {{ old('discount_type') === 'fixed' ? 'selected' : '' }}
+                                            >
+                                                Fixed Amount ($)
+                                            </option>
+
+                                        </select>
+
+                                        @error('discount_type')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                    </div>
+
+
+                                    {{-- Discount Value --}}
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-semibold">
+                                            Discount Value
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="discount_value"
+                                            id="discountValue"
+                                            class="form-control @error('discount_value') is-invalid @enderror"
+                                            step="0.01"
+                                            min="0"
+                                            value="{{ old('discount_value', 0) }}"
+                                            placeholder="0"
+                                        >
+
+                                        @error('discount_value')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                    </div>
+
+
+                                    {{-- Start Date --}}
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-semibold">
+                                            Start Date
+                                        </label>
+
+                                        <input
+                                            type="datetime-local"
+                                            name="discount_start_at"
+                                            class="form-control @error('discount_start_at') is-invalid @enderror"
+                                            value="{{ old('discount_start_at') }}"
+                                        >
+
+                                        @error('discount_start_at')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                    </div>
+
+
+                                    {{-- End Date --}}
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-semibold">
+                                            End Date
+                                        </label>
+
+                                        <input
+                                            type="datetime-local"
+                                            name="discount_end_at"
+                                            class="form-control @error('discount_end_at') is-invalid @enderror"
+                                            value="{{ old('discount_end_at') }}"
+                                        >
+
+                                        @error('discount_end_at')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                    </div>
+
+                                </div>
+
+
+                                <small class="text-muted d-block mt-3">
+                                    Leave Discount Type as "No Discount" if this book should not appear in Special Offers.
+                                </small>
+
+                            </div>
+
+                        </div>
+
 
                         {{-- Publication Year --}}
                         <div class="col-md-6">
@@ -346,6 +521,7 @@
 
                         </div>
 
+
                         {{-- Pages --}}
                         <div class="col-md-6">
 
@@ -370,6 +546,7 @@
 
                         </div>
 
+
                         {{-- Seller --}}
                         <div class="col-12">
 
@@ -381,6 +558,7 @@
                                 name="seller_id"
                                 class="form-select @error('seller_id') is-invalid @enderror"
                             >
+
                                 <option value="">
                                     Select seller
                                 </option>
@@ -408,6 +586,7 @@
 
                     </div>
 
+
                     {{-- Description --}}
                     <div class="mt-3">
 
@@ -426,6 +605,7 @@
 
                 </div>
 
+
                 {{-- RIGHT SIDE --}}
                 <div class="col-12 col-lg-4">
 
@@ -436,11 +616,13 @@
                             Cover Image
                         </label>
 
+
                         {{-- Preview --}}
                         <div
                             class="cover-preview mb-3"
                             id="coverPreview"
                         >
+
                             <div class="cover-preview-placeholder">
 
                                 <i class="bi bi-book"></i>
@@ -450,7 +632,9 @@
                                 </span>
 
                             </div>
+
                         </div>
+
 
                         <input
                             type="file"
@@ -471,6 +655,7 @@
                         @enderror
 
                     </div>
+
 
                     {{-- Status --}}
                     <div class="mb-3">
@@ -509,6 +694,7 @@
 
                     </div>
 
+
                     {{-- Actions --}}
                     <div class="d-grid gap-2 mt-4">
 
@@ -541,6 +727,7 @@
 
 @endsection
 
+
 @push('css')
 
 <style>
@@ -551,21 +738,33 @@
 
     .form-control,
     .form-select {
+
         border-radius: 14px;
+
         padding: 12px 16px;
+
         color: #111827 !important;
+
         background-color: #fff !important;
+
         border-color: #cbd5e1;
     }
 
+
     .form-control::placeholder {
+
         color: #64748b;
+
         opacity: 1;
     }
 
+
     .form-label {
+
         color: var(--bs-body-color);
+
         margin-bottom: 8px;
+
         font-weight: 600;
     }
 
@@ -575,40 +774,67 @@
     ========================================================= */
 
     .cover-preview {
+
         width: 100%;
+
         height: 300px;
+
         border: 1px solid #cbd5e1;
+
         border-radius: 14px;
+
         overflow: hidden;
+
         background: #f8fafc;
+
         display: flex;
+
         align-items: center;
+
         justify-content: center;
     }
 
+
     .cover-preview img {
+
         width: 100%;
+
         height: 100%;
+
         object-fit: contain;
+
         display: block;
     }
 
+
     .cover-preview-placeholder {
+
         display: flex;
+
         flex-direction: column;
+
         align-items: center;
+
         justify-content: center;
+
         gap: 10px;
+
         color: #64748b;
+
         text-align: center;
     }
 
+
     .cover-preview-placeholder i {
+
         font-size: 48px;
     }
 
+
     .cover-preview-placeholder span {
+
         font-size: 14px;
+
         font-weight: 500;
     }
 
@@ -618,22 +844,45 @@
     ========================================================= */
 
     input[type="file"].form-control {
+
         padding: 6px;
+
         background: #f8fafc;
+
         color: #0f172a;
+
         border-color: #cbd5e1;
     }
 
+
     input[type="file"].form-control::file-selector-button,
     input[type="file"].form-control::-webkit-file-upload-button {
+
         margin: 0 10px 0 0;
+
         padding: 10px 14px;
+
         border: 0;
+
         border-right: 1px solid #cbd5e1;
+
         border-radius: 10px;
+
         background: #e2e8f0;
+
         color: #0f172a;
+
         font-weight: 600;
+    }
+
+
+    /* =========================================================
+       DISCOUNT
+    ========================================================= */
+
+    .border.rounded-4 {
+
+        border-color: #e2e8f0 !important;
     }
 
 
@@ -643,35 +892,61 @@
 
     :root[data-theme="dark"] .form-control,
     :root[data-theme="dark"] .form-select {
+
         color: #f8fafc !important;
+
         background-color: #0f172a !important;
+
         border-color: #334155;
     }
 
+
     :root[data-theme="dark"] .form-control::placeholder {
+
         color: #94a3b8;
     }
 
+
     :root[data-theme="dark"] input[type="file"].form-control {
+
         background: #0b1220 !important;
+
         color: #e5e7eb !important;
+
         border-color: #334155 !important;
     }
 
+
     :root[data-theme="dark"] input[type="file"].form-control::file-selector-button,
     :root[data-theme="dark"] input[type="file"].form-control::-webkit-file-upload-button {
+
         background: #1e293b;
+
         color: #e5e7eb;
+
         border-right: 1px solid #334155;
     }
 
+
     :root[data-theme="dark"] .cover-preview {
+
         background: #0b1220;
+
         border-color: #334155;
     }
 
+
     :root[data-theme="dark"] .cover-preview-placeholder {
+
         color: #94a3b8;
+    }
+
+
+    :root[data-theme="dark"] .border.rounded-4 {
+
+        border-color: #334155 !important;
+
+        background: #0b1220;
     }
 
 </style>
@@ -685,57 +960,129 @@
 
     document.addEventListener('DOMContentLoaded', function () {
 
-        const input = document.getElementById('coverInput');
-        const preview = document.getElementById('coverPreview');
+        /* =====================================================
+           COVER PREVIEW
+        ===================================================== */
 
-        if (!input || !preview) {
-            return;
+        const input =
+            document.getElementById('coverInput');
+
+        const preview =
+            document.getElementById('coverPreview');
+
+
+        if (input && preview) {
+
+            input.addEventListener('change', function () {
+
+                const file = this.files[0];
+
+
+                if (!file) {
+
+                    preview.innerHTML = `
+
+                        <div class="cover-preview-placeholder">
+
+                            <i class="bi bi-book"></i>
+
+                            <span>
+                                No cover selected
+                            </span>
+
+                        </div>
+
+                    `;
+
+                    return;
+                }
+
+
+                if (!file.type.startsWith('image/')) {
+
+                    this.value = '';
+
+                    preview.innerHTML = `
+
+                        <div class="cover-preview-placeholder">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            <span>
+                                Please select an image
+                            </span>
+
+                        </div>
+
+                    `;
+
+                    return;
+                }
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload = function (event) {
+
+                    preview.innerHTML = `
+
+                        <img
+                            src="${event.target.result}"
+                            alt="Book Cover Preview"
+                        >
+
+                    `;
+                };
+
+
+                reader.readAsDataURL(file);
+
+            });
+
         }
 
-        input.addEventListener('change', function () {
 
-            const file = this.files[0];
+        /* =====================================================
+           DISCOUNT
+        ===================================================== */
 
-            if (!file) {
-                preview.innerHTML = `
-                    <div class="cover-preview-placeholder">
-                        <i class="bi bi-book"></i>
-                        <span>No cover selected</span>
-                    </div>
-                `;
+        const discountType =
+            document.getElementById('discountType');
 
-                return;
+        const discountValue =
+            document.getElementById('discountValue');
+
+
+        if (discountType && discountValue) {
+
+            function updateDiscountValue() {
+
+                if (discountType.value === 'none') {
+
+                    discountValue.value = '0';
+
+                    discountValue.disabled = true;
+
+                } else {
+
+                    discountValue.disabled = false;
+
+                }
+
             }
 
-            if (!file.type.startsWith('image/')) {
-                this.value = '';
 
-                preview.innerHTML = `
-                    <div class="cover-preview-placeholder">
-                        <i class="bi bi-exclamation-circle"></i>
-                        <span>Please select an image</span>
-                    </div>
-                `;
+            discountType.addEventListener(
+                'change',
+                updateDiscountValue
+            );
 
-                return;
-            }
 
-            const reader = new FileReader();
+            updateDiscountValue();
 
-            reader.onload = function (event) {
-
-                preview.innerHTML = `
-                    <img
-                        src="${event.target.result}"
-                        alt="Book Cover Preview"
-                    >
-                `;
-
-            };
-
-            reader.readAsDataURL(file);
-
-        });
+        }
 
     });
 

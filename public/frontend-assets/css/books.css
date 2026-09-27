@@ -2913,3 +2913,119 @@
         width: max-content;
     }
 }
+
+
+/* =========================================================
+   DISCOUNT BADGE
+========================================================= */
+
+.books-section .book-discount {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 5;
+
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 28px;
+    padding: 6px 10px;
+
+    border: 1px solid rgba(139, 94, 60, 0.28);
+    border-radius: 20px;
+
+    background: rgba(255, 250, 246, 0.94);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    color: #8b5e3c;
+
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PRICE WRAPPER
+========================================================= */
+
+.books-section .book-price-wrap {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   ORIGINAL PRICE
+========================================================= */
+
+.books-section .book-old-price {
+    color: #a49b94;
+
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+
+    text-decoration: line-through;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DISCOUNTED PRICE
+========================================================= */
+
+.books-section .book-discounted-price {
+    color: #8b5e3c;
+
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media screen and (max-width: 575px) {
+
+    .books-section .book-discount {
+        top: 12px;
+        right: 12px;
+
+        min-height: 26px;
+        padding: 5px 9px;
+
+        font-size: 8px;
+    }
+
+    .books-section .book-price-wrap {
+        gap: 6px;
+    }
+
+    .books-section .book-old-price {
+        font-size: 11px;
+    }
+
+    .books-section .book-discounted-price {
+        font-size: 16px;
+    }
+
+}
+

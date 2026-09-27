@@ -1,4 +1,4 @@
-<section id="popular-books" class="popular-books-section" data-aos="fade-up">
+<section id="popular-books" class="popular-books-section">
     <div class="container">
 
         {{-- =====================================================
@@ -130,6 +130,9 @@
                                     ? $book->cover
                                     : asset('storage/' . $book->cover);
                             }
+
+                            $originalPrice = (float) $book->price;
+                            $discountedPrice = (float) $book->discounted_price;
                         @endphp
 
                         <article class="popular-book-card">
@@ -157,6 +160,14 @@
                                 <span class="popular-book-badge">
                                     Best Selling
                                 </span>
+
+                                @if($book->is_discount_active)
+
+                                    <span class="popular-book-discount">
+                                        {{ $book->discount_label }}
+                                    </span>
+
+                                @endif
 
                                 <form
                                     action="{{ route('frontend.cart.add', $book) }}"
@@ -195,9 +206,27 @@
 
                                 <div class="popular-book-bottom">
 
-                                    <span class="popular-book-price">
-                                        ${{ number_format($book->price, 2) }}
-                                    </span>
+                                    <div class="popular-book-price-wrap">
+
+                                        @if($book->is_discount_active)
+
+                                            <span class="popular-book-old-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                            <span class="popular-book-price popular-book-discounted-price">
+                                                ${{ number_format($discountedPrice, 2) }}
+                                            </span>
+
+                                        @else
+
+                                            <span class="popular-book-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                        @endif
+
+                                    </div>
 
                                     <span class="popular-book-arrow">
                                         <i class="bi bi-arrow-up-right"></i>
@@ -212,6 +241,7 @@
                     @empty
 
                         <div class="popular-books-empty">
+
                             <div class="popular-books-empty-icon">
                                 <i class="bi bi-book"></i>
                             </div>
@@ -223,6 +253,7 @@
                             <p>
                                 Best selling books will appear here once they are available.
                             </p>
+
                         </div>
 
                     @endforelse
@@ -256,6 +287,9 @@
                                     ? $book->cover
                                     : asset('storage/' . $book->cover);
                             }
+
+                            $originalPrice = (float) $book->price;
+                            $discountedPrice = (float) $book->discounted_price;
                         @endphp
 
                         <article class="popular-book-card">
@@ -283,6 +317,14 @@
                                 <span class="popular-book-badge">
                                     Trending
                                 </span>
+
+                                @if($book->is_discount_active)
+
+                                    <span class="popular-book-discount">
+                                        {{ $book->discount_label }}
+                                    </span>
+
+                                @endif
 
                                 <form
                                     action="{{ route('frontend.cart.add', $book) }}"
@@ -321,9 +363,27 @@
 
                                 <div class="popular-book-bottom">
 
-                                    <span class="popular-book-price">
-                                        ${{ number_format($book->price, 2) }}
-                                    </span>
+                                    <div class="popular-book-price-wrap">
+
+                                        @if($book->is_discount_active)
+
+                                            <span class="popular-book-old-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                            <span class="popular-book-price popular-book-discounted-price">
+                                                ${{ number_format($discountedPrice, 2) }}
+                                            </span>
+
+                                        @else
+
+                                            <span class="popular-book-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                        @endif
+
+                                    </div>
 
                                     <span class="popular-book-arrow">
                                         <i class="bi bi-arrow-up-right"></i>
@@ -338,6 +398,7 @@
                     @empty
 
                         <div class="popular-books-empty">
+
                             <div class="popular-books-empty-icon">
                                 <i class="bi bi-fire"></i>
                             </div>
@@ -349,6 +410,7 @@
                             <p>
                                 Trending books will appear here once they are available.
                             </p>
+
                         </div>
 
                     @endforelse
@@ -382,6 +444,9 @@
                                     ? $book->cover
                                     : asset('storage/' . $book->cover);
                             }
+
+                            $originalPrice = (float) $book->price;
+                            $discountedPrice = (float) $book->discounted_price;
                         @endphp
 
                         <article class="popular-book-card">
@@ -409,6 +474,14 @@
                                 <span class="popular-book-badge">
                                     New Arrival
                                 </span>
+
+                                @if($book->is_discount_active)
+
+                                    <span class="popular-book-discount">
+                                        {{ $book->discount_label }}
+                                    </span>
+
+                                @endif
 
                                 <form
                                     action="{{ route('frontend.cart.add', $book) }}"
@@ -447,9 +520,27 @@
 
                                 <div class="popular-book-bottom">
 
-                                    <span class="popular-book-price">
-                                        ${{ number_format($book->price, 2) }}
-                                    </span>
+                                    <div class="popular-book-price-wrap">
+
+                                        @if($book->is_discount_active)
+
+                                            <span class="popular-book-old-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                            <span class="popular-book-price popular-book-discounted-price">
+                                                ${{ number_format($discountedPrice, 2) }}
+                                            </span>
+
+                                        @else
+
+                                            <span class="popular-book-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                        @endif
+
+                                    </div>
 
                                     <span class="popular-book-arrow">
                                         <i class="bi bi-arrow-up-right"></i>
@@ -464,6 +555,7 @@
                     @empty
 
                         <div class="popular-books-empty">
+
                             <div class="popular-books-empty-icon">
                                 <i class="bi bi-stars"></i>
                             </div>
@@ -475,6 +567,7 @@
                             <p>
                                 New arrivals will appear here once they are added.
                             </p>
+
                         </div>
 
                     @endforelse
@@ -508,6 +601,9 @@
                                     ? $book->cover
                                     : asset('storage/' . $book->cover);
                             }
+
+                            $originalPrice = (float) $book->price;
+                            $discountedPrice = (float) $book->discounted_price;
                         @endphp
 
                         <article class="popular-book-card">
@@ -535,6 +631,14 @@
                                 <span class="popular-book-badge">
                                     Editor Pick
                                 </span>
+
+                                @if($book->is_discount_active)
+
+                                    <span class="popular-book-discount">
+                                        {{ $book->discount_label }}
+                                    </span>
+
+                                @endif
 
                                 <form
                                     action="{{ route('frontend.cart.add', $book) }}"
@@ -573,9 +677,27 @@
 
                                 <div class="popular-book-bottom">
 
-                                    <span class="popular-book-price">
-                                        ${{ number_format($book->price, 2) }}
-                                    </span>
+                                    <div class="popular-book-price-wrap">
+
+                                        @if($book->is_discount_active)
+
+                                            <span class="popular-book-old-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                            <span class="popular-book-price popular-book-discounted-price">
+                                                ${{ number_format($discountedPrice, 2) }}
+                                            </span>
+
+                                        @else
+
+                                            <span class="popular-book-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                        @endif
+
+                                    </div>
 
                                     <span class="popular-book-arrow">
                                         <i class="bi bi-arrow-up-right"></i>
@@ -590,6 +712,7 @@
                     @empty
 
                         <div class="popular-books-empty">
+
                             <div class="popular-books-empty-icon">
                                 <i class="bi bi-pencil-square"></i>
                             </div>
@@ -601,6 +724,7 @@
                             <p>
                                 Editor picks will appear here once they are selected.
                             </p>
+
                         </div>
 
                     @endforelse
@@ -634,6 +758,9 @@
                                     ? $book->cover
                                     : asset('storage/' . $book->cover);
                             }
+
+                            $originalPrice = (float) $book->price;
+                            $discountedPrice = (float) $book->discounted_price;
                         @endphp
 
                         <article class="popular-book-card">
@@ -661,6 +788,14 @@
                                 <span class="popular-book-badge">
                                     Most Loved
                                 </span>
+
+                                @if($book->is_discount_active)
+
+                                    <span class="popular-book-discount">
+                                        {{ $book->discount_label }}
+                                    </span>
+
+                                @endif
 
                                 <form
                                     action="{{ route('frontend.cart.add', $book) }}"
@@ -699,9 +834,27 @@
 
                                 <div class="popular-book-bottom">
 
-                                    <span class="popular-book-price">
-                                        ${{ number_format($book->price, 2) }}
-                                    </span>
+                                    <div class="popular-book-price-wrap">
+
+                                        @if($book->is_discount_active)
+
+                                            <span class="popular-book-old-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                            <span class="popular-book-price popular-book-discounted-price">
+                                                ${{ number_format($discountedPrice, 2) }}
+                                            </span>
+
+                                        @else
+
+                                            <span class="popular-book-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                        @endif
+
+                                    </div>
 
                                     <span class="popular-book-arrow">
                                         <i class="bi bi-arrow-up-right"></i>
@@ -716,6 +869,7 @@
                     @empty
 
                         <div class="popular-books-empty">
+
                             <div class="popular-books-empty-icon">
                                 <i class="bi bi-heart"></i>
                             </div>
@@ -727,6 +881,7 @@
                             <p>
                                 Loved books will appear here once readers start discovering them.
                             </p>
+
                         </div>
 
                     @endforelse
@@ -760,6 +915,9 @@
                                     ? $book->cover
                                     : asset('storage/' . $book->cover);
                             }
+
+                            $originalPrice = (float) $book->price;
+                            $discountedPrice = (float) $book->discounted_price;
                         @endphp
 
                         <article class="popular-book-card">
@@ -787,6 +945,14 @@
                                 <span class="popular-book-badge">
                                     Budget Deal
                                 </span>
+
+                                @if($book->is_discount_active)
+
+                                    <span class="popular-book-discount">
+                                        {{ $book->discount_label }}
+                                    </span>
+
+                                @endif
 
                                 <form
                                     action="{{ route('frontend.cart.add', $book) }}"
@@ -825,9 +991,27 @@
 
                                 <div class="popular-book-bottom">
 
-                                    <span class="popular-book-price">
-                                        ${{ number_format($book->price, 2) }}
-                                    </span>
+                                    <div class="popular-book-price-wrap">
+
+                                        @if($book->is_discount_active)
+
+                                            <span class="popular-book-old-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                            <span class="popular-book-price popular-book-discounted-price">
+                                                ${{ number_format($discountedPrice, 2) }}
+                                            </span>
+
+                                        @else
+
+                                            <span class="popular-book-price">
+                                                ${{ number_format($originalPrice, 2) }}
+                                            </span>
+
+                                        @endif
+
+                                    </div>
 
                                     <span class="popular-book-arrow">
                                         <i class="bi bi-arrow-up-right"></i>
@@ -842,6 +1026,7 @@
                     @empty
 
                         <div class="popular-books-empty">
+
                             <div class="popular-books-empty-icon">
                                 <i class="bi bi-tags"></i>
                             </div>
@@ -853,6 +1038,7 @@
                             <p>
                                 Budget deals will appear here once they are added.
                             </p>
+
                         </div>
 
                     @endforelse

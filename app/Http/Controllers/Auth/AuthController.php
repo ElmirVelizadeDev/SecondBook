@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\PasswordOtp;
+use App\Models\Otp;
 use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Throwable;
 use Laravel\Socialite\Facades\Socialite;
@@ -30,9 +31,315 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
+    public function emailVerify()
+    {
+        $email = session('email_verification_email');
+
+        if (!$email) {
+            return redirect()->route('frontend.auth.login');
+        }
+
+        return view('auth.email-verify', compact('email'));
+    }
+
+    public function verifyEmailOtp(Request $request)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | Get Pending Registration
+        |--------------------------------------------------------------------------
+        */
+
+        $pendingRegistration = session('pending_registration');
+
+        $email = session('email_verification_email');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Verification Session Check
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$pendingRegistration || !$email) {
+            return response()->json([
+                'success' => false,
+                'message' =>
+                    'Your registration session has expired. Please register again.',
+            ], 422);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validate OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'otp_code' => [
+                    'required',
+                    'digits:6',
+                ],
+            ],
+            [
+                'otp_code.required' =>
+                    'Verification code is required.',
+
+                'otp_code.digits' =>
+                    'Verification code must be exactly 6 digits.',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+
+                'message' =>
+                    $validator->errors()->first(),
+
+                'errors' =>
+                    $validator->errors(),
+            ], 422);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Find OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp = Otp::where(
+            'email',
+            strtolower($email)
+        )
+            ->where(
+                'purpose',
+                'email_verification'
+            )
+            ->where(
+                'otp_code',
+                $request->otp_code
+            )
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Invalid OTP
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$otp) {
+            return response()->json([
+                'success' => false,
+
+                'message' =>
+                    'Invalid verification code. Please check the code and try again.',
+
+                'errors' => [
+                    'otp_code' => [
+                        'Invalid verification code.',
+                    ],
+                ],
+            ], 422);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Expired OTP
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            Carbon::now()->greaterThan(
+                $otp->expires_at
+            )
+        ) {
+            $otp->delete();
+
+            return response()->json([
+                'success' => false,
+
+                'message' =>
+                    'This verification code has expired. Please request a new code.',
+
+                'errors' => [
+                    'otp_code' => [
+                        'This verification code has expired.',
+                    ],
+                ],
+            ], 422);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Final Username Check
+        |--------------------------------------------------------------------------
+        |
+        | Someone could register the same username while the first
+        | registration is waiting for OTP.
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            User::where(
+                'username',
+                $pendingRegistration['username']
+            )->exists()
+        ) {
+            $otp->delete();
+
+            session()->forget([
+                'pending_registration',
+                'email_verification_email',
+            ]);
+
+            return response()->json([
+                'success' => false,
+
+                'message' =>
+                    'This username is no longer available. Please register again.',
+            ], 422);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Final Email Check
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            User::whereRaw(
+                'LOWER(email) = ?',
+                [
+                    strtolower(
+                        $pendingRegistration['email']
+                    )
+                ]
+            )->exists()
+        ) {
+            $otp->delete();
+
+            session()->forget([
+                'pending_registration',
+                'email_verification_email',
+            ]);
+
+            return response()->json([
+                'success' => false,
+
+                'message' =>
+                    'This email is already registered. Please log in instead.',
+            ], 422);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create User ONLY AFTER OTP Verification
+        |--------------------------------------------------------------------------
+        */
+
+        $user = User::create([
+            'name' =>
+                $pendingRegistration['first_name']
+                . ' '
+                . $pendingRegistration['last_name'],
+
+            'first_name' =>
+                $pendingRegistration['first_name'],
+
+            'last_name' =>
+                $pendingRegistration['last_name'],
+
+            'username' =>
+                $pendingRegistration['username'],
+
+            'email' =>
+                $pendingRegistration['email'],
+
+            'password' =>
+                $pendingRegistration['password'],
+
+            'role' =>
+                'user',
+
+            'status' =>
+                'active',
+
+            'email_verified_at' =>
+                now(),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Delete Used OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Clear Registration Session
+        |--------------------------------------------------------------------------
+        */
+
+        session()->forget([
+            'pending_registration',
+            'email_verification_email',
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Login User Automatically
+        |--------------------------------------------------------------------------
+        */
+
+        Auth::login($user);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Regenerate Session
+        |--------------------------------------------------------------------------
+        */
+
+        $request->session()->regenerate();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Last Login
+        |--------------------------------------------------------------------------
+        */
+
+        $user->update([
+            'last_login_at' => now(),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Success
+        |--------------------------------------------------------------------------
+        */
+
+        return response()->json([
+            'success' => true,
+
+            'message' =>
+                'Your email has been verified successfully. Welcome to SecondBook!',
+
+            'redirect' =>
+                route('frontend.home'),
+        ]);
+    }
+
     public function storeRegister(Request $request)
     {
-        // Check if user registration is enabled from Admin Settings
+        /*
+        |--------------------------------------------------------------------------
+        | Check Registration Status
+        |--------------------------------------------------------------------------
+        */
+
         if (!Setting::get('user_registration_enabled', true)) {
             return back()->with(
                 'error',
@@ -40,12 +347,39 @@ class AuthController extends Controller
             );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Normalize Input
+        |--------------------------------------------------------------------------
+        */
+
         $request->merge([
             'first_name' => trim((string) $request->first_name),
-            'last_name' => trim((string) $request->last_name),
-            'username' => trim((string) $request->username),
-            'email' => strtolower(trim((string) $request->email)),
+            'last_name'  => trim((string) $request->last_name),
+            'username'   => trim((string) $request->username),
+            'email'      => strtolower(trim((string) $request->email)),
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validation
+        |--------------------------------------------------------------------------
+        |
+        | The regex requires a real domain ending with a TLD.
+        |
+        | Valid:
+        | elmir@gmail.com
+        | elmir@yahoo.com
+        | elmir@outlook.com
+        |
+        | Invalid:
+        | elmir@gmail
+        | elmir@
+        | @gmail.com
+        | elmir@gmail.
+        |
+        |--------------------------------------------------------------------------
+        */
 
         $request->validate(
             [
@@ -54,7 +388,7 @@ class AuthController extends Controller
                     'string',
                     'min:2',
                     'max:50',
-                    'regex:/^[\pL\pM]+(?:[\'-][\pL\pM]+)*$/u',
+                    'regex:/^[\pL\pM]+(?:[\'\-\s][\pL\pM]+)*$/u',
                 ],
 
                 'last_name' => [
@@ -62,7 +396,7 @@ class AuthController extends Controller
                     'string',
                     'min:2',
                     'max:50',
-                    'regex:/^[\pL\pM]+(?:[\'-][\pL\pM]+)*$/u',
+                    'regex:/^[\pL\pM]+(?:[\'\-\s][\pL\pM]+)*$/u',
                 ],
 
                 'username' => [
@@ -70,15 +404,15 @@ class AuthController extends Controller
                     'string',
                     'min:3',
                     'max:100',
-                    'regex:/^[A-Za-z0-9_.-]+$/',
+                    'regex:/^[A-Za-z0-9\_.-]+$/',
                     'unique:users,username',
                 ],
 
                 'email' => [
                     'required',
                     'string',
-                    'email:rfc',
                     'max:255',
+                    'regex:/^[A-Za-z0-9.!#$%&\'*+\/=?^_`{|}~-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com|icloud\.com|protonmail\.com|gmx\.com|mail\.com|zoho\.com|yandex\.com)$/i',
                     'unique:users,email',
                 ],
 
@@ -89,11 +423,15 @@ class AuthController extends Controller
                         'minimum_password_length',
                         8
                     ),
+                    'max:128',
                     'confirmed',
                 ],
 
-                'terms' => 'accepted',
+                'terms' => [
+                    'accepted',
+                ],
             ],
+
             [
                 'first_name.required' =>
                     'First name is required.',
@@ -134,11 +472,11 @@ class AuthController extends Controller
                 'username.unique' =>
                     'This username is already taken.',
 
-                'email.required' =>
-                    'Email address is required.',
-
                 'email.email' =>
                     'Please enter a valid email address.',
+
+                'email.regex' =>
+                    'Please enter a valid email address. Allowed providers: Gmail, Yahoo, Outlook, Hotmail, iCloud, ProtonMail, GMX, Mail.com, Zoho, or Yandex.',
 
                 'email.max' =>
                     'Email address may not exceed 255 characters.',
@@ -152,6 +490,9 @@ class AuthController extends Controller
                 'password.min' =>
                     'Password does not meet the minimum length requirement.',
 
+                'password.max' =>
+                    'Password may not exceed 128 characters.',
+
                 'password.confirmed' =>
                     'Password confirmation does not match.',
 
@@ -160,33 +501,149 @@ class AuthController extends Controller
             ]
         );
 
-        $user = User::create([
-            'name' =>
-                $request->first_name . ' ' . $request->last_name,
+        /*
+        |--------------------------------------------------------------------------
+        | Generate OTP
+        |--------------------------------------------------------------------------
+        */
 
-            'first_name' =>
-                $request->first_name,
+        $email = strtolower(
+            trim($request->email)
+        );
 
-            'last_name' =>
-                $request->last_name,
+        $otp = (string) random_int(
+            100000,
+            999999
+        );
 
-            'username' =>
-                $request->username,
+        /*
+        |--------------------------------------------------------------------------
+        | Store Pending Registration
+        |--------------------------------------------------------------------------
+        |
+        | IMPORTANT:
+        | No User::create() here.
+        |
+        | The account will only be created after OTP verification.
+        |--------------------------------------------------------------------------
+        */
 
-            'email' =>
-                $request->email,
+        session([
+            'pending_registration' => [
+                'first_name' => $request->first_name,
+                'last_name'  => $request->last_name,
+                'username'   => $request->username,
+                'email'      => $email,
+                'password'   => Hash::make($request->password),
+            ],
 
-            'password' =>
-                Hash::make($request->password),
-
-            'role' =>
-                'user',
+            'email_verification_email' => $email,
         ]);
 
-        Auth::login($user);
+        /*
+        |--------------------------------------------------------------------------
+        | Store Registration OTP
+        |--------------------------------------------------------------------------
+        */
+
+        Otp::updateOrCreate(
+            [
+                'email' =>
+                    $email,
+
+                'purpose' =>
+                    'email_verification',
+            ],
+            [
+                'otp_code' =>
+                    $otp,
+
+                'expires_at' =>
+                    Carbon::now()->addMinutes(10),
+            ]
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Send Verification Email
+        |--------------------------------------------------------------------------
+        */
+
+        try {
+            Mail::raw(
+                "Your SecondBook email verification code is: {$otp}\n\n"
+                . "This code will expire in 10 minutes.",
+
+                function ($message) use ($email) {
+                    $message
+                        ->to($email)
+                        ->subject(
+                            'SecondBook Email Verification'
+                        );
+                }
+            );
+        } catch (Throwable $e) {
+            report($e);
+
+            Otp::where(
+                'email',
+                $email
+            )
+                ->where(
+                    'purpose',
+                    'email_verification'
+                )
+                ->delete();
+
+            session()->forget([
+                'pending_registration',
+                'email_verification_email',
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>
+                        'Unable to send the verification code. Please try again.',
+                ], 500);
+            }
+
+            return back()
+                ->withErrors([
+                    'email' =>
+                        'Unable to send the verification code. Please try again.',
+                ])
+                ->withInput();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Success
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+
+                'message' =>
+                    'A verification code has been sent to your email.',
+
+                'redirect' =>
+                    route(
+                        'frontend.auth.email.verify'
+                    ),
+            ]);
+        }
 
         return redirect()
-            ->route('frontend.home');
+            ->route(
+                'frontend.auth.email.verify'
+            )
+            ->with(
+                'status',
+                'Please enter the verification code sent to your email.'
+            );
     }
 
     /*
@@ -202,19 +659,23 @@ class AuthController extends Controller
 
     public function storeLogin(Request $request)
     {
-        $credentials = $request->validate(
+        $validator = Validator::make(
+            $request->all(),
             [
                 'email' => [
                     'required',
                     'string',
                     'email:rfc',
-                    'max:255',
+                    'max:254',
                 ],
 
                 'password' => [
                     'required',
+                    'string',
+                    'max:128',
                 ],
             ],
+
             [
                 'email.required' =>
                     'Email address is required.',
@@ -223,12 +684,38 @@ class AuthController extends Controller
                     'Please enter a valid email address.',
 
                 'email.max' =>
-                    'Email address may not exceed 255 characters.',
+                    'Email address may not exceed 254 characters.',
 
                 'password.required' =>
                     'Password is required.',
+
+                'password.max' =>
+                    'Password may not exceed 128 characters.',
             ]
         );
+
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>
+                        $validator->errors()->first(),
+                    'errors' =>
+                        $validator->errors(),
+                ], 422);
+            }
+
+            return back()
+                ->withErrors($validator)
+                ->withInput(
+                    $request->only(
+                        'email',
+                        'remember'
+                    )
+                );
+        }
+
+        $credentials = $validator->validated();
 
         $remember = $request->boolean('remember');
 
@@ -252,7 +739,12 @@ class AuthController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            if (Hash::check($password, $user->password)) {
+            if (
+                Hash::check(
+                    $password,
+                    $user->password
+                )
+            ) {
                 $passwordValid = true;
             } elseif (
                 $user->password &&
@@ -266,7 +758,8 @@ class AuthController extends Controller
 
                 $passwordValid = true;
 
-                $user->password = Hash::make($password);
+                $user->password =
+                    Hash::make($password);
 
                 $user->save();
             }
@@ -277,6 +770,18 @@ class AuthController extends Controller
                 | Login
                 |--------------------------------------------------------------------------
                 */
+
+                if (is_null($user->email_verified_at)) {
+                    session([
+                        'email_verification_email' => strtolower($user->email),
+                    ]);
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Please verify your email address before signing in.',
+                        'redirect' => route('frontend.auth.email.verify'),
+                    ], 403);
+                }
 
                 Auth::login(
                     $user,
@@ -316,12 +821,28 @@ class AuthController extends Controller
                         true
                     )
                 ) {
-                    return redirect()
-                        ->route('admin.dashboard');
+                    $redirectUrl =
+                        route('admin.dashboard');
+                } else {
+                    $redirectUrl =
+                        route('frontend.home');
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | AJAX Success
+                |--------------------------------------------------------------------------
+                */
+
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect' => $redirectUrl,
+                    ]);
                 }
 
                 return redirect()
-                    ->route('frontend.home');
+                    ->to($redirectUrl);
             }
         }
 
@@ -330,6 +851,14 @@ class AuthController extends Controller
         | Invalid Login
         |--------------------------------------------------------------------------
         */
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' =>
+                    'Invalid email or password.',
+            ], 422);
+        }
 
         return back()
             ->with(
@@ -344,6 +873,12 @@ class AuthController extends Controller
             );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google Login
+    |--------------------------------------------------------------------------
+    */
+
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
@@ -352,9 +887,14 @@ class AuthController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser =
+                Socialite::driver('google')->user();
 
-            $email = strtolower(trim($googleUser->getEmail()));
+            $email = strtolower(
+                trim(
+                    $googleUser->getEmail()
+                )
+            );
 
             $user = User::whereRaw(
                 'LOWER(email) = ?',
@@ -362,7 +902,9 @@ class AuthController extends Controller
             )->first();
 
             if (!$user) {
-                $name = trim($googleUser->getName() ?? '');
+                $name = trim(
+                    $googleUser->getName() ?? ''
+                );
 
                 $nameParts = preg_split(
                     '/\s+/',
@@ -370,12 +912,15 @@ class AuthController extends Controller
                     2
                 );
 
-                $firstName = $nameParts[0] ?? 'Google';
-                $lastName = $nameParts[1] ?? 'User';
+                $firstName =
+                    $nameParts[0] ?? 'Google';
+
+                $lastName =
+                    $nameParts[1] ?? 'User';
 
                 $baseUsername = strtolower(
                     preg_replace(
-                        '/[^A-Za-z0-9_.-]/',
+                        '/[^A-Za-z0-9\_.-]/',
                         '',
                         $googleUser->getNickname()
                             ?: $googleUser->getName()
@@ -391,7 +936,10 @@ class AuthController extends Controller
                 $counter = 1;
 
                 while (
-                    User::where('username', $username)->exists()
+                    User::where(
+                        'username',
+                        $username
+                    )->exists()
                 ) {
                     $username =
                         $baseUsername . $counter;
@@ -400,21 +948,46 @@ class AuthController extends Controller
                 }
 
                 $user = User::create([
-                    'name' => $firstName . ' ' . $lastName,
-                    'first_name' => $firstName,
-                    'last_name' => $lastName,
-                    'username' => $username,
-                    'email' => $email,
-                    'password' => Hash::make(
-                        bin2hex(random_bytes(32))
-                    ),
-                    'role' => 'user',
-                    'status' => 'active',
+                    'name' =>
+                        $firstName . ' ' . $lastName,
+
+                    'first_name' =>
+                        $firstName,
+
+                    'last_name' =>
+                        $lastName,
+
+                    'username' =>
+                        $username,
+
+                    'email' =>
+                        $email,
+
+                    'password' =>
+                        Hash::make(
+                            bin2hex(
+                                random_bytes(32)
+                            )
+                        ),
+
+                    'role' =>
+                        'user',
+
+                    'status' =>
+                        'active',
+
+                    'email_verified_at' =>
+                        now(),
+                ]);
+            }
+
+            if (is_null($user->email_verified_at)) {
+                $user->update([
                     'email_verified_at' => now(),
                 ]);
             }
 
-            Auth::login($user);
+            Auth::login($user , true);
 
             $request->session()->regenerate();
 
@@ -423,20 +996,24 @@ class AuthController extends Controller
             ]);
 
             if ($user->isAdmin()) {
-                return redirect()->route(
-                    'admin.dashboard'
-                );
+                return redirect()
+                    ->route(
+                        'admin.dashboard'
+                    );
             }
 
-            return redirect()->route(
-                'frontend.home'
-            );
+            return redirect()
+                ->route(
+                    'frontend.home'
+                );
 
         } catch (Throwable $e) {
             report($e);
 
             return redirect()
-                ->route('frontend.auth.login')
+                ->route(
+                    'frontend.auth.login'
+                )
                 ->with(
                     'error',
                     'Unable to sign in with Google. Please try again.'
@@ -452,44 +1029,167 @@ class AuthController extends Controller
 
     public function passwordRequest()
     {
-        return view('auth.password-request');
+        return view(
+            'auth.password-request'
+        );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Send OTP - Password Reset
+    |--------------------------------------------------------------------------
+    */
 
     public function sendOtp(Request $request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Normalize Email
+        |--------------------------------------------------------------------------
+        */
+
         $request->merge([
             'email' => strtolower(
-                trim((string) $request->email)
+                trim(
+                    (string) $request->email
+                )
             ),
         ]);
 
-        $request->validate([
-            'email' => [
-                'required',
-                'string',
-                'email:rfc',
-                'max:255',
+        /*
+        |--------------------------------------------------------------------------
+        | Validation
+        |--------------------------------------------------------------------------
+        */
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'email' => [
+                    'required',
+                    'string',
+                    'email:rfc',
+                    'max:255',
+                ],
             ],
+
+            [
+                'email.required' =>
+                    'Email address is required.',
+
+                'email.email' =>
+                    'Please enter a valid email address.',
+
+                'email.max' =>
+                    'Email address may not exceed 255 characters.',
+            ]
+        );
+
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>
+                        $validator->errors()->first(),
+                    'errors' =>
+                        $validator->errors(),
+                ], 422);
+            }
+
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Find User
+        |--------------------------------------------------------------------------
+        */
+
+        $user = User::whereRaw(
+            'LOWER(email) = ?',
+            [$request->email]
+        )->first();
+
+        if (!$user) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>
+                        'No account was found with this email address.',
+                    'errors' => [
+                        'email' => [
+                            'No account was found with this email address.',
+                        ],
+                    ],
+                ], 422);
+            }
+
+            return back()
+                ->withErrors([
+                    'email' =>
+                        'No account was found with this email address.',
+                ])
+                ->withInput();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Clear Any Previous Sensitive Action
+        |--------------------------------------------------------------------------
+        */
+
+        session()->forget([
+            'sensitive_action',
+            'sensitive_action_email',
         ]);
 
-        $otp = rand(
+        /*
+        |--------------------------------------------------------------------------
+        | Generate OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp = random_int(
             100000,
             999999
         );
 
-        PasswordOtp::updateOrCreate(
+        /*
+        |--------------------------------------------------------------------------
+        | Store Password Reset OTP
+        |--------------------------------------------------------------------------
+        */
+
+        Otp::updateOrCreate(
             [
-                'email' => $request->email,
+                'email' =>
+                    $request->email,
+
+                'purpose' =>
+                    'password_reset',
             ],
+
             [
-                'otp_code' => $otp,
-                'expires_at' => Carbon::now()->addMinutes(10),
+                'otp_code' =>
+                    $otp,
+
+                'expires_at' =>
+                    Carbon::now()->addMinutes(10),
             ]
         );
 
+        /*
+        |--------------------------------------------------------------------------
+        | Send Email
+        |--------------------------------------------------------------------------
+        */
+
         try {
             Mail::raw(
-                "Your SecondBook password reset code is: $otp",
+                "Your SecondBook password reset code is: {$otp}",
+
                 function ($message) use ($request) {
                     $message
                         ->to($request->email)
@@ -498,14 +1198,72 @@ class AuthController extends Controller
                         );
                 }
             );
+
         } catch (Throwable $e) {
             report($e);
+
+            Otp::where(
+                'email',
+                $request->email
+            )
+                ->where(
+                    'purpose',
+                    'password_reset'
+                )
+                ->delete();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>
+                        'Unable to send the verification code. Please try again.',
+                ], 500);
+            }
+
+            return back()
+                ->withErrors([
+                    'email' =>
+                        'Unable to send the verification code. Please try again.',
+                ])
+                ->withInput();
         }
 
-        // Emaili session-da saxlayırıq
+        /*
+        |--------------------------------------------------------------------------
+        | Store Reset Email
+        |--------------------------------------------------------------------------
+        */
+
         session([
-            'reset_email' => $request->email,
+            'reset_email' =>
+                $request->email,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX Success
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+
+                'message' =>
+                    'Verification code sent successfully.',
+
+                'redirect' =>
+                    route(
+                        'frontend.auth.password.verify'
+                    ),
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Normal Request Success
+        |--------------------------------------------------------------------------
+        */
 
         return redirect()
             ->route(
@@ -517,80 +1275,635 @@ class AuthController extends Controller
             );
     }
 
+    public function resendVerificationCode(Request $request)
+    {
+        $sensitiveAction = session('sensitive_action');
+        $sensitiveEmail = session('sensitive_action_email');
+
+        $authenticatedUser = Auth::user();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Registration Email Verification
+        |--------------------------------------------------------------------------
+        */
+
+        $pendingRegistration =
+            session('pending_registration');
+
+        $emailVerificationEmail =
+            session('email_verification_email');
+
+        if (
+            $pendingRegistration &&
+            $emailVerificationEmail
+        ) {
+            $purpose = 'email_verification';
+
+            $email = strtolower(
+                trim(
+                    $emailVerificationEmail
+                )
+            );
+        } else {
+            /*
+            |--------------------------------------------------------------------------
+            | Existing Sensitive Actions
+            |--------------------------------------------------------------------------
+            */
+
+            $authenticatedUser = Auth::user();
+
+            if (
+                $authenticatedUser &&
+                in_array(
+                    $sensitiveAction,
+                    [
+                        'password_change',
+                        'account_delete',
+                    ],
+                    true
+                ) &&
+                $sensitiveEmail === strtolower($authenticatedUser->email)
+            ) {
+                $purpose = $sensitiveAction;
+
+                $email =
+                    strtolower(
+                        $authenticatedUser->email
+                    );
+            } else {
+                $purpose = 'password_reset';
+
+                $email =
+                    strtolower(
+                        (string) session('reset_email')
+                    );
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validate Verification Session
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$email) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your verification session has expired. Please start again.',
+            ], 422);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Password Reset User Check
+        |--------------------------------------------------------------------------
+        */
+
+        if ($purpose === 'password_reset') {
+            $user = User::whereRaw('LOWER(email) = ?', [$email])->first();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No account was found with this email address.',
+                ], 422);
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Generate New OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp = (string) random_int(100000, 999999);
+
+        Otp::updateOrCreate(
+            [
+                'email' => $email,
+                'purpose' => $purpose,
+            ],
+            [
+                'otp_code' => $otp,
+                'expires_at' => Carbon::now()->addMinutes(10),
+            ]
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Email Content
+        |--------------------------------------------------------------------------
+        */
+
+        if ($purpose === 'account_delete') {
+            $subject = 'SecondBook Account Deletion Verification';
+
+            $message = "Your SecondBook account deletion verification code is: {$otp}\n\n"
+                . "This code will expire in 10 minutes.";
+        } elseif ($purpose === 'password_change') {
+            $subject = 'SecondBook Password Change Verification';
+
+            $message = "Your SecondBook password change verification code is: {$otp}\n\n"
+                . "This code will expire in 10 minutes.";
+        } else {
+            $subject = 'SecondBook Password Reset OTP';
+
+            $message = "Your SecondBook password reset verification code is: {$otp}\n\n"
+                . "This code will expire in 10 minutes.";
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Send Email
+        |--------------------------------------------------------------------------
+        */
+
+        try {
+            Mail::raw($message, function ($mail) use ($email, $subject) {
+                $mail->to($email)
+                    ->subject($subject);
+            });
+        } catch (Throwable $e) {
+            Otp::where('email', $email)
+                ->where('purpose', $purpose)
+                ->delete();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to send the verification code right now. Please try again.',
+            ], 500);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Response
+        |--------------------------------------------------------------------------
+        */
+
+        return response()->json([
+            'success' => true,
+            'message' => 'A new verification code has been sent to your email.',
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Verify OTP
+    |--------------------------------------------------------------------------
+    */
+
     public function verifyOtp(Request $request)
     {
-        $request->validate([
+        /*
+        |--------------------------------------------------------------------------
+        | Determine Sensitive Action
+        |--------------------------------------------------------------------------
+        */
+
+        $sensitiveAction =
+            session('sensitive_action');
+
+        $sensitiveEmail =
+            session('sensitive_action_email');
+
+        $authenticatedUser =
+            Auth::user();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Password Reset Flow
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $sensitiveAction === 'password_change' &&
+            $authenticatedUser &&
+            $sensitiveEmail &&
+            strtolower($sensitiveEmail) ===
+                strtolower($authenticatedUser->email)
+        ) {
+            $purpose = 'password_change';
+        } else {
+            $purpose = 'password_reset';
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Normalize OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $request->merge([
+            'otp_code' =>
+                trim(
+                    (string) $request->otp_code
+                ),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Base Validation
+        |--------------------------------------------------------------------------
+        */
+
+        $rules = [
             'otp_code' => [
                 'required',
                 'digits:6',
             ],
+        ];
 
-            'password' => [
-                'required',
-                'string',
-                'min:' . Setting::get(
+        $messages = [
+            'otp_code.required' =>
+                'Verification code is required.',
+
+            'otp_code.digits' =>
+                'Verification code must be exactly 6 digits.',
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Password Validation
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            in_array(
+                $purpose,
+                [
+                    'password_reset',
+                    'password_change',
+                ],
+                true
+            )
+        ) {
+            $minimumPasswordLength =
+                Setting::get(
                     'minimum_password_length',
                     8
-                ),
-            ],
-        ]);
+                );
 
-        $otp = PasswordOtp::where(
+            $rules['password'] = [
+                'required',
+                'string',
+                'min:' . $minimumPasswordLength,
+                'max:128',
+                'regex:/[a-z]/',
+                'regex:/[0-9]/',
+                'confirmed',
+            ];
+
+            $messages['password.required'] =
+                'New password is required.';
+
+            $messages['password.min'] =
+                'Password must be at least ' .
+                $minimumPasswordLength .
+                ' characters.';
+
+            $messages['password.max'] =
+                'Password may not exceed 128 characters.';
+
+            $messages['password.regex'] =
+                'Password must contain at least one lowercase letter and one number.';
+
+            $messages['password.confirmed'] =
+                'Password confirmation does not match.';
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validate Request
+        |--------------------------------------------------------------------------
+        */
+
+        $validator = Validator::make(
+            $request->all(),
+            $rules,
+            $messages
+        );
+
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+
+                    'message' =>
+                        $validator->errors()->first(),
+
+                    'errors' =>
+                        $validator->errors(),
+                ], 422);
+            }
+
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Get Email According To Purpose
+        |--------------------------------------------------------------------------
+        */
+
+        if ($purpose === 'password_reset') {
+            $email = session('reset_email');
+
+            if (!$email) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' =>
+                            'Your password reset session has expired. Please request a new code.',
+                    ], 422);
+                }
+
+                return redirect()
+                    ->route(
+                        'frontend.auth.password.request'
+                    )
+                    ->withErrors([
+                        'email' =>
+                            'Your password reset session has expired. Please request a new code.',
+                    ]);
+            }
+        } else {
+            $email = $sensitiveEmail;
+
+            if (
+                !$authenticatedUser ||
+                !$email ||
+                strtolower($email) !==
+                    strtolower($authenticatedUser->email)
+            ) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' =>
+                            'Your verification session has expired. Please start the action again.',
+                    ], 422);
+                }
+
+                return redirect()
+                    ->route(
+                        'frontend.account.settings'
+                    )
+                    ->with(
+                        'error',
+                        'Your verification session has expired. Please start the action again.'
+                    );
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Find OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp = Otp::where(
             'email',
-            session('reset_email')
+            $email
         )
+            ->where(
+                'purpose',
+                $purpose
+            )
             ->where(
                 'otp_code',
                 $request->otp_code
             )
             ->first();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Invalid OTP
+        |--------------------------------------------------------------------------
+        */
+
         if (!$otp) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+
+                    'message' =>
+                        'Invalid verification code. Please check the code and try again.',
+
+                    'errors' => [
+                        'otp_code' => [
+                            'Invalid verification code.',
+                        ],
+                    ],
+                ], 422);
+            }
+
             return back()
                 ->withErrors([
                     'otp_code' =>
-                        'Invalid OTP code.',
-                ]);
+                        'Invalid verification code.',
+                ])
+                ->withInput();
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Expired OTP
+        |--------------------------------------------------------------------------
+        */
 
         if (
             Carbon::now()->greaterThan(
                 $otp->expires_at
             )
         ) {
+            $otp->delete();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+
+                    'message' =>
+                        'This verification code has expired. Please request a new code.',
+
+                    'errors' => [
+                        'otp_code' => [
+                            'This verification code has expired.',
+                        ],
+                    ],
+                ], 422);
+            }
+
             return back()
                 ->withErrors([
                     'otp_code' =>
-                        'OTP code has expired.',
-                ]);
+                        'This verification code has expired.',
+                ])
+                ->withInput();
         }
 
-        $user = User::where(
-            'email',
-            $otp->email
-        )->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Find User For Password Operations
+        |--------------------------------------------------------------------------
+        */
+
+        if ($purpose === 'password_change') {
+            $user = $authenticatedUser;
+        } else {
+            $user = User::whereRaw(
+                'LOWER(email) = ?',
+                [strtolower($otp->email)]
+            )->first();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | User Not Found
+        |--------------------------------------------------------------------------
+        */
 
         if (!$user) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+
+                    'message' =>
+                        'The account associated with this code could not be found.',
+                ], 404);
+            }
+
             return back()
                 ->withErrors([
                     'email' =>
                         'User not found.',
-                ]);
+                ])
+                ->withInput();
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | New Password Must Be Different
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            Hash::check(
+                $request->password,
+                $user->password
+            )
+        ) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+
+                    'message' =>
+                        'Your new password must be different from your current password.',
+
+                    'errors' => [
+                        'password' => [
+                            'Your new password must be different from your current password.',
+                        ],
+                    ],
+                ], 422);
+            }
+
+            return back()
+                ->withErrors([
+                    'password' =>
+                        'Your new password must be different from your current password.',
+                ])
+                ->withInput();
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Password
+        |--------------------------------------------------------------------------
+        */
+
         $user->update([
-            'password' => Hash::make(
-                $request->password
-            ),
+            'password' =>
+                Hash::make(
+                    $request->password
+                ),
         ]);
 
-        // OTP silinir
+        /*
+        |--------------------------------------------------------------------------
+        | Delete Used OTP
+        |--------------------------------------------------------------------------
+        */
+
         $otp->delete();
 
-        // Session təmizlənir
-        session()->forget(
-            'reset_email'
-        );
+        /*
+        |--------------------------------------------------------------------------
+        | Password Change
+        |--------------------------------------------------------------------------
+        */
+
+        if ($purpose === 'password_change') {
+            session()->forget([
+                'sensitive_action',
+                'sensitive_action_email',
+            ]);
+
+            session()->flash(
+                'success',
+                'Your password has been updated successfully.'
+            );
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+
+                    'message' =>
+                        'Your password has been updated successfully.',
+
+                    'redirect' =>
+                        route(
+                            'frontend.account.settings'
+                        ) . '#security',
+                ]);
+            }
+
+            return redirect()
+                ->to(
+                    route(
+                        'frontend.account.settings'
+                    ) . '#security'
+                )
+                ->with(
+                    'success',
+                    'Your password has been updated successfully.'
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Password Reset
+        |--------------------------------------------------------------------------
+        */
+
+        session()->forget('reset_email');
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+
+                'message' =>
+                    'Your password has been reset successfully.',
+
+                'redirect' =>
+                    route(
+                        'frontend.auth.login'
+                    ),
+            ]);
+        }
 
         return redirect()
             ->route(
@@ -638,31 +1951,19 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        // User's own orders
-        $orderCount = $user->orders()->count();
+        $orderCount =
+            $user->orders()->count();
 
-        // User's wishlist items
-        $wishlistCount = $user->wishlists()->count();
+        $wishlistCount =
+            $user->wishlists()->count();
 
-        // User's reviews
-        $reviewsCount = $user->reviews()->count();
+        $reviewsCount =
+            $user->reviews()->count();
 
         /*
         |--------------------------------------------------------------------------
         | Books Sold
         |--------------------------------------------------------------------------
-        |
-        | Only seller accounts can have sales.
-        |
-        | Count the actual quantity sold from orders belonging to
-        | books owned by this seller.
-        |
-        | pending    -> not counted
-        | processing -> counted
-        | shipped    -> counted
-        | delivered  -> counted
-        | cancelled  -> not counted
-        |
         */
 
         $booksSoldCount = 0;
@@ -695,7 +1996,8 @@ class AuthController extends Controller
         */
 
         $profileName = trim(
-            $user->first_name . ' ' . $user->last_name
+            $user->first_name . ' ' .
+            $user->last_name
         );
 
         if ($profileName === '') {
@@ -788,12 +2090,13 @@ class AuthController extends Controller
             $user->country,
         ]);
 
-        $profileAddress = !empty($addressParts)
-            ? implode(
-                ', ',
-                $addressParts
-            )
-            : 'Not provided';
+        $profileAddress =
+            !empty($addressParts)
+                ? implode(
+                    ', ',
+                    $addressParts
+                )
+                : 'Not provided';
 
         /*
         |--------------------------------------------------------------------------
@@ -809,13 +2112,14 @@ class AuthController extends Controller
             ? $user->created_at->format('F j, Y')
             : 'N/A';
 
-        $lastAccountUpdate = $user->updated_at
-            ? $user->updated_at->format('F j, Y')
-            : 'N/A';
+        $lastAccountUpdate =
+            $user->updated_at
+                ? $user->updated_at->format('F j, Y')
+                : 'N/A';
 
         $lastLogin = $user->last_login_at
             ? $user->last_login_at->format(
-                'F j, Y \a\t g:i A'
+                'F j, Y \a\t g\:i A'
             )
             : 'Not available';
 
@@ -939,57 +2243,33 @@ class AuthController extends Controller
         $validated = $request->validateWithBag(
             'profileUpdate',
             [
-                /*
-                |--------------------------------------------------------------------------
-                | First Name
-                |--------------------------------------------------------------------------
-                */
-
                 'first_name' => [
                     'required',
                     'string',
                     'min:2',
                     'max:50',
-                    'regex:/^[\pL\pM]+(?:[\'-][\pL\pM]+)*$/u',
+                    'regex:/^[\pL\pM]+(?:[\'\-\s][\pL\pM]+)*$/u',
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Last Name
-                |--------------------------------------------------------------------------
-                */
 
                 'last_name' => [
                     'required',
                     'string',
                     'min:2',
                     'max:50',
-                    'regex:/^[\pL\pM]+(?:[\'-][\pL\pM]+)*$/u',
+                    'regex:/^[\pL\pM]+(?:[\'\-\s][\pL\pM]+)*$/u',
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Username
-                |--------------------------------------------------------------------------
-                */
 
                 'username' => [
                     'nullable',
                     'string',
                     'min:3',
                     'max:100',
-                    'regex:/^[A-Za-z0-9_.-]+$/',
+                    'regex:/^[A-Za-z0-9\_.-]+$/',
                     Rule::unique(
                         'users',
                         'username'
                     )->ignore($user->id),
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Email
-                |--------------------------------------------------------------------------
-                */
 
                 'email' => [
                     'required',
@@ -1001,12 +2281,6 @@ class AuthController extends Controller
                         'email'
                     )->ignore($user->id),
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Phone Country Code
-                |--------------------------------------------------------------------------
-                */
 
                 'phone_country_code' => [
                     'required',
@@ -1025,23 +2299,11 @@ class AuthController extends Controller
                     ]),
                 ],
 
-                /*
-                |--------------------------------------------------------------------------
-                | Phone Number
-                |--------------------------------------------------------------------------
-                */
-
                 'phone' => [
                     'nullable',
                     'string',
                     'regex:/^[0-9]+$/',
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Date Of Birth
-                |--------------------------------------------------------------------------
-                */
 
                 'date_of_birth' => [
                     'nullable',
@@ -1049,26 +2311,15 @@ class AuthController extends Controller
                     'before_or_equal:today',
                 ],
 
-                /*
-                |--------------------------------------------------------------------------
-                | Gender
-                |--------------------------------------------------------------------------
-                */
-
                 'gender' => [
                     'nullable',
                     Rule::in([
                         'male',
                         'female',
+                        'other',
                         'prefer_not_to_say',
                     ]),
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Country
-                |--------------------------------------------------------------------------
-                */
 
                 'country' => [
                     'nullable',
@@ -1076,23 +2327,11 @@ class AuthController extends Controller
                     'max:120',
                 ],
 
-                /*
-                |--------------------------------------------------------------------------
-                | City
-                |--------------------------------------------------------------------------
-                */
-
                 'city' => [
                     'nullable',
                     'string',
                     'max:120',
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | State
-                |--------------------------------------------------------------------------
-                */
 
                 'state' => [
                     'nullable',
@@ -1100,23 +2339,11 @@ class AuthController extends Controller
                     'max:120',
                 ],
 
-                /*
-                |--------------------------------------------------------------------------
-                | Postal Code
-                |--------------------------------------------------------------------------
-                */
-
                 'postal_code' => [
                     'nullable',
                     'string',
                     'max:30',
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Address
-                |--------------------------------------------------------------------------
-                */
 
                 'address' => [
                     'nullable',
@@ -1124,23 +2351,11 @@ class AuthController extends Controller
                     'max:255',
                 ],
 
-                /*
-                |--------------------------------------------------------------------------
-                | Bio
-                |--------------------------------------------------------------------------
-                */
-
                 'bio' => [
                     'nullable',
                     'string',
-                    'max:300',
+                    'max:1000',
                 ],
-
-                /*
-                |--------------------------------------------------------------------------
-                | Profile Photo
-                |--------------------------------------------------------------------------
-                */
 
                 'profile_photo' => [
                     'nullable',
@@ -1149,13 +2364,8 @@ class AuthController extends Controller
                     'max:2048',
                 ],
             ],
-            [
-                /*
-                |--------------------------------------------------------------------------
-                | Name Messages
-                |--------------------------------------------------------------------------
-                */
 
+            [
                 'first_name.required' =>
                     'First name is required.',
 
@@ -1166,7 +2376,8 @@ class AuthController extends Controller
                     'First name may not exceed 50 characters.',
 
                 'first_name.regex' =>
-                    'First name may contain letters, hyphens, or apostrophes only.',
+                    'First name may contain letters, spaces, hyphens, or apostrophes only.',
+
 
                 'last_name.required' =>
                     'Last name is required.',
@@ -1178,13 +2389,8 @@ class AuthController extends Controller
                     'Last name may not exceed 50 characters.',
 
                 'last_name.regex' =>
-                    'Last name may contain letters, hyphens, or apostrophes only.',
+                    'Last name may contain letters, spaces, hyphens, or apostrophes only.',
 
-                /*
-                |--------------------------------------------------------------------------
-                | Username Messages
-                |--------------------------------------------------------------------------
-                */
 
                 'username.min' =>
                     'Username must be at least 3 characters.',
@@ -1198,11 +2404,6 @@ class AuthController extends Controller
                 'username.unique' =>
                     'This username is already taken.',
 
-                /*
-                |--------------------------------------------------------------------------
-                | Email Messages
-                |--------------------------------------------------------------------------
-                */
 
                 'email.required' =>
                     'Email address is required.',
@@ -1216,11 +2417,6 @@ class AuthController extends Controller
                 'email.unique' =>
                     'This email is already registered.',
 
-                /*
-                |--------------------------------------------------------------------------
-                | Phone Messages
-                |--------------------------------------------------------------------------
-                */
 
                 'phone_country_code.required' =>
                     'Please select a country code.',
@@ -1231,11 +2427,6 @@ class AuthController extends Controller
                 'phone.regex' =>
                     'Phone number may contain numbers only.',
 
-                /*
-                |--------------------------------------------------------------------------
-                | Date Of Birth Messages
-                |--------------------------------------------------------------------------
-                */
 
                 'date_of_birth.date' =>
                     'Please enter a valid date of birth.',
@@ -1243,11 +2434,6 @@ class AuthController extends Controller
                 'date_of_birth.before_or_equal' =>
                     'Date of birth cannot be in the future.',
 
-                /*
-                |--------------------------------------------------------------------------
-                | Photo Messages
-                |--------------------------------------------------------------------------
-                */
 
                 'profile_photo.image' =>
                     'The profile photo must be a valid image.',
@@ -1257,6 +2443,10 @@ class AuthController extends Controller
 
                 'profile_photo.max' =>
                     'Profile photo may not exceed 2 MB.',
+
+
+                'bio.max' =>
+                    'Bio may not exceed 1000 characters.',
             ]
         );
 
@@ -1270,18 +2460,21 @@ class AuthController extends Controller
             $user->profile_photo ?? null;
 
         if ($request->hasFile('profile_photo')) {
+
             if ($profilePhotoPath) {
+
                 Storage::disk('public')->delete(
                     $profilePhotoPath
                 );
             }
 
-            $profilePhotoPath = $request
-                ->file('profile_photo')
-                ->store(
-                    'profile-photos',
-                    'public'
-                );
+            $profilePhotoPath =
+                $request
+                    ->file('profile_photo')
+                    ->store(
+                        'profile-photos',
+                        'public'
+                    );
         }
 
         /*
@@ -1306,23 +2499,16 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         | Username
         |--------------------------------------------------------------------------
-        |
-        | Username Blade-dən gəlməsə belə,
-        | mövcud username qorunur.
-        |
         */
 
-        $username = $validated['username']
+        $username =
+            $validated['username']
             ?? $user->username;
 
         /*
         |--------------------------------------------------------------------------
         | Phone Number
         |--------------------------------------------------------------------------
-        |
-        | Seçilmiş ölkə koduna görə nömrənin
-        | uzunluğu yoxlanılır.
-        |
         */
 
         $phoneNumber = preg_replace(
@@ -1338,6 +2524,7 @@ class AuthController extends Controller
         */
 
         $phoneRules = [
+
             '+994' => [
                 'min' => 9,
                 'max' => 9,
@@ -1396,6 +2583,7 @@ class AuthController extends Controller
         */
 
         if ($phoneNumber !== '') {
+
             $countryCode =
                 $validated['phone_country_code'];
 
@@ -1412,10 +2600,40 @@ class AuthController extends Controller
                 $phoneLength < $minLength ||
                 $phoneLength > $maxLength
             ) {
+
+                $message =
+                    "Please enter a valid phone number for {$countryCode}.";
+
+                /*
+                |--------------------------------------------------------------------------
+                | AJAX Validation Error
+                |--------------------------------------------------------------------------
+                */
+
+                if ($request->expectsJson()) {
+
+                    return response()->json([
+                        'success' => false,
+
+                        'message' => $message,
+
+                        'errors' => [
+                            'phone' => [
+                                $message,
+                            ],
+                        ],
+                    ], 422);
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Normal Request Validation Error
+                |--------------------------------------------------------------------------
+                */
+
                 return back()
                     ->withErrors([
-                        'phone' =>
-                            "Please enter a valid phone number for {$countryCode}.",
+                        'phone' => $message,
                     ])
                     ->withInput();
             }
@@ -1427,23 +2645,20 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $fullPhone = $phoneNumber !== ''
-            ? $validated['phone_country_code'] . $phoneNumber
-            : null;
+        $fullPhone =
+            $phoneNumber !== ''
+                ? $validated['phone_country_code'] .
+                    $phoneNumber
+                : null;
 
         /*
         |--------------------------------------------------------------------------
         | Update User
         |--------------------------------------------------------------------------
-        |
-        | Notification və privacy preference-ləri
-        | artıq burada saxlanılmır.
-        |
-        | Onlar user_settings cədvəlindən idarə olunur.
-        |
         */
 
         $user->update([
+
             'first_name' =>
                 $firstName,
 
@@ -1458,7 +2673,9 @@ class AuthController extends Controller
 
             'email' =>
                 strtolower(
-                    trim($validated['email'])
+                    trim(
+                        $validated['email']
+                    )
                 ),
 
             'phone' =>
@@ -1494,7 +2711,61 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Success
+        | Refresh User
+        |--------------------------------------------------------------------------
+        |
+        | Make sure the JSON response contains the latest database values.
+        |
+        */
+
+        $user->refresh();
+
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX Success Response
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->expectsJson()) {
+
+            return response()->json([
+
+                'success' => true,
+
+                'message' =>
+                    'Profile updated successfully.',
+
+                'user' => [
+
+                    'full_name' =>
+                        trim(
+                            ($user->first_name ?? '') .
+                            ' ' .
+                            ($user->last_name ?? '')
+                        ),
+
+                    'email' =>
+                        $user->email,
+
+                    'role' =>
+                        ucfirst(
+                            $user->role ?? 'User'
+                        ),
+
+                    'profile_photo_url' =>
+                        $user->profile_photo
+                            ? asset(
+                                'storage/' .
+                                $user->profile_photo
+                            )
+                            : null,
+                ],
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Normal Request Success
         |--------------------------------------------------------------------------
         */
 
@@ -1538,11 +2809,21 @@ class AuthController extends Controller
     |--------------------------------------------------------------------------
     | Update Password
     |--------------------------------------------------------------------------
+    |
+    | Password changes from Account Settings are handled by
+    | AccountSettingsController. This method is kept for compatibility
+    | with any existing route that may still use it.
+    |--------------------------------------------------------------------------
     */
 
     public function updatePassword(Request $request)
     {
         $user = Auth::user();
+
+        $minimumPasswordLength = Setting::get(
+            'minimum_password_length',
+            8
+        );
 
         $validated = $request->validateWithBag(
             'passwordUpdate',
@@ -1555,19 +2836,49 @@ class AuthController extends Controller
                 'password' => [
                     'required',
                     'string',
-                    'min:' . Setting::get(
-                        'minimum_password_length',
-                        8
-                    ),
+                    'min:' . $minimumPasswordLength,
+                    'max:128',
+                    'regex:/[a-z]/',
+                    'regex:/[0-9]/',
                     'confirmed',
+                    'different:current_password',
                 ],
+            ],
+
+            [
+                'current_password.required' =>
+                    'Current password is required.',
+
+                'current_password.current_password' =>
+                    'The current password is incorrect.',
+
+                'password.required' =>
+                    'New password is required.',
+
+                'password.min' =>
+                    'Password must be at least ' .
+                    $minimumPasswordLength .
+                    ' characters.',
+
+                'password.max' =>
+                    'Password must not exceed 128 characters.',
+
+                'password.regex' =>
+                    'Password must contain at least one lowercase letter and one number.',
+
+                'password.confirmed' =>
+                    'Password confirmation does not match.',
+
+                'password.different' =>
+                    'New password must be different from your current password.',
             ]
         );
 
         $user->update([
-            'password' => Hash::make(
-                $validated['password']
-            ),
+            'password' =>
+                Hash::make(
+                    $validated['password']
+                ),
         ]);
 
         return redirect()
@@ -1578,15 +2889,211 @@ class AuthController extends Controller
             );
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Destroy Profile
-    |--------------------------------------------------------------------------
-    */
-
-    public function destroyProfile(Request $request)
+    public function accountDeleteVerify()
     {
         $user = Auth::user();
+
+        if (!$user) {
+            return redirect()
+                ->route('frontend.auth.login');
+        }
+
+        $action = session('sensitive_action');
+        $email = session('sensitive_action_email');
+
+        if (
+            $action !== 'account_delete' ||
+            !$email ||
+            strtolower($email) !== strtolower($user->email)
+        ) {
+            return redirect()
+                ->route('frontend.account.settings')
+                ->with(
+                    'error',
+                    'Your account deletion verification session has expired.'
+                );
+        }
+
+        return view('auth.account-delete-verify');
+    }
+
+    public function verifyAccountDeletePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your session has expired. Please log in again.',
+            ], 401);
+        }
+
+        $action = session('sensitive_action');
+        $email = session('sensitive_action_email');
+
+        if (
+            $action !== 'account_delete' ||
+            !$email ||
+            strtolower($email) !== strtolower($user->email)
+        ) {
+            return response()->json([
+                'success' => false,
+                'message' =>
+                    'Your account deletion verification session has expired.',
+            ], 422);
+        }
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'current_password' => [
+                    'required',
+                    'string',
+                ],
+            ],
+            [
+                'current_password.required' =>
+                    'Current password is required.',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        if (
+            !Hash::check(
+                $request->current_password,
+                $user->password
+            )
+        ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The current password is incorrect.',
+                'errors' => [
+                    'current_password' => [
+                        'The current password is incorrect.',
+                    ],
+                ],
+            ], 422);
+        }
+
+        session([
+            'account_delete_password_verified' => true,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'step' => 'otp',
+        ]);
+    }
+
+    public function verifyAccountDeleteOtp(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' =>
+                    'Your session has expired. Please log in again.',
+            ], 401);
+        }
+
+        if (
+            !session('account_delete_password_verified')
+        ) {
+            return response()->json([
+                'success' => false,
+                'message' =>
+                    'Please verify your current password first.',
+            ], 422);
+        }
+
+        $email = strtolower(
+            trim($user->email)
+        );
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'otp_code' => [
+                    'required',
+                    'digits:6',
+                ],
+            ],
+            [
+                'otp_code.required' =>
+                    'Verification code is required.',
+
+                'otp_code.digits' =>
+                    'Verification code must be exactly 6 digits.',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $otp = Otp::where(
+            'email',
+            $email
+        )
+            ->where(
+                'purpose',
+                'account_delete'
+            )
+            ->where(
+                'otp_code',
+                $request->otp_code
+            )
+            ->first();
+
+        if (!$otp) {
+            return response()->json([
+                'success' => false,
+                'message' =>
+                    'Invalid verification code. Please check the code and try again.',
+                'errors' => [
+                    'otp_code' => [
+                        'Invalid verification code.',
+                    ],
+                ],
+            ], 422);
+        }
+
+        if (
+            Carbon::now()->greaterThan(
+                $otp->expires_at
+            )
+        ) {
+            $otp->delete();
+
+            return response()->json([
+                'success' => false,
+                'message' =>
+                    'This verification code has expired. Please request a new code.',
+                'errors' => [
+                    'otp_code' => [
+                        'This verification code has expired.',
+                    ],
+                ],
+            ], 422);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Delete Profile Photo
+        |--------------------------------------------------------------------------
+        */
 
         if ($user->profile_photo) {
             Storage::disk('public')->delete(
@@ -1594,19 +3101,235 @@ class AuthController extends Controller
             );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Delete OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Logout
+        |--------------------------------------------------------------------------
+        */
+
         Auth::logout();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Delete Account
+        |--------------------------------------------------------------------------
+        */
+
         $user->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Clear Session
+        |--------------------------------------------------------------------------
+        */
+
+        session()->forget([
+            'sensitive_action',
+            'sensitive_action_email',
+            'account_delete_password_verified',
+        ]);
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
+        return response()->json([
+            'success' => true,
+
+            'message' =>
+                'Your account has been deleted.',
+
+            'redirect' =>
+                route('frontend.home'),
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Destroy Profile
+    |--------------------------------------------------------------------------
+    |
+    | Account is NOT deleted immediately.
+    | A verification code is sent to the user's email first.
+    |--------------------------------------------------------------------------
+    */
+
+    public function destroyProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>
+                        'You must be logged in to delete your account.',
+                ], 401);
+            }
+
+            return redirect()
+                ->route('frontend.auth.login');
+        }
+
+        $email = strtolower(
+            trim($user->email)
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Reset Delete Verification State
+        |--------------------------------------------------------------------------
+        */
+
+        session()->forget([
+            'account_delete_password_verified',
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Generate OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp = random_int(
+            100000,
+            999999
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store Account Delete OTP
+        |--------------------------------------------------------------------------
+        */
+
+        Otp::updateOrCreate(
+            [
+                'email' =>
+                    $email,
+
+                'purpose' =>
+                    'account_delete',
+            ],
+
+            [
+                'otp_code' =>
+                    $otp,
+
+                'expires_at' =>
+                    Carbon::now()->addMinutes(10),
+            ]
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store Sensitive Action
+        |--------------------------------------------------------------------------
+        */
+
+        session([
+            'sensitive_action' =>
+                'account_delete',
+
+            'sensitive_action_email' =>
+                $email,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Send Email
+        |--------------------------------------------------------------------------
+        */
+
+        try {
+            Mail::raw(
+                "Your SecondBook account deletion verification code is: {$otp}\n\n"
+                . "This code will expire in 10 minutes.",
+
+                function ($message) use ($email) {
+                    $message
+                        ->to($email)
+                        ->subject(
+                            'SecondBook Account Deletion Verification'
+                        );
+                }
+            );
+
+        } catch (Throwable $e) {
+            report($e);
+
+            Otp::where(
+                'email',
+                $email
+            )
+                ->where(
+                    'purpose',
+                    'account_delete'
+                )
+                ->delete();
+
+            session()->forget([
+                'sensitive_action',
+                'sensitive_action_email',
+                'account_delete_password_verified',
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>
+                        'Unable to send the verification code. Please try again.',
+                ], 500);
+            }
+
+            return back()
+                ->withErrors([
+                    'delete_account' =>
+                        'Unable to send the verification code. Please try again.',
+                ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX Success
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+
+                'message' =>
+                    'Verification code sent successfully. Please check your email.',
+
+                'redirect' =>
+                    route(
+                        'frontend.auth.account.delete.verify'
+                    ),
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Normal Request Success
+        |--------------------------------------------------------------------------
+        */
+
         return redirect()
-            ->route('frontend.home')
+            ->route(
+                'frontend.auth.account.delete.verify'
+            )
             ->with(
-                'success',
-                'Your account has been deleted.'
+                'status',
+                'Please verify your password and enter the code sent to your email.'
             );
     }
 }
+

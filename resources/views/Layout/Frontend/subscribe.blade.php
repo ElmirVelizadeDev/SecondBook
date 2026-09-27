@@ -14,7 +14,7 @@
                 <div class="subscribe-divider"></div>
             </div>
 
-            <div class="subscribe-content" data-aos="fade-up">
+            <div class="subscribe-content">
 
                 <p class="subscribe-description">
                     Be the first to discover newly listed books, exclusive

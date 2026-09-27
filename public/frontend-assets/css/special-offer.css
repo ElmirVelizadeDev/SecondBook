@@ -670,3 +670,39 @@
         font-size: 17px;
     }
 }
+
+/* =========================================================
+   SPECIAL OFFER — SCROLL REVEAL
+========================================================= */
+
+#special-offer .special-offer-header,
+#special-offer .special-offer-products {
+    opacity: 0;
+    transform: translateY(35px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+#special-offer.is-visible .special-offer-header,
+#special-offer.is-visible .special-offer-products {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#special-offer.is-visible .special-offer-products {
+    transition-delay: 0.12s;
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #special-offer .special-offer-header,
+    #special-offer .special-offer-products {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+}

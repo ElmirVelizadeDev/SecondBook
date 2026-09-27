@@ -69,38 +69,35 @@
 
                 </div>
 
-                {{-- Validation errors --}}
-                @if ($errors->any())
+                {{-- AJAX Alert --}}
+                <div
+                    class="sb-login-alert sb-password-reset-ajax-alert"
+                    id="passwordResetAlert"
+                    style="display: none;"
+                >
 
-                    <div class="sb-login-alert">
+                    <span class="sb-login-alert-icon">
+                        <i class="bi bi-exclamation-circle"></i>
+                    </span>
 
-                        <span class="sb-login-alert-icon">
-                            <i class="bi bi-exclamation-circle"></i>
-                        </span>
+                    <div class="sb-login-alert-content">
 
-                        <div class="sb-login-alert-content">
+                        <strong id="passwordResetAlertTitle">
+                            Please check the following
+                        </strong>
 
-                            <strong>Please check the following</strong>
-
-                            <ul>
-
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-
-                            </ul>
-
-                        </div>
+                        <ul id="passwordResetAlertList"></ul>
 
                     </div>
 
-                @endif
+                </div>
 
                 {{-- Password reset form --}}
                 <form
                     action="{{ route('frontend.auth.password.send.otp') }}"
                     method="POST"
                     class="sb-login-form"
+                    id="passwordResetForm"
                 >
 
                     @csrf
@@ -152,6 +149,7 @@
                     <button
                         type="submit"
                         class="sb-signin-btn sb-reset-submit"
+                        id="passwordResetSubmitButton"
                     >
 
                         <span class="sb-signin-content">
@@ -225,5 +223,172 @@
     </div>
 
 </div>
+
+@push('js')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const form = document.getElementById('passwordResetForm');
+    const submitButton = document.getElementById('passwordResetSubmitButton');
+
+    const alertBox = document.getElementById('passwordResetAlert');
+    const alertTitle = document.getElementById('passwordResetAlertTitle');
+    const alertList = document.getElementById('passwordResetAlertList');
+
+    if (!form || !submitButton || !alertBox) {
+        return;
+    }
+
+    function escapeHtml(value) {
+        const div = document.createElement('div');
+        div.textContent = value;
+        return div.innerHTML;
+    }
+
+    function removeAlert() {
+        alertBox.style.display = 'none';
+        alertTitle.textContent = 'Please check the following';
+        alertList.innerHTML = '';
+    }
+
+    function showAlert(title, messages) {
+
+        removeAlert();
+
+        alertTitle.textContent = title;
+
+        const uniqueMessages = [...new Set(
+            messages.filter(Boolean)
+        )];
+
+        uniqueMessages.forEach(function (message) {
+
+            const li = document.createElement('li');
+
+            li.innerHTML = escapeHtml(message);
+
+            alertList.appendChild(li);
+        });
+
+        alertBox.style.display = 'flex';
+    }
+
+    form.addEventListener('submit', async function (event) {
+
+        event.preventDefault();
+
+        removeAlert();
+
+        const originalButtonContent = submitButton.innerHTML;
+
+        submitButton.disabled = true;
+
+        submitButton.innerHTML = `
+            <span class="sb-signin-content">
+
+                <span class="sb-signin-icon">
+                    <i class="bi bi-arrow-repeat"></i>
+                </span>
+
+                <span class="sb-signin-text">
+                    Sending...
+                </span>
+
+            </span>
+
+            <span class="sb-signin-arrow">
+                <i class="bi bi-arrow-up-right"></i>
+            </span>
+        `;
+
+        try {
+
+            const response = await fetch(
+                form.action,
+                {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document
+                            .querySelector('input[name="_token"]')
+                            .value,
+
+                        'X-Requested-With': 'XMLHttpRequest',
+
+                        'Accept': 'application/json'
+                    },
+                    body: new FormData(form),
+                    credentials: 'same-origin'
+                }
+            );
+
+            const data = await response.json();
+
+            if (response.ok && data.success !== false) {
+
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
+
+                window.location.href = @json(
+                    route('frontend.auth.password.verify')
+                );
+
+                return;
+            }
+
+            let messages = [];
+
+            if (data.errors) {
+
+                Object.values(data.errors).forEach(function (errors) {
+
+                    if (Array.isArray(errors)) {
+                        messages.push(...errors);
+                    } else {
+                        messages.push(errors);
+                    }
+
+                });
+            }
+
+            if (messages.length === 0 && data.message) {
+                messages.push(data.message);
+            }
+
+            if (messages.length === 0) {
+                messages.push(
+                    'Unable to send the verification code. Please try again.'
+                );
+            }
+
+            showAlert(
+                data.message
+                    ? 'Unable to continue'
+                    : 'Please check the following',
+                messages
+            );
+
+        } catch (error) {
+
+            showAlert(
+                'Something went wrong',
+                [
+                    'Unable to process your request right now. Please try again.'
+                ]
+            );
+
+        } finally {
+
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonContent;
+
+        }
+
+    });
+
+});
+</script>
+@endpush
 
 @endsection

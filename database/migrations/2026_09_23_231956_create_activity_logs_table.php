@@ -8,33 +8,35 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('activity_logs', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('activity_logs')) {
+            Schema::create('activity_logs', function (Blueprint $table) {
+                $table->id();
 
-            $table->foreignId('user_id')
-                ->nullable()
-                ->constrained()
-                ->nullOnDelete();
+                $table->foreignId('user_id')
+                    ->nullable()
+                    ->constrained()
+                    ->nullOnDelete();
 
-            $table->string('action');
+                $table->string('action');
 
-            $table->string('module')
-                ->nullable();
+                $table->string('module')
+                    ->nullable();
 
-            $table->string('description');
+                $table->string('description');
 
-            $table->string('ip_address', 45)
-                ->nullable();
+                $table->string('ip_address', 45)
+                    ->nullable();
 
-            $table->text('user_agent')
-                ->nullable();
+                $table->text('user_agent')
+                    ->nullable();
 
-            $table->timestamps();
+                $table->timestamps();
 
-            $table->index('action');
-            $table->index('module');
-            $table->index('created_at');
-        });
+                $table->index('action');
+                $table->index('module');
+                $table->index('created_at');
+            });
+        }
     }
 
     public function down(): void

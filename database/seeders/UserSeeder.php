@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Sellers
+        | Sellers - 15
         |--------------------------------------------------------------------------
         */
 
@@ -45,6 +45,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Mammadov',
                 'username' => 'seller_ali',
                 'email' => 'seller.ali@secondbook.test',
+                'phone' => '+994501000001',
                 'photo' => 'https://randomuser.me/api/portraits/men/32.jpg',
             ],
             [
@@ -52,6 +53,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Hasanli',
                 'username' => 'seller_nigar',
                 'email' => 'seller.nigar@secondbook.test',
+                'phone' => '+994501000002',
                 'photo' => 'https://randomuser.me/api/portraits/women/44.jpg',
             ],
             [
@@ -59,6 +61,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Karimov',
                 'username' => 'seller_rauf',
                 'email' => 'seller.rauf@secondbook.test',
+                'phone' => '+994501000003',
                 'photo' => 'https://randomuser.me/api/portraits/men/46.jpg',
             ],
             [
@@ -66,6 +69,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Quliyeva',
                 'username' => 'seller_aysel',
                 'email' => 'seller.aysel@secondbook.test',
+                'phone' => '+994501000004',
                 'photo' => 'https://randomuser.me/api/portraits/women/65.jpg',
             ],
             [
@@ -73,7 +77,88 @@ class UserSeeder extends Seeder
                 'last_name' => 'Aliyev',
                 'username' => 'seller_murad',
                 'email' => 'seller.murad@secondbook.test',
+                'phone' => '+994501000005',
                 'photo' => 'https://randomuser.me/api/portraits/men/75.jpg',
+            ],
+            [
+                'first_name' => 'Leyla',
+                'last_name' => 'Huseynova',
+                'username' => 'seller_leyla',
+                'email' => 'seller.leyla@secondbook.test',
+                'phone' => '+994501000006',
+                'photo' => 'https://randomuser.me/api/portraits/women/68.jpg',
+            ],
+            [
+                'first_name' => 'Kamran',
+                'last_name' => 'Ismayilov',
+                'username' => 'seller_kamran',
+                'email' => 'seller.kamran@secondbook.test',
+                'phone' => '+994501000007',
+                'photo' => 'https://randomuser.me/api/portraits/men/52.jpg',
+            ],
+            [
+                'first_name' => 'Sabina',
+                'last_name' => 'Aliyeva',
+                'username' => 'seller_sabina',
+                'email' => 'seller.sabina@secondbook.test',
+                'phone' => '+994501000008',
+                'photo' => 'https://randomuser.me/api/portraits/women/49.jpg',
+            ],
+            [
+                'first_name' => 'Orkhan',
+                'last_name' => 'Safarov',
+                'username' => 'seller_orkhan',
+                'email' => 'seller.orkhan@secondbook.test',
+                'phone' => '+994501000009',
+                'photo' => 'https://randomuser.me/api/portraits/men/41.jpg',
+            ],
+            [
+                'first_name' => 'Zehra',
+                'last_name' => 'Abbasova',
+                'username' => 'seller_zehra',
+                'email' => 'seller.zehra@secondbook.test',
+                'phone' => '+994501000010',
+                'photo' => 'https://randomuser.me/api/portraits/women/33.jpg',
+            ],
+            [
+                'first_name' => 'Tural',
+                'last_name' => 'Rahimov',
+                'username' => 'seller_tural',
+                'email' => 'seller.tural@secondbook.test',
+                'phone' => '+994501000011',
+                'photo' => 'https://randomuser.me/api/portraits/men/36.jpg',
+            ],
+            [
+                'first_name' => 'Gunay',
+                'last_name' => 'Mehdiyeva',
+                'username' => 'seller_gunay',
+                'email' => 'seller.gunay@secondbook.test',
+                'phone' => '+994501000012',
+                'photo' => 'https://randomuser.me/api/portraits/women/24.jpg',
+            ],
+            [
+                'first_name' => 'Elvin',
+                'last_name' => 'Jafarov',
+                'username' => 'seller_elvin',
+                'email' => 'seller.elvin@secondbook.test',
+                'phone' => '+994501000013',
+                'photo' => 'https://randomuser.me/api/portraits/men/22.jpg',
+            ],
+            [
+                'first_name' => 'Narmin',
+                'last_name' => 'Ismayilova',
+                'username' => 'seller_narmin',
+                'email' => 'seller.narmin@secondbook.test',
+                'phone' => '+994501000014',
+                'photo' => 'https://randomuser.me/api/portraits/women/29.jpg',
+            ],
+            [
+                'first_name' => 'Samir',
+                'last_name' => 'Hajiyev',
+                'username' => 'seller_samir',
+                'email' => 'seller.samir@secondbook.test',
+                'phone' => '+994501000015',
+                'photo' => 'https://randomuser.me/api/portraits/men/61.jpg',
             ],
         ];
 
@@ -88,8 +173,9 @@ class UserSeeder extends Seeder
                     'password' => 'password',
                     'role' => 'seller',
                     'status' => 'active',
-                    'email_verified_at' => now(),
+                    'phone' => $seller['phone'],
                     'profile_photo' => $seller['photo'],
+                    'email_verified_at' => now(),
                     'profile_visibility' => true,
                     'receive_email_notifications' => true,
                     'receive_order_updates' => true,
@@ -100,7 +186,7 @@ class UserSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Buyers
+        | Buyers - 20
         |--------------------------------------------------------------------------
         */
 
@@ -115,9 +201,19 @@ class UserSeeder extends Seeder
             ['Sabina', 'Aliyeva', 'sabina_aliyeva', 'sabina@example.com'],
             ['Orkhan', 'Safarov', 'orkhan_safarov', 'orkhan@example.com'],
             ['Zehra', 'Abbasova', 'zehra_abbasova', 'zehra@example.com'],
+            ['Rashad', 'Mammadli', 'rashad_mammadli', 'rashad@example.com'],
+            ['Gunay', 'Aliyeva', 'gunay_aliyeva', 'gunay@example.com'],
+            ['Nurlan', 'Huseynov', 'nurlan_huseynov', 'nurlan@example.com'],
+            ['Amina', 'Karimova', 'amina_karimova', 'amina@example.com'],
+            ['Farid', 'Jafarov', 'farid_jafarov', 'farid@example.com'],
+            ['Lala', 'Mehdiyeva', 'lala_mehdiyeva', 'lala@example.com'],
+            ['Emin', 'Ismayilov', 'emin_ismayilov', 'emin@example.com'],
+            ['Arzu', 'Hajiyeva', 'arzu_hajiyeva', 'arzu@example.com'],
+            ['Vusal', 'Rahmanov', 'vusal_rahmanov', 'vusal@example.com'],
+            ['Diana', 'Aliyeva', 'diana_aliyeva', 'diana@example.com'],
         ];
 
-        foreach ($buyers as $index => $buyer) {
+        foreach ($buyers as $buyer) {
             User::updateOrCreate(
                 ['email' => $buyer[3]],
                 [
@@ -137,6 +233,9 @@ class UserSeeder extends Seeder
             );
         }
 
-        $this->command->info('Users, sellers and buyers seeded successfully.');
+        $this->command->info(
+            'Users, 15 sellers and 20 buyers seeded successfully.'
+        );
     }
 }
+

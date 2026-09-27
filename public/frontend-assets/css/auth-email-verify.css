@@ -1,17 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
-
 /* =========================================================
-   SECOND BOOK — REGISTER AUTH
-   Premium Register Page
+   SECOND BOOK — EMAIL VERIFY
+
+   Premium Authentication Page
+
    ========================================================= */
 
 .frontend-main {
     padding: 0 !important;
 }
 
+
 /* =========================================================
-   AUTH BACKGROUND
-   EXACT LOGIN BACKGROUND SYSTEM
+   BACKGROUND
+   Same visual system as Login / Register / Password Reset
+
    ========================================================= */
 
 .auth-page-bg {
@@ -108,6 +110,11 @@
     pointer-events: none;
 }
 
+
+/* =========================================================
+   WRAPPER
+   ========================================================= */
+
 .auth-wrapper {
     min-height: 100vh;
     display: flex;
@@ -126,83 +133,42 @@
     max-width: 415px;
 }
 
-/* =========================================================
-   ANIMATIONS
-   ========================================================= */
-
-@keyframes authDustFloat {
-    from {
-        transform:
-            translateY(0)
-            translateX(0);
-        opacity: 0.55;
-    }
-
-    to {
-        transform:
-            translateY(-10px)
-            translateX(8px);
-        opacity: 0.75;
-    }
-}
-
-@keyframes registerWave {
-    0%,
-    100% {
-        transform: rotate(0deg);
-    }
-
-    50% {
-        transform: rotate(8deg);
-    }
-}
-
-@keyframes registerOrbFloat {
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0);
-    }
-
-    50% {
-        transform: translate3d(4px, -5px, 0);
-    }
-}
 
 /* =========================================================
-   REGISTER CARD
+   CARD
    ========================================================= */
 
-.sb-register-premium {
-    --register-brown: #8b5e3c;
-    --register-brown-dark: #674329;
-    --register-brown-deep: #3b2619;
-    --register-gold: #c59a5a;
-    --register-gold-light: #d9b77d;
-    --register-text: #241b16;
-    --register-muted: #776d65;
-    --register-light: #a69c94;
-    --register-border: #e7dfd8;
-    --register-border-light: #eee8e2;
-    --register-surface: #ffffff;
-    --register-surface-soft: #fbf8f5;
+.sb-password-verify-premium {
+    --verify-brown: #8b5e3c;
+    --verify-brown-dark: #674329;
+    --verify-brown-deep: #3b2619;
+    --verify-gold: #c59a5a;
+    --verify-gold-light: #d9b77d;
+    --verify-text: #241b16;
+    --verify-muted: #776d65;
+    --verify-light: #a69c94;
+    --verify-border: #e7dfd8;
+    --verify-border-light: #eee8e2;
+    --verify-surface: #ffffff;
+    --verify-surface-soft: #fbf8f5;
 
     position: relative;
     overflow: hidden;
     width: min(100%, 480px);
     margin: 0 auto;
     padding: 42px 43px 27px;
-    border: 1px solid rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255,255,255,.78);
     border-radius: 27px;
     background:
         linear-gradient(
             145deg,
-            rgba(255, 255, 255, 0.985),
-            rgba(250, 247, 243, 0.985)
+            rgba(255,255,255,.985),
+            rgba(250,247,243,.985)
         );
     box-shadow:
-        0 35px 90px rgba(45, 30, 20, 0.15),
-        0 10px 30px rgba(45, 30, 20, 0.07);
-    color: var(--register-text);
+        0 35px 90px rgba(45,30,20,.15),
+        0 10px 30px rgba(45,30,20,.07);
+    color: var(--verify-text);
     font-family:
         "DM Sans",
         -apple-system,
@@ -212,9 +178,12 @@
     isolation: isolate;
 }
 
-/* Card ambient glow */
 
-.sb-register-premium::before {
+/* =========================================================
+   CARD DECORATIONS
+   ========================================================= */
+
+.sb-password-verify-premium::before {
     content: '';
     position: absolute;
     width: 310px;
@@ -225,15 +194,13 @@
     background:
         radial-gradient(
             circle,
-            rgba(197, 154, 90, 0.14) 0%,
-            rgba(197, 154, 90, 0.05) 45%,
+            rgba(197,154,90,.14) 0%,
             transparent 68%
         );
     pointer-events: none;
-    z-index: -1;
 }
 
-.sb-register-premium::after {
+.sb-password-verify-premium::after {
     content: '';
     position: absolute;
     width: 230px;
@@ -244,51 +211,43 @@
     background:
         radial-gradient(
             circle,
-            rgba(139, 94, 60, 0.09) 0%,
+            rgba(139,94,60,.09) 0%,
             transparent 68%
         );
     pointer-events: none;
-    z-index: -1;
 }
 
-/* =========================================================
-   REGISTER DECORATIVE ELEMENTS
-   ========================================================= */
-
-.sb-register-orb {
+.sb-verify-orb {
     position: absolute;
     border-radius: 50%;
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
 }
 
-.sb-register-orb-one {
+.sb-verify-orb-one {
     width: 8px;
     height: 8px;
     top: 72px;
     right: 56px;
-    background: var(--register-gold);
+    background: var(--verify-gold);
     box-shadow:
-        0 0 0 5px rgba(197, 154, 90, 0.08),
-        0 0 16px rgba(197, 154, 90, 0.28);
+        0 0 0 5px rgba(197,154,90,.08);
     animation:
-        registerOrbFloat 3.8s ease-in-out infinite;
+        verifyOrbPulse 3.5s ease-in-out infinite;
 }
 
-.sb-register-orb-two {
+.sb-verify-orb-two {
     width: 5px;
     height: 5px;
     bottom: 108px;
     left: 34px;
-    background: var(--register-brown);
-    opacity: 0.45;
-    box-shadow:
-        0 0 0 4px rgba(139, 94, 60, 0.06);
+    background: var(--verify-brown);
+    opacity: .45;
     animation:
-        registerOrbFloat 4.5s ease-in-out infinite reverse;
+        verifyOrbPulse 4.5s ease-in-out infinite reverse;
 }
 
-.sb-register-card-line {
+.sb-verify-card-line {
     position: absolute;
     top: 0;
     left: 43px;
@@ -298,14 +257,14 @@
         linear-gradient(
             90deg,
             transparent,
-            var(--register-gold),
-            var(--register-brown),
+            var(--verify-gold),
+            var(--verify-brown),
             transparent
         );
-    opacity: 0.72;
+    opacity: .72;
     pointer-events: none;
-    z-index: 3;
 }
+
 
 /* =========================================================
    BRAND
@@ -316,12 +275,9 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 25px;
-    position: relative;
-    z-index: 2;
 }
 
 .sb-login-brand-link {
-    display: inline-flex;
     text-decoration: none;
 }
 
@@ -332,16 +288,16 @@
     min-width: 154px;
     min-height: 48px;
     padding: 8px 17px;
-    border: 1px solid var(--register-border);
+    border: 1px solid var(--verify-border);
     border-radius: 13px;
     background:
         linear-gradient(
             145deg,
-            #ffffff,
+            #fff,
             #faf6f1
         );
     box-shadow:
-        0 8px 24px rgba(49, 34, 24, 0.06);
+        0 8px 24px rgba(49,34,24,.06);
 }
 
 .sb-login-logo {
@@ -352,16 +308,14 @@
     object-fit: contain;
 }
 
+
 /* =========================================================
    HEADING
-   SAME EDITORIAL STYLE AS LOGIN
    ========================================================= */
 
 .sb-login-head {
     text-align: center;
     margin-bottom: 28px;
-    position: relative;
-    z-index: 2;
 }
 
 .sb-login-kicker {
@@ -369,10 +323,10 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
-    color: var(--register-brown);
+    color: var(--verify-brown);
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: 0.17em;
+    letter-spacing: .17em;
     text-transform: uppercase;
 }
 
@@ -383,7 +337,7 @@
         linear-gradient(
             90deg,
             transparent,
-            var(--register-gold)
+            var(--verify-gold)
         );
 }
 
@@ -391,17 +345,15 @@
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--register-gold);
+    background: var(--verify-gold);
     box-shadow:
-        0 0 0 4px rgba(197, 154, 90, 0.09);
+        0 0 0 4px rgba(197,154,90,.09);
 }
 
 .sb-login-title {
     display: block;
     margin: 0;
-    position: relative;
-    left: -15px;
-    color: var(--register-text);
+    color: var(--verify-text);
     font-family:
         "Playfair Display",
         Georgia,
@@ -409,12 +361,13 @@
     font-size: 38px;
     font-weight: 600;
     line-height: 1.08;
-    letter-spacing: -0.035em;
+    letter-spacing: -.035em;
     white-space: nowrap;
+    transform: translateX(-12px);
 }
 
 .sb-login-title span:not(.sb-login-wave) {
-    color: var(--register-brown);
+    color: var(--verify-brown);
     font-style: italic;
 }
 
@@ -428,16 +381,92 @@
     font-style: normal !important;
     transform-origin: 70% 80%;
     animation:
-        registerWave 3.2s ease-in-out infinite;
+        verifyWave 3.2s ease-in-out infinite;
 }
 
 .sb-login-subtitle {
     max-width: 350px;
     margin: 12px auto 0;
-    color: var(--register-muted);
+    color: var(--verify-muted);
     font-size: 12px;
     line-height: 1.75;
 }
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.sb-login-alert {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    margin-bottom: 20px;
+    padding: 12px 13px;
+    border-radius: 13px;
+    font-size: 10px;
+    line-height: 1.55;
+}
+
+.sb-verify-alert-danger {
+    border: 1px solid rgba(177,72,72,.16);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,247,247,.98),
+            rgba(252,240,240,.98)
+        );
+    color: #8b4545;
+}
+
+.sb-verify-alert-success {
+    border: 1px solid rgba(78,132,88,.17);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(247,252,247,.98),
+            rgba(239,248,241,.98)
+        );
+    color: #52755a;
+}
+
+.sb-login-alert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+.sb-verify-alert-danger .sb-login-alert-icon {
+    background: rgba(177,72,72,.08);
+}
+
+.sb-verify-alert-success .sb-login-alert-icon {
+    background: rgba(78,132,88,.09);
+}
+
+.sb-login-alert-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sb-login-alert-content strong {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.sb-login-alert-content span {
+    font-size: 9px;
+    opacity: .85;
+}
+
 
 /* =========================================================
    FORM
@@ -452,14 +481,8 @@
     margin-bottom: 19px;
 }
 
-.sb-register-name-row {
-    margin-left: -6px;
-    margin-right: -6px;
-}
-
-.sb-register-name-row > .sb-field {
-    padding-left: 6px;
-    padding-right: 6px;
+.sb-verify-field {
+    margin-bottom: 18px;
 }
 
 .sb-field-label {
@@ -468,37 +491,50 @@
     justify-content: space-between;
     gap: 10px;
     margin-bottom: 8px;
-    color: var(--register-text);
+    color: var(--verify-text);
     font-size: 11px;
     font-weight: 700;
 }
+
+.sb-field-label > span {
+    color: #a89d94;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
 
 .sb-input-group {
     position: relative;
     display: flex;
     align-items: center;
     min-height: 52px;
-    border: 1px solid var(--register-border);
+    border: 1px solid var(--verify-border);
     border-radius: 14px;
     background:
         linear-gradient(
             145deg,
-            #ffffff,
+            #fff,
             #fcfaf8
         );
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        inset 0 1px 0 rgba(255,255,255,.8);
     transition:
-        border-color 0.25s ease,
-        box-shadow 0.25s ease,
-        transform 0.25s ease;
+        border-color .25s ease,
+        box-shadow .25s ease,
+        transform .25s ease;
 }
 
 .sb-input-group:focus-within {
-    border-color: rgba(139, 94, 60, 0.52);
+    border-color: rgba(139,94,60,.52);
     box-shadow:
-        0 0 0 4px rgba(139, 94, 60, 0.075),
-        0 8px 22px rgba(70, 45, 29, 0.055);
+        0 0 0 4px rgba(139,94,60,.075),
+        0 8px 22px rgba(70,45,29,.055);
     transform: translateY(-1px);
 }
 
@@ -508,7 +544,7 @@
     justify-content: center;
     width: 49px;
     flex: 0 0 49px;
-    color: var(--register-brown);
+    color: var(--verify-brown);
     font-size: 14px;
 }
 
@@ -520,7 +556,7 @@
     border: 0 !important;
     outline: 0 !important;
     background: transparent !important;
-    color: var(--register-text) !important;
+    color: var(--verify-text) !important;
     box-shadow: none !important;
     font-family:
         "DM Sans",
@@ -536,14 +572,44 @@
 
 .sb-login-input:-webkit-autofill,
 .sb-login-input:-webkit-autofill:hover,
-.sb-login-input:-webkit-autofill:focus,
-.sb-login-input:-webkit-autofill:active {
-    -webkit-text-fill-color: var(--register-text);
+.sb-login-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--verify-text);
     -webkit-box-shadow:
-        0 0 0 1000px #ffffff inset !important;
+        0 0 0 1000px #fff inset !important;
     transition:
         background-color 5000s ease-in-out 0s;
 }
+
+.sb-input-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    flex: 0 0 40px;
+    color: #c0b6ae;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   OTP
+   ========================================================= */
+
+.sb-otp-input {
+    letter-spacing: .22em;
+    font-weight: 700;
+    color: var(--verify-brown) !important;
+}
+
+.sb-otp-input::placeholder {
+    letter-spacing: 0;
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   PASSWORD TOGGLE
+   ========================================================= */
 
 .sb-pass-toggle {
     display: flex;
@@ -560,162 +626,89 @@
     cursor: pointer;
     font-size: 14px;
     transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        transform 0.2s ease;
+        color .2s ease,
+        background .2s ease,
+        transform .2s ease;
 }
 
 .sb-pass-toggle:hover {
-    color: var(--register-brown);
-    background:
-        rgba(139, 94, 60, 0.075);
+    color: var(--verify-brown);
+    background: rgba(139,94,60,.075);
     transform: scale(1.04);
 }
 
+
 /* =========================================================
-   VALIDATION ALERT
+   RESEND
    ========================================================= */
 
-.sb-login-alert {
-    position: relative;
+.sb-verify-resend {
     display: flex;
-    align-items: flex-start;
-    gap: 11px;
-    margin-bottom: 21px;
-    padding: 12px 13px;
-    border: 1px solid rgba(190, 91, 70, 0.18);
-    border-radius: 13px;
+    align-items: center;
+    gap: 9px;
+    margin-top: 2px;
+    margin-bottom: 18px;
+    padding: 10px 12px;
+    border: 1px solid var(--verify-border-light);
+    border-radius: 12px;
     background:
         linear-gradient(
             145deg,
-            rgba(255, 247, 244, 0.98),
-            rgba(255, 251, 249, 0.98)
+            rgba(255,255,255,.75),
+            rgba(250,247,243,.75)
         );
-    color: #70453b;
-    box-shadow:
-        0 8px 22px rgba(95, 51, 40, 0.045);
 }
 
-.sb-login-alert-icon {
+.sb-verify-resend-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
     border-radius: 9px;
-    background:
-        rgba(190, 91, 70, 0.09);
-    color: #b45f4d;
+    background: rgba(139,94,60,.07);
+    color: var(--verify-brown);
     font-size: 12px;
 }
 
-.sb-login-alert-content {
-    min-width: 0;
-}
-
-.sb-login-alert-content strong {
-    display: block;
-    margin-bottom: 4px;
-    color: #654036;
-    font-size: 10px;
-    font-weight: 700;
-}
-
-.sb-login-alert-content ul {
-    margin: 0;
-    padding-left: 15px;
-    color: #8a645b;
+.sb-verify-resend-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    color: #948a82;
     font-size: 9px;
-    line-height: 1.55;
 }
 
-.sb-login-alert-content li + li {
-    margin-top: 2px;
-}
-
-/* =========================================================
-   TERMS
-   ========================================================= */
-
-.sb-register-options {
-    margin-top: -2px;
-    margin-bottom: 21px;
-}
-
-.sb-register-terms {
+.sb-verify-resend-link {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
-    margin: 0;
-    color: #8f847c;
-    font-size: 10px;
-    line-height: 1.45;
-    cursor: pointer;
-}
-
-.sb-register-terms input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.sb-custom-checkbox {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 17px;
-    height: 17px;
-    flex: 0 0 17px;
-    border: 1px solid #d8cec5;
-    border-radius: 5px;
-    background: #ffffff;
-    color: transparent;
-    font-size: 10px;
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.sb-register-terms input:checked + .sb-custom-checkbox {
-    border-color: var(--register-brown);
-    background:
-        var(--register-brown);
-    color: #ffffff;
-    transform: scale(1.03);
-}
-
-.sb-register-terms:focus-within .sb-custom-checkbox {
-    box-shadow:
-        0 0 0 4px rgba(139, 94, 60, 0.08);
-}
-
-.sb-register-terms-text {
-    display: inline;
-}
-
-.sb-register-terms-text a {
-    color: var(--register-brown);
+    gap: 4px;
+    color: var(--verify-brown);
+    font-size: 9px;
     font-weight: 700;
     text-decoration: none;
     transition:
-        color 0.2s ease;
+        color .2s ease,
+        transform .2s ease;
 }
 
-.sb-register-terms-text a:hover {
-    color: var(--register-brown-dark);
+.sb-verify-resend-link:hover {
+    color: var(--verify-brown-dark);
+    transform: translateX(2px);
 }
+
+.sb-verify-resend-link i {
+    font-size: 9px;
+}
+
 
 /* =========================================================
-   REGISTER BUTTON
-   SAME PREMIUM BUTTON SYSTEM AS LOGIN
+   SUBMIT BUTTON
    ========================================================= */
 
-.sb-register-submit {
+.sb-signin-btn {
     position: relative;
     display: flex;
     align-items: center;
@@ -728,7 +721,7 @@
     background:
         radial-gradient(
             circle at 85% 10%,
-            rgba(255, 255, 255, 0.15),
+            rgba(255,255,255,.15),
             transparent 28%
         ),
         linear-gradient(
@@ -737,176 +730,88 @@
             #7b4f32 50%,
             #9a6948 100%
         );
-    color: #ffffff;
+    color: #fff;
     cursor: pointer;
     overflow: hidden;
     box-shadow:
-        0 14px 28px rgba(96, 59, 36, 0.20);
+        0 14px 28px rgba(96,59,36,.20);
     font-family:
         "DM Sans",
         sans-serif;
     transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+        transform .25s ease,
+        box-shadow .25s ease;
 }
 
-.sb-register-submit::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 70%;
-    height: 100%;
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.11),
-            transparent
-        );
-    transform: skewX(-18deg);
-    transition:
-        left 0.55s ease;
-}
-
-.sb-register-submit:hover {
+.sb-signin-btn:hover {
     transform: translateY(-2px);
     box-shadow:
-        0 17px 32px rgba(96, 59, 36, 0.25);
-}
-
-.sb-register-submit:hover::before {
-    left: 130%;
-}
-
-.sb-register-submit:active {
-    transform: translateY(0);
+        0 18px 34px rgba(96,59,36,.25);
 }
 
 .sb-signin-content {
     display: flex;
     align-items: center;
     gap: 10px;
-    position: relative;
-    z-index: 2;
 }
 
 .sb-signin-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 35px;
-    height: 35px;
+    width: 34px;
+    height: 34px;
     border-radius: 10px;
-    background:
-        rgba(255, 255, 255, 0.12);
-    font-size: 13px;
+    background: rgba(255,255,255,.11);
+    font-size: 14px;
 }
 
 .sb-signin-text {
     font-size: 11px;
     font-weight: 700;
+    letter-spacing: .01em;
 }
 
 .sb-signin-arrow {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
+    width: 41px;
+    height: 41px;
+    border: 1px solid rgba(255,255,255,.15);
     border-radius: 11px;
-    background:
-        rgba(255, 255, 255, 0.12);
-    position: relative;
-    z-index: 2;
-    font-size: 13px;
+    background: rgba(255,255,255,.08);
+    font-size: 12px;
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+        transform .25s ease,
+        background .25s ease;
 }
 
-.sb-register-submit:hover .sb-signin-arrow {
-    background:
-        rgba(255, 255, 255, 0.18);
-    transform:
-        translate(1px, -1px);
+.sb-signin-btn:hover .sb-signin-arrow {
+    transform: rotate(5deg);
+    background: rgba(255,255,255,.14);
 }
+
 
 /* =========================================================
-   BENEFITS
+   NAVIGATION
    ========================================================= */
 
-.sb-register-benefits {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 7px;
-    margin-top: 23px;
+.sb-verify-navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 21px;
     padding-top: 19px;
-    border-top: 1px solid var(--register-border-light);
+    border-top: 1px solid var(--verify-border-light);
 }
 
-.sb-register-benefit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    min-width: 0;
-    color: #847970;
-}
-
-.sb-register-benefit-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
-    border: 1px solid #ebe3dc;
-    border-radius: 9px;
-    background:
-        linear-gradient(
-            145deg,
-            #ffffff,
-            #faf6f1
-        );
-    color: var(--register-brown);
-    font-size: 11px;
-    box-shadow:
-        0 5px 14px rgba(49, 34, 24, 0.04);
-}
-
-.sb-register-benefit div {
-    min-width: 0;
-}
-
-.sb-register-benefit strong {
-    display: block;
-    color: var(--register-text);
-    font-size: 9px;
-    font-weight: 700;
-    line-height: 1.25;
-}
-
-.sb-register-benefit small {
-    display: block;
-    margin-top: 2px;
-    color: #a49a92;
-    font-size: 7px;
-    font-weight: 500;
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-/* =========================================================
-   LOGIN LINK
-   ========================================================= */
-
-.sb-register-login {
+.sb-verify-login,
+.sb-verify-register {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
-    margin-top: 21px;
     color: #948a82;
     font-size: 10px;
 }
@@ -914,31 +819,24 @@
 .sb-register-link {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    color: var(--register-brown);
-    font-size: 10px;
+    gap: 5px;
+    color: var(--verify-brown);
     font-weight: 700;
     text-decoration: none;
     transition:
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.sb-register-link i {
-    font-size: 9px;
-    transition:
-        transform 0.2s ease;
+        color .2s ease,
+        transform .2s ease;
 }
 
 .sb-register-link:hover {
-    color: var(--register-brown-dark);
-    transform: translateY(-1px);
+    color: var(--verify-brown-dark);
+    transform: translateX(2px);
 }
 
-.sb-register-link:hover i {
-    transform:
-        translate(1px, -1px);
+.sb-register-link i {
+    font-size: 10px;
 }
+
 
 /* =========================================================
    BOTTOM MARK
@@ -953,14 +851,13 @@
 }
 
 .sb-login-bottom-mark span {
-    display: block;
-    width: 48px;
+    width: 45px;
     height: 1px;
     background:
         linear-gradient(
             90deg,
             transparent,
-            #dfd4ca
+            var(--verify-border)
         );
 }
 
@@ -968,67 +865,97 @@
     background:
         linear-gradient(
             90deg,
-            #dfd4ca,
+            var(--verify-border),
             transparent
         );
 }
 
 .sb-login-bottom-mark i {
-    color: var(--register-gold);
-    font-size: 11px;
+    color: var(--verify-gold);
+    font-size: 10px;
 }
 
+
 /* =========================================================
-   RESPONSIVE — TABLET
+   ANIMATIONS
    ========================================================= */
 
-@media (max-width: 991.98px) {
-    .auth-page-bg {
-        background-attachment: scroll;
+@keyframes verifyWave {
+    0%,
+    100% {
+        transform: rotate(0deg);
     }
 
-    .auth-page-bg-login::before {
-        filter:
-            blur(2px)
-            saturate(90%)
-            contrast(1.06);
+    8% {
+        transform: rotate(8deg);
     }
 
-    .auth-grid {
-        max-width: 100%;
+    16% {
+        transform: rotate(-5deg);
     }
 
-    .auth-grid-login {
-        max-width: 415px;
+    24% {
+        transform: rotate(5deg);
     }
 
-    .sb-register-premium {
+    32% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes verifyOrbPulse {
+    0%,
+    100% {
+        opacity: .45;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .9;
+        transform: scale(1.3);
+    }
+}
+
+@keyframes authDustFloat {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(0, -8px, 0);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — 991px
+   ========================================================= */
+
+@media (max-width: 991px) {
+    .sb-password-verify-premium {
         width: min(100%, 465px);
         padding: 39px 38px 25px;
     }
 
-    .sb-register-card-line {
+    .sb-verify-card-line {
         left: 38px;
         right: 38px;
     }
 }
 
+
 /* =========================================================
-   RESPONSIVE — MOBILE
+   RESPONSIVE — 767px
    ========================================================= */
 
-@media (max-width: 767.98px) {
-    .auth-grid-login {
-        max-width: 100%;
-    }
-
-    .sb-register-premium {
+@media (max-width: 767px) {
+    .sb-password-verify-premium {
         width: min(100%, 440px);
         padding: 35px 31px 24px;
         border-radius: 23px;
     }
 
-    .sb-register-card-line {
+    .sb-verify-card-line {
         left: 31px;
         right: 31px;
     }
@@ -1039,39 +966,26 @@
 
     .sb-login-title {
         font-size: 35px;
-        left: -9px;
     }
 
     .sb-login-subtitle {
         font-size: 11px;
     }
-
-    .sb-register-benefits {
-        gap: 5px;
-    }
 }
 
+
 /* =========================================================
-   RESPONSIVE — SMALL MOBILE
+   RESPONSIVE — 575px
    ========================================================= */
 
-@media (max-width: 575.98px) {
-    .auth-wrapper {
-        width: 100%;
-    }
-
-    .auth-grid-login {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .sb-register-premium {
+@media (max-width: 575px) {
+    .sb-password-verify-premium {
         width: calc(100% - 22px);
         padding: 31px 22px 22px;
         border-radius: 20px;
     }
 
-    .sb-register-card-line {
+    .sb-verify-card-line {
         left: 23px;
         right: 23px;
     }
@@ -1079,7 +993,7 @@
     .sb-login-logo-wrap {
         min-width: 139px;
         min-height: 44px;
-        padding: 7px 14px;
+        padding: 7px 15px;
         border-radius: 12px;
     }
 
@@ -1094,7 +1008,7 @@
 
     .sb-login-title {
         font-size: 32px;
-        left: -8px;
+        transform: translateX(-1px);
     }
 
     .sb-login-wave {
@@ -1126,67 +1040,52 @@
         flex-basis: 45px;
     }
 
-    .sb-login-options,
-    .sb-register-options {
-        gap: 10px;
-        margin-bottom: 19px;
+    .sb-verify-resend {
+        padding: 9px 10px;
     }
 
-    .sb-register-submit {
+    .sb-signin-btn {
         min-height: 51px;
         border-radius: 13px;
     }
 
-    .sb-signin-icon {
-        width: 33px;
-        height: 33px;
-        border-radius: 9px;
+    .sb-signin-text {
+        font-size: 10px;
     }
 
-    .sb-signin-arrow {
-        width: 39px;
-        height: 39px;
-        border-radius: 10px;
+    .sb-google-btn {
+        min-height: 47px;
+        border-radius: 13px;
     }
 
-    .sb-register-benefits {
-        grid-template-columns: 1fr;
+    .sb-verify-navigation {
         gap: 8px;
-    }
-
-    .sb-register-benefit {
-        justify-content: flex-start;
-    }
-
-    .sb-register-login {
-        flex-direction: column;
-        gap: 4px;
     }
 }
 
+
 /* =========================================================
-   RESPONSIVE — VERY SMALL
+   RESPONSIVE — 390px
    ========================================================= */
 
 @media (max-width: 390px) {
-    .sb-register-premium {
+    .sb-password-verify-premium {
         width: calc(100% - 16px);
         padding: 27px 18px 20px;
         border-radius: 18px;
     }
 
-    .sb-register-card-line {
+    .sb-verify-card-line {
         left: 18px;
         right: 18px;
     }
 
-    .sb-login-kicker {
-        font-size: 8px;
-    }
-
     .sb-login-title {
         font-size: 29px;
-        left: -7px;
+    }
+
+    .sb-login-kicker {
+        font-size: 8px;
     }
 
     .sb-login-subtitle {
@@ -1197,36 +1096,47 @@
         font-size: 10px;
     }
 
-    .sb-register-terms {
-        font-size: 9px;
+    .sb-field-label > span {
+        font-size: 7px;
+    }
+
+    .sb-verify-resend-content {
+        font-size: 8px;
+    }
+
+    .sb-verify-resend-link {
+        font-size: 8px;
     }
 
     .sb-signin-text {
         font-size: 10px;
     }
 
-    .sb-google-btn {
+    .sb-verify-login,
+    .sb-verify-register {
         font-size: 9px;
     }
 }
+
 
 /* =========================================================
    REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-    .auth-page-bg-login .auth-wrapper::before,
-    .sb-register-orb-one,
-    .sb-register-orb-two,
-    .sb-login-wave {
+    .sb-login-wave,
+    .sb-verify-orb-one,
+    .sb-verify-orb-two,
+    .auth-page-bg-login .auth-wrapper::before {
         animation: none !important;
     }
 
     .sb-input-group,
+    .sb-signin-btn,
+    .sb-signin-arrow,
     .sb-pass-toggle,
-    .sb-register-submit,
     .sb-register-link,
-    .sb-signin-arrow {
+    .sb-verify-resend-link {
         transition: none !important;
     }
 }

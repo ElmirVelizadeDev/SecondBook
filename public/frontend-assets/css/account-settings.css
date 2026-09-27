@@ -84,7 +84,7 @@
     color: #72543d;
     font-size: 10px;
     font-weight: 700;
-    line-height: 1 !important;
+    line-height: 1;
     text-decoration: none;
     white-space: nowrap;
     transition:
@@ -403,7 +403,7 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    line-height: 1 !important;
+    line-height: 1;
     white-space: nowrap;
 }
 
@@ -414,10 +414,10 @@
 
 .settings-outline-btn {
     gap: 6px;
-    height: 32px !important;
-    min-height: 32px !important;
-    max-height: 32px !important;
-    padding: 0 11px !important;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    padding: 0 11px;
     border: 1px solid #ded2c8;
     border-radius: 8px;
     background: #fff;
@@ -461,12 +461,6 @@
     color: #665b53;
     font-size: 10px;
     font-weight: 700;
-}
-
-.settings-form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
 }
 
 
@@ -550,7 +544,7 @@
 }
 
 .password-toggle i {
-    margin: 0 !important;
+    margin: 0;
     font-size: 14px;
 }
 
@@ -598,10 +592,10 @@
 
 .settings-primary-btn {
     gap: 7px;
-    height: 34px !important;
-    min-height: 34px !important;
-    max-height: 34px !important;
-    padding: 0 12px !important;
+    height: 34px;
+    min-height: 34px;
+    max-height: 34px;
+    padding: 0 12px;
     border: 0;
     border-radius: 8px;
     background: #8b5e3c;
@@ -782,10 +776,10 @@
 
 .danger-delete-btn {
     gap: 6px;
-    height: 33px !important;
-    min-height: 33px !important;
-    max-height: 33px !important;
-    padding: 0 11px !important;
+    height: 33px;
+    min-height: 33px;
+    max-height: 33px;
+    padding: 0 11px;
     border: 1px solid #e7caca;
     border-radius: 8px;
     background: #fff;
@@ -895,11 +889,6 @@
         padding-right: 18px;
     }
 
-    .settings-form-row {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-
     .settings-form-footer {
         align-items: flex-start;
         flex-direction: column;
@@ -907,9 +896,9 @@
 
     .settings-form-footer .settings-primary-btn {
         width: 100%;
-        height: 36px !important;
-        min-height: 36px !important;
-        max-height: 36px !important;
+        height: 36px;
+        min-height: 36px;
+        max-height: 36px;
     }
 
     .settings-card-footer {
@@ -921,16 +910,16 @@
 
     .settings-card-footer .settings-outline-btn {
         width: 100%;
-        height: 34px !important;
-        min-height: 34px !important;
-        max-height: 34px !important;
+        height: 34px;
+        min-height: 34px;
+        max-height: 34px;
         justify-content: center;
     }
 
     .settings-preferences-footer .settings-primary-btn {
-        height: 36px !important;
-        min-height: 36px !important;
-        max-height: 36px !important;
+        height: 36px;
+        min-height: 36px;
+        max-height: 36px;
     }
 
     .danger-action {
@@ -940,142 +929,10 @@
 
     .danger-delete-btn {
         width: 100%;
-        height: 35px !important;
-        min-height: 35px !important;
-        max-height: 35px !important;
+        height: 35px;
+        min-height: 35px;
+        max-height: 35px;
     }
-
-
-    /* =====================================================
-       PASSWORD INPUT
-    ===================================================== */
-
-    .settings-input {
-        position: relative !important;
-        width: 100%;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        border: 1px solid #d9cec4 !important;
-        border-radius: 11px !important;
-        background: #fff !important;
-        overflow: visible;
-    }
-
-    .settings-input:focus-within {
-        border-color: #8b5e3c !important;
-        box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.08) !important;
-    }
-
-    .settings-input input,
-    .settings-input input.form-control {
-        width: 100% !important;
-        height: 100% !important;
-        min-width: 0;
-        margin: 0 !important;
-        padding: 0 52px 0 10px !important;
-        border: 0 !important;
-        border-width: 0 !important;
-        border-style: none !important;
-        border-color: transparent !important;
-        outline: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-        color: #332d28 !important;
-        font-size: 11px;
-        line-height: 1;
-        appearance: none !important;
-        -webkit-appearance: none !important;
-    }
-
-    .settings-input input:focus,
-    .settings-input input.form-control:focus {
-        border: 0 !important;
-        outline: none !important;
-        box-shadow: none !important;
-    }
-
-    .settings-input input::placeholder {
-        color: #aaa19a !important;
-        opacity: 1;
-    }
-
-
-    /* =====================================================
-       CHROME AUTOFILL
-    ===================================================== */
-
-    .settings-input input:-webkit-autofill,
-    .settings-input input:-webkit-autofill:hover,
-    .settings-input input:-webkit-autofill:focus,
-    .settings-input input:-webkit-autofill:active {
-        -webkit-text-fill-color: #332d28 !important;
-        -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
-        box-shadow: 0 0 0 1000px #fff inset !important;
-        border: 0 !important;
-        outline: none !important;
-    }
-
-
-    /* =====================================================
-       PASSWORD ICON
-    ===================================================== */
-
-    .settings-input > i {
-        position: relative;
-        z-index: 2;
-        flex: 0 0 auto;
-        margin-left: 14px !important;
-        color: #a4968c;
-        font-size: 13px;
-    }
-
-    .password-toggle {
-        position: absolute !important;
-        top: 50% !important;
-        right: 10px !important;
-        transform: translateY(-50%) !important;
-        z-index: 5;
-        width: 32px !important;
-        height: 32px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: 0 !important;
-        outline: none !important;
-        border-radius: 8px !important;
-        background: transparent !important;
-        color: #9a8f87 !important;
-        box-shadow: none !important;
-        cursor: pointer;
-    }
-
-    .password-toggle i {
-        margin: 0 !important;
-        padding: 0 !important;
-        color: inherit !important;
-        font-size: 14px !important;
-        line-height: 1 !important;
-    }
-
-    .password-toggle:hover {
-        background: #f7f1eb !important;
-        color: #8b5e3c !important;
-    }
-
-    .password-toggle:focus,
-    .password-toggle:active {
-        outline: none !important;
-        border: 0 !important;
-        box-shadow: none !important;
-    }
-
-
-    /* =====================================================
-       SCROLL TARGET
-    ===================================================== */
 
     #account,
     #security,
@@ -1112,9 +969,9 @@
 
     .account-back-profile {
         width: 100%;
-        height: 35px !important;
-        min-height: 35px !important;
-        max-height: 35px !important;
+        height: 35px;
+        min-height: 35px;
+        max-height: 35px;
         justify-content: center;
     }
 
@@ -1168,9 +1025,9 @@
 
     .settings-primary-btn {
         width: 100%;
-        height: 36px !important;
-        min-height: 36px !important;
-        max-height: 36px !important;
+        height: 36px;
+        min-height: 36px;
+        max-height: 36px;
     }
 
     .settings-form-footer > span {
@@ -1186,90 +1043,16 @@
     }
 
     .danger-delete-btn {
-        height: 35px !important;
-        min-height: 35px !important;
-        max-height: 35px !important;
+        height: 35px;
+        min-height: 35px;
+        max-height: 35px;
     }
 }
 
-/* =========================================================
-   PASSWORD REQUIREMENTS
-========================================================= */
-
-.password-requirements {
-    display: none;
-    width: 100%;
-    margin-top: 4px;
-    margin-bottom: 24px;
-    padding: 16px 18px;
-    border: 1px solid #eadfd7;
-    border-radius: 12px;
-    background: #fcfaf8;
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease;
+.delete-cancel-btn {
+    margin-left: 10px !important;
 }
 
-.password-requirement {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-height: 28px;
-    margin: 0;
-    color: #8a7b72;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.4;
-    transition:
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.password-requirement + .password-requirement {
-    margin-top: 7px;
-}
-
-.password-requirement i {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    min-width: 18px;
-    height: 18px;
-    font-size: 14px;
-    color: #b7aaa1;
-    transition:
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.password-requirement.valid {
-    color: #4f6658;
-}
-
-.password-requirement.valid i {
-    color: #5d806b;
-    transform: scale(1.05);
-}
-
-
-/* =========================================================
-   PASSWORD REQUIREMENTS — RESPONSIVE
-========================================================= */
-
-@media (max-width: 575.98px) {
-
-    .password-requirements {
-        padding: 14px 15px;
-        margin-bottom: 20px;
-        border-radius: 10px;
-    }
-
-    .password-requirement {
-        font-size: 12.5px;
-    }
-
-    .password-requirement + .password-requirement {
-        margin-top: 6px;
-    }
+.swal2-actions {
+    gap: 10px !important;
 }

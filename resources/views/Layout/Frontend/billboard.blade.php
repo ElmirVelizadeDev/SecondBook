@@ -59,7 +59,7 @@
                         <div class="billboard-actions">
 
                             <a
-                                href="#popular-books"
+                                href="{{ route('frontend.books') }}"
                                 class="billboard-btn billboard-btn-primary"
                             >
                                 <span>Explore Books</span>

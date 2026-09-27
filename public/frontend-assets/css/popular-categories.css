@@ -562,3 +562,56 @@
     }
 }
 
+/* =========================================================
+   CATEGORIES ANIMATION
+========================================================= */
+
+#categories .categories-header,
+#categories .category-card {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+#categories .categories-header {
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+#categories .category-card {
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
+}
+
+#categories .categories-header.is-visible,
+#categories .category-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#categories .category-card:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+#categories .category-card:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+#categories .category-card:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+#categories .category-card:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    #categories .categories-header,
+    #categories .category-card {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}

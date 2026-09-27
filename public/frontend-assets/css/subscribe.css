@@ -393,3 +393,47 @@
         display: none;
     }
 }
+
+/* =========================================================
+   SUBSCRIBE — SCROLL REVEAL
+   ========================================================= */
+
+#subscribe .subscribe-content {
+
+    opacity: 0;
+
+    transform: translateY(35px);
+
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+
+/* =========================================================
+   VISIBLE STATE
+   ========================================================= */
+
+#subscribe.is-visible .subscribe-content {
+
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #subscribe .subscribe-content {
+
+        opacity: 1;
+
+        transform: none;
+
+        transition: none;
+    }
+}

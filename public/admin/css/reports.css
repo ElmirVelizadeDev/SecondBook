@@ -1319,3 +1319,27 @@ RESPONSIVE
     color: #6ee7a0;
 }
 
+/* ========================================
+   REPORTS - DARK MODE STOCK BADGES
+======================================== */
+
+.dark-mode .reports-page .reports-stock-normal,
+.dark-theme .reports-page .reports-stock-normal,
+[data-theme="dark"] .reports-page .reports-stock-normal {
+    background: #123524;
+    color: #6ee7a0;
+}
+
+.dark-mode .reports-page .reports-stock-warning,
+.dark-theme .reports-page .reports-stock-warning,
+[data-theme="dark"] .reports-page .reports-stock-warning {
+    background: #422b08;
+    color: #fbbf24;
+}
+
+.dark-mode .reports-page .reports-stock-danger,
+.dark-theme .reports-page .reports-stock-danger,
+[data-theme="dark"] .reports-page .reports-stock-danger {
+    background: #3f1d24;
+    color: #f87171;
+}

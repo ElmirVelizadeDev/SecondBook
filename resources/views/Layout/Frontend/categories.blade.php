@@ -1,4 +1,4 @@
-<section id="categories" class="categories-section" data-aos="fade-up">
+<section id="categories" class="categories-section">
     <div class="container">
 
         <div class="categories-header">

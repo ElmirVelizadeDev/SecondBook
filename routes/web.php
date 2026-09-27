@@ -56,6 +56,7 @@ use App\Http\Controllers\Frontend\SellerApplicationController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\ReturnPolicyController;
+use App\Http\Controllers\Frontend\CookiePolicyController;
 use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\Frontend\PrivacyPolicyController;
 
@@ -78,44 +79,37 @@ use App\Http\Controllers\Seller\StoreSettingsController;
 use App\Http\Controllers\Auth\AuthController;
 
 
-/*
-|--------------------------------------------------------------------------
-| ROOT
-|--------------------------------------------------------------------------
-*/
+// =========================================================
+// ROOT
+// =========================================================
 
 Route::redirect('/', '/frontend');
 
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN
-|--------------------------------------------------------------------------
-*/
+// =========================================================
+// ADMIN
+// =========================================================
 
 Route::prefix('admin')
     ->middleware(['admin', 'permission'])
     ->name('admin.')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | DASHBOARD
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // DASHBOARD
+        // ---------------------------------------------------------
 
         Route::controller(AdminController::class)->group(function () {
 
             Route::get('/dashboard', 'dashboard')
                 ->name('dashboard');
+
         });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | BOOK MANAGEMENT
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // BOOK MANAGEMENT
+        // ---------------------------------------------------------
 
         // Books
 
@@ -144,6 +138,7 @@ Route::prefix('admin')
 
                 Route::delete('/{book}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -174,6 +169,7 @@ Route::prefix('admin')
 
                 Route::delete('/{condition}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -201,6 +197,7 @@ Route::prefix('admin')
 
                 Route::delete('/{book}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -234,6 +231,7 @@ Route::prefix('admin')
 
                 Route::delete('/{category}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -267,6 +265,7 @@ Route::prefix('admin')
 
                 Route::delete('/{author}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -300,14 +299,13 @@ Route::prefix('admin')
 
                 Route::delete('/{publisher}', 'destroy')
                     ->name('destroy');
+
             });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | SALES MANAGEMENT
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // SALES MANAGEMENT
+        // ---------------------------------------------------------
 
         // Refunds
 
@@ -339,6 +337,7 @@ Route::prefix('admin')
 
                 Route::delete('/{refund}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -366,6 +365,7 @@ Route::prefix('admin')
 
                 Route::delete('/{shipping}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -399,6 +399,7 @@ Route::prefix('admin')
 
                 Route::delete('/{coupon}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -429,6 +430,7 @@ Route::prefix('admin')
 
                 Route::delete('/{order}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -459,14 +461,13 @@ Route::prefix('admin')
 
                 Route::delete('/{payment}', 'destroy')
                     ->name('destroy');
+
             });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | SELLER APPLICATIONS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // SELLER APPLICATIONS
+        // ---------------------------------------------------------
 
         Route::controller(SellerApplicationsController::class)
             ->prefix('seller-applications')
@@ -484,14 +485,13 @@ Route::prefix('admin')
 
                 Route::patch('/{application}/reject', 'reject')
                     ->name('reject');
+
             });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | USER MANAGEMENT
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // USER MANAGEMENT
+        // ---------------------------------------------------------
 
         // Users
 
@@ -523,6 +523,7 @@ Route::prefix('admin')
 
                 Route::delete('/{user}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -556,6 +557,7 @@ Route::prefix('admin')
 
                 Route::delete('/{seller}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -586,14 +588,13 @@ Route::prefix('admin')
 
                 Route::delete('/{role}', 'destroy')
                     ->name('destroy');
+
             });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | CONTENT MANAGEMENT
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // CONTENT MANAGEMENT
+        // ---------------------------------------------------------
 
         // Reviews
 
@@ -601,7 +602,9 @@ Route::prefix('admin')
             ->prefix('reviews')
             ->name('reviews.')
             ->group(function () {
-                Route::get('/', 'index')->name('index');
+
+                Route::get('/', 'index')
+                    ->name('index');
 
                 Route::get('/{review}', 'show')
                     ->name('show');
@@ -614,6 +617,7 @@ Route::prefix('admin')
 
                 Route::delete('/{review}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -647,6 +651,7 @@ Route::prefix('admin')
 
                 Route::delete('/{message}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -674,6 +679,7 @@ Route::prefix('admin')
 
                 Route::delete('/{banner}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -683,6 +689,7 @@ Route::prefix('admin')
             ->prefix('blogs')
             ->name('blogs.')
             ->group(function () {
+
                 Route::get('/', 'index')
                     ->name('index');
 
@@ -700,7 +707,9 @@ Route::prefix('admin')
 
                 Route::delete('/{blog}', 'destroy')
                     ->name('destroy');
+
             });
+
 
         // FAQ
 
@@ -726,14 +735,13 @@ Route::prefix('admin')
 
                 Route::delete('/{faq}', 'destroy')
                     ->name('destroy');
+
             });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | ANALYTICS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // ANALYTICS
+        // ---------------------------------------------------------
 
         // Reports
 
@@ -750,6 +758,7 @@ Route::prefix('admin')
 
                 Route::get('/books', 'books')
                     ->name('books');
+
             });
 
 
@@ -762,14 +771,13 @@ Route::prefix('admin')
 
                 Route::get('/', 'index')
                     ->name('index');
+
             });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | SYSTEM
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // SYSTEM
+        // ---------------------------------------------------------
 
         // Settings
 
@@ -783,6 +791,7 @@ Route::prefix('admin')
 
                 Route::put('/', 'update')
                     ->name('update');
+
             });
 
 
@@ -792,16 +801,19 @@ Route::prefix('admin')
             ->prefix('email-settings')
             ->name('email-settings.')
             ->group(function () {
-                
+
                 Route::get('/', 'index')
                     ->name('index');
+
                 Route::put('/', 'update')
                     ->name('update');
+
                 Route::post('/test', 'test')
                     ->name('test');
+
             });
 
-        
+
         // Notifications
 
         Route::controller(NotificationController::class)
@@ -826,6 +838,7 @@ Route::prefix('admin')
 
                 Route::delete('/{notification}', 'destroy')
                     ->name('destroy');
+
             });
 
 
@@ -838,6 +851,7 @@ Route::prefix('admin')
 
                 Route::get('/', 'index')
                     ->name('index');
+
             });
 
 
@@ -848,9 +862,11 @@ Route::prefix('admin')
             ->name('backup.')
             ->group(function () {
 
-                Route::get('/', 'index')->name('index');
+                Route::get('/', 'index')
+                    ->name('index');
 
-                Route::post('/create', 'create')->name('create');
+                Route::post('/create', 'create')
+                    ->name('create');
 
                 Route::get('/download/{file}', 'download')
                     ->name('download');
@@ -860,27 +876,24 @@ Route::prefix('admin')
 
                 Route::post('/restore/{file}', 'restore')
                     ->name('restore');
+
             });
 
     });
 
 
-/*
-|--------------------------------------------------------------------------
-| SELLER PANEL
-|--------------------------------------------------------------------------
-*/
+// =========================================================
+// SELLER PANEL
+// =========================================================
 
 Route::prefix('seller')
     ->middleware(['auth', 'seller'])
     ->name('seller.')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | DASHBOARD
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // DASHBOARD
+        // ---------------------------------------------------------
 
         Route::get(
             '/dashboard',
@@ -888,11 +901,9 @@ Route::prefix('seller')
         )->name('dashboard');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | STORE
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // STORE
+        // ---------------------------------------------------------
 
         Route::get(
             '/store',
@@ -905,11 +916,9 @@ Route::prefix('seller')
         )->name('store.update');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | BOOKS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // BOOKS
+        // ---------------------------------------------------------
 
         Route::get(
             '/books',
@@ -947,11 +956,9 @@ Route::prefix('seller')
         )->name('books.destroy');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | ORDERS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // ORDERS
+        // ---------------------------------------------------------
 
         Route::get(
             '/orders',
@@ -974,11 +981,9 @@ Route::prefix('seller')
         )->name('orders.destroy');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | SALES
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // SALES
+        // ---------------------------------------------------------
 
         Route::get(
             '/sales',
@@ -986,11 +991,9 @@ Route::prefix('seller')
         )->name('sales.index');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | REVIEWS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // REVIEWS
+        // ---------------------------------------------------------
 
         Route::get(
             '/reviews',
@@ -998,11 +1001,9 @@ Route::prefix('seller')
         )->name('reviews.index');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | SETTINGS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // SETTINGS
+        // ---------------------------------------------------------
 
         Route::get(
             '/settings',
@@ -1013,37 +1014,39 @@ Route::prefix('seller')
             '/settings',
             [StoreSettingsController::class, 'update']
         )->name('settings.update');
+
     });
 
 
-/*
-|--------------------------------------------------------------------------
-| FRONTEND
-|--------------------------------------------------------------------------
-*/
+// =========================================================
+// FRONTEND
+// =========================================================
 
 Route::prefix('frontend')
     ->name('frontend.')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | HOME
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // HOME
+        // ---------------------------------------------------------
 
         Route::controller(HomeController::class)->group(function () {
 
             Route::get('/', 'index')
                 ->name('home');
+
+                Route::get(
+                    '/featured-books',
+                    [HomeController::class, 'featuredBooks']
+                )->name('featured-books');
+
+
         });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | BOOKS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // BOOKS
+        // ---------------------------------------------------------
 
         Route::controller(FrontendBooksController::class)->group(function () {
 
@@ -1052,51 +1055,48 @@ Route::prefix('frontend')
 
             Route::get('/books/{book}', 'show')
                 ->name('books.show');
+
         });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | CATEGORIES
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // CATEGORIES
+        // ---------------------------------------------------------
 
         Route::controller(FrontendCategoriesController::class)->group(function () {
 
             Route::get('/categories', 'index')
                 ->name('categories');
+
         });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | AUTHORS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // AUTHORS
+        // ---------------------------------------------------------
 
         Route::controller(FrontendAuthorsController::class)->group(function () {
 
             Route::get('/authors', 'index')
                 ->name('authors');
+
         });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | ABOUT
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // ABOUT
+        // ---------------------------------------------------------
 
         Route::get('/about', function () {
+
             return view('Frontend.about');
+
         })->name('about');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | CONTACT
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // CONTACT
+        // ---------------------------------------------------------
 
         Route::controller(ContactController::class)->group(function () {
 
@@ -1105,14 +1105,13 @@ Route::prefix('frontend')
 
             Route::post('/contact', 'store')
                 ->name('contact.store');
+
         });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | BECOME A SELLER
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // BECOME A SELLER
+        // ---------------------------------------------------------
 
         Route::controller(SellerApplicationController::class)->group(function () {
 
@@ -1121,14 +1120,13 @@ Route::prefix('frontend')
 
             Route::post('/become-a-seller', 'store')
                 ->name('seller-application.store');
+
         });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | PUBLIC INFORMATION
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // PUBLIC INFORMATION
+        // ---------------------------------------------------------
 
         // FAQ
 
@@ -1170,11 +1168,17 @@ Route::prefix('frontend')
         )->name('privacy-policy');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | AUTHENTICATION - GUEST
-        |--------------------------------------------------------------------------
-        */
+        // Cookies Policy
+
+        Route::get(
+            '/cookies',
+            [CookiePolicyController::class, 'index']
+        )->name('cookies');
+
+
+        // ---------------------------------------------------------
+        // AUTHENTICATION - GUEST
+        // ---------------------------------------------------------
 
         Route::controller(AuthController::class)
             ->prefix('auth')
@@ -1201,12 +1205,13 @@ Route::prefix('frontend')
 
 
                 // Google Login
-                
+
                 Route::get('/google', 'redirectToGoogle')
                     ->name('google.redirect');
 
                 Route::get('/google/callback', 'handleGoogleCallback')
                     ->name('google.callback');
+
 
                 // Forgot Password
 
@@ -1219,21 +1224,6 @@ Route::prefix('frontend')
                 })->name('password.request');
 
 
-                // OTP Verify Page
-
-                Route::get('/password/verify', function () {
-
-                    if (!session()->has('reset_email')) {
-
-                        return redirect()
-                            ->route('frontend.auth.password.request');
-                    }
-
-                    return view('auth.password-verify');
-
-                })->name('password.verify');
-
-
                 // Send OTP
 
                 Route::post(
@@ -1241,32 +1231,187 @@ Route::prefix('frontend')
                     'sendOtp'
                 )->name('password.send.otp');
 
-
-                // Verify OTP
-
-                Route::post(
-                    '/password/verify',
-                    'verifyOtp'
-                )->name('password.verify.otp');
             });
 
+        // =========================================================
+        // EMAIL VERIFICATION
+        // =========================================================
 
-        /*
-        |--------------------------------------------------------------------------
-        | TERMS
-        |--------------------------------------------------------------------------
-        */
+        Route::get(
+            '/auth/email/verify',
+            [AuthController::class, 'emailVerify']
+        )->name('auth.email.verify');
+
+        Route::post(
+            '/auth/email/verify',
+            [AuthController::class, 'verifyEmailOtp']
+        )->name('auth.email.verify.otp');
+
+        Route::post(
+            '/auth/email/resend',
+            [AuthController::class, 'resendEmailVerificationOtp']
+        )->name('auth.email.verify.resend');
+
+
+        // ---------------------------------------------------------
+        // PASSWORD VERIFICATION PAGE
+        // ---------------------------------------------------------
+
+        Route::get('/auth/password/verify', function () {
+
+            $resetEmail = session('reset_email');
+
+            $sensitiveAction = session('sensitive_action');
+
+            $sensitiveEmail = session('sensitive_action_email');
+
+            $hasSensitiveVerification =
+                in_array(
+                    $sensitiveAction,
+                    [
+                        'password_change',
+                    ],
+                    true
+                )
+                && $sensitiveEmail;
+
+            if (
+                !$resetEmail &&
+                !$hasSensitiveVerification
+            ) {
+                return redirect()
+                    ->route(
+                        'frontend.auth.password.request'
+                    );
+            }
+
+            return view(
+                'auth.password-verify'
+            );
+
+        })->name('auth.password.verify');
+
+
+        // ---------------------------------------------------------
+        // RESEND PASSWORD VERIFICATION OTP
+        // ---------------------------------------------------------
+
+        Route::post(
+            '/auth/password/resend',
+            [
+                AuthController::class,
+                'resendVerificationCode'
+            ]
+        )->name('auth.password.resend');
+
+
+        // ---------------------------------------------------------
+        // VERIFY PASSWORD OTP
+        // ---------------------------------------------------------
+
+        Route::post(
+            '/auth/password/verify',
+            [
+                AuthController::class,
+                'verifyOtp'
+            ]
+        )->name('auth.password.verify.otp');
+
+
+        // ---------------------------------------------------------
+        // ACCOUNT DELETE VERIFICATION
+        // ---------------------------------------------------------
+        //
+        // Account deletion uses a completely separate
+        // verification flow.
+        //
+        // 1. User confirms deletion
+        // 2. OTP is sent
+        // 3. User enters current password
+        // 4. User enters OTP
+        // 5. Account is permanently deleted
+        //
+        // These routes require authentication.
+        // ---------------------------------------------------------
+
+        Route::middleware('auth')->group(function () {
+
+            // -----------------------------------------------------
+            // ACCOUNT DELETE VERIFICATION PAGE
+            // -----------------------------------------------------
+
+            Route::get(
+                '/auth/account/delete/verify',
+                [
+                    AuthController::class,
+                    'accountDeleteVerify'
+                ]
+            )->name(
+                'auth.account.delete.verify'
+            );
+
+
+            // -----------------------------------------------------
+            // VERIFY CURRENT PASSWORD
+            // -----------------------------------------------------
+
+            Route::post(
+                '/auth/account/delete/verify-password',
+                [
+                    AuthController::class,
+                    'verifyAccountDeletePassword'
+                ]
+            )->name(
+                'auth.account.delete.verify.password'
+            );
+
+
+            // -----------------------------------------------------
+            // VERIFY DELETE ACCOUNT OTP
+            // -----------------------------------------------------
+
+            Route::post(
+                '/auth/account/delete/verify-otp',
+                [
+                    AuthController::class,
+                    'verifyAccountDeleteOtp'
+                ]
+            )->name(
+                'auth.account.delete.verify.otp'
+            );
+
+
+            // -----------------------------------------------------
+            // RESEND DELETE ACCOUNT OTP
+            // -----------------------------------------------------
+
+            Route::post(
+                '/auth/account/delete/resend',
+                [
+                    AuthController::class,
+                    'resendVerificationCode'
+                ]
+            )->name(
+                'auth.account.delete.resend'
+            );
+
+        });
+
+
+        // ---------------------------------------------------------
+        // TERMS
+        // ---------------------------------------------------------
 
         Route::get('/auth/terms', function () {
+
             return view('auth.terms');
+
         })->name('auth.terms');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | AUTHENTICATION - LOGGED USERS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // AUTHENTICATION - LOGGED USERS
+        // ---------------------------------------------------------
 
         Route::controller(AuthController::class)
             ->prefix('auth')
@@ -1276,24 +1421,22 @@ Route::prefix('frontend')
 
                 Route::post('/logout', 'logout')
                     ->name('logout');
+
             });
+
     });
 
 
-/*
-|--------------------------------------------------------------------------
-| PROFILE
-|--------------------------------------------------------------------------
-*/
+// =========================================================
+// PROFILE
+// =========================================================
 
 Route::middleware('auth')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | MY PROFILE
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // MY PROFILE
+        // ---------------------------------------------------------
 
         Route::get(
             '/my-profile',
@@ -1301,11 +1444,9 @@ Route::middleware('auth')
         )->name('my.profile');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | EDIT PROFILE
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // EDIT PROFILE
+        // ---------------------------------------------------------
 
         Route::get(
             '/profile/edit',
@@ -1313,11 +1454,9 @@ Route::middleware('auth')
         )->name('profile.edit');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE PROFILE
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // UPDATE PROFILE
+        // ---------------------------------------------------------
 
         Route::put(
             '/profile',
@@ -1325,11 +1464,9 @@ Route::middleware('auth')
         )->name('profile.update');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | REMOVE PROFILE PHOTO
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // REMOVE PROFILE PHOTO
+        // ---------------------------------------------------------
 
         Route::delete(
             '/profile/photo',
@@ -1337,11 +1474,9 @@ Route::middleware('auth')
         )->name('profile.photo.destroy');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE PASSWORD
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // UPDATE PASSWORD
+        // ---------------------------------------------------------
 
         Route::put(
             '/profile/password',
@@ -1349,35 +1484,30 @@ Route::middleware('auth')
         )->name('profile.password.update');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | DELETE ACCOUNT
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // DELETE ACCOUNT
+        // ---------------------------------------------------------
 
         Route::delete(
             '/profile',
             [AuthController::class, 'destroyProfile']
         )->name('profile.destroy');
+
     });
 
 
-/*
-|--------------------------------------------------------------------------
-| FRONTEND CUSTOMER ACCOUNT
-|--------------------------------------------------------------------------
-*/
+// =========================================================
+// FRONTEND CUSTOMER ACCOUNT
+// =========================================================
 
 Route::middleware('auth')
     ->prefix('frontend')
     ->name('frontend.')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | SHOPPING CART
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // SHOPPING CART
+        // ---------------------------------------------------------
 
         Route::get(
             '/cart',
@@ -1405,11 +1535,9 @@ Route::middleware('auth')
         )->name('cart.clear');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | CHECKOUT
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // CHECKOUT
+        // ---------------------------------------------------------
 
         Route::get(
             '/checkout',
@@ -1422,11 +1550,9 @@ Route::middleware('auth')
         )->name('checkout.store');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | FRONTEND PAYMENTS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // FRONTEND PAYMENTS
+        // ---------------------------------------------------------
 
         Route::get(
             '/payment/{order}',
@@ -1439,11 +1565,9 @@ Route::middleware('auth')
         )->name('payment.process');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | NOTIFICATIONS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // NOTIFICATIONS
+        // ---------------------------------------------------------
 
         Route::controller(FrontendNotificationController::class)
             ->prefix('notifications')
@@ -1461,13 +1585,13 @@ Route::middleware('auth')
 
                 Route::delete('/{notification}', 'destroy')
                     ->name('destroy');
+
             });
 
-        /*
-        |--------------------------------------------------------------------------
-        | WISHLIST
-        |--------------------------------------------------------------------------
-        */
+
+        // ---------------------------------------------------------
+        // WISHLIST
+        // ---------------------------------------------------------
 
         Route::get(
             '/wishlist',
@@ -1485,11 +1609,9 @@ Route::middleware('auth')
         )->name('wishlist.remove');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | ORDERS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // ORDERS
+        // ---------------------------------------------------------
 
         Route::get(
             '/orders',
@@ -1507,11 +1629,9 @@ Route::middleware('auth')
         )->name('orders.cancel');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | WRITE REVIEW
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // WRITE REVIEW
+        // ---------------------------------------------------------
 
         Route::get(
             '/orders/{order}/review',
@@ -1524,35 +1644,30 @@ Route::middleware('auth')
         )->name('reviews.store');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | ORDER TRACKING
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // ORDER TRACKING
+        // ---------------------------------------------------------
 
         Route::get(
             '/order-tracking/{order}',
             [FrontendOrdersController::class, 'tracking']
         )->name('order-tracking');
+
     });
 
 
-/*
-|--------------------------------------------------------------------------
-| FRONTEND ACCOUNT SETTINGS
-|--------------------------------------------------------------------------
-*/
+// =========================================================
+// FRONTEND ACCOUNT SETTINGS
+// =========================================================
 
 Route::middleware('auth')
     ->prefix('frontend/account')
     ->name('frontend.account.')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | ACCOUNT SETTINGS
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // ACCOUNT SETTINGS
+        // ---------------------------------------------------------
 
         Route::get(
             '/settings',
@@ -1560,11 +1675,9 @@ Route::middleware('auth')
         )->name('settings');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE PREFERENCES
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // UPDATE PREFERENCES
+        // ---------------------------------------------------------
 
         Route::put(
             '/settings/preferences',
@@ -1572,15 +1685,13 @@ Route::middleware('auth')
         )->name('settings.preferences');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE PASSWORD
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // UPDATE PASSWORD
+        // ---------------------------------------------------------
 
         Route::put(
             '/settings/password',
             [AccountSettingsController::class, 'updatePassword']
         )->name('settings.password');
-    });
 
+    });

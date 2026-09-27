@@ -38,6 +38,7 @@ class User extends Authenticatable
         'receive_order_updates',
         'receive_promotional_emails',
         'profile_visibility',
+        'email_verified_at',
         'last_login_at',
     ];
 

@@ -1199,6 +1199,7 @@
         );
 
     color: var(--login-text);
+    text-decoration: none !important;
 
     cursor: pointer;
 

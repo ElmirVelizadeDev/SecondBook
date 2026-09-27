@@ -1,4 +1,4 @@
-<section id="why-choose" class="why-choose-section" data-aos="fade-up">
+<section id="why-choose" class="why-choose-section">
 
     <div class="container">
 

@@ -659,8 +659,29 @@
 
 .users-pagination {
     padding-top: 22px;
+}
+
+.users-pagination nav {
+    width: 100%;
+}
+
+.users-pagination nav > div {
+    width: 100%;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.users-pagination nav > div > div:first-child {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.users-pagination nav > div > div:last-child {
+    margin-left: auto;
 }
 
 .users-pagination .pagination {
@@ -1225,11 +1246,23 @@
         min-width: 760px;
         max-width: none;
     }
+    .users-pagination nav > div {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
 
-    .users-pagination {
+    .users-pagination nav > div > div:first-child {
+        text-align: center;
+    }
+
+    .users-pagination nav > div > div:last-child {
+        margin-left: 0;
+        display: flex;
         justify-content: center;
     }
 }
+
 
 
 @media (max-width: 480px) {
