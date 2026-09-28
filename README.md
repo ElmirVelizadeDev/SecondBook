@@ -689,7 +689,7 @@ SecondBook is built with:
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/ElmirVelizade2006/SecondBook.git
+git clone https://github.com/ElmirVelizadeDev/SecondBook.git
 ```
 
 ## 2. Enter the project
@@ -963,4 +963,4 @@ This project is currently intended as a personal/portfolio development project.
 Clone the repository:
 
 
-git clone https://github.com/ElmirVelizade/SecondBook.git
+git clone https://github.com/ElmirVelizadeDev/SecondBook.git
