@@ -370,11 +370,73 @@
 
         {{-- Pagination --}}
         @if($banners->hasPages())
-
             <div class="banners-pagination">
-                {{ $banners->links() }}
-            </div>
 
+                <div class="banners-pagination-info">
+                    Showing
+                    <strong>{{ $banners->firstItem() }}</strong>
+                    to
+                    <strong>{{ $banners->lastItem() }}</strong>
+                    of
+                    <strong>{{ $banners->total() }}</strong>
+                    results
+                </div>
+
+                <div class="banners-pagination-links">
+
+                    {{-- Previous --}}
+                    @if($banners->onFirstPage())
+                        <span class="banner-page-btn disabled">‹</span>
+                    @else
+                        <a
+                            href="{{ $banners->previousPageUrl() }}"
+                            class="banner-page-btn"
+                        >‹</a>
+                    @endif
+
+                    @php
+                        $current = $banners->currentPage();
+                        $last = $banners->lastPage();
+                    @endphp
+
+                    @for($page = 1; $page <= $last; $page++)
+
+                        @if(
+                            $page <= 6 ||
+                            $page >= $last - 1 ||
+                            abs($page - $current) <= 1
+                        )
+
+                            <a
+                                href="{{ $banners->url($page) }}"
+                                class="banner-page-btn {{ $page == $current ? 'active' : '' }}"
+                            >
+                                {{ $page }}
+                            </a>
+
+                        @elseif($page == 7 || $page == $last - 2)
+
+                            <span class="banner-page-btn disabled">
+                                ...
+                            </span>
+
+                        @endif
+
+                    @endfor
+
+                    {{-- Next --}}
+                    @if($banners->hasMorePages())
+                        <a
+                            href="{{ $banners->nextPageUrl() }}"
+                            class="banner-page-btn"
+                        >›</a>
+                    @else
+                        <span class="banner-page-btn disabled">›</span>
+                    @endif
+
+                </div>
+
+            </div>
         @endif
 
     </div>

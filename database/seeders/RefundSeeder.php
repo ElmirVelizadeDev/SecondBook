@@ -19,13 +19,14 @@ class RefundSeeder extends Seeder
             return;
         }
 
+        // Remove previous seeded refunds
         Refund::where('refund_number', 'like', 'REF-SEED-%')->delete();
 
         $orders = Order::with('payment')
             ->whereIn('payment_status', ['paid', 'refunded'])
             ->whereIn('order_status', ['delivered', 'cancelled'])
             ->orderBy('id')
-            ->take(5)
+            ->take(15)
             ->get();
 
         if ($orders->isEmpty()) {
@@ -39,6 +40,34 @@ class RefundSeeder extends Seeder
             'Wrong book received',
             'Book condition was not as described',
             'Customer changed their mind',
+            'Book was not as expected',
+            'Customer received the wrong edition',
+            'Book arrived late',
+            'Duplicate order placed',
+            'Customer no longer needs the book',
+            'Cover was damaged during delivery',
+            'Missing pages reported',
+            'Incorrect book description',
+            'Seller could not fulfill the order',
+            'Customer requested cancellation',
+        ];
+
+        $statuses = [
+            'pending',
+            'approved',
+            'processed',
+            'rejected',
+            'processed',
+            'pending',
+            'approved',
+            'processed',
+            'rejected',
+            'processed',
+            'pending',
+            'approved',
+            'processed',
+            'rejected',
+            'processed',
         ];
 
         foreach ($orders as $index => $order) {
@@ -48,50 +77,67 @@ class RefundSeeder extends Seeder
                 continue;
             }
 
-            $amount = min(
-                (float) $payment->amount,
-                round((float) $payment->amount * 0.5, 2)
+            $paymentAmount = (float) $payment->amount;
+
+            $amount = round(
+                $paymentAmount * [0.25, 0.50, 0.75, 1.00][$index % 4],
+                2
             );
 
-            $statuses = [
-                'pending',
+            $status = $statuses[$index];
+
+            $requestedAt = now()->subDays(
+                rand(2, 30)
+            )->subHours(
+                rand(1, 12)
+            );
+
+            $processedAt = in_array($status, [
                 'approved',
                 'processed',
                 'rejected',
-                'processed',
-            ];
-
-            $status = $statuses[$index % count($statuses)];
-
-            $requestedAt = now()->subDays(rand(2, 30));
+            ])
+                ? $requestedAt->copy()->addHours(rand(2, 48))
+                : null;
 
             Refund::create([
                 'order_id' => $order->id,
                 'payment_id' => $payment->id,
                 'user_id' => $order->user_id,
+
                 'processed_by' => in_array($status, [
                     'approved',
                     'processed',
                     'rejected',
-                ]) ? $admin->id : null,
+                ])
+                    ? $admin->id
+                    : null,
+
                 'refund_number' => 'REF-SEED-' .
                     now()->format('Ymd') . '-' .
-                    str_pad($index + 1, 4, '0', STR_PAD_LEFT),
+                    str_pad(
+                        $index + 1,
+                        4,
+                        '0',
+                        STR_PAD_LEFT
+                    ),
+
                 'amount' => $amount,
-                'reason' => $reasons[$index % count($reasons)],
+
+                'reason' => $reasons[$index],
+
                 'note' => 'Seeded refund record.',
+
                 'status' => $status,
+
                 'requested_at' => $requestedAt,
-                'processed_at' => in_array($status, [
-                    'approved',
-                    'processed',
-                    'rejected',
-                ])
-                    ? $requestedAt->copy()->addHours(rand(2, 48))
-                    : null,
+
+                'processed_at' => $processedAt,
             ]);
         }
 
-        $this->command->info('Seeded refund records successfully.');
+        $this->command->info(
+            '15 refund records seeded successfully.'
+        );
     }
 }

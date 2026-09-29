@@ -1,6 +1,6 @@
 @extends('Layout.Frontend.master')
 
-@section('title', 'Home | SecondBook')
+
 
 @section('content')
 

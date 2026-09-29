@@ -799,3 +799,24 @@
 
 }
 
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.activity-logs-pagination {
+    display: flex;
+    justify-content: flex-start !important;
+    align-items: center;
+    width: 100%;
+    margin-top: 24px;
+}
+
+.activity-logs-pagination nav {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+.activity-logs-pagination .pagination {
+    justify-content: flex-start !important;
+    margin: 0 !important;
+}

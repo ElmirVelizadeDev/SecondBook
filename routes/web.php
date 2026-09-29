@@ -1212,6 +1212,16 @@ Route::prefix('frontend')
                 Route::get('/google/callback', 'handleGoogleCallback')
                     ->name('google.callback');
 
+                // ---------------------------------------------------------
+                // ADMIN TWO-FACTOR AUTHENTICATION
+                // ---------------------------------------------------------
+
+                Route::get('/admin/2fa', 'showAdminTwoFactor')
+                    ->name('admin.2fa');
+
+                Route::post('/admin/2fa', 'verifyAdminTwoFactor')
+                    ->name('admin.2fa.verify');
+
 
                 // Forgot Password
 

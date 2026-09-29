@@ -325,9 +325,16 @@ class SettingsController extends Controller
             'System settings were updated.'
         );
 
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Settings updated successfully.',
+            ]);
+        }
+
         return redirect()
             ->route('admin.settings.index')
             ->with('success', 'Settings updated successfully.');
-    }
+            }
 }
 

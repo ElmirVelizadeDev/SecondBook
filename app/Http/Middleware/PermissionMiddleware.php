@@ -20,19 +20,22 @@ class PermissionMiddleware
         |--------------------------------------------------------------------------
         | Dashboard
         |--------------------------------------------------------------------------
-        |
-        | The admin dashboard should be accessible to every authenticated
-        | admin user. It does not require a separate dashboard.view permission.
-        |
         */
+
         if ($routeName === 'admin.dashboard') {
             return $next($request);
         }
 
         $permission = $this->permissionForRoute(
             $routeName,
-            $request->method()
+            $request
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Permission Check
+        |--------------------------------------------------------------------------
+        */
 
         if (
             $permission === null ||
@@ -41,35 +44,137 @@ class PermissionMiddleware
             return $next($request);
         }
 
-        abort(403);
+        /*
+        |--------------------------------------------------------------------------
+        | Access Denied
+        |--------------------------------------------------------------------------
+        */
+
+        return redirect()
+            ->back()
+            ->with(
+                'permission_denied',
+                'You do not have permission to access this page.'
+            );
     }
 
     private function permissionForRoute(
         string $routeName,
-        string $method
+        Request $request
     ): ?string {
         $routeName = substr($routeName, strlen('admin.'));
 
+        /*
+        |--------------------------------------------------------------------------
+        | Module Mapping
+        |--------------------------------------------------------------------------
+        */
+
         $module = match (true) {
-            str_starts_with($routeName, 'book.conditions.') => 'book_conditions',
-            str_starts_with($routeName, 'book.requests.') => 'book_requests',
-            str_starts_with($routeName, 'email.settings.') => 'email_settings',
-            str_starts_with($routeName, 'activity.logs.') => 'activity_logs',
-            str_starts_with($routeName, 'roles.') => 'roles',
-            str_starts_with($routeName, 'faq.') => 'faq',
-            str_starts_with($routeName, 'backup.') => 'backup',
+
+            str_starts_with($routeName, 'book.conditions.')
+                => 'book_conditions',
+
+            str_starts_with($routeName, 'book.requests.')
+                => 'book_requests',
+
+            str_starts_with($routeName, 'email-settings.')
+                => 'email_settings',
+
+            str_starts_with($routeName, 'activity.logs.')
+                => 'activity_logs',
+
+            str_starts_with($routeName, 'roles.')
+                => 'roles',
+
+            str_starts_with($routeName, 'faq.')
+                => 'faq',
+
+            str_starts_with($routeName, 'seller-applications.')
+                => 'seller_applications',
+
+            str_starts_with($routeName, 'backup.')
+                => 'backup',
 
             default => str($routeName)
                 ->before('.')
                 ->toString(),
         };
 
+        /*
+        |--------------------------------------------------------------------------
+        | Special Actions
+        |--------------------------------------------------------------------------
+        */
+
+        $specialPermissions = [
+
+            /*
+            | Reviews
+            */
+            'reviews.approve' => 'reviews.approve',
+            'reviews.reject'  => 'reviews.reject',
+
+            /*
+            | Seller Applications
+            */
+            'seller-applications.approve'
+                => 'seller_applications.approve',
+
+            'seller-applications.reject'
+                => 'seller_applications.reject',
+
+            /*
+            | Notifications
+            */
+            'notifications.read'      => 'notifications.view',
+            'notifications.read-all'  => 'notifications.view',
+            'notifications.unread'    => 'notifications.view',
+
+            /*
+            | Messages
+            */
+            'messages.reply'          => 'messages.create',
+            'messages.sendReply'      => 'messages.create',
+            'messages.site-reply'     => 'messages.create',
+            'messages.send-site-reply'=> 'messages.create',
+            'messages.unread'         => 'messages.view',
+
+            /*
+            | Backup
+            */
+            'backup.create'   => 'backup.create',
+            'backup.download' => 'backup.view',
+            'backup.delete'   => 'backup.delete',
+            'backup.restore'  => 'backup.create',
+        ];
+
+        if (isset($specialPermissions[$routeName])) {
+            return $specialPermissions[$routeName];
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Action
+        |--------------------------------------------------------------------------
+        */
+
         $action = str($routeName)
             ->afterLast('.')
             ->toString();
 
-        if ($action === 'status' || $action === 'toggle-status') {
+        /*
+        |--------------------------------------------------------------------------
+        | Status / Toggle Status
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $action === 'status' ||
+            $action === 'toggle-status'
+        ) {
             if ($module === 'refunds') {
+
                 return in_array(
                     $request->input('status'),
                     ['approved', 'rejected'],
@@ -83,12 +188,23 @@ class PermissionMiddleware
                     );
             }
 
-            return in_array($module, ['users', 'sellers'], true)
+            return in_array(
+                $module,
+                ['users', 'sellers'],
+                true
+            )
                 ? $module . '.ban'
                 : $module . '.edit';
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Standard CRUD Actions
+        |--------------------------------------------------------------------------
+        */
+
         return match (true) {
+
             in_array(
                 $action,
                 [
@@ -100,34 +216,41 @@ class PermissionMiddleware
                     'download',
                 ],
                 true
-            ) => $module . '.view',
+            )
+                => $module . '.view',
 
             in_array(
                 $action,
-                ['create', 'store'],
+                [
+                    'create',
+                    'store',
+                ],
                 true
-            ) => $module . '.create',
+            )
+                => $module . '.create',
 
             in_array(
                 $action,
-                ['edit', 'update'],
+                [
+                    'edit',
+                    'update',
+                ],
                 true
-            ) => $module . '.edit',
+            )
+                => $module . '.edit',
 
             in_array(
                 $action,
-                ['destroy', 'delete'],
+                [
+                    'destroy',
+                    'delete',
+                ],
                 true
-            ) => $module . '.delete',
+            )
+                => $module . '.delete',
 
-            in_array(
-                $action,
-                ['send'],
-                true
-            ) => $module . '.create',
-
-            default => $module . '.view',
+            default
+                => $module . '.view',
         };
     }
 }
-

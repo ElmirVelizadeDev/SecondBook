@@ -855,41 +855,71 @@
 
         {{-- Pagination --}}
         @if($reviews->hasPages())
-
             <div class="reviews-pagination">
 
                 <div class="reviews-pagination-info">
-
                     Showing
-
-                    <strong>
-                        {{ $reviews->firstItem() }}
-                    </strong>
-
+                    <strong>{{ $reviews->firstItem() }}</strong>
                     to
-
-                    <strong>
-                        {{ $reviews->lastItem() }}
-                    </strong>
-
+                    <strong>{{ $reviews->lastItem() }}</strong>
                     of
-
-                    <strong>
-                        {{ $reviews->total() }}
-                    </strong>
-
+                    <strong>{{ $reviews->total() }}</strong>
                     results
-
                 </div>
 
                 <div class="reviews-pagination-links">
 
-                    {{ $reviews->onEachSide(1)->links() }}
+                    @if($reviews->onFirstPage())
+                        <span class="review-page-btn disabled">‹</span>
+                    @else
+                        <a
+                            href="{{ $reviews->previousPageUrl() }}"
+                            class="review-page-btn"
+                        >‹</a>
+                    @endif
+
+                    @php
+                        $current = $reviews->currentPage();
+                        $last = $reviews->lastPage();
+                    @endphp
+
+                    @for($page = 1; $page <= $last; $page++)
+
+                        @if(
+                            $page <= 6 ||
+                            $page >= $last - 1 ||
+                            abs($page - $current) <= 1
+                        )
+
+                            <a
+                                href="{{ $reviews->url($page) }}"
+                                class="review-page-btn {{ $page == $current ? 'active' : '' }}"
+                            >
+                                {{ $page }}
+                            </a>
+
+                        @elseif($page == 7 || $page == $last - 2)
+
+                            <span class="review-page-btn disabled">
+                                ...
+                            </span>
+
+                        @endif
+
+                    @endfor
+
+                    @if($reviews->hasMorePages())
+                        <a
+                            href="{{ $reviews->nextPageUrl() }}"
+                            class="review-page-btn"
+                        >›</a>
+                    @else
+                        <span class="review-page-btn disabled">›</span>
+                    @endif
 
                 </div>
 
             </div>
-
         @endif
 
     </div>

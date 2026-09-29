@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Order;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -32,16 +31,25 @@ class ReportsController extends Controller
             ? Carbon::parse($validated['end_date'])->endOfDay()
             : now()->endOfDay();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Base Orders Query
+        |--------------------------------------------------------------------------
+        */
+
+        $ordersQuery = Order::query()
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate
+            ]);
+
+
         /*
         |--------------------------------------------------------------------------
         | Order Statistics
         |--------------------------------------------------------------------------
         */
-
-        $ordersQuery = Order::whereBetween(
-            'created_at',
-            [$startDate, $endDate]
-        );
 
         $totalOrders = (clone $ordersQuery)->count();
 
@@ -57,34 +65,63 @@ class ReportsController extends Controller
             ->where('order_status', 'cancelled')
             ->count();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Delivered Orders
+        |--------------------------------------------------------------------------
+        */
+
+        $deliveredOrdersQuery = (clone $ordersQuery)
+            ->where('order_status', 'delivered');
+
+
         /*
         |--------------------------------------------------------------------------
         | Revenue
         |--------------------------------------------------------------------------
         */
 
-        $totalRevenue = (clone $ordersQuery)
-            ->where('order_status', 'delivered')
+        $totalRevenue = (clone $deliveredOrdersQuery)
             ->sum('total_price');
 
-        $booksSold = (clone $ordersQuery)
-            ->where('order_status', 'delivered')
+
+        /*
+        |--------------------------------------------------------------------------
+        | Books Sold
+        |--------------------------------------------------------------------------
+        */
+
+        $booksSold = (clone $deliveredOrdersQuery)
             ->sum('quantity');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Average Order Value
+        |--------------------------------------------------------------------------
+        */
 
         $averageOrderValue = $deliveredOrders > 0
             ? $totalRevenue / $deliveredOrders
             : 0;
 
+
         /*
         |--------------------------------------------------------------------------
         | Customers
         |--------------------------------------------------------------------------
+        |
+        | Burada seçilən tarix aralığında sifariş etmiş
+        | unikal istifadəçilər hesablanır.
+        |
         */
 
-        $totalCustomers = User::whereBetween(
-            'created_at',
-            [$startDate, $endDate]
-        )->count();
+        $totalCustomers = (clone $ordersQuery)
+            ->whereNotNull('user_id')
+            ->distinct()
+            ->count('user_id');
+
 
         /*
         |--------------------------------------------------------------------------
@@ -93,19 +130,23 @@ class ReportsController extends Controller
         */
 
         $topBooks = Order::query()
-            ->selectRaw(
-                'book_id, SUM(quantity) as total_sold, SUM(total_price) as revenue'
-            )
+            ->selectRaw('
+                book_id,
+                SUM(quantity) as total_sold,
+                SUM(total_price) as revenue
+            ')
             ->with('book')
             ->where('order_status', 'delivered')
-            ->whereBetween(
-                'created_at',
-                [$startDate, $endDate]
-            )
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate
+            ])
+            ->whereNotNull('book_id')
             ->groupBy('book_id')
             ->orderByDesc('total_sold')
             ->limit(5)
             ->get();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -117,13 +158,14 @@ class ReportsController extends Controller
                 'user',
                 'book',
             ])
-            ->whereBetween(
-                'created_at',
-                [$startDate, $endDate]
-            )
-            ->latest()
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate
+            ])
+            ->latest('created_at')
             ->limit(8)
             ->get();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -137,6 +179,7 @@ class ReportsController extends Controller
             ->limit(5)
             ->get();
 
+
         /*
         |--------------------------------------------------------------------------
         | Sales Chart
@@ -144,17 +187,19 @@ class ReportsController extends Controller
         */
 
         $salesByDay = Order::query()
-            ->selectRaw(
-                'DATE(created_at) as date, SUM(total_price) as revenue'
-            )
+            ->selectRaw('
+                DATE(created_at) as date,
+                SUM(total_price) as revenue
+            ')
             ->where('order_status', 'delivered')
-            ->whereBetween(
-                'created_at',
-                [$startDate, $endDate]
-            )
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate
+            ])
             ->groupByRaw('DATE(created_at)')
             ->orderBy('date')
             ->get();
+
 
         return view('admin.reports.index', compact(
             'startDate',
@@ -196,9 +241,24 @@ class ReportsController extends Controller
             ? Carbon::parse($validated['end_date'])->endOfDay()
             : now()->endOfDay();
 
+
         /*
         |--------------------------------------------------------------------------
         | Delivered Orders
+        |--------------------------------------------------------------------------
+        */
+
+        $deliveredOrdersQuery = Order::query()
+            ->where('order_status', 'delivered')
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate
+            ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Orders List
         |--------------------------------------------------------------------------
         */
 
@@ -206,14 +266,15 @@ class ReportsController extends Controller
                 'user',
                 'book',
             ])
-            ->whereBetween(
-                'created_at',
-                [$startDate, $endDate]
-            )
             ->where('order_status', 'delivered')
-            ->latest()
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate
+            ])
+            ->latest('created_at')
             ->paginate(15)
             ->withQueryString();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -221,16 +282,8 @@ class ReportsController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $deliveredOrdersQuery = Order::where(
-                'order_status',
-                'delivered'
-            )
-            ->whereBetween(
-                'created_at',
-                [$startDate, $endDate]
-            );
-
-        $totalOrders = (clone $deliveredOrdersQuery)->count();
+        $totalOrders = (clone $deliveredOrdersQuery)
+            ->count();
 
         $totalRevenue = (clone $deliveredOrdersQuery)
             ->sum('total_price');
@@ -241,6 +294,7 @@ class ReportsController extends Controller
         $averageOrderValue = $totalOrders > 0
             ? $totalRevenue / $totalOrders
             : 0;
+
 
         return view('admin.reports.sales', compact(
             'startDate',
@@ -275,6 +329,7 @@ class ReportsController extends Controller
             ? Carbon::parse($validated['end_date'])->endOfDay()
             : now()->endOfDay();
 
+
         /*
         |--------------------------------------------------------------------------
         | Books
@@ -287,60 +342,36 @@ class ReportsController extends Controller
                 'publisher',
                 'seller',
             ])
-
-            /*
-            |--------------------------------------------------------------------------
-            | Total Quantity Sold
-            |--------------------------------------------------------------------------
-            |
-            | withCount() yalnızca order sətrinin sayını hesablayırdı.
-            | Burada SUM(quantity) istifadə edirik.
-            |
-            */
-
             ->withSum([
                 'orders as sold_count' => function ($query) use (
                     $startDate,
                     $endDate
                 ) {
                     $query
-                        ->where(
-                            'order_status',
-                            'delivered'
-                        )
-                        ->whereBetween(
-                            'created_at',
-                            [$startDate, $endDate]
-                        );
+                        ->where('order_status', 'delivered')
+                        ->whereBetween('created_at', [
+                            $startDate,
+                            $endDate
+                        ]);
                 },
             ], 'quantity')
-
-            /*
-            |--------------------------------------------------------------------------
-            | Revenue
-            |--------------------------------------------------------------------------
-            */
-
             ->withSum([
                 'orders as revenue' => function ($query) use (
                     $startDate,
                     $endDate
                 ) {
                     $query
-                        ->where(
-                            'order_status',
-                            'delivered'
-                        )
-                        ->whereBetween(
-                            'created_at',
-                            [$startDate, $endDate]
-                        );
+                        ->where('order_status', 'delivered')
+                        ->whereBetween('created_at', [
+                            $startDate,
+                            $endDate
+                        ]);
                 },
             ], 'total_price')
-
-            ->latest()
+            ->latest('created_at')
             ->paginate(15)
             ->withQueryString();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -366,32 +397,26 @@ class ReportsController extends Controller
             [1, 5]
         )->count();
 
+
         /*
         |--------------------------------------------------------------------------
-        | Total Books Sold
+        | Sales Statistics
         |--------------------------------------------------------------------------
         */
 
-        $deliveredOrdersQuery = Order::where(
-                'order_status',
-                'delivered'
-            )
-            ->whereBetween(
-                'created_at',
-                [$startDate, $endDate]
-            );
+        $deliveredOrdersQuery = Order::query()
+            ->where('order_status', 'delivered')
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate
+            ]);
 
         $totalSold = (clone $deliveredOrdersQuery)
             ->sum('quantity');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Total Revenue
-        |--------------------------------------------------------------------------
-        */
-
         $totalRevenue = (clone $deliveredOrdersQuery)
             ->sum('total_price');
+
 
         return view('admin.reports.books', compact(
             'books',
@@ -406,4 +431,3 @@ class ReportsController extends Controller
         ));
     }
 }
-

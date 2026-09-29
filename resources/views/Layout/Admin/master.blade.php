@@ -12,7 +12,18 @@
 
     <title>SecondBook Admin</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('admin/images/logo.png') }}">
+    @php
+    $adminFavicon = \App\Models\Setting::get('favicon');
+    @endphp
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="{{ $adminFavicon
+            ? asset('storage/' . $adminFavicon)
+            : asset('admin/images/logo.png')
+        }}"
+    >
 
     <link
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
@@ -570,6 +581,16 @@
                 title: 'Warning',
                 text: @json(session('warning')),
                 confirmButtonColor: '#8b5e3c',
+                confirmButtonText: 'OK'
+            });
+        @endif
+
+        @if(session('permission_denied'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Access Denied',
+                text: @json(session('permission_denied')),
+                confirmButtonColor: '#2563eb',
                 confirmButtonText: 'OK'
             });
         @endif

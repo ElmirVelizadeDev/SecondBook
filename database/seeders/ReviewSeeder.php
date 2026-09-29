@@ -17,7 +17,6 @@ class ReviewSeeder extends Seeder
 
         $books = DB::table('books')
             ->where('status', 'approved')
-            ->whereNotNull('seller_id')
             ->pluck('id')
             ->values();
 
@@ -42,7 +41,9 @@ class ReviewSeeder extends Seeder
 
         foreach ($users as $userId) {
             for ($i = 0; $i < 3; $i++) {
+
                 $bookId = $books[$counter % $books->count()];
+
                 $counter++;
 
                 DB::table('reviews')->updateOrInsert(

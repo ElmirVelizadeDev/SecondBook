@@ -374,38 +374,124 @@ border: 0;
 font-size: 13px;
 }
 
-/* =========================================================
-PAGINATION
-========================================================= */
-
 .banners-pagination {
-padding: 18px 16px 4px;
-display: flex;
-justify-content: flex-end;
+    width: 100%;
+    padding: 22px 24px;
+    border-top: 1px solid #e5e7eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-.banners-pagination .pagination {
-margin: 0;
+.banners-pagination-info {
+    font-size: 13px;
+    color: #64748b;
 }
 
-.banners-pagination .page-link {
-color: #172033;
-border-color: #e5e7eb;
-border-radius: 8px;
-margin-left: 4px;
-box-shadow: none;
+.banners-pagination-info strong {
+    color: #1e293b;
+    font-weight: 600;
 }
 
-.banners-pagination .page-link:hover {
-color: #3b5bdb;
-background: #eef2ff;
-border-color: #c7d2fe;
+.banners-pagination-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.banners-pagination .page-item.active .page-link {
-background: #3b5bdb;
-border-color: #3b5bdb;
-color: #ffffff;
+.banner-page-btn {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+
+    background: #fff;
+    color: #475569;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.banner-page-btn:hover {
+    background: #f8fafc;
+    border-color: #bfdbfe;
+    color: #2563eb;
+}
+
+.banner-page-btn.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+.banner-page-btn.disabled {
+    background: #f8fafc;
+    color: #94a3b8;
+    cursor: default;
+}
+
+
+/* DARK MODE */
+
+[data-theme="dark"] .banners-pagination {
+    border-top-color: #263244;
+}
+
+[data-theme="dark"] .banners-pagination-info {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .banners-pagination-info strong {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .banner-page-btn {
+    background: #151d2b;
+    border-color: #2b3749;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .banner-page-btn:hover {
+    background: #1d2939;
+    border-color: #3b82f6;
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .banner-page-btn.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+[data-theme="dark"] .banner-page-btn.disabled {
+    background: #111827;
+    color: #64748b;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 767.98px) {
+    .banners-pagination {
+        flex-direction: column;
+        justify-content: center;
+        padding: 18px 16px;
+    }
+
+    .banners-pagination-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 /* =========================================================

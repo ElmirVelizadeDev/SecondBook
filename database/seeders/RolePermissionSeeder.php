@@ -12,9 +12,16 @@ class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        $modules = [
+        /*
+        |--------------------------------------------------------------------------
+        | Permissions
+        |--------------------------------------------------------------------------
+        */
 
-            'dashboard' => ['view'],
+        $modules = [
+            'dashboard' => [
+                'view',
+            ],
 
             'books' => [
                 'view',
@@ -128,6 +135,12 @@ class RolePermissionSeeder extends Seeder
                 'approve',
             ],
 
+            'messages' => [
+                'view',
+                'create',
+                'delete',
+            ],
+
             'banners' => [
                 'view',
                 'create',
@@ -195,12 +208,16 @@ class RolePermissionSeeder extends Seeder
             ],
         ];
 
+        /*
+        |--------------------------------------------------------------------------
+        | Create / Update Permissions
+        |--------------------------------------------------------------------------
+        */
+
         $permissions = collect();
 
         foreach ($modules as $module => $actions) {
-
             foreach ($actions as $action) {
-
                 $name = $module . '.' . $action;
 
                 $permission = Permission::updateOrCreate(
@@ -236,13 +253,9 @@ class RolePermissionSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Super Admin
+        | SUPER ADMIN
         |--------------------------------------------------------------------------
         */
-
-        $all = $permissions
-            ->pluck('id')
-            ->all();
 
         $superAdmin = Role::updateOrCreate(
             [
@@ -250,16 +263,22 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'display_name' => 'Super Admin',
-                'description' => 'Full access to every admin module.',
+                'description' => 'Full access to every part of the administration system.',
                 'is_system' => true,
             ]
         );
 
-        $superAdmin->permissions()->sync($all);
+        /*
+        | Super Admin always receives every current permission.
+        */
+
+        $superAdmin->permissions()->sync(
+            $permissions->pluck('id')->all()
+        );
 
         /*
         |--------------------------------------------------------------------------
-        | Admin
+        | ADMIN
         |--------------------------------------------------------------------------
         */
 
@@ -269,12 +288,13 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'display_name' => 'Admin',
-                'description' => 'Operational access to marketplace management.',
+                'description' => 'Full operational access to marketplace management.',
                 'is_system' => true,
             ]
         );
 
-        $admin->permissions()->sync(
+        $this->addDefaultPermissions(
+            $admin,
             $this->permissionIds(
                 $permissions,
                 [
@@ -286,14 +306,18 @@ class RolePermissionSeeder extends Seeder
                     'authors',
                     'publishers',
                     'refunds',
+                    'shipping',
+                    'coupons',
                     'orders',
                     'payments',
-                    'coupons',
-                    'shipping',
                     'users',
                     'sellers',
                     'seller_applications',
                     'reviews',
+                    'messages',
+                    'banners',
+                    'blogs',
+                    'faq',
                     'reports',
                     'analytics',
                 ]
@@ -302,7 +326,7 @@ class RolePermissionSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Manager
+        | MANAGER
         |--------------------------------------------------------------------------
         */
 
@@ -312,22 +336,26 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'display_name' => 'Manager',
-                'description' => 'Manages marketplace inventory and sales operations.',
+                'description' => 'Manages marketplace inventory, sales and daily operations.',
                 'is_system' => true,
             ]
         );
 
-        $manager->permissions()->sync(
+        $this->addDefaultPermissions(
+            $manager,
             $this->permissionIds(
                 $permissions,
                 [
                     'dashboard',
                     'books',
+                    'book_conditions',
+                    'book_requests',
                     'refunds',
-                    'orders',
-                    'payments',
                     'shipping',
                     'coupons',
+                    'orders',
+                    'payments',
+                    'users',
                     'sellers',
                     'seller_applications',
                     'reports',
@@ -338,7 +366,7 @@ class RolePermissionSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Editor
+        | EDITOR
         |--------------------------------------------------------------------------
         */
 
@@ -353,12 +381,14 @@ class RolePermissionSeeder extends Seeder
             ]
         );
 
-        $editor->permissions()->sync(
+        $this->addDefaultPermissions(
+            $editor,
             $this->permissionIds(
                 $permissions,
                 [
                     'dashboard',
                     'books',
+                    'book_conditions',
                     'categories',
                     'authors',
                     'publishers',
@@ -372,7 +402,127 @@ class RolePermissionSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Seller
+        | MODERATOR
+        |--------------------------------------------------------------------------
+        */
+
+        $moderator = Role::updateOrCreate(
+            [
+                'name' => 'moderator',
+            ],
+            [
+                'display_name' => 'Moderator',
+                'description' => 'Moderates books, reviews and marketplace content.',
+                'is_system' => true,
+            ]
+        );
+
+        /*
+        | Moderator gets normal access to content moderation modules.
+        */
+
+        $this->addDefaultPermissions(
+            $moderator,
+            $this->permissionIds(
+                $permissions,
+                [
+                    'dashboard',
+                    'reviews',
+                    'banners',
+                    'blogs',
+                    'faq',
+                ]
+            )
+        );
+
+        /*
+        | Books are restricted to moderation actions only.
+        */
+
+        $this->addDefaultPermissions(
+            $moderator,
+            $this->permissionIds(
+                $permissions,
+                [
+                    'books',
+                ],
+                [
+                    'view',
+                    'approve',
+                    'reject',
+                ]
+            )
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | SUPPORT
+        |--------------------------------------------------------------------------
+        */
+
+        $support = Role::updateOrCreate(
+            [
+                'name' => 'support',
+            ],
+            [
+                'display_name' => 'Support',
+                'description' => 'Handles customer, seller and order support.',
+                'is_system' => true,
+            ]
+        );
+
+        $this->addDefaultPermissions(
+            $support,
+            $this->permissionIds(
+                $permissions,
+                [
+                    'dashboard',
+                    'users',
+                    'sellers',
+                    'seller_applications',
+                    'orders',
+                    'reviews',
+                    'messages',
+                ]
+            )
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCOUNTANT
+        |--------------------------------------------------------------------------
+        */
+
+        $accountant = Role::updateOrCreate(
+            [
+                'name' => 'accountant',
+            ],
+            [
+                'display_name' => 'Accountant',
+                'description' => 'Manages payments, refunds and financial reports.',
+                'is_system' => true,
+            ]
+        );
+
+        $this->addDefaultPermissions(
+            $accountant,
+            $this->permissionIds(
+                $permissions,
+                [
+                    'dashboard',
+                    'orders',
+                    'payments',
+                    'refunds',
+                    'coupons',
+                    'reports',
+                    'analytics',
+                ]
+            )
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | SELLER
         |--------------------------------------------------------------------------
         */
 
@@ -387,21 +537,25 @@ class RolePermissionSeeder extends Seeder
             ]
         );
 
-        $seller->permissions()->sync(
+        $this->addDefaultPermissions(
+            $seller,
             $this->permissionIds(
                 $permissions,
-                ['books'],
+                [
+                    'books',
+                ],
                 [
                     'view',
                     'create',
                     'edit',
+                    'delete',
                 ]
             )
         );
 
         /*
         |--------------------------------------------------------------------------
-        | Member
+        | MEMBER
         |--------------------------------------------------------------------------
         */
 
@@ -416,39 +570,121 @@ class RolePermissionSeeder extends Seeder
             ]
         );
 
-        $member->permissions()->sync([]);
+        /*
+        | Member has no admin permissions.
+        |
+        | We intentionally do not call sync() here so that
+        | future custom permissions can be managed from the panel.
+        */
 
         /*
         |--------------------------------------------------------------------------
-        | Sync User Roles
+        | SYNCHRONIZE EXISTING BUSINESS ROLES
         |--------------------------------------------------------------------------
+        |
+        | users.role remains responsible for the application's
+        | existing business logic.
+        |
+        | role_user provides granular RBAC permissions.
+        |
         */
 
         User::where('role', 'admin')
             ->get()
-            ->each(
-                fn (User $user) =>
-                $user->roles()->sync([$superAdmin->id])
-            );
+            ->each(function (User $user) use ($admin) {
+                $user->roles()->syncWithoutDetaching([
+                    $admin->id,
+                ]);
+            });
 
         User::where('role', 'seller')
             ->get()
-            ->each(
-                fn (User $user) =>
-                $user->roles()->sync([$seller->id])
-            );
+            ->each(function (User $user) use ($seller) {
+                $user->roles()->syncWithoutDetaching([
+                    $seller->id,
+                ]);
+            });
 
         User::where('role', 'user')
             ->get()
-            ->each(
-                fn (User $user) =>
-                $user->roles()->sync([$member->id])
+            ->each(function (User $user) use ($member) {
+                $user->roles()->syncWithoutDetaching([
+                    $member->id,
+                ]);
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | YOUR SUPER ADMIN ACCOUNT
+        |--------------------------------------------------------------------------
+        |
+        | Your existing users.role remains "admin".
+        | The RBAC role gives your account full Super Admin access.
+        |
+        */
+
+        $yourAccount = User::where('username', 'elmir1')->first();
+
+        if ($yourAccount) {
+            $yourAccount->update([
+                'role' => 'admin',
+            ]);
+
+            /*
+            | Only Super Admin role remains attached to this account.
+            */
+
+            $yourAccount->roles()->sync([
+                $superAdmin->id,
+            ]);
+
+            $this->command->info(
+                'Super Admin assigned to: ' . $yourAccount->username
             );
+        } else {
+            $this->command->warn(
+                'User "elmir1" was not found. Super Admin was not assigned.'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | DONE
+        |--------------------------------------------------------------------------
+        */
 
         $this->command->info(
             'Roles and permissions seeded successfully.'
         );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Add Default Permissions
+    |--------------------------------------------------------------------------
+    |
+    | syncWithoutDetaching() is intentional.
+    |
+    | This means:
+    | - default permissions are added
+    | - manually assigned permissions are NOT removed
+    |
+    */
+
+    private function addDefaultPermissions(
+        Role $role,
+        array $permissionIds
+    ): void {
+        $role->permissions()->syncWithoutDetaching(
+            $permissionIds
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Permission IDs
+    |--------------------------------------------------------------------------
+    */
 
     private function permissionIds(
         $permissions,
@@ -486,10 +722,15 @@ class RolePermissionSeeder extends Seeder
             ->all();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Permission Group
+    |--------------------------------------------------------------------------
+    */
+
     private function groupName(string $module): string
     {
         return match ($module) {
-
             'book_conditions',
             'book_requests' => 'Books',
 
@@ -499,6 +740,12 @@ class RolePermissionSeeder extends Seeder
             default => Str::headline($module),
         };
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Permission Display Name
+    |--------------------------------------------------------------------------
+    */
 
     private function displayName(
         string $module,

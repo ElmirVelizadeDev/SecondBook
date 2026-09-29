@@ -2562,3 +2562,77 @@
         border-color: #273449;
     }
 }
+
+
+/* =========================================================
+   DARK MODE — REFUND STATUS BADGES
+========================================================= */
+
+.dark-mode .refund-status.status-pending,
+.dark-theme .refund-status.status-pending,
+[data-theme="dark"] .refund-status.status-pending {
+    background: #3a2b12;
+    color: #fbbf24;
+    border: 1px solid #654a18;
+}
+
+.dark-mode .refund-status.status-approved,
+.dark-theme .refund-status.status-approved,
+[data-theme="dark"] .refund-status.status-approved {
+    background: #172b4d;
+    color: #60a5fa;
+    border: 1px solid #244579;
+}
+
+.dark-mode .refund-status.status-rejected,
+.dark-theme .refund-status.status-rejected,
+[data-theme="dark"] .refund-status.status-rejected {
+    background: #3a1820;
+    color: #fb7185;
+    border: 1px solid #652936;
+}
+
+.dark-mode .refund-status.status-processed,
+.dark-theme .refund-status.status-processed,
+[data-theme="dark"] .refund-status.status-processed {
+    background: #12352a;
+    color: #4ade80;
+    border: 1px solid #1d6049;
+}
+
+.dark-mode .refund-status.status-cancelled,
+.dark-theme .refund-status.status-cancelled,
+[data-theme="dark"] .refund-status.status-cancelled {
+    background: #202938;
+    color: #94a3b8;
+    border: 1px solid #334155;
+}
+
+
+/* =========================================================
+   DARK MODE — ADD REFUND BUTTON
+========================================================= */
+
+.dark-mode .refunds-hero-button,
+.dark-theme .refunds-hero-button,
+[data-theme="dark"] .refunds-hero-button {
+    background: #f8fafc;
+    color: #1d4ed8;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+.dark-mode .refunds-hero-button:hover,
+.dark-theme .refunds-hero-button:hover,
+[data-theme="dark"] .refunds-hero-button:hover {
+    background: #ffffff;
+    color: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.30);
+}
+
+.dark-mode .refunds-hero-button i,
+.dark-theme .refunds-hero-button i,
+[data-theme="dark"] .refunds-hero-button i {
+    color: currentColor;
+}

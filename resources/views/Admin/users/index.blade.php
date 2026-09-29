@@ -392,25 +392,29 @@
 
                             {{-- Role --}}
                             <td>
+                                @php
+                                    $primaryRole = $user->roles->first();
+                                    $roleName = $primaryRole?->name ?? $user->role ?? 'user';
+                                    $roleDisplayName = $primaryRole?->display_name ?? ucfirst($user->role ?? 'user');
+                                @endphp
 
                                 <span
                                     class="role-pill {{
-                                        $user->role === 'admin'
+                                        $roleName === 'super-admin' || $roleName === 'admin'
                                             ? 'role-admin'
                                             : 'role-member'
                                     }}"
                                 >
-
                                     <i class="bi {{
-                                        $user->role === 'admin'
-                                            ? 'bi-stars'
-                                            : 'bi-person'
+                                        $roleName === 'super-admin'
+                                            ? 'bi-shield-fill-check'
+                                            : ($roleName === 'admin'
+                                                ? 'bi-stars'
+                                                : 'bi-person')
                                     }}"></i>
 
-                                    {{ ucfirst($user->role) }}
-
+                                    {{ $roleDisplayName }}
                                 </span>
-
                             </td>
 
 

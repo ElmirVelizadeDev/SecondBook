@@ -10,7 +10,7 @@
                 class="header-toggle me-2 me-md-3 is-active"
                 id="toggleSidebar"
                 type="button"
-                aria-label="Menyunu aç / bağla"
+                aria-label="Open / close menu"
                 aria-expanded="true"
             >
                 <span class="hamburger-box" aria-hidden="true">
@@ -28,7 +28,7 @@
                 </h4>
 
                 <small class="text-muted d-none d-sm-inline">
-                    Welcome back, Admin 👋
+                    Welcome back, {{ auth()->user()->name }} 👋
                 </small>
             </div>
 
@@ -37,8 +37,8 @@
 
         {{-- Right Side --}}
         <div class="d-flex align-items-center">
-            
-            {{-- Notification --}}
+
+            {{-- Notifications --}}
             <a
                 href="{{ route('admin.notifications.index') }}"
                 class="header-icon me-2 me-md-3 text-decoration-none position-relative"
@@ -110,7 +110,7 @@
                             </h6>
 
                             <small class="text-muted">
-                                Administrator
+                                {{ auth()->user()->roles->first()?->display_name ?? 'Administrator' }}
                             </small>
 
                         </div>

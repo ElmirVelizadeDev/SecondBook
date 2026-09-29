@@ -166,6 +166,116 @@
 }
 
 /* =========================================================
+   REVIEWS PAGINATION
+========================================================= */
+
+.reviews-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 24px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.reviews-pagination-info {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.reviews-pagination-info strong {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.reviews-pagination-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.review-page-btn {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    background: #fff;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.review-page-btn:hover {
+    color: #2563eb;
+    border-color: #bfdbfe;
+    background: #f8fafc;
+}
+
+.review-page-btn.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+.review-page-btn.disabled {
+    color: #94a3b8;
+    background: #f8fafc;
+    cursor: default;
+}
+
+[data-theme="dark"] .reviews-pagination {
+    border-top-color: #263244;
+}
+
+[data-theme="dark"] .reviews-pagination-info {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .reviews-pagination-info strong {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .review-page-btn {
+    background: #151d2b;
+    border-color: #2b3749;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .review-page-btn:hover {
+    background: #1d2939;
+    border-color: #3b82f6;
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .review-page-btn.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+@media (max-width: 767.98px) {
+    .reviews-pagination {
+        flex-direction: column;
+        gap: 16px;
+        padding: 18px 16px;
+    }
+
+    .reviews-pagination-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .review-page-btn {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* =========================================================
    FILTERS
    ========================================================= */
 

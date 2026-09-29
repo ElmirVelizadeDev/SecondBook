@@ -443,6 +443,119 @@
 
             </div>
 
+
+            {{-- Pagination --}}
+
+            @if ($orders->hasPages())
+
+                <div class="orders-pagination">
+
+                    {{-- Info --}}
+                    <div class="orders-pagination-info">
+                        Showing
+                        <strong>{{ $orders->firstItem() }}</strong>
+                        to
+                        <strong>{{ $orders->lastItem() }}</strong>
+                        of
+                        <strong>{{ $orders->total() }}</strong>
+                        orders
+                    </div>
+
+
+                    {{-- Pagination --}}
+                    <div class="orders-pagination-links">
+
+                        <nav aria-label="Orders pagination">
+
+                            <ul class="pagination mb-0">
+
+                                {{-- Previous --}}
+                                <li class="page-item {{ $orders->onFirstPage() ? 'disabled' : '' }}">
+
+                                    @if ($orders->onFirstPage())
+
+                                        <span class="page-link">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </span>
+
+                                    @else
+
+                                        <a
+                                            class="page-link"
+                                            href="{{ $orders->previousPageUrl() }}"
+                                            aria-label="Previous">
+
+                                            <i class="bi bi-chevron-left"></i>
+
+                                        </a>
+
+                                    @endif
+
+                                </li>
+
+
+                                {{-- Pages --}}
+                                @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
+
+                                    <li class="page-item {{ $page == $orders->currentPage() ? 'active' : '' }}">
+
+                                        @if ($page == $orders->currentPage())
+
+                                            <span class="page-link">
+                                                {{ $page }}
+                                            </span>
+
+                                        @else
+
+                                            <a
+                                                class="page-link"
+                                                href="{{ $url }}">
+
+                                                {{ $page }}
+
+                                            </a>
+
+                                        @endif
+
+                                    </li>
+
+                                @endforeach
+
+
+                                {{-- Next --}}
+                                <li class="page-item {{ $orders->hasMorePages() ? '' : 'disabled' }}">
+
+                                    @if ($orders->hasMorePages())
+
+                                        <a
+                                            class="page-link"
+                                            href="{{ $orders->nextPageUrl() }}"
+                                            aria-label="Next">
+
+                                            <i class="bi bi-chevron-right"></i>
+
+                                        </a>
+
+                                    @else
+
+                                        <span class="page-link">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </span>
+
+                                    @endif
+
+                                </li>
+
+                            </ul>
+
+                        </nav>
+
+                    </div>
+
+                </div>
+
+            @endif
+
         </div>
 
     </div>

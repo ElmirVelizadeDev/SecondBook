@@ -1,43 +1,125 @@
 <footer id="footer" class="site-footer">
     <div class="container">
 
+        @php
+            $siteName = \App\Models\Setting::get('site_name', 'SecondBook');
+            $siteDescription = \App\Models\Setting::get(
+                'site_description',
+                'SecondBook is an online marketplace where readers can buy, sell and discover quality second-hand books at affordable prices.'
+            );
+            $supportEmail = \App\Models\Setting::get(
+                'support_email',
+                'support@secondbook.com'
+            );
+            $supportPhone = \App\Models\Setting::get(
+                'support_phone',
+                '+994 50 123 45 67'
+            );
+            $address = \App\Models\Setting::get(
+                'address',
+                'M.S.Ordubadi'
+            );
+            $city = \App\Models\Setting::get(
+                'city',
+                'Nakhchivan'
+            );
+            $country = \App\Models\Setting::get(
+                'country',
+                'Azerbaijan'
+            );
+            $logo = \App\Models\Setting::get('logo');
+
+            $facebook = \App\Models\Setting::get('facebook');
+            $instagram = \App\Models\Setting::get('instagram');
+            $tiktok = \App\Models\Setting::get('tiktok');
+            $youtube = \App\Models\Setting::get('youtube');
+            $whatsapp = \App\Models\Setting::get('whatsapp');
+        @endphp
+
         <div class="footer-main">
 
             {{-- Brand --}}
             <div class="footer-column footer-brand">
                 <a href="{{ route('frontend.home') }}" class="footer-logo-link">
                     <img
-                        src="{{ asset('main-logo.png') }}"
-                        alt="SecondBook"
+                        src="{{ $logo
+                            ? asset('storage/' . $logo)
+                            : asset('main-logo.png')
+                        }}"
+                        alt="{{ $siteName }}"
                         class="footer-logo"
                     >
                 </a>
 
                 <p class="footer-description">
-                    SecondBook is an online marketplace where readers can buy,
-                    sell and discover quality second-hand books at affordable prices.
+                    {{ $siteDescription }}
                 </p>
 
+                {{-- Social Profiles --}}
                 <div class="footer-socials">
-                    <a href="#" aria-label="Facebook">
+
+                    <a
+                        href="{{ $facebook ?: '#' }}"
+                        @if($facebook)
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        @endif
+                        aria-label="Facebook"
+                    >
                         <i class="bi bi-facebook"></i>
                     </a>
 
-                    <a href="#" aria-label="Instagram">
+                    <a
+                        href="{{ $instagram ?: '#' }}"
+                        @if($instagram)
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        @endif
+                        aria-label="Instagram"
+                    >
                         <i class="bi bi-instagram"></i>
                     </a>
 
-                    <a href="#" aria-label="X">
-                        <i class="bi bi-twitter-x"></i>
+                    <a
+                        href="{{ $tiktok ?: '#' }}"
+                        @if($tiktok)
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        @endif
+                        aria-label="TikTok"
+                    >
+                        <i class="bi bi-tiktok"></i>
                     </a>
 
-                    <a href="#" aria-label="LinkedIn">
-                        <i class="bi bi-linkedin"></i>
+                    <a
+                        href="{{ $youtube ?: '#' }}"
+                        @if($youtube)
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        @endif
+                        aria-label="YouTube"
+                    >
+                        <i class="bi bi-youtube"></i>
                     </a>
+
+                    <a
+                        href="{{ $whatsapp
+                            ? 'https://wa.me/' . preg_replace('/[^0-9]/', '', $whatsapp)
+                            : '#'
+                        }}"
+                        @if($whatsapp)
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        @endif
+                        aria-label="WhatsApp"
+                    >
+                        <i class="bi bi-whatsapp"></i>
+                    </a>
+
                 </div>
 
                 <p class="footer-copyright">
-                    © 2026 SecondBook. All Rights Reserved.
+                    © {{ date('Y') }} {{ $siteName }}. All Rights Reserved.
                 </p>
             </div>
 
@@ -182,17 +264,19 @@
 
                     <li>
                         <i class="bi bi-envelope"></i>
-                        <span>support@secondbook.com</span>
+                        <span>{{ $supportEmail }}</span>
                     </li>
 
                     <li>
                         <i class="bi bi-telephone"></i>
-                        <span>+994 50 123 45 67</span>
+                        <span>{{ $supportPhone }}</span>
                     </li>
 
                     <li>
                         <i class="bi bi-geo-alt"></i>
-                        <span>M.S.Ordubadi, Nakhchivan, Azerbaijan</span>
+                        <span>
+                            {{ $address }}{{ $city ? ', ' . $city : '' }}{{ $country ? ', ' . $country : '' }}
+                        </span>
                     </li>
 
                     <li>
@@ -206,7 +290,7 @@
         </div>
 
         <div class="footer-bottom">
-            <span>SecondBook Marketplace</span>
+            <span>{{ $siteName }} Marketplace</span>
 
             <span class="footer-bottom-separator"></span>
 

@@ -120,16 +120,12 @@ class User extends Authenticatable
     public function hasPermission(string $permission): bool
     {
         /*
-        |--------------------------------------------------------------------------
-        | Admin Access
-        |--------------------------------------------------------------------------
+        | Super Admin Access
         |
-        | Users with the "admin" role have access to all admin permissions.
-        | Super-admin also has full access.
-        |
+        | Users with the "super-admin" role have access
+        | to all permissions.
         */
-
-        if ($this->isAdmin() || $this->hasRole('super-admin')) {
+        if ($this->hasRole('super-admin')) {
             return true;
         }
 
