@@ -294,6 +294,14 @@ class RefundsController extends Controller
     public function destroy(Refund $refund)
     {
         if ($refund->status === 'processed') {
+
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Processed refunds cannot be deleted.',
+                ], 422);
+            }
+
             return back()->with(
                 'error',
                 'Processed refunds cannot be deleted.'
@@ -309,6 +317,13 @@ class RefundsController extends Controller
         );
 
         $refund->delete();
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "Refund {$refundNumber} deleted successfully.",
+            ]);
+        }
 
         return redirect()
             ->route('admin.refunds.index')

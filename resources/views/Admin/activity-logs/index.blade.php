@@ -308,7 +308,82 @@
 
             <div class="activity-logs-pagination">
 
-                {{ $logs->links() }}
+                {{-- Left: Showing --}}
+                <div class="activity-pagination-info">
+                    Showing
+                    <strong>{{ $logs->firstItem() }}</strong>
+                    to
+                    <strong>{{ $logs->lastItem() }}</strong>
+                    of
+                    <strong>{{ $logs->total() }}</strong>
+                    results
+                </div>
+
+
+                {{-- Right: Pages --}}
+                <div class="activity-pagination-pages">
+
+                    {{-- Previous --}}
+                    @if($logs->onFirstPage())
+
+                        <span class="activity-page disabled">
+                            ‹
+                        </span>
+
+                    @else
+
+                        <a
+                            href="{{ $logs->previousPageUrl() }}"
+                            class="activity-page"
+                        >
+                            ‹
+                        </a>
+
+                    @endif
+
+
+                    {{-- Page Numbers --}}
+                    @foreach($logs->getUrlRange(1, $logs->lastPage()) as $page => $url)
+
+                        @if($page == $logs->currentPage())
+
+                            <span class="activity-page active">
+                                {{ $page }}
+                            </span>
+
+                        @else
+
+                            <a
+                                href="{{ $url }}"
+                                class="activity-page"
+                            >
+                                {{ $page }}
+                            </a>
+
+                        @endif
+
+                    @endforeach
+
+
+                    {{-- Next --}}
+                    @if($logs->hasMorePages())
+
+                        <a
+                            href="{{ $logs->nextPageUrl() }}"
+                            class="activity-page"
+                        >
+                            ›
+                        </a>
+
+                    @else
+
+                        <span class="activity-page disabled">
+                            ›
+                        </span>
+
+                    @endif
+
+                </div>
 
             </div>
 

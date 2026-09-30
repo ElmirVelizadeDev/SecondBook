@@ -286,12 +286,10 @@ class CouponsController extends Controller
 
         $coupon->delete();
 
-        return redirect()
-            ->route('admin.coupons.index')
-            ->with(
-                'success',
-                'Coupon deleted successfully.'
-            );
+        return response()->json([
+            'success' => true,
+            'message' => 'Coupon deleted successfully.',
+        ]);
     }
 
     // Toggle Status
@@ -315,12 +313,13 @@ class CouponsController extends Controller
             . '.'
         );
 
-        return redirect()
-            ->back()
-            ->with(
-                'success',
-                'Coupon status updated successfully.'
-            );
+        return response()->json([
+            'success' => true,
+            'status' => (bool) $newStatus,
+            'message' => $newStatus
+                ? 'Coupon activated successfully.'
+                : 'Coupon deactivated successfully.',
+        ]);
     }
 }
 

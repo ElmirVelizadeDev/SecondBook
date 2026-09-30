@@ -8,554 +8,1019 @@
 
 @section('content')
 
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
-        <i class="bi bi-check-circle me-2"></i>
-        {{ session('success') }}
+<div class="dashboard-section payments-page">
 
-        <button type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"
-                aria-label="Close"></button>
-    </div>
-@endif
+    {{-- ================= HERO ================= --}}
+    <section class="payments-hero">
 
-@if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
-        <i class="bi bi-exclamation-circle me-2"></i>
-        {{ session('error') }}
+        <div class="payments-hero-content">
 
-        <button type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"
-                aria-label="Close"></button>
-    </div>
-@endif
+            <span class="payments-hero-badge">
+                <i class="bi bi-credit-card"></i>
+                Payment Operations
+            </span>
 
-<div class="container-fluid p-4">
+            <h1>Every payment, under control.</h1>
 
-    {{-- Header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-
-            <h2 class="fw-bold mb-1">
-
-                <i class="bi bi-credit-card me-2"></i>
-
-                Payments
-
-            </h2>
-
-            <p class="text-muted mb-0">
-
-                Manage customer payments and transaction status.
-
+            <p>
+                Manage transactions, payment methods and payment status
+                from one organised workspace.
             </p>
 
         </div>
 
-
-        <a href="{{ route('admin.payments.create') }}"
-           class="btn btn-primary">
-
-            <i class="bi bi-plus-lg me-2"></i>
-
-            Add Payment
-
-        </a>
-
-    </div>
-
-
-    {{-- Statistics --}}
-    <div class="row g-4 mb-4">
-
-
-        <div class="col-xl-3 col-md-6">
-
-            <div class="payment-card">
-
-                <div>
-
-                    <span>Total Payments</span>
-
-                    <h3>{{ $totalPayments }}</h3>
-
-                </div>
-
-                <i class="bi bi-credit-card"></i>
-
-            </div>
-
+        <div class="payments-hero-mark" aria-hidden="true">
+            <i class="bi bi-wallet2"></i>
         </div>
 
-
-        <div class="col-xl-3 col-md-6">
-
-            <div class="payment-card">
-
-                <div>
-
-                    <span>Pending</span>
-
-                    <h3>{{ $pendingPayments }}</h3>
-
-                </div>
-
-                <i class="bi bi-hourglass-split"></i>
-
-            </div>
-
-        </div>
+    </section>
 
 
-        <div class="col-xl-3 col-md-6">
+    {{-- ================= SUCCESS / ERROR ================= --}}
+    @if(session('success'))
 
-            <div class="payment-card">
-
-                <div>
-
-                    <span>Paid</span>
-
-                    <h3>{{ $paidPayments }}</h3>
-
-                </div>
-
+        <div class="payments-alert payments-alert-success">
+            <div class="payments-alert-content">
                 <i class="bi bi-check-circle"></i>
 
+                <span>
+                    {{ session('success') }}
+                </span>
+            </div>
+
+            <button
+                type="button"
+                class="payments-alert-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+    @endif
+
+
+    @if(session('error'))
+
+        <div class="payments-alert payments-alert-error">
+            <div class="payments-alert-content">
+                <i class="bi bi-exclamation-circle"></i>
+
+                <span>
+                    {{ session('error') }}
+                </span>
+            </div>
+
+            <button
+                type="button"
+                class="payments-alert-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+    @endif
+
+
+    {{-- ================= STATISTICS ================= --}}
+    <section class="payments-stats">
+
+        <div class="payment-stat-card stat-blue">
+
+            <div class="payment-stat-content">
+                <span>Total Payments</span>
+                <strong>{{ $totalPayments }}</strong>
+            </div>
+
+            <div class="payment-stat-icon">
+                <i class="bi bi-credit-card"></i>
             </div>
 
         </div>
 
 
-        <div class="col-xl-3 col-md-6">
+        <div class="payment-stat-card stat-orange">
 
-            <div class="payment-card">
+            <div class="payment-stat-content">
+                <span>Pending</span>
+                <strong>{{ $pendingPayments }}</strong>
+            </div>
 
-                <div>
+            <div class="payment-stat-icon">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
 
-                    <span>Revenue</span>
+        </div>
 
-                    <h3>${{ number_format($totalRevenue, 2) }}</h3>
 
-                </div>
+        <div class="payment-stat-card stat-green">
 
+            <div class="payment-stat-content">
+                <span>Paid</span>
+                <strong>{{ $paidPayments }}</strong>
+            </div>
+
+            <div class="payment-stat-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+        </div>
+
+
+        <div class="payment-stat-card stat-purple">
+
+            <div class="payment-stat-content">
+                <span>Revenue</span>
+                <strong>${{ number_format($totalRevenue, 2) }}</strong>
+            </div>
+
+            <div class="payment-stat-icon">
                 <i class="bi bi-currency-dollar"></i>
-
             </div>
 
         </div>
 
+    </section>
 
-    </div>
 
+    {{-- ================= MAIN PANEL ================= --}}
+    <section class="dashboard-panel payments-panel">
 
-    {{-- Filters --}}
-    <div class="dashboard-panel mb-4">
-        <form method="GET"
-            action="{{ route('admin.payments.index') }}"
-            class="row g-3 align-items-end">
+        {{-- Header --}}
+        <div class="payments-panel-header">
 
-            {{-- Search --}}
-            <div class="col-12 col-md-6 col-lg-4">
-                <label class="form-label small text-muted fw-semibold">
-                    Search
-                </label>
+            <div class="payments-heading-content">
 
-                <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
+                <span class="eyebrow">
+                    Payment directory
+                </span>
 
-                    <input type="text"
-                        name="search"
-                        value="{{ request('search') }}"
-                        class="form-control border-start-0"
-                        placeholder="Transaction ID, order number...">
+                <h5>All Payments</h5>
 
-                    <button type="submit" class="btn btn-primary">
-                        Search
-                    </button>
-                </div>
+                <p>
+                    Search, filter and review every marketplace payment.
+                </p>
+
             </div>
 
 
-            {{-- Payment Status --}}
-            <div class="col-6 col-md-3 col-lg-2">
-                <label class="form-label small text-muted fw-semibold">
-                    Status
-                </label>
+            <div class="payments-header-action">
 
-                <select name="payment_status" class="form-select">
-                    <option value="">All Status</option>
-
-                    <option value="pending"
-                        @selected(request('payment_status') === 'pending')>
-                        Pending
-                    </option>
-
-                    <option value="paid"
-                        @selected(request('payment_status') === 'paid')>
-                        Paid
-                    </option>
-
-                    <option value="failed"
-                        @selected(request('payment_status') === 'failed')>
-                        Failed
-                    </option>
-
-                    <option value="refunded"
-                        @selected(request('payment_status') === 'refunded')>
-                        Refunded
-                    </option>
-                </select>
-            </div>
-
-
-            {{-- Payment Method --}}
-            <div class="col-6 col-md-3 col-lg-2">
-                <label class="form-label small text-muted fw-semibold">
-                    Method
-                </label>
-
-                <select name="payment_method" class="form-select">
-                    <option value="">All Methods</option>
-
-                    <option value="cash_on_delivery"
-                        @selected(request('payment_method') === 'cash_on_delivery')>
-                        Cash On Delivery
-                    </option>
-
-                    <option value="credit_card"
-                        @selected(request('payment_method') === 'credit_card')>
-                        Credit Card
-                    </option>
-
-                    <option value="debit_card"
-                        @selected(request('payment_method') === 'debit_card')>
-                        Debit Card
-                    </option>
-
-                    <option value="paypal"
-                        @selected(request('payment_method') === 'paypal')>
-                        PayPal
-                    </option>
-                </select>
-            </div>
-
-
-            {{-- Date --}}
-            <div class="col-12 col-md-6 col-lg-2">
-                <label class="form-label small text-muted fw-semibold">
-                    Date
-                </label>
-
-                <input type="date"
-                    name="date"
-                    value="{{ request('date') }}"
-                    class="form-control">
-            </div>
-
-
-            {{-- Buttons --}}
-            <div class="col-12 col-md-6 col-lg-2 payment-filter-buttons">
-
-                <button type="submit"
-                        class="btn btn-primary filter-btn">
-                    <i class="bi bi-funnel me-1"></i>
-                    <span>Filter</span>
-                </button>
-
-                <a href="{{ route('admin.payments.index') }}"
-                class="btn reset-btn">
-                    Reset
+                <a
+                    href="{{ route('admin.payments.create') }}"
+                    class="payments-add-btn"
+                >
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Add Payment</span>
                 </a>
 
             </div>
 
+        </div>
+
+
+        {{-- ================= FILTERS ================= --}}
+        <form
+            method="GET"
+            action="{{ route('admin.payments.index') }}"
+            class="payment-filters"
+        >
+
+            {{-- Search --}}
+            <div class="payment-filter-group payment-filter-search">
+
+                <label for="payment-search">
+                    Search
+                </label>
+
+                <div class="payment-search-field">
+
+                    <i class="bi bi-search"></i>
+
+                    <input
+                        id="payment-search"
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Transaction ID, order number..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+
+            {{-- Payment Status --}}
+            <div class="payment-filter-group">
+
+                <label for="payment-status">
+                    Payment Status
+                </label>
+
+                <select
+                    id="payment-status"
+                    name="payment_status"
+                    class="payment-filter-select"
+                >
+
+                    <option value="">
+                        All Status
+                    </option>
+
+                    <option
+                        value="pending"
+                        @selected(request('payment_status') === 'pending')
+                    >
+                        Pending
+                    </option>
+
+                    <option
+                        value="paid"
+                        @selected(request('payment_status') === 'paid')
+                    >
+                        Paid
+                    </option>
+
+                    <option
+                        value="failed"
+                        @selected(request('payment_status') === 'failed')
+                    >
+                        Failed
+                    </option>
+
+                    <option
+                        value="refunded"
+                        @selected(request('payment_status') === 'refunded')
+                    >
+                        Refunded
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            {{-- Payment Method --}}
+            <div class="payment-filter-group">
+
+                <label for="payment-method">
+                    Payment Method
+                </label>
+
+                <select
+                    id="payment-method"
+                    name="payment_method"
+                    class="payment-filter-select"
+                >
+
+                    <option value="">
+                        All Methods
+                    </option>
+
+                    <option
+                        value="cash_on_delivery"
+                        @selected(request('payment_method') === 'cash_on_delivery')
+                    >
+                        Cash On Delivery
+                    </option>
+
+                    <option
+                        value="credit_card"
+                        @selected(request('payment_method') === 'credit_card')
+                    >
+                        Credit Card
+                    </option>
+
+                    <option
+                        value="debit_card"
+                        @selected(request('payment_method') === 'debit_card')
+                    >
+                        Debit Card
+                    </option>
+
+                    <option
+                        value="paypal"
+                        @selected(request('payment_method') === 'paypal')
+                    >
+                        PayPal
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            {{-- Date --}}
+            <div class="payment-filter-group">
+
+                <label for="payment-date">
+                    Payment Date
+                </label>
+
+                <div class="payment-date-field">
+
+                    <i class="bi bi-calendar3"></i>
+
+                    <input
+                        id="payment-date"
+                        type="date"
+                        name="date"
+                        value="{{ request('date') }}"
+                    >
+
+                </div>
+
+            </div>
+
+
+            {{-- Filter Actions --}}
+            <div class="payment-filter-actions">
+
+                <button
+                    type="submit"
+                    class="payment-filter-btn"
+                >
+                    <i class="bi bi-funnel"></i>
+                    <span>Filter</span>
+                </button>
+
+
+                @if(request()->hasAny([
+                    'search',
+                    'payment_status',
+                    'payment_method',
+                    'date'
+                ]))
+
+                    <a
+                        href="{{ route('admin.payments.index') }}"
+                        class="payment-clear-filter"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        <span>Clear</span>
+                    </a>
+
+                @endif
+
+            </div>
+
         </form>
-    </div>
 
 
-    {{-- Payments Table --}}
-    <div class="card border-0 shadow-sm">
+        {{-- ================= PAYMENTS TABLE ================= --}}
+        <div class="payments-table-wrap">
 
-        <div class="card-body">
+            <table class="payments-table">
 
-            <div class="table-responsive">
+                <thead>
 
-                <table class="table align-middle">
+                    <tr>
 
-                    <thead>
+                        <th class="payments-col-id">
+                            #
+                        </th>
 
-                        <tr>
+                        <th class="payments-col-transaction">
+                            Transaction
+                        </th>
 
-                            <th>#</th>
+                        <th class="payments-col-customer">
+                            Customer
+                        </th>
 
-                            <th>Transaction</th>
+                        <th class="payments-col-order">
+                            Order
+                        </th>
 
-                            <th>Customer</th>
+                        <th class="payments-col-amount">
+                            Amount
+                        </th>
 
-                            <th>Order</th>
+                        <th class="payments-col-method">
+                            Method
+                        </th>
 
-                            <th>Amount</th>
+                        <th class="payments-col-status">
+                            Status
+                        </th>
 
-                            <th>Method</th>
+                        <th class="payments-col-date">
+                            Date
+                        </th>
 
-                            <th>Status</th>
+                        <th class="payments-col-actions">
+                            Actions
+                        </th>
 
-                            <th>Date</th>
+                    </tr>
 
-                            <th>Action</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        @forelse($payments as $payment)
-
-                            <tr>
-
-                                <td>
-                                    {{ $payment->id }}
-                                </td>
-
-
-                                <td>
-
-                                    <span class="fw-semibold">
-                                        {{ $payment->transaction_id }}
-                                    </span>
-
-                                </td>
+                </thead>
 
 
-                                <td>
+                <tbody>
 
-                                    <div class="fw-semibold">
+                    @forelse($payments as $payment)
 
-                                        {{ $payment->order->user->first_name }}
-                                        {{ $payment->order->user->last_name }}
+                        @php
+
+                            $customerName = trim(
+                                ($payment->order->user->first_name ?? '') . ' ' .
+                                ($payment->order->user->last_name ?? '')
+                            );
+
+                            $customerName = $customerName ?: (
+                                $payment->order->user->name ??
+                                $payment->order->user->username ??
+                                'Customer'
+                            );
+
+                            $customerInitial = strtoupper(
+                                mb_substr($customerName, 0, 1)
+                            );
+
+                            $paymentStatus = strtolower(
+                                $payment->payment_status ?? 'pending'
+                            );
+
+                            $knownStatuses = [
+                                'paid',
+                                'pending',
+                                'failed',
+                                'refunded'
+                            ];
+
+                            $paymentStatusClass = in_array(
+                                $paymentStatus,
+                                $knownStatuses
+                            )
+                                ? 'payment-status-' . $paymentStatus
+                                : 'payment-status-default';
+
+                        @endphp
+
+
+                        <tr id="payment-row-{{ $payment->id }}">
+
+                            {{-- ID --}}
+                            <td>
+
+                                <span class="payment-id">
+                                    #{{ $payment->id }}
+                                </span>
+
+                            </td>
+
+
+                            {{-- Transaction --}}
+                            <td>
+
+                                <div class="payment-transaction-cell">
+
+                                    <div class="payment-transaction-icon">
+                                        <i class="bi bi-receipt"></i>
+                                    </div>
+
+                                    <div class="payment-transaction-info">
+
+                                        <strong
+                                            title="{{ $payment->transaction_id }}"
+                                        >
+                                            {{ $payment->transaction_id }}
+                                        </strong>
+
+                                        <small>
+                                            Transaction
+                                        </small>
 
                                     </div>
 
-                                    <small class="text-muted">
+                                </div>
 
-                                        {{ $payment->order->user->email }}
-
-                                    </small>
-
-                                </td>
+                            </td>
 
 
-                                <td>
+                            {{-- Customer --}}
+                            <td>
 
-                                    <span class="fw-semibold">
+                                <div class="payment-customer-cell">
 
-                                        {{ $payment->order->order_number }}
+                                    <div class="payment-customer-avatar">
+                                        {{ $customerInitial }}
+                                    </div>
 
-                                    </span>
+                                    <div class="payment-customer-info">
 
-                                    <br>
+                                        <strong title="{{ $customerName }}">
+                                            {{ $customerName }}
+                                        </strong>
 
-                                    <small class="text-muted">
+                                        <small
+                                            title="{{ $payment->order->user->email ?? '' }}"
+                                        >
+                                            {{ $payment->order->user->email ?? '—' }}
+                                        </small>
 
-                                        {{ $payment->order->book->title }}
+                                    </div>
 
-                                    </small>
+                                </div>
 
-                                </td>
+                            </td>
 
 
-                                <td>
+                            {{-- Order --}}
+                            <td>
 
+                                <div class="payment-order-cell">
+
+                                    <div class="payment-order-icon">
+                                        <i class="bi bi-cart-check"></i>
+                                    </div>
+
+                                    <div class="payment-order-info">
+
+                                        <strong
+                                            title="{{ $payment->order->order_number ?? '#' . $payment->order_id }}"
+                                        >
+                                            {{ $payment->order->order_number ?? '#' . $payment->order_id }}
+                                        </strong>
+
+                                        <small
+                                            title="{{ $payment->order->book->title ?? 'Unknown book' }}"
+                                        >
+                                            {{ $payment->order->book->title ?? 'Unknown book' }}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            {{-- Amount --}}
+                            <td>
+
+                                <span class="payment-amount">
                                     ${{ number_format($payment->amount, 2) }}
+                                </span>
 
-                                </td>
+                            </td>
 
 
-                                <td>
+                            {{-- Method --}}
+                            <td>
+
+                                <span class="payment-method">
 
                                     @switch($payment->payment_method)
 
                                         @case('cash_on_delivery')
+                                            <i class="bi bi-cash-stack"></i>
                                             Cash On Delivery
                                             @break
 
                                         @case('credit_card')
+                                            <i class="bi bi-credit-card"></i>
                                             Credit Card
                                             @break
 
                                         @case('debit_card')
+                                            <i class="bi bi-credit-card-2-front"></i>
                                             Debit Card
                                             @break
 
                                         @case('paypal')
+                                            <i class="bi bi-paypal"></i>
                                             PayPal
                                             @break
 
+                                        @default
+                                            <i class="bi bi-wallet2"></i>
+                                            {{ ucfirst(str_replace('_', ' ', $payment->payment_method ?? 'Unknown')) }}
+
                                     @endswitch
 
-                                </td>
+                                </span>
+
+                            </td>
 
 
-                                <td>
+                            {{-- Status --}}
+                            <td>
 
-                                    @if($payment->payment_status === 'paid')
+                                <span class="payment-status-pill {{ $paymentStatusClass }}">
 
-                                        <span class="badge bg-success">
-                                            Paid
-                                        </span>
+                                    <i class="bi bi-circle-fill"></i>
 
-                                    @elseif($payment->payment_status === 'pending')
+                                    {{ ucfirst($paymentStatus) }}
 
-                                        <span class="badge bg-warning text-dark">
-                                            Pending
-                                        </span>
+                                </span>
 
-                                    @elseif($payment->payment_status === 'failed')
-
-                                        <span class="badge bg-danger">
-                                            Failed
-                                        </span>
-
-                                    @else
-
-                                        <span class="badge bg-secondary">
-                                            Refunded
-                                        </span>
-
-                                    @endif
-
-                                </td>
+                            </td>
 
 
-                                <td>
+                            {{-- Date --}}
+                            <td>
 
-                                    {{ $payment->created_at->format('d M Y') }}
+                                <div class="payment-date-block">
 
-                                </td>
+                                    <span class="payment-date">
+                                        {{ $payment->created_at->format('d M Y') }}
+                                    </span>
+
+                                    <small class="payment-time">
+                                        {{ $payment->created_at->format('H:i') }}
+                                    </small>
+
+                                </div>
+
+                            </td>
 
 
-                                <td>
-                                    <div class="payment-actions">
+                            {{-- Actions --}}
+                            <td>
 
-                                        <a href="{{ route('admin.payments.show', $payment->id) }}"
-                                        class="btn btn-sm btn-light"
-                                        title="View">
+                                <div class="payment-actions">
 
-                                            <i class="bi bi-eye"></i>
+                                    <a
+                                        href="{{ route('admin.payments.show', $payment->id) }}"
+                                        class="payment-action-btn payment-view-btn"
+                                        title="View payment"
+                                        aria-label="View payment #{{ $payment->id }}"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </a>
 
-                                        </a>
 
-                                        <a href="{{ route('admin.payments.edit', $payment->id) }}"
-                                        class="btn btn-sm btn-light"
-                                        title="Edit">
+                                    <a
+                                        href="{{ route('admin.payments.edit', $payment->id) }}"
+                                        class="payment-action-btn payment-edit-btn"
+                                        title="Edit payment"
+                                        aria-label="Edit payment #{{ $payment->id }}"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
 
-                                            <i class="bi bi-pencil"></i>
 
-                                        </a>
+                                    <form
+                                        action="{{ route('admin.payments.destroy', $payment->id) }}"
+                                        method="POST"
+                                        class="payment-delete-form"
+                                    >
 
-                                        <form action="{{ route('admin.payments.destroy', $payment->id) }}"
-                                            method="POST"
-                                            class="d-inline delete-payment-form">
+                                        @csrf
+                                        @method('DELETE')
 
-                                            @csrf
-                                            @method('DELETE')
+                                        <button
+                                            type="submit"
+                                            class="payment-action-btn payment-delete-btn"
+                                            title="Delete payment"
+                                            aria-label="Delete payment #{{ $payment->id }}"
+                                        >
+                                            <i class="bi bi-trash"></i>
+                                        </button>
 
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-danger delete-payment-btn"
-                                                    title="Delete">
+                                    </form>
 
-                                                <i class="bi bi-trash"></i>
+                                </div>
 
-                                            </button>
+                            </td>
 
-                                        </form>
+                        </tr>
 
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="9">
+
+                                <div class="payments-empty-state">
+
+                                    <div class="payments-empty-icon">
+                                        <i class="bi bi-credit-card-2-front"></i>
                                     </div>
-                                </td>
 
-                            </tr>
+                                    <strong>
+                                        No payments found
+                                    </strong>
 
-                        @empty
+                                    <span>
+                                        Try changing your filters or search criteria.
+                                    </span>
 
-                            <tr>
+                                </div>
 
-                                <td colspan="9"
-                                    class="text-center text-muted py-4">
+                            </td>
 
-                                    No payments found.
+                        </tr>
 
-                                </td>
+                    @endforelse
 
-                            </tr>
+                </tbody>
 
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <div class="mt-3">
-
-                {{ $payments->links() }}
-
-            </div>
+            </table>
 
         </div>
 
-    </div>
+
+        {{-- ================= PAGINATION ================= --}}
+        @if($payments->hasPages())
+
+            @php
+
+                $payments->appends(request()->query());
+
+                $current = $payments->currentPage();
+                $last    = $payments->lastPage();
+
+                $start = max(1, $current - 2);
+                $end   = min($last, $current + 2);
+
+            @endphp
+
+
+            <div class="payments-pagination">
+
+                <div class="payments-pagination-info">
+
+                    Showing
+
+                    <strong>
+                        {{ $payments->firstItem() }}
+                    </strong>
+
+                    to
+
+                    <strong>
+                        {{ $payments->lastItem() }}
+                    </strong>
+
+                    of
+
+                    <strong>
+                        {{ $payments->total() }}
+                    </strong>
+
+                    payments
+
+                </div>
+
+
+                <nav
+                    class="payments-pagination-pages"
+                    aria-label="Payments pagination"
+                >
+
+                    {{-- Previous --}}
+                    @if($payments->onFirstPage())
+
+                        <span
+                            class="payments-pager-btn disabled"
+                            aria-disabled="true"
+                        >
+                            <i class="bi bi-chevron-left"></i>
+                        </span>
+
+                    @else
+
+                        <a
+                            href="{{ $payments->previousPageUrl() }}"
+                            class="payments-pager-btn"
+                            aria-label="Previous page"
+                        >
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+
+                    @endif
+
+
+                    {{-- First Page --}}
+                    @if($start > 1)
+
+                        <a
+                            href="{{ $payments->url(1) }}"
+                            class="payments-pager-btn"
+                        >
+                            1
+                        </a>
+
+                        @if($start > 2)
+
+                            <span class="payments-pager-dots">
+                                …
+                            </span>
+
+                        @endif
+
+                    @endif
+
+
+                    {{-- Page Window --}}
+                    @for($page = $start; $page <= $end; $page++)
+
+                        @if($page === $current)
+
+                            <span
+                                class="payments-pager-btn active"
+                                aria-current="page"
+                            >
+                                {{ $page }}
+                            </span>
+
+                        @else
+
+                            <a
+                                href="{{ $payments->url($page) }}"
+                                class="payments-pager-btn"
+                            >
+                                {{ $page }}
+                            </a>
+
+                        @endif
+
+                    @endfor
+
+
+                    {{-- Last Page --}}
+                    @if($end < $last)
+
+                        @if($end < $last - 1)
+
+                            <span class="payments-pager-dots">
+                                …
+                            </span>
+
+                        @endif
+
+                        <a
+                            href="{{ $payments->url($last) }}"
+                            class="payments-pager-btn"
+                        >
+                            {{ $last }}
+                        </a>
+
+                    @endif
+
+
+                    {{-- Next --}}
+                    @if($payments->hasMorePages())
+
+                        <a
+                            href="{{ $payments->nextPageUrl() }}"
+                            class="payments-pager-btn"
+                            aria-label="Next page"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                    @else
+
+                        <span
+                            class="payments-pager-btn disabled"
+                            aria-disabled="true"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+
+                    @endif
+
+                </nav>
+
+            </div>
+
+        @endif
+
+    </section>
 
 </div>
 
-{{-- Delete Confirmation --}}
+@endsection
+
+@push('js')
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const deleteForms = document.querySelectorAll('.delete-payment-form');
+    /* =========================================================
+       DELETE PAYMENT — AJAX
+    ========================================================= */
 
-    deleteForms.forEach(function (form) {
+    document.querySelectorAll('.payment-delete-form').forEach(function (form) {
 
-        form.addEventListener('submit', function (event) {
+        form.addEventListener('submit', async function (event) {
 
             event.preventDefault();
 
-            Swal.fire({
+            const row = form.closest('tr');
+            const button = form.querySelector('button');
+
+            const result = await Swal.fire({
                 title: 'Are you sure?',
                 text: 'This payment will be permanently deleted.',
                 icon: 'warning',
-
                 showCancelButton: true,
-
                 confirmButtonColor: '#dc3545',
                 cancelButtonColor: '#6c757d',
-
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'Cancel'
-            }).then((result) => {
-
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-
             });
 
-        });
+            if (!result.isConfirmed) {
+                return;
+            }
 
+            if (button) {
+                button.disabled = true;
+            }
+
+            try {
+
+                const csrfToken = document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type':
+                            'application/x-www-form-urlencoded; charset=UTF-8'
+                    },
+                    body: new URLSearchParams({
+                        _token: csrfToken,
+                        _method: 'DELETE'
+                    })
+                });
+
+                const contentType =
+                    response.headers.get('content-type') || '';
+
+                let data = {};
+
+                if (contentType.includes('application/json')) {
+                    data = await response.json();
+                }
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message ||
+                        'Unable to delete the payment.'
+                    );
+                }
+
+                /* Remove row without page refresh */
+                if (row) {
+
+                    row.style.transition =
+                        'opacity 0.3s ease, transform 0.3s ease';
+
+                    row.style.opacity = '0';
+
+                    row.style.transform =
+                        'translateX(20px)';
+
+                    setTimeout(function () {
+                        row.remove();
+                    }, 300);
+                }
+
+                /* Success */
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment deleted',
+                    text: data.message ||
+                        'The payment has been deleted successfully.',
+                    timer: 1600,
+                    showConfirmButton: false
+                });
+
+            } catch (error) {
+
+                if (button) {
+                    button.disabled = false;
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Delete failed',
+                    text: error.message ||
+                        'Unable to delete the payment.',
+                    confirmButtonColor: '#2563eb'
+                });
+            }
+        });
     });
 
 });
 </script>
 
-@endsection
-
+@endpush

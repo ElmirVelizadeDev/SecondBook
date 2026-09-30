@@ -5,7 +5,6 @@
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,7 +12,7 @@
     <title>SecondBook Admin</title>
 
     @php
-    $adminFavicon = \App\Models\Setting::get('favicon');
+        $adminFavicon = \App\Models\Setting::get('favicon');
     @endphp
 
     <link
@@ -25,6 +24,7 @@
         }}"
     >
 
+    {{-- Google Font --}}
     <link
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"
@@ -43,6 +43,7 @@
     >
 
     {{-- Custom CSS --}}
+    <link rel="stylesheet" href="{{ asset('admin/css/dashboard-premium.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/sidebar.css') }}">
@@ -72,11 +73,14 @@
     <script>
         (function () {
 
-            var savedTheme = localStorage.getItem('admin_theme');
+            var savedTheme =
+                localStorage.getItem('admin_theme');
 
             var preferredDark =
                 window.matchMedia &&
-                window.matchMedia('(prefers-color-scheme: dark)').matches;
+                window.matchMedia(
+                    '(prefers-color-scheme: dark)'
+                ).matches;
 
             var theme =
                 savedTheme ||
@@ -91,6 +95,10 @@
     </script>
 
     <style>
+
+        /* =========================================================
+           DARK MODE
+        ========================================================= */
 
         :root[data-theme="dark"] body {
             background: #0f172a;
@@ -222,7 +230,10 @@
             color: #c08457 !important;
         }
 
-        /* SweetAlert2 Theme Fix */
+
+        /* =========================================================
+           SWEETALERT2 GLOBAL THEME
+        ========================================================= */
 
         .swal2-popup {
             color: #111827 !important;
@@ -236,8 +247,6 @@
             color: #6b7280 !important;
         }
 
-        /* SweetAlert2 Dark Mode */
-
         :root[data-theme="dark"] .swal2-popup {
             background: #111827 !important;
         }
@@ -250,8 +259,458 @@
             color: #cbd5e1 !important;
         }
 
+
         /* =========================================================
-        GLOBAL SCROLL FIX
+           ADMIN LOGOUT ALERT
+        ========================================================= */
+
+        .admin-logout-popup {
+            overflow: hidden !important;
+            border: 1px solid #e4e7ec !important;
+            border-radius: 22px !important;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffffff 0%,
+                    #fbfcfe 100%
+                ) !important;
+
+            box-shadow:
+                0 30px 80px -25px rgba(16, 24, 40, .30),
+                0 12px 35px -15px rgba(16, 24, 40, .18);
+
+            font-family:
+                "Plus Jakarta Sans",
+                system-ui,
+                -apple-system,
+                "Segoe UI",
+                sans-serif !important;
+        }
+
+
+        /* =========================================================
+           LOGOUT TITLE
+        ========================================================= */
+
+        .admin-logout-title {
+            margin: 0 !important;
+            padding: 28px 28px 4px !important;
+
+            color: #101828 !important;
+            font-size: 21px !important;
+            font-weight: 800 !important;
+
+            letter-spacing: -.025em;
+            line-height: 1.3 !important;
+        }
+
+
+        /* =========================================================
+           LOGOUT BODY
+        ========================================================= */
+
+        .admin-logout-body {
+            margin: 0 !important;
+            padding: 0 28px !important;
+
+            color: #667085 !important;
+            font-size: 13px !important;
+            line-height: 1.65 !important;
+        }
+
+        .admin-logout-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        /* =========================================================
+           LOGOUT ICON
+        ========================================================= */
+
+        .admin-logout-icon {
+            width: 64px;
+            height: 64px;
+            margin: 2px auto 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #fff1f0,
+                    #fef3f2
+                );
+
+            color: #d92d20;
+
+            box-shadow:
+                inset 0 0 0 1px
+                rgba(217, 45, 32, .10),
+
+                0 10px 25px -16px
+                rgba(217, 45, 32, .45);
+
+            font-size: 25px;
+        }
+
+        .admin-logout-icon i {
+            line-height: 1;
+        }
+
+
+        /* =========================================================
+           LOGOUT TEXT
+        ========================================================= */
+
+        .admin-logout-content p {
+            max-width: 300px;
+            margin: 0 auto !important;
+
+            color: #667085 !important;
+            font-size: 13px !important;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+
+        /* =========================================================
+           LOGOUT ACTIONS
+        ========================================================= */
+
+        .admin-logout-actions {
+            width: 100%;
+            margin: 0 !important;
+            padding: 24px 28px 28px !important;
+
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+
+        /* =========================================================
+           BUTTON BASE
+        ========================================================= */
+
+        .admin-logout-confirm,
+        .admin-logout-cancel {
+            height: 46px !important;
+            margin: 0 !important;
+            padding: 0 16px !important;
+
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px !important;
+
+            font-family:
+                "Plus Jakarta Sans",
+                system-ui,
+                sans-serif !important;
+
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            line-height: 1 !important;
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease,
+                background .2s ease,
+                border-color .2s ease !important;
+        }
+
+
+        /* =========================================================
+           BUTTON CONTENT
+        ========================================================= */
+
+        .admin-logout-btn,
+        .admin-cancel-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .admin-logout-btn i,
+        .admin-cancel-btn i {
+            font-size: 14px;
+        }
+
+
+        /* =========================================================
+           CANCEL BUTTON
+        ========================================================= */
+
+        .admin-logout-cancel {
+            border:
+                1px solid #dfe3ea !important;
+
+            background:
+                #ffffff !important;
+
+            color:
+                #475467 !important;
+
+            box-shadow:
+                0 2px 5px
+                rgba(16, 24, 40, .04);
+        }
+
+        .admin-logout-cancel:hover {
+            transform:
+                translateY(-1px);
+
+            border-color:
+                #cfd4dc !important;
+
+            background:
+                #f8fafc !important;
+
+            color:
+                #101828 !important;
+
+            box-shadow:
+                0 8px 20px -14px
+                rgba(16, 24, 40, .35);
+        }
+
+
+        /* =========================================================
+           LOGOUT BUTTON
+        ========================================================= */
+
+        .admin-logout-confirm {
+            border:
+                1px solid #d92d20 !important;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e5483d,
+                    #d92d20
+                ) !important;
+
+            color:
+                #ffffff !important;
+
+            box-shadow:
+                0 10px 24px -13px
+                rgba(217, 45, 32, .65);
+        }
+
+        .admin-logout-confirm:hover {
+            transform:
+                translateY(-1px);
+
+            border-color:
+                #c5261b !important;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #dc4035,
+                    #c9251b
+                ) !important;
+
+            color:
+                #ffffff !important;
+
+            box-shadow:
+                0 14px 28px -14px
+                rgba(217, 45, 32, .75);
+        }
+
+        .admin-logout-confirm:active,
+        .admin-logout-cancel:active {
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================================
+           DARK MODE - LOGOUT
+        ========================================================= */
+
+        :root[data-theme="dark"] .admin-logout-popup {
+            border-color:
+                #26334d !important;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #111827 0%,
+                    #0f172a 100%
+                ) !important;
+
+            box-shadow:
+                0 35px 90px -25px
+                rgba(0, 0, 0, .75),
+
+                0 15px 40px -18px
+                rgba(0, 0, 0, .65);
+        }
+
+        :root[data-theme="dark"] .admin-logout-title {
+            color:
+                #f2f4f7 !important;
+        }
+
+        :root[data-theme="dark"] .admin-logout-content p {
+            color:
+                #98a7bd !important;
+        }
+
+        :root[data-theme="dark"] .admin-logout-icon {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(239, 68, 68, .16),
+                    rgba(127, 29, 29, .20)
+                );
+
+            color:
+                #ff8178;
+
+            box-shadow:
+                inset 0 0 0 1px
+                rgba(248, 113, 113, .12),
+
+                0 12px 28px -16px
+                rgba(239, 68, 68, .35);
+        }
+
+        :root[data-theme="dark"] .admin-logout-cancel {
+            border-color:
+                #2d3a52 !important;
+
+            background:
+                #172033 !important;
+
+            color:
+                #b8c3d6 !important;
+
+            box-shadow:
+                none;
+        }
+
+        :root[data-theme="dark"] .admin-logout-cancel:hover {
+            border-color:
+                #3b4a66 !important;
+
+            background:
+                #1c2940 !important;
+
+            color:
+                #f2f4f7 !important;
+        }
+
+
+        /* =========================================================
+           LOGOUT ANIMATION
+        ========================================================= */
+
+        @keyframes adminLogoutShow {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(12px)
+                    scale(.97);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+        @keyframes adminLogoutHide {
+
+            from {
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+            to {
+                opacity: 0;
+
+                transform:
+                    translateY(8px)
+                    scale(.98);
+            }
+
+        }
+
+        .admin-logout-show {
+            animation:
+                adminLogoutShow .22s
+                cubic-bezier(.2, .8, .2, 1) both;
+        }
+
+        .admin-logout-hide {
+            animation:
+                adminLogoutHide .16s ease both;
+        }
+
+
+        /* =========================================================
+           MOBILE LOGOUT
+        ========================================================= */
+
+        @media (max-width: 480px) {
+
+            .admin-logout-popup {
+                width:
+                    calc(100% - 28px) !important;
+
+                border-radius:
+                    19px !important;
+            }
+
+            .admin-logout-title {
+                padding:
+                    24px 22px 4px !important;
+
+                font-size:
+                    19px !important;
+            }
+
+            .admin-logout-body {
+                padding:
+                    0 22px !important;
+            }
+
+            .admin-logout-actions {
+                padding:
+                    20px 22px 22px !important;
+            }
+
+        }
+
+
+        /* =========================================================
+           GLOBAL SCROLL / STICKY FIX
+           
+           IMPORTANT:
+           Do NOT use overflow-x:hidden on ancestors of
+           position:sticky elements.
         ========================================================= */
 
         html,
@@ -262,23 +721,65 @@
             padding: 0;
         }
 
+        html {
+            overflow-x: clip;
+        }
+
         body {
-            overflow-x: hidden;
+            overflow-x: clip;
         }
 
-        .wrapper {
-            width: 100%;
-            max-width: 100%;
-            min-height: 100vh;
-            display: flex;
-            overflow-x: hidden;
-        }
+        /*
+         * Main wrapper must not become a scrolling container.
+         * clip prevents horizontal overflow without creating
+         * the same scrolling context as overflow:hidden.
+         */
+        /* =========================================================
+        SETTINGS STICKY SUPPORT
+        ========================================================= */
 
-        .main {
-            min-width: 0;
-            width: 100%;
-            flex: 1;
-            overflow-x: hidden;
+        @media (min-width: 992px) {
+
+            .settings-page {
+                position: relative;
+                width: 100%;
+                min-width: 0;
+            }
+
+            .settings-page .sx-layout {
+                display: grid;
+                grid-template-columns: 232px minmax(0, 1fr);
+                gap: 24px;
+                align-items: start;
+
+                width: 100%;
+                min-width: 0;
+
+                overflow: visible !important;
+            }
+
+            .settings-page .sx-rail {
+                position: -webkit-sticky;
+                position: sticky;
+
+                top: 100px;
+
+                align-self: start;
+
+                width: 232px;
+                height: fit-content;
+
+                max-height: none;
+
+                overflow: visible;
+
+                z-index: 20;
+            }
+
+            .settings-page .sx-content {
+                min-width: 0;
+                width: 100%;
+            }
         }
 
         .container-fluid {
@@ -287,6 +788,17 @@
             min-width: 0;
         }
 
+        /*
+         * Settings sticky ancestors
+         */
+        .main .settings-page,
+        .main .settings-page .sx-layout {
+            overflow: visible !important;
+        }
+
+        /*
+         * Sidebar overlay should not affect normal page scrolling.
+         */
         .sidebar-overlay {
             overflow: hidden;
         }
@@ -295,25 +807,48 @@
 
 </head>
 
+
 <body class="sidebar-open">
 
 <div class="wrapper">
 
-    {{-- Sidebar --}}
+    {{-- =========================================================
+         SIDEBAR
+    ========================================================= --}}
+
     @include('layout.admin.sidebar')
 
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    {{-- =========================================================
+         SIDEBAR OVERLAY
+    ========================================================= --}}
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    {{-- =========================================================
+         MAIN
+    ========================================================= --}}
 
     <div class="main">
 
         {{-- Header --}}
         @include('layout.admin.header')
 
+
+        {{-- =====================================================
+             PAGE CONTENT
+        ====================================================== --}}
+
         <div class="container-fluid p-0">
 
             @yield('content')
 
         </div>
+
 
         {{-- Footer --}}
         @include('layout.admin.footer')
@@ -323,7 +858,10 @@
 </div>
 
 
-{{-- Common Scripts --}}
+{{-- =========================================================
+     COMMON SCRIPTS
+========================================================= --}}
+
 @include('layout.admin.scripts')
 
 <script src="{{ asset('admin/js/sidebar.js') }}"></script>
@@ -331,7 +869,10 @@
 <script src="{{ asset('admin/js/app.js') }}"></script>
 
 
-{{-- Theme System --}}
+{{-- =========================================================
+     THEME SYSTEM
+========================================================= --}}
+
 <script>
 
     (function () {
@@ -353,11 +894,17 @@
                 safeTheme
             );
 
+
             var label =
-                document.getElementById('themeToggleLabel');
+                document.getElementById(
+                    'themeToggleLabel'
+                );
 
             var icon =
-                document.getElementById('themeToggleIcon');
+                document.getElementById(
+                    'themeToggleIcon'
+                );
+
 
             if (label && icon) {
 
@@ -383,7 +930,10 @@
 
         }
 
-        window.setAdminTheme = applyTheme;
+
+        window.setAdminTheme =
+            applyTheme;
+
 
         document.addEventListener(
             'DOMContentLoaded',
@@ -394,6 +944,7 @@
                         'data-theme'
                     ) || 'light';
 
+
                 applyTheme(currentTheme);
 
 
@@ -401,6 +952,7 @@
                     document.getElementById(
                         'themeToggleBtn'
                     );
+
 
                 if (toggleBtn) {
 
@@ -410,10 +962,12 @@
 
                             event.preventDefault();
 
+
                             var now =
                                 document.documentElement.getAttribute(
                                     'data-theme'
                                 ) || 'light';
+
 
                             applyTheme(
                                 now === 'dark'
@@ -428,23 +982,27 @@
 
 
                 document
-                    .querySelectorAll('[data-theme-target]')
-                    .forEach(function (btn) {
+                    .querySelectorAll(
+                        '[data-theme-target]'
+                    )
+                    .forEach(
+                        function (btn) {
 
-                        btn.addEventListener(
-                            'click',
-                            function () {
+                            btn.addEventListener(
+                                'click',
+                                function () {
 
-                                applyTheme(
-                                    btn.getAttribute(
-                                        'data-theme-target'
-                                    )
-                                );
+                                    applyTheme(
+                                        btn.getAttribute(
+                                            'data-theme-target'
+                                        )
+                                    );
 
-                            }
-                        );
+                                }
+                            );
 
-                    });
+                        }
+                    );
 
             }
         );
@@ -454,57 +1012,185 @@
 </script>
 
 
-{{-- Logout Confirmation --}}
+{{-- =========================================================
+     LOGOUT CONFIRMATION
+========================================================= --}}
+
 <script>
 
     document.addEventListener(
         'DOMContentLoaded',
         function () {
 
+
             function confirmLogout(formId) {
+
+                const isDark =
+                    document.documentElement.getAttribute(
+                        'data-theme'
+                    ) === 'dark';
+
 
                 Swal.fire({
 
-                    title: 'Logout?',
+                    title: 'Sign out?',
 
-                    text: 'Are you sure you want to sign out of your account?',
 
-                    icon: 'warning',
+                    html: `
+
+                        <div class="admin-logout-content">
+
+                            <div class="admin-logout-icon">
+
+                                <i class="bi bi-box-arrow-right"></i>
+
+                            </div>
+
+                            <p>
+
+                                Are you sure you want to sign out
+                                of your admin account?
+
+                            </p>
+
+                        </div>
+
+                    `,
+
 
                     showCancelButton: true,
 
-                    confirmButtonText: 'Logout',
 
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: `
 
-                    confirmButtonColor: '#8b5e3c',
+                        <span class="admin-logout-btn">
 
-                    cancelButtonColor: '#6c757d',
+                            <i class="bi bi-box-arrow-right"></i>
 
-                    reverseButtons: false
+                            Logout
 
-                }).then(function (result) {
+                        </span>
 
-                    if (result.isConfirmed) {
+                    `,
 
-                        var form =
-                            document.getElementById(formId);
 
-                        if (form) {
-                            form.submit();
-                        }
+                    cancelButtonText: `
+
+                        <span class="admin-cancel-btn">
+
+                            <i class="bi bi-x-lg"></i>
+
+                            Cancel
+
+                        </span>
+
+                    `,
+
+
+                    reverseButtons: true,
+
+                    focusCancel: true,
+
+                    allowOutsideClick: true,
+
+                    allowEscapeKey: true,
+
+
+                    width: '420px',
+
+                    padding: '0',
+
+
+                    background:
+                        isDark
+                            ? '#111827'
+                            : '#ffffff',
+
+
+                    color:
+                        isDark
+                            ? '#f2f4f7'
+                            : '#101828',
+
+
+                    backdrop:
+                        isDark
+                            ? 'rgba(2, 6, 23, .76)'
+                            : 'rgba(15, 23, 42, .45)',
+
+
+                    customClass: {
+
+                        popup:
+                            'admin-logout-popup',
+
+                        title:
+                            'admin-logout-title',
+
+                        htmlContainer:
+                            'admin-logout-body',
+
+                        actions:
+                            'admin-logout-actions',
+
+                        confirmButton:
+                            'admin-logout-confirm',
+
+                        cancelButton:
+                            'admin-logout-cancel'
+
+                    },
+
+
+                    showClass: {
+
+                        popup:
+                            'admin-logout-show'
+
+                    },
+
+
+                    hideClass: {
+
+                        popup:
+                            'admin-logout-hide'
 
                     }
 
-                });
+                }).then(
+                    function (result) {
+
+                        if (result.isConfirmed) {
+
+                            var form =
+                                document.getElementById(
+                                    formId
+                                );
+
+
+                            if (form) {
+
+                                form.submit();
+
+                            }
+
+                        }
+
+                    }
+                );
 
             }
 
 
-            // Header Logout
+            /* =====================================================
+               HEADER LOGOUT
+            ===================================================== */
 
             var logoutBtn =
-                document.getElementById('logoutBtn');
+                document.getElementById(
+                    'logoutBtn'
+                );
+
 
             if (logoutBtn) {
 
@@ -514,7 +1200,9 @@
 
                         event.preventDefault();
 
-                        confirmLogout('logoutForm');
+                        confirmLogout(
+                            'logoutForm'
+                        );
 
                     }
                 );
@@ -522,12 +1210,15 @@
             }
 
 
-            // Sidebar Logout
+            /* =====================================================
+               SIDEBAR LOGOUT
+            ===================================================== */
 
             var sidebarLogoutBtn =
                 document.getElementById(
                     'sidebarLogoutBtn'
                 );
+
 
             if (sidebarLogoutBtn) {
 
@@ -551,59 +1242,122 @@
 
 </script>
 
-{{-- Session Alerts --}}
+
+{{-- =========================================================
+     SESSION ALERTS
+========================================================= --}}
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
 
-        @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: @json(session('success')),
-                confirmButtonColor: '#8b5e3c',
-                confirmButtonText: 'OK'
-            });
-        @endif
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
 
-        @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: @json(session('error')),
-                confirmButtonColor: '#8b5e3c',
-                confirmButtonText: 'OK'
-            });
-        @endif
 
-        @if(session('warning'))
-            Swal.fire({
-                icon: 'warning',
-                title: 'Warning',
-                text: @json(session('warning')),
-                confirmButtonColor: '#8b5e3c',
-                confirmButtonText: 'OK'
-            });
-        @endif
+            @if(session('success'))
 
-        @if(session('permission_denied'))
-            Swal.fire({
-                icon: 'warning',
-                title: 'Access Denied',
-                text: @json(session('permission_denied')),
-                confirmButtonColor: '#2563eb',
-                confirmButtonText: 'OK'
-            });
-        @endif
+                Swal.fire({
 
-    });
+                    icon: 'success',
+
+                    title: 'Success',
+
+                    text:
+                        @json(session('success')),
+
+                    confirmButtonColor:
+                        '#8b5e3c',
+
+                    confirmButtonText:
+                        'OK'
+
+                });
+
+            @endif
+
+
+            @if(session('error'))
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Error',
+
+                    text:
+                        @json(session('error')),
+
+                    confirmButtonColor:
+                        '#8b5e3c',
+
+                    confirmButtonText:
+                        'OK'
+
+                });
+
+            @endif
+
+
+            @if(session('warning'))
+
+                Swal.fire({
+
+                    icon: 'warning',
+
+                    title: 'Warning',
+
+                    text:
+                        @json(session('warning')),
+
+                    confirmButtonColor:
+                        '#8b5e3c',
+
+                    confirmButtonText:
+                        'OK'
+
+                });
+
+            @endif
+
+
+            @if(session('permission_denied'))
+
+                Swal.fire({
+
+                    icon: 'warning',
+
+                    title: 'Access Denied',
+
+                    text:
+                        @json(session('permission_denied')),
+
+                    confirmButtonColor:
+                        '#2563eb',
+
+                    confirmButtonText:
+                        'OK'
+
+                });
+
+            @endif
+
+        }
+    );
+
 </script>
 
 
-{{-- Page Specific Scripts --}}
+{{-- =========================================================
+     PAGE SPECIFIC SCRIPTS
+========================================================= --}}
+
 @stack('scripts')
 
 
-{{-- Existing JS Stack --}}
+{{-- =========================================================
+     EXISTING JS STACK
+========================================================= --}}
+
 @stack('js')
 
 

@@ -2,79 +2,97 @@
 
 @section('title', 'Edit Refund')
 
-@push('css') <link rel="stylesheet" href="{{ asset('admin/css/refunds.css') }}">
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/refunds.css') }}">
 @endpush
 
 @section('content')
 
-<div class="dashboard-section refunds-page">
+<div class="refunds-page">
 
+    {{-- =========================================================
+        HEADER
+    ========================================================= --}}
+    <div class="refund-hero">
 
-{{-- Hero --}}
-<div class="refund-form-hero mb-4">
+        <div class="refund-hero-content">
 
-    <div class="refund-form-hero-content">
+            <span class="refund-hero-badge">
+                <i class="bi bi-pencil-square"></i>
+                Refund Management
+            </span>
 
-        <a href="{{ route('admin.refunds.show', $refund) }}" class="refund-back-link">
-            <i class="bi bi-arrow-left"></i>
-            Back to Refund Details
-        </a>
+            <h1>Edit Refund</h1>
 
-        <div class="refund-hero-badge">
-            <i class="bi bi-pencil-square"></i>
-            Payments Recovery
+            <p>
+                Update the information associated with this refund.
+            </p>
+
         </div>
 
-        <h1>Edit Refund</h1>
+        <div class="refund-hero-actions">
 
-        <p>
-            Update the refund request information and customer details.
-        </p>
+            <a
+                href="{{ route('admin.refunds.show', $refund) }}"
+                class="refund-back-btn"
+            >
+                <i class="bi bi-arrow-left"></i>
+                <span>Back to Refund Details</span>
+            </a>
+
+        </div>
 
     </div>
 
-    <div class="refund-hero-icon">
-        <i class="bi bi-pencil-square"></i>
-    </div>
 
-</div>
+    {{-- =========================================================
+        VALIDATION ERRORS
+    ========================================================= --}}
+    @if($errors->any())
 
+        <div class="refund-alert refund-alert-danger">
 
-{{-- Validation Errors --}}
-@if ($errors->any())
-    <div class="alert alert-danger border-0 shadow-sm mb-4">
-        <div class="d-flex align-items-start gap-2">
-            <i class="bi bi-exclamation-triangle-fill mt-1"></i>
+            <i class="bi bi-exclamation-triangle"></i>
 
             <div>
-                <strong>Please fix the following errors:</strong>
 
-                <ul class="mb-0 mt-1 ps-3">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                <strong>
+                    Please fix the following errors:
+                </strong>
+
+                <ul>
+
+                    @foreach($errors->all() as $error)
+
+                        <li>
+                            {{ $error }}
+                        </li>
+
                     @endforeach
+
                 </ul>
+
             </div>
+
         </div>
-    </div>
-@endif
+
+    @endif
 
 
-{{-- Main Form --}}
-<form method="POST"
-      action="{{ route('admin.refunds.update', $refund) }}">
+    {{-- =========================================================
+        MAIN PANEL
+    ========================================================= --}}
+    <div class="refund-panel">
 
-    @csrf
-    @method('PUT')
+        {{-- =====================================================
+            PANEL HEADER
+        ===================================================== --}}
+        <div class="refund-panel-header">
 
-    <div class="dashboard-panel refund-form-panel">
+            <div class="refund-panel-heading">
 
-        {{-- Header --}}
-        <div class="refund-form-panel-header">
-
-            <div>
-                <span class="refund-section-kicker">
-                    REFUND INFORMATION
+                <span class="eyebrow">
+                    Refund Information
                 </span>
 
                 <h5>
@@ -84,22 +102,21 @@
                 <p>
                     Modify the information associated with this refund.
                 </p>
-            </div>
 
-            <span class="refund-status status-{{ $refund->status }}">
-                {{ ucfirst($refund->status) }}
-            </span>
+            </div>
 
         </div>
 
 
-        {{-- Refund Summary --}}
-        <div class="refund-edit-summary">
+        {{-- =====================================================
+            REFUND SUMMARY
+        ===================================================== --}}
+        <div class="refund-summary">
 
-            <div class="refund-edit-summary-item">
+            {{-- Refund Number --}}
+            <div class="refund-summary-item">
 
                 <span>
-                    <i class="bi bi-hash"></i>
                     Refund Number
                 </span>
 
@@ -109,10 +126,11 @@
 
             </div>
 
-            <div class="refund-edit-summary-item">
+
+            {{-- Requested --}}
+            <div class="refund-summary-item">
 
                 <span>
-                    <i class="bi bi-calendar3"></i>
                     Requested
                 </span>
 
@@ -122,10 +140,11 @@
 
             </div>
 
-            <div class="refund-edit-summary-item">
+
+            {{-- Customer --}}
+            <div class="refund-summary-item">
 
                 <span>
-                    <i class="bi bi-person"></i>
                     Customer
                 </span>
 
@@ -135,271 +154,374 @@
 
             </div>
 
-        </div>
 
+            {{-- Status --}}
+            <div class="refund-summary-item">
 
-        {{-- Refund Details --}}
-        <div class="refund-form-section">
+                <span>
+                    Status
+                </span>
 
-            <div class="refund-form-section-heading">
-
-                <div class="refund-form-section-icon">
-                    <i class="bi bi-cash-stack"></i>
-                </div>
-
-                <div>
-                    <h6>Refund Details</h6>
-                    <p>
-                        Update the refund amount and reason.
-                    </p>
-                </div>
+                <strong>
+                    {{ ucfirst($refund->status) }}
+                </strong>
 
             </div>
 
+        </div>
 
-            <div class="row g-4">
 
-                {{-- Amount --}}
-                <div class="col-md-6">
+        {{-- =====================================================
+            FORM
+        ===================================================== --}}
+        <form
+            action="{{ route('admin.refunds.update', $refund) }}"
+            method="POST"
+            class="refund-form"
+        >
 
-                    <label for="amount" class="refund-form-label">
-                        Refund Amount <span>*</span>
-                    </label>
+            @csrf
+            @method('PUT')
 
-                    <div class="refund-input-group">
 
-                        <span class="refund-input-prefix">
-                            $
-                        </span>
+            {{-- =================================================
+                REFUND INFORMATION
+            ================================================= --}}
+            <div class="refund-form-section">
+
+                <div class="refund-section-heading">
+
+                    <div class="refund-section-icon">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+
+                    <div>
+
+                        <h6>
+                            Refund Information
+                        </h6>
+
+                        <p>
+                            Update the refund amount, reason and note.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="refund-form-grid">
+
+                    {{-- =================================================
+                        AMOUNT
+                    ================================================= --}}
+                    <div>
+
+                        <label
+                            for="amount"
+                            class="refund-form-label"
+                        >
+                            Refund Amount
+                            <span class="required">*</span>
+                        </label>
 
                         <input
+                            id="amount"
                             type="number"
                             name="amount"
-                            id="amount"
-                            class="form-control refund-form-control refund-amount-input @error('amount') is-invalid @enderror"
+                            class="refund-form-control @error('amount') is-invalid @enderror"
                             value="{{ old('amount', $refund->amount) }}"
                             min="0.01"
                             step="0.01"
+                            placeholder="0.00"
                             required
                         >
 
+                        @error('amount')
+
+                            <div class="refund-field-error">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
                     </div>
 
-                    @error('amount')
-                        <div class="refund-field-error">
-                            <i class="bi bi-exclamation-circle"></i>
-                            {{ $message }}
-                        </div>
-                    @enderror
 
-                </div>
+                    {{-- =================================================
+                        REASON
+                    ================================================= --}}
+                    <div>
 
-
-                {{-- Reason --}}
-                <div class="col-md-6">
-
-                    <label for="reason" class="refund-form-label">
-                        Reason <span>*</span>
-                    </label>
-
-                    <input
-                        type="text"
-                        name="reason"
-                        id="reason"
-                        class="form-control refund-form-control @error('reason') is-invalid @enderror"
-                        value="{{ old('reason', $refund->reason) }}"
-                        maxlength="255"
-                        required
-                    >
-
-                    @error('reason')
-                        <div class="refund-field-error">
-                            <i class="bi bi-exclamation-circle"></i>
-                            {{ $message }}
-                        </div>
-                    @enderror
-
-                </div>
-
-
-                {{-- Note --}}
-                <div class="col-12">
-
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-
-                        <label for="note" class="refund-form-label mb-0">
-                            Additional Note
+                        <label
+                            for="reason"
+                            class="refund-form-label"
+                        >
+                            Refund Reason
+                            <span class="required">*</span>
                         </label>
 
-                        <span class="refund-note-counter">
-                            <span id="refundNoteCount">
-                                {{ strlen(old('note', $refund->note ?? '')) }}
-                            </span>
-                            / 2000
-                        </span>
+                        <input
+                            id="reason"
+                            type="text"
+                            name="reason"
+                            class="refund-form-control @error('reason') is-invalid @enderror"
+                            value="{{ old('reason', $refund->reason) }}"
+                            maxlength="255"
+                            placeholder="Enter refund reason"
+                            required
+                        >
+
+                        @error('reason')
+
+                            <div class="refund-field-error">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
 
                     </div>
 
-                    <textarea
-                        name="note"
-                        id="note"
-                        rows="6"
-                        maxlength="2000"
-                        class="form-control refund-form-control refund-form-textarea @error('note') is-invalid @enderror"
-                        placeholder="Add any additional information about this refund..."
-                    >{{ old('note', $refund->note) }}</textarea>
 
-                    @error('note')
-                        <div class="refund-field-error">
-                            <i class="bi bi-exclamation-circle"></i>
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    {{-- =================================================
+                        DESCRIPTION
+                    ================================================= --}}
+                    <div class="refund-field-full">
+
+                        <label
+                            for="description"
+                            class="refund-form-label"
+                        >
+                            Description
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            class="refund-form-control @error('description') is-invalid @enderror"
+                            rows="5"
+                            placeholder="Enter additional refund information..."
+                        >{{ old('description', $refund->description) }}</textarea>
+
+                        @error('description')
+
+                            <div class="refund-field-error">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+
+                    {{-- =================================================
+                        INTERNAL NOTE
+                    ================================================= --}}
+                    <div class="refund-field-full">
+
+                        <label
+                            for="admin_note"
+                            class="refund-form-label"
+                        >
+                            Internal Note
+                        </label>
+
+                        <textarea
+                            id="admin_note"
+                            name="admin_note"
+                            class="refund-form-control @error('admin_note') is-invalid @enderror"
+                            rows="5"
+                            maxlength="2000"
+                            placeholder="Add an internal note about this refund..."
+                        >{{ old('admin_note', $refund->admin_note) }}</textarea>
+
+                        <span class="refund-field-help">
+                            This note is intended for internal administrative use.
+                        </span>
+
+                        @error('admin_note')
+
+                            <div class="refund-field-error">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
+
+            {{-- =================================================
+                RELATED ORDER
+            ================================================= --}}
+            <div class="refund-form-section">
+
+                <div class="refund-section-heading">
+
+                    <div class="refund-section-icon">
+                        <i class="bi bi-bag-check"></i>
+                    </div>
+
+                    <div>
+
+                        <h6>
+                            Related Order
+                        </h6>
+
+                        <p>
+                            Order connected to this refund.
+                        </p>
+
+                    </div>
+
+                </div>
 
 
-        {{-- Order Information --}}
-        <div class="refund-form-section">
+                @if($refund->order)
 
-            <div class="refund-form-section-heading">
+                    <div class="refund-order-card">
 
-                <div class="refund-form-section-icon">
-                    <i class="bi bi-bag-check"></i>
+                        <div class="refund-order-main">
+
+                            <div class="refund-order-icon">
+                                <i class="bi bi-box-seam"></i>
+                            </div>
+
+
+                            <div class="refund-order-content">
+
+                                <span>
+                                    Order Number
+                                </span>
+
+                                <strong>
+                                    #{{ $refund->order->order_number }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="refund-order-total">
+
+                                <span>
+                                    Order Total
+                                </span>
+
+                                <strong>
+                                    ${{ number_format($refund->order->total_price ?? 0, 2) }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @else
+
+                    <div class="refund-warning">
+
+                        <div class="refund-warning-icon">
+                            <i class="bi bi-exclamation-circle"></i>
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Order information unavailable
+                            </strong>
+
+                            <p>
+                                The order associated with this refund
+                                could not be found.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+            </div>
+
+
+            {{-- =================================================
+                WARNING
+            ================================================= --}}
+            <div class="refund-warning">
+
+                <div class="refund-warning-icon">
+                    <i class="bi bi-info-circle"></i>
                 </div>
 
                 <div>
-                    <h6>Related Order</h6>
+
+                    <strong>
+                        Before saving
+                    </strong>
+
                     <p>
-                        Order connected to this refund.
+                        Make sure the refund amount and reason are correct.
+                        Processed refunds cannot be modified.
                     </p>
+
                 </div>
 
             </div>
 
 
-            @if($refund->order)
+            {{-- =================================================
+                ACTIONS
+            ================================================= --}}
+            <div class="refund-form-footer">
 
-                <div class="refund-edit-order">
+                <a
+                    href="{{ route('admin.refunds.show', $refund) }}"
+                    class="refund-cancel-btn"
+                >
 
-                    <div class="refund-edit-order-icon">
-                        <i class="bi bi-box-seam"></i>
-                    </div>
+                    <i class="bi bi-x-lg"></i>
+                    Cancel
 
-                    <div class="refund-edit-order-content">
-
-                        <span>Order Number</span>
-
-                        <strong>
-                            #{{ $refund->order->order_number }}
-                        </strong>
-
-                    </div>
-
-                    <div class="refund-edit-order-total">
-
-                        <span>Order Total</span>
-
-                        <strong>
-                            ${{ number_format($refund->order->total_price, 2) }}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            @else
-
-                <div class="refund-empty-inline">
-                    <i class="bi bi-exclamation-circle"></i>
-                    Order information is unavailable.
-                </div>
-
-            @endif
-
-        </div>
+                </a>
 
 
-        {{-- Warning --}}
-        <div class="refund-edit-warning">
+                @if($refund->status !== 'processed')
 
-            <div class="refund-edit-warning-icon">
-                <i class="bi bi-info-circle-fill"></i>
+                    <button
+                        type="submit"
+                        class="refund-submit-btn"
+                    >
+
+                        <i class="bi bi-check-circle"></i>
+                        Update Refund
+
+                    </button>
+
+                @else
+
+                    <button
+                        type="button"
+                        class="refund-submit-btn"
+                        disabled
+                    >
+
+                        <i class="bi bi-lock"></i>
+                        Refund Locked
+
+                    </button>
+
+                @endif
+
             </div>
 
-            <div>
-                <strong>Before saving</strong>
-
-                <p>
-                    Make sure the refund amount and reason are correct.
-                    Processed refunds cannot be modified.
-                </p>
-            </div>
-
-        </div>
-
-
-        {{-- Actions --}}
-        <div class="refund-form-actions">
-
-            <a href="{{ route('admin.refunds.show', $refund) }}"
-               class="refund-form-cancel">
-                <i class="bi bi-x-lg"></i>
-                Cancel
-            </a>
-
-            @if($refund->status !== 'processed')
-
-                <button type="submit"
-                        class="refund-form-submit">
-                    <i class="bi bi-check2-circle"></i>
-                    Update Refund
-                </button>
-
-            @else
-
-                <button type="button"
-                        class="refund-form-submit"
-                        disabled>
-                    <i class="bi bi-lock"></i>
-                    Refund Locked
-                </button>
-
-            @endif
-
-        </div>
+        </form>
 
     </div>
-
-</form>
-
 
 </div>
 
 @endsection
-
-@push('js')
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const note = document.getElementById('note');
-    const counter = document.getElementById('refundNoteCount');
-
-    if (note && counter) {
-        const updateCounter = () => {
-            counter.textContent = note.value.length;
-        };
-
-        note.addEventListener('input', updateCounter);
-        updateCounter();
-    }
-
-});
-</script>
-
-@endpush

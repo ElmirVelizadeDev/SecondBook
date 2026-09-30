@@ -3,52 +3,71 @@
 @section('title', 'Payment Details')
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/orders.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/payments.css') }}">
 @endpush
 
 @section('content')
 
-<div class="container-fluid p-4">
+@php
+    $paymentStatus = strtolower($payment->payment_status ?? 'pending');
 
-    {{-- Header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    $knownStatuses = ['paid', 'pending', 'failed', 'refunded'];
 
-        <div>
+    $statusClass = in_array($paymentStatus, $knownStatuses)
+        ? 'payment-status-' . $paymentStatus
+        : 'payment-status-default';
 
-            <h2 class="fw-bold mb-1">
+    $customerName = trim(
+        ($payment->order->user->first_name ?? '') . ' ' .
+        ($payment->order->user->last_name ?? '')
+    );
 
-                <i class="bi bi-receipt me-2"></i>
+    $customerName = $customerName
+        ?: ($payment->order->user->name
+        ?? $payment->order->user->username
+        ?? '—');
 
-                Payment Details
+    $paymentMethod = ucwords(
+        str_replace('_', ' ', $payment->payment_method ?? '—')
+    );
+@endphp
 
-            </h2>
+<div class="orders-show-page">
 
-            <p class="text-muted mb-0">
+    {{-- =====================================================
+         HEADER
+    ====================================================== --}}
+    <div class="orders-edit-header">
 
-                View payment and transaction information.
+        <div class="orders-edit-heading">
 
-            </p>
+            <div class="orders-edit-eyebrow">
+                <i class="bi bi-credit-card"></i>
+                Payment Management
+            </div>
+
+            <h1>Payment Details</h1>
+
+            <p>View complete payment information.</p>
 
         </div>
 
-
-        <div>
+        <div class="orders-show-header-actions">
 
             <a href="{{ route('admin.payments.index') }}"
-               class="btn btn-secondary">
+               class="orders-edit-back">
 
-                <i class="bi bi-arrow-left me-2"></i>
-
-                Back
+                <i class="bi bi-arrow-left"></i>
+                <span>Back to Payments</span>
 
             </a>
 
             <a href="{{ route('admin.payments.edit', $payment->id) }}"
-               class="btn btn-primary">
+               class="orders-edit-submit">
 
-                <i class="bi bi-pencil me-2"></i>
-
-                Edit
+                <i class="bi bi-pencil"></i>
+                <span>Edit Payment</span>
 
             </a>
 
@@ -57,166 +76,157 @@
     </div>
 
 
-    <div class="row g-4">
+    {{-- =====================================================
+         SUMMARY
+    ====================================================== --}}
+    <div class="orders-show-summary">
 
+        <div class="orders-show-summary-item">
 
-        {{-- Payment Information --}}
-        <div class="col-lg-7">
+            <span>Payment ID</span>
 
-            <div class="card border-0 shadow-sm">
+            <strong>
+                #{{ $payment->id }}
+            </strong>
 
-                <div class="card-body p-4">
+        </div>
 
-                    <h5 class="fw-bold mb-4">
-                        Payment Information
-                    </h5>
 
+        <div class="orders-show-summary-item">
 
-                    <div class="row g-4">
+            <span>Amount</span>
 
+            <strong>
+                ${{ number_format($payment->amount, 2) }}
+            </strong>
 
-                        <div class="col-md-6">
+        </div>
 
-                            <small class="text-muted d-block">
-                                Transaction ID
-                            </small>
 
-                            <strong>
-                                {{ $payment->transaction_id }}
-                            </strong>
+        <div class="orders-show-summary-item">
 
-                        </div>
+            <span>Method</span>
 
+            <strong>
+                {{ $paymentMethod }}
+            </strong>
 
-                        <div class="col-md-6">
+        </div>
 
-                            <small class="text-muted d-block">
-                                Amount
-                            </small>
 
-                            <strong>
-                                ${{ number_format($payment->amount, 2) }}
-                            </strong>
+        <div class="orders-show-summary-item">
 
-                        </div>
+            <span>Status</span>
 
+            <em class="payment-status-pill {{ $statusClass }}">
 
-                        <div class="col-md-6">
+                <i class="bi bi-circle-fill"></i>
 
-                            <small class="text-muted d-block">
-                                Payment Method
-                            </small>
+                {{ ucfirst($paymentStatus) }}
 
-                            <strong>
+            </em>
 
-                                @switch($payment->payment_method)
+        </div>
 
-                                    @case('cash_on_delivery')
-                                        Cash On Delivery
-                                        @break
+    </div>
 
-                                    @case('credit_card')
-                                        Credit Card
-                                        @break
 
-                                    @case('debit_card')
-                                        Debit Card
-                                        @break
+    {{-- =====================================================
+         DETAILS GRID
+    ====================================================== --}}
+    <div class="orders-show-grid">
 
-                                    @case('paypal')
-                                        PayPal
-                                        @break
 
-                                @endswitch
+        {{-- =================================================
+             PAYMENT INFORMATION
+        ================================================== --}}
+        <div class="orders-edit-card">
 
-                            </strong>
+            <div class="orders-edit-card-header">
 
-                        </div>
+                <div class="orders-edit-card-icon">
+                    <i class="bi bi-credit-card"></i>
+                </div>
 
+                <div class="orders-edit-card-title">
 
-                        <div class="col-md-6">
+                    <strong>Payment Information</strong>
 
-                            <small class="text-muted d-block">
-                                Payment Status
-                            </small>
+                    <span>Transaction and payment details</span>
 
-                            @if($payment->payment_status === 'paid')
+                </div>
 
-                                <span class="badge bg-success">
-                                    Paid
-                                </span>
+            </div>
 
-                            @elseif($payment->payment_status === 'pending')
 
-                                <span class="badge bg-warning text-dark">
-                                    Pending
-                                </span>
+            <div class="orders-show-body">
 
-                            @elseif($payment->payment_status === 'failed')
+                <div class="orders-show-row">
 
-                                <span class="badge bg-danger">
-                                    Failed
-                                </span>
+                    <span>Payment ID</span>
 
-                            @else
+                    <strong>
+                        #{{ $payment->id }}
+                    </strong>
 
-                                <span class="badge bg-secondary">
-                                    Refunded
-                                </span>
+                </div>
 
-                            @endif
 
-                        </div>
+                <div class="orders-show-row">
 
+                    <span>Transaction ID</span>
 
-                        <div class="col-md-6">
+                    <strong>
+                        {{ $payment->transaction_id ?: '—' }}
+                    </strong>
 
-                            <small class="text-muted d-block">
-                                Payment Date
-                            </small>
+                </div>
 
-                            <strong>
 
-                                {{ $payment->created_at->format('d M Y, H:i') }}
+                <div class="orders-show-row">
 
-                            </strong>
+                    <span>Amount</span>
 
-                        </div>
+                    <strong>
+                        ${{ number_format($payment->amount, 2) }}
+                    </strong>
 
+                </div>
 
-                        <div class="col-md-6">
 
-                            <small class="text-muted d-block">
-                                Paid At
-                            </small>
+                <div class="orders-show-row">
 
-                            <strong>
+                    <span>Method</span>
 
-                                {{ $payment->paid_at
-                                    ? $payment->paid_at->format('d M Y, H:i')
-                                    : '—'
-                                }}
+                    <strong>
+                        {{ $paymentMethod }}
+                    </strong>
 
-                            </strong>
+                </div>
 
-                        </div>
 
+                <div class="orders-show-row">
 
-                        <div class="col-12">
+                    <span>Status</span>
 
-                            <small class="text-muted d-block">
-                                Note
-                            </small>
+                    <em class="payment-status-pill {{ $statusClass }}">
 
-                            <p class="mb-0">
+                        <i class="bi bi-circle-fill"></i>
 
-                                {{ $payment->note ?: 'No note available.' }}
+                        {{ ucfirst($paymentStatus) }}
 
-                            </p>
+                    </em>
 
-                        </div>
+                </div>
 
-                    </div>
+
+                <div class="orders-show-row">
+
+                    <span>Created</span>
+
+                    <strong>
+                        {{ $payment->created_at?->format('d M Y H:i') ?? '—' }}
+                    </strong>
 
                 </div>
 
@@ -225,77 +235,313 @@
         </div>
 
 
-        {{-- Order Information --}}
-        <div class="col-lg-5">
+        {{-- =================================================
+             CUSTOMER
+        ================================================== --}}
+        <div class="orders-edit-card">
 
-            <div class="card border-0 shadow-sm">
+            <div class="orders-edit-card-header">
 
-                <div class="card-body p-4">
+                <div class="orders-edit-card-icon">
+                    <i class="bi bi-person"></i>
+                </div>
 
-                    <h5 class="fw-bold mb-4">
-                        Order Information
-                    </h5>
+                <div class="orders-edit-card-title">
 
+                    <strong>Customer</strong>
 
-                    <div class="mb-3">
+                    <span>Payment customer information</span>
 
-                        <small class="text-muted d-block">
-                            Order Number
-                        </small>
+                </div>
 
-                        <strong>
-                            {{ $payment->order->order_number }}
-                        </strong>
-
-                    </div>
+            </div>
 
 
-                    <div class="mb-3">
+            <div class="orders-show-body">
 
-                        <small class="text-muted d-block">
-                            Customer
-                        </small>
+                <div class="orders-show-row">
 
-                        <strong>
+                    <span>Name</span>
 
-                            {{ $payment->order->user->first_name }}
-                            {{ $payment->order->user->last_name }}
+                    <strong>
+                        {{ $customerName }}
+                    </strong>
 
-                        </strong>
-
-                        <small class="text-muted d-block">
-
-                            {{ $payment->order->user->email }}
-
-                        </small>
-
-                    </div>
+                </div>
 
 
-                    <div class="mb-3">
+                <div class="orders-show-row">
 
-                        <small class="text-muted d-block">
-                            Book
-                        </small>
+                    <span>Email</span>
 
-                        <strong>
-                            {{ $payment->order->book->title }}
-                        </strong>
+                    <strong>
+                        {{ $payment->order->user->email ?? '—' }}
+                    </strong>
 
-                    </div>
+                </div>
 
 
-                    <div>
+                <div class="orders-show-row">
 
-                        <small class="text-muted d-block">
-                            Order Total
-                        </small>
+                    <span>Phone</span>
 
-                        <strong>
-                            ${{ number_format($payment->order->total_price, 2) }}
-                        </strong>
+                    <strong>
+                        {{ $payment->order->phone ?? '—' }}
+                    </strong>
 
-                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- =================================================
+             ORDER
+        ================================================== --}}
+        <div class="orders-edit-card">
+
+            <div class="orders-edit-card-header">
+
+                <div class="orders-edit-card-icon">
+                    <i class="bi bi-cart-check"></i>
+                </div>
+
+                <div class="orders-edit-card-title">
+
+                    <strong>Order</strong>
+
+                    <span>Related order information</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="orders-show-body">
+
+                <div class="orders-show-row">
+
+                    <span>Order Number</span>
+
+                    <strong>
+                        {{ $payment->order->order_number ?? '—' }}
+                    </strong>
+
+                </div>
+
+
+                <div class="orders-show-row">
+
+                    <span>Order Status</span>
+
+                    <strong>
+                        {{ ucfirst($payment->order->order_status ?? '—') }}
+                    </strong>
+
+                </div>
+
+
+                <div class="orders-show-row">
+
+                    <span>Order Total</span>
+
+                    <strong>
+                        ${{ number_format($payment->order->total_price ?? 0, 2) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- =================================================
+             BOOK
+        ================================================== --}}
+        <div class="orders-edit-card">
+
+            <div class="orders-edit-card-header">
+
+                <div class="orders-edit-card-icon">
+                    <i class="bi bi-book"></i>
+                </div>
+
+                <div class="orders-edit-card-title">
+
+                    <strong>Book</strong>
+
+                    <span>Related ordered book</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="orders-show-body">
+
+                <div class="orders-show-row">
+
+                    <span>Title</span>
+
+                    <strong>
+                        {{ $payment->order->book->title ?? '—' }}
+                    </strong>
+
+                </div>
+
+
+                <div class="orders-show-row">
+
+                    <span>Author</span>
+
+                    <strong>
+                        {{ $payment->order->book->author->name ?? '—' }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- =================================================
+             PAYMENT STATUS
+        ================================================== --}}
+        <div class="orders-edit-card">
+
+            <div class="orders-edit-card-header">
+
+                <div class="orders-edit-card-icon">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+
+                <div class="orders-edit-card-title">
+
+                    <strong>Payment Status</strong>
+
+                    <span>Current payment state</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="orders-show-body">
+
+                <div class="orders-show-row">
+
+                    <span>Status</span>
+
+                    <em class="payment-status-pill {{ $statusClass }}">
+
+                        <i class="bi bi-circle-fill"></i>
+
+                        {{ ucfirst($paymentStatus) }}
+
+                    </em>
+
+                </div>
+
+
+                <div class="orders-show-row">
+
+                    <span>Method</span>
+
+                    <strong>
+                        {{ $paymentMethod }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- =================================================
+             PAYMENT DATE
+        ================================================== --}}
+        <div class="orders-edit-card">
+
+            <div class="orders-edit-card-header">
+
+                <div class="orders-edit-card-icon">
+                    <i class="bi bi-calendar3"></i>
+                </div>
+
+                <div class="orders-edit-card-title">
+
+                    <strong>Payment Date</strong>
+
+                    <span>Payment creation information</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="orders-show-body">
+
+                <div class="orders-show-row">
+
+                    <span>Date</span>
+
+                    <strong>
+                        {{ $payment->created_at?->format('d M Y') ?? '—' }}
+                    </strong>
+
+                </div>
+
+
+                <div class="orders-show-row">
+
+                    <span>Time</span>
+
+                    <strong>
+                        {{ $payment->created_at?->format('H:i') ?? '—' }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- =================================================
+             TRANSACTION
+        ================================================== --}}
+        <div class="orders-edit-card orders-show-full">
+
+            <div class="orders-edit-card-header">
+
+                <div class="orders-edit-card-icon">
+                    <i class="bi bi-receipt"></i>
+                </div>
+
+                <div class="orders-edit-card-title">
+
+                    <strong>Transaction</strong>
+
+                    <span>Transaction reference information</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="orders-show-body">
+
+                <div class="orders-show-row">
+
+                    <span>Transaction ID</span>
+
+                    <strong>
+                        {{ $payment->transaction_id ?: 'No transaction ID available.' }}
+                    </strong>
 
                 </div>
 

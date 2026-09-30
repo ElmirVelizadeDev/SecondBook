@@ -5,6 +5,10 @@
 @section('content')
 
 @php
+    /* =========================================================
+       DATA HELPERS
+    ========================================================= */
+
     $setting = fn (string $key, mixed $default = '') =>
         $settings[$key]->value ?? $default;
 
@@ -18,1246 +22,1478 @@
         $setting('payment_methods', '[]'),
         true
     ) ?: [];
+
+    $html = fn (string $s) =>
+        new \Illuminate\Support\HtmlString($s);
+
+
+    /* =========================================================
+       UI BUILDERS
+    ========================================================= */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Section heading
+    |--------------------------------------------------------------------------
+    */
+
+    $head = fn (
+        string $icon,
+        string $tone,
+        string $title,
+        string $desc
+    ) => $html(
+        '<div class="settings-card-header">
+            <div class="settings-card-heading">
+                <span class="sx-chip sx-tone-' . $tone . '">
+                    <i class="bi ' . $icon . '"></i>
+                </span>
+
+                <div>
+                    <h2>' . e($title) . '</h2>
+                    <p>' . e($desc) . '</p>
+                </div>
+            </div>
+        </div>'
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Text / number / URL / email field
+    |--------------------------------------------------------------------------
+    */
+
+    $field = function (array $f) use ($setting, $html) {
+        $name = $f['name'];
+
+        $value = old(
+            $name,
+            $setting($name, $f['default'] ?? '')
+        );
+
+        $hint = isset($f['hint'])
+            ? ' <small>(' . e($f['hint']) . ')</small>'
+            : '';
+
+        return $html(
+            '<div class="settings-field ' . ($f['class'] ?? '') . '">
+
+                <label for="' . $name . '">
+                    ' . e($f['label']) . $hint . '
+                </label>
+
+                <div class="sx-input">
+                    <i class="bi ' . $f['icon'] . '"></i>
+
+                    <input
+                        id="' . $name . '"
+                        type="' . ($f['type'] ?? 'text') . '"
+                        name="' . $name . '"
+                        value="' . e($value) . '"
+                        ' . ($f['attrs'] ?? '') . '
+                    >
+                </div>
+
+            </div>'
+        );
+    };
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Textarea
+    |--------------------------------------------------------------------------
+    */
+
+    $area = function (array $f) use ($setting, $html) {
+        $name = $f['name'];
+
+        return $html(
+            '<div class="settings-field ' .
+                ($f['class'] ?? 'settings-field-full') .
+            '">
+
+                <label for="' . $name . '">
+                    ' . e($f['label']) . '
+                </label>
+
+                <textarea
+                    class="sx-area"
+                    id="' . $name . '"
+                    name="' . $name . '"
+                    rows="' . ($f['rows'] ?? 3) . '"
+                >' . e(old($name, $setting($name))) . '</textarea>
+
+            </div>'
+        );
+    };
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | File upload
+    |--------------------------------------------------------------------------
+    */
+
+    $file = fn (array $f) => $html(
+        '<div class="settings-field ' . ($f['class'] ?? '') . '">
+
+            <label for="' . $f['name'] . '">
+                ' . e($f['label']) . '
+            </label>
+
+            <div class="sx-file" data-file>
+
+                <input
+                    class="sx-file-input"
+                    id="' . $f['name'] . '"
+                    type="file"
+                    name="' . $f['name'] . '"
+                    accept="image/*"
+                >
+
+                <label
+                    class="sx-file-drop"
+                    for="' . $f['name'] . '"
+                >
+
+                    <span class="sx-file-thumb">
+                        <i class="bi ' . $f['icon'] . '"></i>
+                        <img alt="" hidden>
+                    </span>
+
+                    <span class="sx-file-text">
+                        <strong>Choose an image</strong>
+
+                        <span
+                            class="sx-file-name"
+                            data-file-name
+                        >
+                            Drop a file here or browse
+                        </span>
+                    </span>
+
+                    <span class="sx-file-btn">
+                        <i class="bi bi-upload"></i>
+                        Browse
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>'
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Toggle card
+    |--------------------------------------------------------------------------
+    */
+
+    $toggle = function (
+        string $key,
+        array $t
+    ) use ($enabled, $html) {
+
+        $checked = $enabled(
+            $key,
+            $t['default'] ?? true
+        )
+            ? 'checked'
+            : '';
+
+        return $html(
+            '<div class="settings-toggle-card">
+
+                <div class="settings-toggle-info">
+
+                    <span class="sx-chip sx-chip-sm sx-tone-' .
+                        $t['tone'] .
+                    '">
+                        <i class="bi ' . $t['icon'] . '"></i>
+                    </span>
+
+                    <div>
+                        <strong>' . e($t['label']) . '</strong>
+                        <small>' . e($t['description']) . '</small>
+                    </div>
+
+                </div>
+
+                <label class="settings-toggle">
+                    <input
+                        type="checkbox"
+                        name="' . $key . '"
+                        value="1"
+                        ' . $checked . '
+                    >
+                    <i></i>
+                </label>
+
+            </div>'
+        );
+    };
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Side navigation rail
+    |--------------------------------------------------------------------------
+    */
+
+    $rail = [
+        [
+            'sec-appearance',
+            'bi-palette',
+            'violet',
+            'Appearance'
+        ],
+        [
+            'sec-general',
+            'bi-globe',
+            'blue',
+            'General'
+        ],
+        [
+            'sec-store',
+            'bi-shop',
+            'green',
+            'Store'
+        ],
+        [
+            'sec-orders',
+            'bi-bag-check',
+            'amber',
+            'Orders'
+        ],
+        [
+            'sec-payments',
+            'bi-credit-card-2-front',
+            'blue',
+            'Payments'
+        ],
+        [
+            'sec-shipping',
+            'bi-truck',
+            'cyan',
+            'Shipping'
+        ],
+        [
+            'sec-seo',
+            'bi-search',
+            'violet',
+            'SEO'
+        ],
+        [
+            'sec-social',
+            'bi-share',
+            'rose',
+            'Social'
+        ],
+        [
+            'sec-security',
+            'bi-shield-lock',
+            'red',
+            'Security'
+        ],
+        [
+            'sec-legal',
+            'bi-file-earmark-text',
+            'slate',
+            'Legal'
+        ],
+    ];
 @endphp
+
 
 <div class="dashboard-section settings-page">
 
-    {{-- =========================================================
-         PAGE HEADER
-    ========================================================== --}}
+    {{-- =====================================================
+         HERO
+    ====================================================== --}}
 
-    <div class="dashboard-panel mb-4">
+    <div class="settings-hero">
 
-        <div class="panel-header mb-0">
+        <div class="settings-hero-content">
 
-            <div>
-                <h5 class="mb-1">
-                    Profile Settings
-                </h5>
-
-                <p class="text-muted mb-0 small">
-                    Personalize your admin interface theme
-                </p>
+            <div class="settings-hero-crumb">
+                <i class="bi bi-sliders"></i>
+                Administration
             </div>
 
+            <h1>Settings</h1>
+
+            <p>
+                Configure your SecondBook marketplace, appearance,
+                payments, shipping, security and platform preferences
+                from one place.
+            </p>
+
+        </div>
+
+        <div class="settings-hero-icon">
+            <i class="bi bi-gear-fill"></i>
         </div>
 
     </div>
 
 
-    {{-- =========================================================
+    {{-- =====================================================
          ALERTS
-    ========================================================== --}}
+    ====================================================== --}}
 
     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+        <div class="settings-alert settings-alert-success">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            <div class="settings-alert-body">
+                <span>{{ session('success') }}</span>
+            </div>
+
         </div>
     @endif
+
 
     @if($errors->any())
-        <div class="alert alert-danger">
-            <strong>
-                Please review the settings form.
-            </strong>
+        <div class="settings-alert settings-alert-error">
+
+            <i class="bi bi-exclamation-triangle-fill"></i>
+
+            <div class="settings-alert-body">
+
+                <strong>
+                    Please review the settings form.
+                </strong>
+
+                <span>
+                    {{ $errors->first() }}
+                </span>
+
+            </div>
+
         </div>
     @endif
 
 
-    {{-- Existing theme controls intentionally kept unchanged. --}}
+    <div class="sx-layout">
 
-    {{-- =========================================================
-         THEME MODE
-    ========================================================== --}}
+        {{-- =================================================
+             SIDE RAIL
+        ================================================== --}}
 
-    <div class="dashboard-panel mb-4">
+        <nav
+            class="sx-rail"
+            aria-label="Settings sections"
+        >
 
-        <div class="panel-header">
-            <h5>
-                Theme Mode
-            </h5>
-        </div>
+            <div class="sx-rail-title">
+                Sections
+            </div>
 
-        <p class="text-muted mb-3">
-            Choose your preferred mode. Your choice is saved on this browser.
-        </p>
-
-        <div class="row g-3">
-
-            <div class="col-12 col-md-6">
-
-                <button
-                    type="button"
-                    class="btn btn-light border w-100 text-start p-3 theme-select-btn"
-                    data-theme-target="light"
+            @foreach($rail as [$id, $icon, $tone, $label])
+                <a
+                    href="#{{ $id }}"
+                    class="sx-tone-{{ $tone }}"
+                    data-rail="{{ $id }}"
                 >
+                    <i class="bi {{ $icon }}"></i>
+                    <span>{{ $label }}</span>
+                </a>
+            @endforeach
 
-                    <div class="d-flex align-items-center justify-content-between">
+        </nav>
 
-                        <div>
-                            <strong class="d-block">
-                                Light Mode
-                            </strong>
 
-                            <small class="text-muted">
-                                Classic bright interface
-                            </small>
+        {{-- =================================================
+             MAIN CONTENT
+        ================================================== --}}
+
+        <div class="sx-content">
+
+
+            {{-- =================================================
+                 THEME
+            ================================================== --}}
+
+            <section
+                class="settings-card settings-theme-card"
+                id="sec-appearance"
+            >
+
+                {{
+                    $head(
+                        'bi-palette',
+                        'violet',
+                        'Theme mode',
+                        'Choose how the admin interface appears on this browser.'
+                    )
+                }}
+
+                <div class="settings-theme-options">
+
+                    {{-- LIGHT MODE --}}
+                    <button
+                        type="button"
+                        class="settings-theme-option theme-select-btn"
+                        data-theme-target="light"
+                    >
+
+                        <div class="settings-theme-preview settings-theme-preview-light">
+
+                            <div class="tp-side"></div>
+
+                            <div class="tp-main">
+                                <div class="tp-bar"></div>
+                                <div class="tp-line"></div>
+                                <div class="tp-line"></div>
+                                <div class="tp-line"></div>
+                            </div>
+
                         </div>
 
-                        <i class="bi bi-sun fs-5"></i>
+                        <div class="settings-theme-info">
+
+                            <div>
+                                <strong>Light mode</strong>
+                                <small>
+                                    Classic bright interface
+                                </small>
+                            </div>
+
+                            <div class="settings-theme-check">
+                                <i class="bi bi-sun"></i>
+                            </div>
+
+                        </div>
+
+                    </button>
+
+
+                    {{-- DARK MODE --}}
+                    <button
+                        type="button"
+                        class="settings-theme-option theme-select-btn"
+                        data-theme-target="dark"
+                    >
+
+                        <div class="settings-theme-preview settings-theme-preview-dark">
+
+                            <div class="tp-side"></div>
+
+                            <div class="tp-main">
+                                <div class="tp-bar"></div>
+                                <div class="tp-line"></div>
+                                <div class="tp-line"></div>
+                                <div class="tp-line"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="settings-theme-info">
+
+                            <div>
+                                <strong>Dark mode</strong>
+                                <small>
+                                    Comfortable low-light interface
+                                </small>
+                            </div>
+
+                            <div class="settings-theme-check">
+                                <i class="bi bi-moon-stars"></i>
+                            </div>
+
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            {{-- =================================================
+                 SETTINGS FORM
+            ================================================== --}}
+
+            <form
+                id="settingsForm"
+                method="POST"
+                action="{{ route('admin.settings.update') }}"
+                enctype="multipart/form-data"
+            >
+
+                @csrf
+                @method('PUT')
+
+
+                {{-- =================================================
+                     FORM SAVE HEADER
+                ================================================== --}}
+
+                <div class="settings-save-header">
+
+                    <div>
+                        <h2>Global settings</h2>
+
+                        <p>
+                            Manage how SecondBook behaves across
+                            the marketplace.
+                        </p>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="settings-primary-btn"
+                    >
+                        <i class="bi bi-check2-circle"></i>
+                        <span>Save settings</span>
+                    </button>
+
+                </div>
+
+
+                {{-- =================================================
+                     GENERAL
+                ================================================== --}}
+
+                <section
+                    class="settings-card settings-section"
+                    id="sec-general"
+                >
+
+                    {{
+                        $head(
+                            'bi-globe',
+                            'blue',
+                            'Brand and location',
+                            'Configure the basic identity and location of your marketplace.'
+                        )
+                    }}
+
+                    <div class="settings-grid">
+
+                        {{ $field([
+                            'name' => 'site_name',
+                            'label' => 'Site name',
+                            'icon' => 'bi-fonts',
+                            'default' => 'SecondBook',
+                            'attrs' => 'required'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'support_email',
+                            'label' => 'Support email',
+                            'icon' => 'bi-envelope',
+                            'type' => 'email'
+                        ]) }}
+
+                        {{ $area([
+                            'name' => 'site_description',
+                            'label' => 'Site description'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'support_phone',
+                            'label' => 'Support phone',
+                            'icon' => 'bi-telephone'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'address',
+                            'label' => 'Address',
+                            'icon' => 'bi-geo-alt'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'country',
+                            'label' => 'Country',
+                            'icon' => 'bi-flag'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'city',
+                            'label' => 'City',
+                            'icon' => 'bi-building'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'currency',
+                            'label' => 'Currency',
+                            'icon' => 'bi-cash-coin',
+                            'default' => 'USD',
+                            'attrs' => 'required'
+                        ]) }}
+
+
+                        {{-- TIMEZONE --}}
+
+                        <div class="settings-field">
+
+                            <label for="timezone">
+                                Timezone
+                            </label>
+
+                            <div class="sx-select">
+
+                                <i class="bi bi-clock"></i>
+
+                                <select
+                                    id="timezone"
+                                    name="timezone"
+                                >
+
+                                    @foreach(timezone_identifiers_list() as $timezone)
+                                        <option
+                                            value="{{ $timezone }}"
+                                            @selected(
+                                                old(
+                                                    'timezone',
+                                                    $setting(
+                                                        'timezone',
+                                                        config('app.timezone')
+                                                    )
+                                                ) === $timezone
+                                            )
+                                        >
+                                            {{ $timezone }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- LOGO --}}
+
+                        {{ $file([
+                            'name' => 'logo',
+                            'label' => 'Logo',
+                            'icon' => 'bi-image'
+                        ]) }}
+
+
+                        {{-- FAVICON --}}
+
+                        {{ $file([
+                            'name' => 'favicon',
+                            'label' => 'Favicon',
+                            'icon' => 'bi-bookmark-star'
+                        ]) }}
+
+
+                        {{-- MAINTENANCE MODE --}}
+
+                        <div class="settings-field settings-field-full">
+
+                            {{
+                                $toggle(
+                                    'maintenance_mode',
+                                    [
+                                        'label' => 'Maintenance mode',
+                                        'description' => 'Temporarily disable public marketplace access.',
+                                        'icon' => 'bi-tools',
+                                        'tone' => 'amber',
+                                        'default' => false,
+                                    ]
+                                )
+                            }}
+
+                        </div>
 
                     </div>
 
-                </button>
-
-            </div>
+                </section>
 
 
-            <div class="col-12 col-md-6">
+                {{-- =================================================
+                     STORE
+                ================================================== --}}
 
-                <button
-                    type="button"
-                    class="btn btn-light border w-100 text-start p-3 theme-select-btn"
-                    data-theme-target="dark"
+                <section
+                    class="settings-card settings-section"
+                    id="sec-store"
                 >
 
-                    <div class="d-flex align-items-center justify-content-between">
+                    {{
+                        $head(
+                            'bi-shop',
+                            'green',
+                            'Marketplace behavior',
+                            'Control registrations, approvals, reviews and inventory behavior.'
+                        )
+                    }}
 
-                        <div>
-                            <strong class="d-block">
-                                Dark Mode
-                            </strong>
+                    <div class="settings-toggle-grid">
 
-                            <small class="text-muted">
-                                Low-light interface
-                            </small>
-                        </div>
+                        @foreach([
+                            'marketplace_enabled' => [
+                                'label' => 'Marketplace enabled',
+                                'description' => 'Allow customers to browse and purchase books.',
+                                'icon' => 'bi-shop-window'
+                            ],
+                            'user_registration_enabled' => [
+                                'label' => 'User registration enabled',
+                                'description' => 'Allow new customer accounts to be created.',
+                                'icon' => 'bi-person-plus'
+                            ],
+                            'seller_registration_enabled' => [
+                                'label' => 'Seller registration enabled',
+                                'description' => 'Allow users to apply as marketplace sellers.',
+                                'icon' => 'bi-person-badge'
+                            ],
+                            'seller_approval_required' => [
+                                'label' => 'Seller approval required',
+                                'description' => 'Require admin approval before sellers become active.',
+                                'icon' => 'bi-person-check'
+                            ],
+                            'book_approval_required' => [
+                                'label' => 'Book approval required',
+                                'description' => 'Require approval before seller books become visible.',
+                                'icon' => 'bi-book'
+                            ],
+                            'reviews_enabled' => [
+                                'label' => 'Reviews enabled',
+                                'description' => 'Allow customers to leave reviews for purchased books.',
+                                'icon' => 'bi-star'
+                            ],
+                            'stock_management_enabled' => [
+                                'label' => 'Stock management enabled',
+                                'description' => 'Track book stock and inventory quantities.',
+                                'icon' => 'bi-box-seam'
+                            ],
+                        ] as $key => $item)
 
-                        <i class="bi bi-moon-stars fs-5"></i>
+                            {{
+                                $toggle(
+                                    $key,
+                                    $item + [
+                                        'tone' => 'green',
+                                        'default' => true
+                                    ]
+                                )
+                            }}
+
+                        @endforeach
 
                     </div>
 
-                </button>
+                    <div class="settings-divider"></div>
 
-            </div>
+                    <div class="settings-grid settings-grid-single">
+
+                        {{ $field([
+                            'name' => 'minimum_order_amount',
+                            'label' => 'Minimum order amount',
+                            'icon' => 'bi-cash-stack',
+                            'type' => 'number',
+                            'default' => '0',
+                            'attrs' => 'min="0" step="0.01"',
+                            'class' => 'settings-field-half'
+                        ]) }}
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     ORDERS
+                ================================================== --}}
+
+                <section
+                    class="settings-card settings-section"
+                    id="sec-orders"
+                >
+
+                    {{
+                        $head(
+                            'bi-bag-check',
+                            'amber',
+                            'Order behavior',
+                            'Define default order statuses, numbering and cancellation rules.'
+                        )
+                    }}
+
+                    <div class="settings-grid">
+
+                        {{-- DEFAULT ORDER STATUS --}}
+
+                        <div class="settings-field">
+
+                            <label for="default_order_status">
+                                Default order status
+                            </label>
+
+                            <div class="sx-select">
+
+                                <i class="bi bi-circle-half"></i>
+
+                                <select
+                                    id="default_order_status"
+                                    name="default_order_status"
+                                >
+
+                                    @foreach([
+                                        'pending',
+                                        'processing',
+                                        'shipped',
+                                        'delivered',
+                                        'cancelled'
+                                    ] as $status)
+
+                                        <option
+                                            value="{{ $status }}"
+                                            @selected(
+                                                old(
+                                                    'default_order_status',
+                                                    $setting(
+                                                        'default_order_status',
+                                                        'pending'
+                                                    )
+                                                ) === $status
+                                            )
+                                        >
+                                            {{ ucfirst($status) }}
+                                        </option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        {{ $field([
+                            'name' => 'order_number_format',
+                            'label' => 'Order number format',
+                            'icon' => 'bi-hash',
+                            'default' => 'SB-{YYYY}-{####}'
+                        ]) }}
+
+
+                        {{ $field([
+                            'name' => 'cancel_order_period',
+                            'label' => 'Cancel order period',
+                            'hint' => 'hours',
+                            'icon' => 'bi-hourglass-split',
+                            'type' => 'number',
+                            'default' => '24',
+                            'attrs' => 'min="0"'
+                        ]) }}
+
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-toggle-grid">
+
+                        @foreach([
+                            'auto_cancel_pending_orders' => [
+                                'label' => 'Auto cancel pending orders',
+                                'description' => 'Automatically cancel orders that remain pending.',
+                                'icon' => 'bi-arrow-repeat'
+                            ],
+                            'customer_order_notifications' => [
+                                'label' => 'Customer order notifications',
+                                'description' => 'Send order updates and notifications to customers.',
+                                'icon' => 'bi-bell'
+                            ],
+                        ] as $key => $item)
+
+                            {{
+                                $toggle(
+                                    $key,
+                                    $item + [
+                                        'tone' => 'amber',
+                                        'default' => true
+                                    ]
+                                )
+                            }}
+
+                        @endforeach
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     PAYMENTS
+                ================================================== --}}
+
+                <section
+                    class="settings-card settings-section"
+                    id="sec-payments"
+                >
+
+                    {{
+                        $head(
+                            'bi-credit-card-2-front',
+                            'blue',
+                            'Payment preferences',
+                            'Choose the payment methods available throughout checkout.'
+                        )
+                    }}
+
+                    <div class="settings-grid">
+
+                        {{-- DEFAULT PAYMENT METHOD --}}
+
+                        <div class="settings-field">
+
+                            <label for="default_payment_method">
+                                Default payment method
+                            </label>
+
+                            <div class="sx-select">
+
+                                <i class="bi bi-wallet2"></i>
+
+                                <select
+                                    id="default_payment_method"
+                                    name="default_payment_method"
+                                >
+
+                                    @foreach($paymentMethods as $method)
+
+                                        <option
+                                            value="{{ $method }}"
+                                            @selected(
+                                                old(
+                                                    'default_payment_method',
+                                                    $setting(
+                                                        'default_payment_method',
+                                                        'cash_on_delivery'
+                                                    )
+                                                ) === $method
+                                            )
+                                        >
+                                            {{ ucwords(str_replace('_', ' ', $method)) }}
+                                        </option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- PAYMENTS ENABLED --}}
+
+                        <div class="settings-field settings-field-toggle">
+
+                            {{
+                                $toggle(
+                                    'payments_enabled',
+                                    [
+                                        'label' => 'Payments enabled',
+                                        'description' => 'Allow customers to complete payments at checkout.',
+                                        'icon' => 'bi-credit-card',
+                                        'tone' => 'green',
+                                        'default' => true,
+                                    ]
+                                )
+                            }}
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- AVAILABLE PAYMENT METHODS --}}
+
+                    <div class="settings-subsection">
+
+                        <div class="settings-subsection-heading">
+
+                            <div>
+                                <strong>
+                                    Available payment methods
+                                </strong>
+
+                                <small>
+                                    Select the methods customers can use.
+                                </small>
+                            </div>
+
+                            <i class="bi bi-credit-card"></i>
+
+                        </div>
+
+
+                        <div class="settings-method-grid">
+
+                            @foreach($paymentMethods as $method)
+
+                                <label class="settings-method-option">
+
+                                    <input
+                                        type="checkbox"
+                                        name="payment_methods[]"
+                                        value="{{ $method }}"
+                                        @checked(
+                                            in_array(
+                                                $method,
+                                                $checkedMethods,
+                                                true
+                                            )
+                                            ||
+                                            (
+                                                !$checkedMethods
+                                                &&
+                                                $method === 'cash_on_delivery'
+                                            )
+                                        )
+                                    >
+
+                                    <span class="settings-method-check">
+                                        <i class="bi bi-check-lg"></i>
+                                    </span>
+
+
+                                    <span class="sx-chip sx-chip-sm sx-tone-blue">
+
+                                        @if($method === 'cash_on_delivery')
+                                            <i class="bi bi-cash-coin"></i>
+
+                                        @elseif($method === 'credit_card')
+                                            <i class="bi bi-credit-card"></i>
+
+                                        @elseif($method === 'debit_card')
+                                            <i class="bi bi-credit-card-2-back"></i>
+
+                                        @elseif($method === 'paypal')
+                                            <i class="bi bi-paypal"></i>
+
+                                        @else
+                                            <i class="bi bi-wallet2"></i>
+                                        @endif
+
+                                    </span>
+
+                                    <span class="settings-method-text">
+                                        {{ ucwords(str_replace('_', ' ', $method)) }}
+                                    </span>
+
+                                </label>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     SHIPPING
+                ================================================== --}}
+
+                <section
+                    class="settings-card settings-section"
+                    id="sec-shipping"
+                >
+
+                    {{
+                        $head(
+                            'bi-truck',
+                            'cyan',
+                            'Delivery defaults',
+                            'Configure shipping costs, thresholds and delivery messaging.'
+                        )
+                    }}
+
+                    <div class="settings-grid">
+
+                        {{ $field([
+                            'name' => 'default_shipping_fee',
+                            'label' => 'Default shipping fee',
+                            'icon' => 'bi-box-seam',
+                            'type' => 'number',
+                            'default' => '0',
+                            'attrs' => 'min="0" step="0.01"'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'free_shipping_threshold',
+                            'label' => 'Free shipping threshold',
+                            'icon' => 'bi-gift',
+                            'type' => 'number',
+                            'default' => '0',
+                            'attrs' => 'min="0" step="0.01"'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'default_country',
+                            'label' => 'Default country',
+                            'icon' => 'bi-geo-alt',
+                            'default' => $setting('country')
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'estimated_delivery_message',
+                            'label' => 'Estimated delivery message',
+                            'icon' => 'bi-calendar-check',
+                            'default' => 'Delivered within 3-5 business days',
+                            'class' => 'settings-field-full'
+                        ]) }}
+
+                        <div class="settings-field settings-field-full">
+
+                            {{
+                                $toggle(
+                                    'shipping_enabled',
+                                    [
+                                        'label' => 'Shipping enabled',
+                                        'description' => 'Enable shipping calculations and delivery options.',
+                                        'icon' => 'bi-truck',
+                                        'tone' => 'cyan',
+                                        'default' => true,
+                                    ]
+                                )
+                            }}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     SEO
+                ================================================== --}}
+
+                <section
+                    class="settings-card settings-section"
+                    id="sec-seo"
+                >
+
+                    {{
+                        $head(
+                            'bi-search',
+                            'violet',
+                            'Search visibility',
+                            'Configure metadata and search engine visibility for SecondBook.'
+                        )
+                    }}
+
+                    <div class="settings-grid">
+
+                        {{ $field([
+                            'name' => 'meta_title',
+                            'label' => 'Meta title',
+                            'icon' => 'bi-card-heading'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'keywords',
+                            'label' => 'Keywords',
+                            'icon' => 'bi-tags'
+                        ]) }}
+
+                        {{ $area([
+                            'name' => 'meta_description',
+                            'label' => 'Meta description'
+                        ]) }}
+
+                        {{ $file([
+                            'name' => 'open_graph_image',
+                            'label' => 'Open Graph image',
+                            'icon' => 'bi-share'
+                        ]) }}
+
+
+                        {{-- SEARCH ENGINE INDEXING --}}
+
+                        <div class="settings-field">
+
+                            <label>
+                                Indexing
+                            </label>
+
+                            {{
+                                $toggle(
+                                    'search_engine_indexing',
+                                    [
+                                        'label' => 'Search engine indexing',
+                                        'description' => 'Allow search engines to index the marketplace.',
+                                        'icon' => 'bi-eye',
+                                        'tone' => 'violet',
+                                        'default' => true,
+                                    ]
+                                )
+                            }}
+
+                        </div>
+
+
+                        {{ $field([
+                            'name' => 'google_analytics_id',
+                            'label' => 'Google Analytics ID',
+                            'icon' => 'bi-bar-chart'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'google_search_console_verification',
+                            'label' => 'Search Console verification',
+                            'icon' => 'bi-google'
+                        ]) }}
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     SOCIAL
+                ================================================== --}}
+
+                <section
+                    class="settings-card settings-section"
+                    id="sec-social"
+                >
+
+                    {{
+                        $head(
+                            'bi-share',
+                            'rose',
+                            'Social profiles',
+                            'Connect the social channels displayed throughout the platform.'
+                        )
+                    }}
+
+                    <div class="settings-grid">
+
+                        {{ $field([
+                            'name' => 'facebook',
+                            'label' => 'Facebook',
+                            'icon' => 'bi-facebook',
+                            'type' => 'url'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'instagram',
+                            'label' => 'Instagram',
+                            'icon' => 'bi-instagram',
+                            'type' => 'url'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'tiktok',
+                            'label' => 'Tiktok',
+                            'icon' => 'bi-tiktok',
+                            'type' => 'url'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'youtube',
+                            'label' => 'Youtube',
+                            'icon' => 'bi-youtube',
+                            'type' => 'url'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'whatsapp',
+                            'label' => 'WhatsApp',
+                            'icon' => 'bi-whatsapp'
+                        ]) }}
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     SECURITY
+                ================================================== --}}
+
+                <section
+                    class="settings-card settings-section"
+                    id="sec-security"
+                >
+
+                    {{
+                        $head(
+                            'bi-shield-lock',
+                            'red',
+                            'Security policy',
+                            'Define authentication limits and administrative session policies.'
+                        )
+                    }}
+
+                    <div class="settings-grid">
+
+                        {{ $field([
+                            'name' => 'login_attempt_limit',
+                            'label' => 'Login attempt limit',
+                            'icon' => 'bi-shield-exclamation',
+                            'type' => 'number',
+                            'default' => '5',
+                            'attrs' => 'min="1" max="20"'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'session_lifetime',
+                            'label' => 'Session lifetime',
+                            'hint' => 'minutes',
+                            'icon' => 'bi-stopwatch',
+                            'type' => 'number',
+                            'default' => '120',
+                            'attrs' => 'min="1"'
+                        ]) }}
+
+                        {{ $field([
+                            'name' => 'minimum_password_length',
+                            'label' => 'Minimum password length',
+                            'icon' => 'bi-key',
+                            'type' => 'number',
+                            'default' => '8',
+                            'attrs' => 'min="8"'
+                        ]) }}
+
+                    </div>
+
+
+                    <div class="settings-divider"></div>
+
+
+                    <div class="settings-toggle-grid">
+
+                        @foreach([
+                            'two_factor_authentication_enabled' => [
+                                'label' => 'Two-factor authentication enabled',
+                                'description' => 'Add an additional authentication layer to admin access.',
+                                'icon' => 'bi-phone'
+                            ],
+                            'admin_session_security' => [
+                                'label' => 'Admin session security',
+                                'description' => 'Apply additional protection to administrator sessions.',
+                                'icon' => 'bi-shield-check'
+                            ],
+                        ] as $key => $item)
+
+                            {{
+                                $toggle(
+                                    $key,
+                                    $item + [
+                                        'tone' => 'red',
+                                        'default' => false
+                                    ]
+                                )
+                            }}
+
+                        @endforeach
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     LEGAL
+                ================================================== --}}
+
+                <section
+                    class="settings-card settings-section"
+                    id="sec-legal"
+                >
+
+                    {{
+                        $head(
+                            'bi-file-earmark-text',
+                            'slate',
+                            'Policy content',
+                            'Manage the legal information displayed to customers and sellers.'
+                        )
+                    }}
+
+                    <div class="settings-grid">
+
+                        @foreach([
+                            'privacy_policy' => 'Privacy Policy',
+                            'terms_conditions' => 'Terms & Conditions',
+                            'refund_policy' => 'Refund Policy',
+                            'shipping_policy' => 'Shipping Policy',
+                            'cookie_notice' => 'Cookie Notice',
+                        ] as $key => $label)
+
+                            {{
+                                $area([
+                                    'name' => $key,
+                                    'label' => $label,
+                                    'rows' => 5,
+                                    'class' => 'settings-field-half'
+                                ])
+                            }}
+
+                        @endforeach
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     SAVE BAR
+                ================================================== --}}
+
+                <div
+                    class="settings-save-bar"
+                    id="settingsSaveBar"
+                >
+
+                    <div class="settings-save-info">
+
+                        <span class="settings-save-dot"></span>
+
+                        <div>
+
+                            <strong id="saveStatusTitle">
+                                All changes saved
+                            </strong>
+
+                            <small id="saveStatusText">
+                                Changes apply after saving.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="settings-primary-btn"
+                    >
+                        <i class="bi bi-check2-circle"></i>
+                        <span>Save all settings</span>
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 
     </div>
-
-
-    {{-- =========================================================
-         SETTINGS FORM
-    ========================================================== --}}
-
-    <form
-        id="settingsForm"
-        method="POST"
-        action="{{ route('admin.settings.update') }}"
-        enctype="multipart/form-data"
-    >
-
-        @csrf
-        @method('PUT')
-
-
-        {{-- =====================================================
-             FORM HEADER
-        ====================================================== --}}
-
-        <div class="settings-form-header dashboard-panel mb-4">
-
-            <div>
-
-                <span class="settings-eyebrow">
-                    Platform configuration
-                </span>
-
-                <h5>
-                    Global settings
-                </h5>
-
-                <p class="text-muted mb-0">
-                    Manage how SecondBook behaves across the marketplace.
-                </p>
-
-            </div>
-
-            <button
-                type="submit"
-                class="btn btn-primary"
-            >
-                <i class="bi bi-check-circle me-2"></i>
-                Save settings
-            </button>
-
-        </div>
-
-
-        {{-- =====================================================
-             GENERAL
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        General
-                    </span>
-
-                    <h5>
-                        Brand and location
-                    </h5>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Site name
-                    </label>
-
-                    <input
-                        name="site_name"
-                        class="form-control"
-                        value="{{ old('site_name', $setting('site_name', 'SecondBook')) }}"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Support email
-                    </label>
-
-                    <input
-                        type="email"
-                        name="support_email"
-                        class="form-control"
-                        value="{{ old('support_email', $setting('support_email')) }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12">
-
-                    <label class="form-label">
-                        Site description
-                    </label>
-
-                    <textarea
-                        name="site_description"
-                        class="form-control"
-                        rows="2"
-                    >{{ old('site_description', $setting('site_description')) }}</textarea>
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Support phone
-                    </label>
-
-                    <input
-                        name="support_phone"
-                        class="form-control"
-                        value="{{ old('support_phone', $setting('support_phone')) }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Address
-                    </label>
-
-                    <input
-                        name="address"
-                        class="form-control"
-                        value="{{ old('address', $setting('address')) }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Country
-                    </label>
-
-                    <input
-                        name="country"
-                        class="form-control"
-                        value="{{ old('country', $setting('country')) }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        City
-                    </label>
-
-                    <input
-                        name="city"
-                        class="form-control"
-                        value="{{ old('city', $setting('city')) }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Currency
-                    </label>
-
-                    <input
-                        name="currency"
-                        class="form-control"
-                        value="{{ old('currency', $setting('currency', 'USD')) }}"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Timezone
-                    </label>
-
-                    <select
-                        name="timezone"
-                        class="form-select"
-                    >
-
-                        @foreach(timezone_identifiers_list() as $timezone)
-
-                            <option
-                                value="{{ $timezone }}"
-                                @selected(
-                                    old(
-                                        'timezone',
-                                        $setting('timezone', config('app.timezone'))
-                                    ) === $timezone
-                                )
-                            >
-                                {{ $timezone }}
-                            </option>
-
-                        @endforeach
-
-                    </select>
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Logo
-                    </label>
-
-                    <input
-                        type="file"
-                        name="logo"
-                        class="form-control"
-                        accept="image/*"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Favicon
-                    </label>
-
-                    <input
-                        type="file"
-                        name="favicon"
-                        class="form-control"
-                        accept="image/*"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-6 settings-switches">
-
-                    <label class="settings-switch">
-
-                        <input
-                            type="checkbox"
-                            name="maintenance_mode"
-                            value="1"
-                            @checked($enabled('maintenance_mode'))
-                        >
-
-                        <span>
-                            Maintenance mode
-                        </span>
-
-                    </label>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             STORE
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        Store
-                    </span>
-
-                    <h5>
-                        Marketplace behavior
-                    </h5>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                @foreach([
-                    'marketplace_enabled' => 'Marketplace enabled',
-                    'user_registration_enabled' => 'User registration enabled',
-                    'seller_registration_enabled' => 'Seller registration enabled',
-                    'seller_approval_required' => 'Seller approval required',
-                    'book_approval_required' => 'Book approval required',
-                    'reviews_enabled' => 'Reviews enabled',
-                    'stock_management_enabled' => 'Stock management enabled',
-                ] as $key => $label)
-
-                    <div class="col-12 col-md-6 col-xl-4">
-
-                        <label class="settings-switch">
-
-                            <input
-                                type="checkbox"
-                                name="{{ $key }}"
-                                value="1"
-                                @checked($enabled($key, true))
-                            >
-
-                            <span>
-                                {{ $label }}
-                            </span>
-
-                        </label>
-
-                    </div>
-
-                @endforeach
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Minimum order amount
-                    </label>
-
-                    <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        name="minimum_order_amount"
-                        class="form-control"
-                        value="{{ old('minimum_order_amount', $setting('minimum_order_amount', '0')) }}"
-                    >
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             ORDERS
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        Orders
-                    </span>
-
-                    <h5>
-                        Order behavior
-                    </h5>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Default order status
-                    </label>
-
-                    <select
-                        name="default_order_status"
-                        class="form-select"
-                    >
-
-                        @foreach([
-                            'pending',
-                            'processing',
-                            'shipped',
-                            'delivered',
-                            'cancelled'
-                        ] as $status)
-
-                            <option
-                                value="{{ $status }}"
-                                @selected($setting('default_order_status', 'pending') === $status)
-                            >
-                                {{ ucfirst($status) }}
-                            </option>
-
-                        @endforeach
-
-                    </select>
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Order number format
-                    </label>
-
-                    <input
-                        name="order_number_format"
-                        class="form-control"
-                        value="{{ old('order_number_format', $setting('order_number_format', 'SB-{YYYY}-{####}')) }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Cancel order period (hours)
-                    </label>
-
-                    <input
-                        type="number"
-                        min="0"
-                        name="cancel_order_period"
-                        class="form-control"
-                        value="{{ old('cancel_order_period', $setting('cancel_order_period', '24')) }}"
-                    >
-
-                </div>
-
-
-                @foreach([
-                    'auto_cancel_pending_orders' => 'Auto cancel pending orders',
-                    'customer_order_notifications' => 'Customer order notifications',
-                ] as $key => $label)
-
-                    <div class="col-12 col-md-6">
-
-                        <label class="settings-switch">
-
-                            <input
-                                type="checkbox"
-                                name="{{ $key }}"
-                                value="1"
-                                @checked($enabled($key, true))
-                            >
-
-                            <span>
-                                {{ $label }}
-                            </span>
-
-                        </label>
-
-                    </div>
-
-                @endforeach
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             PAYMENTS
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        Payments
-                    </span>
-
-                    <h5>
-                        Payment preferences
-                    </h5>
-
-                    <small class="text-muted">
-                        Uses the payment methods already defined by the project.
-                    </small>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Default payment method
-                    </label>
-
-                    <select
-                        name="default_payment_method"
-                        class="form-select"
-                    >
-
-                        @foreach($paymentMethods as $method)
-
-                            <option
-                                value="{{ $method }}"
-                                @selected(
-                                    $setting('default_payment_method', 'cash_on_delivery') === $method
-                                )
-                            >
-                                {{ ucwords(str_replace('_', ' ', $method)) }}
-                            </option>
-
-                        @endforeach
-
-                    </select>
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="settings-switch">
-
-                        <input
-                            type="checkbox"
-                            name="payments_enabled"
-                            value="1"
-                            @checked($enabled('payments_enabled', true))
-                        >
-
-                        <span>
-                            Payments enabled
-                        </span>
-
-                    </label>
-
-                </div>
-
-
-                <div class="col-12">
-
-                    <div class="settings-methods">
-
-                        @foreach($paymentMethods as $method)
-
-                            <label class="settings-switch">
-
-                                <input
-                                    type="checkbox"
-                                    name="payment_methods[]"
-                                    value="{{ $method }}"
-                                    @checked(
-                                        in_array($method, $checkedMethods, true)
-                                        || (
-                                            !$checkedMethods
-                                            && $method === 'cash_on_delivery'
-                                        )
-                                    )
-                                >
-
-                                <span>
-                                    {{ ucwords(str_replace('_', ' ', $method)) }}
-                                </span>
-
-                            </label>
-
-                        @endforeach
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             SHIPPING
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        Shipping
-                    </span>
-
-                    <h5>
-                        Delivery defaults
-                    </h5>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Default shipping fee
-                    </label>
-
-                    <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        name="default_shipping_fee"
-                        class="form-control"
-                        value="{{ $setting('default_shipping_fee', '0') }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Free shipping threshold
-                    </label>
-
-                    <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        name="free_shipping_threshold"
-                        class="form-control"
-                        value="{{ $setting('free_shipping_threshold', '0') }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Default country
-                    </label>
-
-                    <input
-                        name="default_country"
-                        class="form-control"
-                        value="{{ $setting('default_country', $setting('country')) }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12">
-
-                    <label class="form-label">
-                        Estimated delivery message
-                    </label>
-
-                    <input
-                        name="estimated_delivery_message"
-                        class="form-control"
-                        value="{{ $setting('estimated_delivery_message', 'Delivered within 3-5 business days') }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12">
-
-                    <label class="settings-switch">
-
-                        <input
-                            type="checkbox"
-                            name="shipping_enabled"
-                            value="1"
-                            @checked($enabled('shipping_enabled', true))
-                        >
-
-                        <span>
-                            Shipping enabled
-                        </span>
-
-                    </label>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             SEO
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        SEO
-                    </span>
-
-                    <h5>
-                        Search visibility
-                    </h5>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Meta title
-                    </label>
-
-                    <input
-                        name="meta_title"
-                        class="form-control"
-                        value="{{ $setting('meta_title') }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Keywords
-                    </label>
-
-                    <input
-                        name="keywords"
-                        class="form-control"
-                        value="{{ $setting('keywords') }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12">
-
-                    <label class="form-label">
-                        Meta description
-                    </label>
-
-                    <textarea
-                        name="meta_description"
-                        rows="2"
-                        class="form-control"
-                    >{{ $setting('meta_description') }}</textarea>
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Open Graph image
-                    </label>
-
-                    <input
-                        type="file"
-                        name="open_graph_image"
-                        class="form-control"
-                        accept="image/*"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="settings-switch">
-
-                        <input
-                            type="checkbox"
-                            name="search_engine_indexing"
-                            value="1"
-                            @checked($enabled('search_engine_indexing', true))
-                        >
-
-                        <span>
-                            Allow search engine indexing
-                        </span>
-
-                    </label>
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Google Analytics ID
-                    </label>
-
-                    <input
-                        name="google_analytics_id"
-                        class="form-control"
-                        value="{{ $setting('google_analytics_id') }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        Search Console verification
-                    </label>
-
-                    <input
-                        name="google_search_console_verification"
-                        class="form-control"
-                        value="{{ $setting('google_search_console_verification') }}"
-                    >
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             SOCIAL
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        Social
-                    </span>
-
-                    <h5>
-                        Social profiles
-                    </h5>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                @foreach([
-                    'facebook',
-                    'instagram',
-                    'tiktok',
-                    'youtube',
-                ] as $network)
-
-                    <div class="col-12 col-md-6">
-
-                        <label class="form-label">
-                            {{ ucfirst($network) }}
-                        </label>
-
-                        <input
-                            type="url"
-                            name="{{ $network }}"
-                            class="form-control"
-                            value="{{ $setting($network) }}"
-                        >
-
-                    </div>
-
-                @endforeach
-
-
-                <div class="col-12 col-md-6">
-
-                    <label class="form-label">
-                        WhatsApp
-                    </label>
-
-                    <input
-                        name="whatsapp"
-                        class="form-control"
-                        value="{{ $setting('whatsapp') }}"
-                    >
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             SECURITY
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        Security
-                    </span>
-
-                    <h5>
-                        Security policy
-                    </h5>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Login attempt limit
-                    </label>
-
-                    <input
-                        type="number"
-                        min="1"
-                        max="20"
-                        name="login_attempt_limit"
-                        class="form-control"
-                        value="{{ $setting('login_attempt_limit', '5') }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Session lifetime (minutes)
-                    </label>
-
-                    <input
-                        type="number"
-                        min="1"
-                        name="session_lifetime"
-                        class="form-control"
-                        value="{{ $setting('session_lifetime', '120') }}"
-                    >
-
-                </div>
-
-
-                <div class="col-12 col-md-4">
-
-                    <label class="form-label">
-                        Minimum password length
-                    </label>
-
-                    <input
-                        type="number"
-                        min="8"
-                        name="minimum_password_length"
-                        class="form-control"
-                        value="{{ $setting('minimum_password_length', '8') }}"
-                    >
-
-                </div>
-
-
-                @foreach([
-                    'two_factor_authentication_enabled' => 'Two-factor authentication enabled',
-                    'admin_session_security' => 'Admin session security',
-                ] as $key => $label)
-
-                    <div class="col-12 col-md-6">
-
-                        <label class="settings-switch">
-
-                            <input
-                                type="checkbox"
-                                name="{{ $key }}"
-                                value="1"
-                                @checked($enabled($key))
-                            >
-
-                            <span>
-                                {{ $label }}
-                            </span>
-
-                        </label>
-
-                    </div>
-
-                @endforeach
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             LEGAL
-        ====================================================== --}}
-
-        <section class="dashboard-panel settings-card mb-4">
-
-            <div class="settings-section-heading">
-
-                <div>
-
-                    <span class="settings-eyebrow">
-                        Legal
-                    </span>
-
-                    <h5>
-                        Policy content
-                    </h5>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3">
-
-                @foreach([
-                    'privacy_policy' => 'Privacy Policy',
-                    'terms_conditions' => 'Terms & Conditions',
-                    'refund_policy' => 'Refund Policy',
-                    'shipping_policy' => 'Shipping Policy',
-                    'cookie_notice' => 'Cookie Notice',
-                ] as $key => $label)
-
-                    <div class="col-12 col-md-6">
-
-                        <label class="form-label">
-                            {{ $label }}
-                        </label>
-
-                        <textarea
-                            name="{{ $key }}"
-                            rows="4"
-                            class="form-control"
-                        >{{ $setting($key) }}</textarea>
-
-                    </div>
-
-                @endforeach
-
-            </div>
-
-        </section>
-
-
-        {{-- =====================================================
-             SAVE BAR
-        ====================================================== --}}
-
-        <div class="settings-save-bar dashboard-panel">
-
-            <span class="text-muted small">
-                Changes apply after saving.
-            </span>
-
-            <button
-                type="submit"
-                class="btn btn-primary"
-            >
-                <i class="bi bi-check-circle me-2"></i>
-                Save all settings
-            </button>
-
-        </div>
-
-    </form>
 
 </div>
 
 
 @push('js')
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -1267,117 +1503,510 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    form.addEventListener('submit', async function (event) {
 
-        event.preventDefault();
+    /* =========================================================
+       THEME BUTTONS
+    ========================================================= */
 
-        const submitButtons = form.querySelectorAll(
-            'button[type="submit"]'
-        );
+    const themeButtons = document.querySelectorAll(
+        '.theme-select-btn'
+    );
 
-        const formData = new FormData(form);
+    const root = document.documentElement;
 
-        submitButtons.forEach(function (button) {
-            button.disabled = true;
+    const markTheme = function () {
 
-            button.dataset.originalHtml =
-                button.innerHTML;
+        const current =
+            root.getAttribute('data-theme') || 'light';
 
-            button.innerHTML = `
-                <span
-                    class="spinner-border spinner-border-sm me-2"
-                    role="status"
-                    aria-hidden="true"
-                ></span>
-                Saving...
-            `;
-        });
+        themeButtons.forEach(function (button) {
 
-        try {
-
-            const response = await fetch(
-                form.action,
-                {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    }
-                }
+            button.classList.toggle(
+                'active',
+                button.dataset.themeTarget === current
             );
 
-            const data = await response.json();
+        });
+    };
 
-            if (!response.ok) {
+    markTheme();
 
-                let errorMessage =
-                    'Please review the settings form.';
+    new MutationObserver(markTheme).observe(root, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+    });
 
-                if (data.errors) {
+    themeButtons.forEach(function (button) {
 
-                    const messages = [];
+        button.addEventListener('click', function () {
 
-                    Object.values(data.errors).forEach(
-                        function (errors) {
+            setTimeout(markTheme, 60);
 
-                            errors.forEach(
-                                function (message) {
-                                    messages.push(message);
-                                }
-                            );
-
-                        }
-                    );
-
-                    if (messages.length) {
-                        errorMessage = messages.join('<br>');
-                    }
-                }
-
-                throw new Error(errorMessage);
-            }
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Settings Saved',
-                text: data.message ||
-                    'Settings updated successfully.',
-                confirmButtonColor: '#2563eb',
-                confirmButtonText: 'OK'
-            });
-
-        } catch (error) {
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Save Failed',
-                html: error.message ||
-                    'Something went wrong while saving settings.',
-                confirmButtonColor: '#2563eb',
-                confirmButtonText: 'OK'
-            });
-
-        } finally {
-
-            submitButtons.forEach(function (button) {
-
-                button.disabled = false;
-
-                if (button.dataset.originalHtml) {
-                    button.innerHTML =
-                        button.dataset.originalHtml;
-                }
-
-            });
-
-        }
+        });
 
     });
 
+
+    /* =========================================================
+       FILE INPUTS
+       Preview + file name + drag & drop
+    ========================================================= */
+
+    document.querySelectorAll('[data-file]').forEach(function (box) {
+
+        const input = box.querySelector(
+            'input[type="file"]'
+        );
+
+        const nameEl = box.querySelector(
+            '[data-file-name]'
+        );
+
+        const img = box.querySelector(
+            '.sx-file-thumb img'
+        );
+
+        const icon = box.querySelector(
+            '.sx-file-thumb i'
+        );
+
+        const idle = nameEl.textContent;
+
+
+        const render = function () {
+
+            const file =
+                input.files && input.files[0];
+
+            box.classList.toggle(
+                'has-file',
+                !!file
+            );
+
+
+            if (!file) {
+
+                nameEl.textContent = idle;
+
+                img.hidden = true;
+                icon.hidden = false;
+
+                return;
+            }
+
+
+            nameEl.textContent =
+                file.name +
+                ' — ' +
+                Math.max(
+                    1,
+                    Math.round(file.size / 1024)
+                ) +
+                ' KB';
+
+
+            if (file.type.startsWith('image/')) {
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    img.src = e.target.result;
+
+                    img.hidden = false;
+                    icon.hidden = true;
+
+                };
+
+                reader.readAsDataURL(file);
+            }
+        };
+
+
+        input.addEventListener(
+            'change',
+            render
+        );
+
+
+        ['dragenter', 'dragover'].forEach(function (type) {
+
+            box.addEventListener(type, function (e) {
+
+                e.preventDefault();
+
+                box.classList.add(
+                    'is-dragover'
+                );
+
+            });
+
+        });
+
+
+        ['dragleave', 'drop'].forEach(function (type) {
+
+            box.addEventListener(type, function () {
+
+                box.classList.remove(
+                    'is-dragover'
+                );
+
+            });
+
+        });
+
+
+        box.addEventListener('drop', function (e) {
+
+            e.preventDefault();
+
+            if (
+                e.dataTransfer &&
+                e.dataTransfer.files.length
+            ) {
+
+                input.files =
+                    e.dataTransfer.files;
+
+                input.dispatchEvent(
+                    new Event(
+                        'change',
+                        {
+                            bubbles: true
+                        }
+                    )
+                );
+
+            }
+
+        });
+
+    });
+
+
+    /* =========================================================
+       SECTION RAIL — SCROLL SPY
+    ========================================================= */
+
+    const links =
+        document.querySelectorAll('[data-rail]');
+
+    if (
+        'IntersectionObserver' in window &&
+        links.length
+    ) {
+
+        const spy =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(function (entry) {
+
+                        if (!entry.isIntersecting) {
+                            return;
+                        }
+
+                        links.forEach(function (link) {
+
+                            link.classList.toggle(
+                                'is-active',
+                                link.dataset.rail ===
+                                    entry.target.id
+                            );
+
+                        });
+
+                    });
+
+                },
+                {
+                    rootMargin:
+                        '-15% 0px -70% 0px'
+                }
+            );
+
+
+        links.forEach(function (link) {
+
+            const target =
+                document.getElementById(
+                    link.dataset.rail
+                );
+
+            if (target) {
+                spy.observe(target);
+            }
+
+        });
+
+
+        links[0].classList.add(
+            'is-active'
+        );
+    }
+
+
+    /* =========================================================
+       UNSAVED CHANGES INDICATOR
+    ========================================================= */
+
+    const saveBar =
+        document.getElementById(
+            'settingsSaveBar'
+        );
+
+    const saveTitle =
+        document.getElementById(
+            'saveStatusTitle'
+        );
+
+    const saveText =
+        document.getElementById(
+            'saveStatusText'
+        );
+
+
+    const setDirty = function (dirty) {
+
+        saveBar.classList.toggle(
+            'is-dirty',
+            dirty
+        );
+
+        saveTitle.textContent =
+            dirty
+                ? 'Unsaved changes'
+                : 'All changes saved';
+
+        saveText.textContent =
+            dirty
+                ? 'Save to apply your edits.'
+                : 'Changes apply after saving.';
+    };
+
+
+    form.addEventListener(
+        'input',
+        function () {
+            setDirty(true);
+        }
+    );
+
+    form.addEventListener(
+        'change',
+        function () {
+            setDirty(true);
+        }
+    );
+
+
+    /* =========================================================
+       AJAX SUBMIT
+       Existing behavior preserved
+    ========================================================= */
+
+    form.addEventListener(
+        'submit',
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const submitButtons =
+                form.querySelectorAll(
+                    'button[type="submit"]'
+                );
+
+
+            const formData =
+                new FormData(form);
+
+
+            submitButtons.forEach(function (button) {
+
+                button.disabled = true;
+
+                button.dataset.originalHtml =
+                    button.innerHTML;
+
+                button.innerHTML = `
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                    ></span>
+
+                    <span>Saving...</span>
+                `;
+
+            });
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        form.action,
+                        {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With':
+                                    'XMLHttpRequest',
+                                'Accept':
+                                    'application/json'
+                            }
+                        }
+                    );
+
+
+                const contentType =
+                    response.headers.get(
+                        'content-type'
+                    ) || '';
+
+
+                let data = {};
+
+
+                if (
+                    contentType.includes(
+                        'application/json'
+                    )
+                ) {
+                    data =
+                        await response.json();
+                }
+
+
+                if (!response.ok) {
+
+                    let errorMessage =
+                        'Please review the settings form.';
+
+
+                    if (data.errors) {
+
+                        const messages = [];
+
+
+                        Object.values(
+                            data.errors
+                        ).forEach(function (errors) {
+
+                            errors.forEach(
+                                function (message) {
+
+                                    messages.push(
+                                        message
+                                    );
+
+                                }
+                            );
+
+                        });
+
+
+                        if (messages.length) {
+
+                            errorMessage =
+                                messages.join(
+                                    '<br>'
+                                );
+
+                        }
+
+                    }
+
+
+                    throw new Error(
+                        errorMessage
+                    );
+                }
+
+
+                setDirty(false);
+
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'Settings saved',
+
+                    text:
+                        data.message ||
+                        'Settings updated successfully.',
+
+                    confirmButtonColor:
+                        '#3451d1',
+
+                    confirmButtonText:
+                        'Done',
+
+                    customClass: {
+                        popup:
+                            'settings-swal-popup'
+                    }
+
+                });
+
+
+            } catch (error) {
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Save failed',
+
+                    html:
+                        error.message ||
+                        'Something went wrong while saving settings.',
+
+                    confirmButtonColor:
+                        '#3451d1',
+
+                    confirmButtonText:
+                        'Try again',
+
+                    customClass: {
+                        popup:
+                            'settings-swal-popup'
+                    }
+
+                });
+
+
+            } finally {
+
+                submitButtons.forEach(
+                    function (button) {
+
+                        button.disabled = false;
+
+                        if (
+                            button.dataset
+                                .originalHtml
+                        ) {
+
+                            button.innerHTML =
+                                button.dataset
+                                    .originalHtml;
+                        }
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
 });
 </script>
+
 @endpush
 
 @endsection
-

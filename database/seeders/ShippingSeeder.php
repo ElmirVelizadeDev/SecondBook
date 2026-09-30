@@ -44,8 +44,8 @@ class ShippingSeeder extends Seeder
             DB::table('shippings')->updateOrInsert(
                 ['name' => $shipping['name']],
                 array_merge($shipping, [
-                    'updated_at' => now(),
                     'created_at' => now(),
+                    'updated_at' => now(),
                 ])
             );
         }

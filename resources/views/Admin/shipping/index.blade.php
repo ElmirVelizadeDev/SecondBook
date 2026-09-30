@@ -8,165 +8,169 @@
 
 @section('content')
 
-    {{-- Success Alert --}}
+<div class="dashboard-section shipping-page">
+
+    {{-- =========================================================
+         HERO
+    ========================================================== --}}
+    <section class="shipping-hero">
+
+        <div class="shipping-hero-content">
+
+            <span class="shipping-hero-badge">
+                <i class="bi bi-truck"></i>
+                Shipping Management
+            </span>
+
+            <h1>Manage shipping methods.</h1>
+
+            <p>
+                Manage delivery options, pricing, availability
+                and shipping methods for your marketplace.
+            </p>
+
+        </div>
+
+        <div class="shipping-hero-mark" aria-hidden="true">
+            <i class="bi bi-truck"></i>
+        </div>
+
+    </section>
+
+
+    {{-- =========================================================
+         ALERTS
+    ========================================================== --}}
     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
-            <i class="bi bi-check-circle me-2"></i>
-            {{ session('success') }}
+        <div class="shipping-alert shipping-alert-success">
+            <i class="bi bi-check-circle"></i>
+
+            <span>{{ session('success') }}</span>
 
             <button type="button"
-                    class="btn-close"
+                    class="shipping-alert-close"
                     data-bs-dismiss="alert"
                     aria-label="Close">
+                <i class="bi bi-x"></i>
             </button>
         </div>
     @endif
 
-
-    {{-- Error Alert --}}
     @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
-            <i class="bi bi-exclamation-circle me-2"></i>
-            {{ session('error') }}
+        <div class="shipping-alert shipping-alert-danger">
+            <i class="bi bi-exclamation-circle"></i>
+
+            <span>{{ session('error') }}</span>
 
             <button type="button"
-                    class="btn-close"
+                    class="shipping-alert-close"
                     data-bs-dismiss="alert"
                     aria-label="Close">
+                <i class="bi bi-x"></i>
             </button>
         </div>
     @endif
 
 
-    <div class="container-fluid p-4">
+    {{-- =========================================================
+         STATISTICS
+    ========================================================== --}}
+    <section class="shipping-stats">
 
-        {{-- =====================================================
-             HEADER
-        ====================================================== --}}
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        {{-- Total --}}
+        <div class="shipping-stat-card stat-blue">
 
-            <div>
+            <div class="shipping-stat-content">
+                <span>Total Shipping</span>
+                <h3>{{ $totalShippings }}</h3>
+            </div>
 
-                <h2 class="fw-bold mb-1">
-                    <i class="bi bi-truck me-2"></i>
-                    Shipping
-                </h2>
+            <div class="shipping-stat-icon">
+                <i class="bi bi-truck"></i>
+            </div>
 
-                <p class="text-muted mb-0">
-                    Manage shipping methods and delivery options.
+        </div>
+
+
+        {{-- Active --}}
+        <div class="shipping-stat-card stat-green">
+
+            <div class="shipping-stat-content">
+                <span>Active</span>
+                <h3>{{ $activeShippings }}</h3>
+            </div>
+
+            <div class="shipping-stat-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+        </div>
+
+
+        {{-- Inactive --}}
+        <div class="shipping-stat-card stat-orange">
+
+            <div class="shipping-stat-content">
+                <span>Inactive</span>
+                <h3>{{ $inactiveShippings }}</h3>
+            </div>
+
+            <div class="shipping-stat-icon">
+                <i class="bi bi-pause-circle"></i>
+            </div>
+
+        </div>
+
+
+        {{-- Free Shipping --}}
+        <div class="shipping-stat-card stat-purple">
+
+            <div class="shipping-stat-content">
+                <span>Free Shipping</span>
+                <h3>{{ $freeShippings }}</h3>
+            </div>
+
+            <div class="shipping-stat-icon">
+                <i class="bi bi-gift"></i>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {{-- =========================================================
+         MAIN PANEL
+    ========================================================== --}}
+    <section class="shipping-panel">
+
+        {{-- Panel Header --}}
+        <div class="shipping-panel-header">
+
+            <div class="shipping-heading-content">
+
+                <span class="eyebrow">
+                    Shipping configuration
+                </span>
+
+                <h5>Shipping Methods</h5>
+
+                <p>
+                    View and manage all available shipping methods.
                 </p>
 
             </div>
 
+            <div class="shipping-header-action">
 
-            <a href="{{ route('admin.shipping.create') }}"
-               class="btn btn-primary shipping-add-btn">
+                <a href="{{ route('admin.shipping.create') }}"
+                   class="shipping-add-btn">
 
-                <i class="bi bi-plus-lg me-2"></i>
-                Add Shipping
+                    <i class="bi bi-plus-lg"></i>
 
-            </a>
+                    <span>Add Shipping</span>
 
-        </div>
-
-
-        {{-- =====================================================
-             STATISTICS
-        ====================================================== --}}
-        <div class="row g-4 mb-4">
-
-            {{-- Total Shipping --}}
-            <div class="col-xl-3 col-md-6">
-
-                <div class="shipping-card">
-
-                    <div>
-
-                        <span>
-                            Total Shipping
-                        </span>
-
-                        <h3>
-                            {{ $totalShippings }}
-                        </h3>
-
-                    </div>
-
-                    <i class="bi bi-truck"></i>
-
-                </div>
-
-            </div>
-
-
-            {{-- Active --}}
-            <div class="col-xl-3 col-md-6">
-
-                <div class="shipping-card">
-
-                    <div>
-
-                        <span>
-                            Active
-                        </span>
-
-                        <h3>
-                            {{ $activeShippings }}
-                        </h3>
-
-                    </div>
-
-                    <i class="bi bi-check-circle"></i>
-
-                </div>
-
-            </div>
-
-
-            {{-- Inactive --}}
-            <div class="col-xl-3 col-md-6">
-
-                <div class="shipping-card">
-
-                    <div>
-
-                        <span>
-                            Inactive
-                        </span>
-
-                        <h3>
-                            {{ $inactiveShippings }}
-                        </h3>
-
-                    </div>
-
-                    <i class="bi bi-pause-circle"></i>
-
-                </div>
-
-            </div>
-
-
-            {{-- Free Shipping --}}
-            <div class="col-xl-3 col-md-6">
-
-                <div class="shipping-card">
-
-                    <div>
-
-                        <span>
-                            Free Shipping
-                        </span>
-
-                        <h3>
-                            {{ $freeShippings }}
-                        </h3>
-
-                    </div>
-
-                    <i class="bi bi-gift"></i>
-
-                </div>
+                </a>
 
             </div>
 
@@ -176,382 +180,575 @@
         {{-- =====================================================
              FILTERS
         ====================================================== --}}
-        <div class="dashboard-panel shipping-filter-panel mb-4">
+        <form method="GET"
+              action="{{ route('admin.shipping.index') }}"
+              class="shipping-filters">
 
-            <form method="GET"
-                  action="{{ route('admin.shipping.index') }}"
-                  class="row g-3 align-items-end">
+            {{-- Search --}}
+            <div class="shipping-filter-group shipping-filter-search">
 
+                <label for="shipping-search">
+                    Search
+                </label>
 
-                {{-- Search --}}
-                <div class="col-12 col-md-6 col-lg-5">
+                <div class="shipping-search-field">
 
-                    <label class="form-label small text-muted fw-semibold">
-                        Search
-                    </label>
+                    <i class="bi bi-search"></i>
 
-                    <div class="input-group shipping-search-group">
-
-                        <span class="input-group-text bg-white border-end-0">
-
-                            <i class="bi bi-search text-muted"></i>
-
-                        </span>
-
-                        <input
-                            type="text"
-                            name="search"
-                            value="{{ request('search') }}"
-                            class="form-control border-start-0"
-                            placeholder="Search shipping method..."
-                        >
-
-                        <button type="submit"
-                                class="btn btn-primary">
-
-                            Search
-
-                        </button>
-
-                    </div>
+                    <input
+                        id="shipping-search"
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Search shipping method..."
+                    >
 
                 </div>
 
-
-                {{-- Status --}}
-                <div class="col-12 col-md-6 col-lg-4">
-
-                    <label class="form-label small text-muted fw-semibold">
-                        Status
-                    </label>
-
-                    <select name="status"
-                            class="form-select">
-
-                        <option value="">
-                            All Status
-                        </option>
-
-                        <option value="1"
-                            @selected(request('status') === '1')>
-                            Active
-                        </option>
-
-                        <option value="0"
-                            @selected(request('status') === '0')>
-                            Inactive
-                        </option>
-
-                    </select>
-
-                </div>
+            </div>
 
 
-                {{-- Filter Buttons --}}
-                <div class="col-12 col-lg-3 shipping-filter-buttons">
+            {{-- Status --}}
+            <div class="shipping-filter-group">
 
-                    <button type="submit"
-                            class="btn btn-primary filter-btn">
+                <label for="shipping-status">
+                    Status
+                </label>
 
-                        <i class="bi bi-funnel me-1"></i>
+                <select id="shipping-status"
+                        name="status"
+                        class="shipping-filter-select">
 
-                        <span>
-                            Filter
-                        </span>
+                    <option value="">
+                        All Status
+                    </option>
 
-                    </button>
+                    <option value="1"
+                        @selected(request('status') === '1')>
+                        Active
+                    </option>
 
-                    
-                    <a href="{{ route('admin.shipping.index') }}"
-                       class="btn btn-light reset-btn">
+                    <option value="0"
+                        @selected(request('status') === '0')>
+                        Inactive
+                    </option>
 
-                        Reset
+                </select>
 
-                    </a>
+            </div>
 
-                </div>
 
-            </form>
+            {{-- Actions --}}
+            <div class="shipping-filter-actions">
+
+                <button type="submit"
+                        class="shipping-filter-btn">
+
+                    <i class="bi bi-funnel"></i>
+
+                    <span>Filter</span>
+
+                </button>
+
+                <a href="{{ route('admin.shipping.index') }}"
+                   class="shipping-clear-filter">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                    Reset
+
+                </a>
+
+            </div>
+
+        </form>
+
+
+        {{-- =====================================================
+             TABLE
+        ====================================================== --}}
+        <div class="shipping-table-wrap">
+
+            <table class="shipping-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th class="shipping-col-id">
+                            #
+                        </th>
+
+                        <th class="shipping-col-method">
+                            Method
+                        </th>
+
+                        <th class="shipping-col-description">
+                            Description
+                        </th>
+
+                        <th class="shipping-col-price">
+                            Price
+                        </th>
+
+                        <th class="shipping-col-delivery">
+                            Delivery Time
+                        </th>
+
+                        <th class="shipping-col-status">
+                            Status
+                        </th>
+
+                        <th class="shipping-col-actions">
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @forelse($shippings as $shipping)
+
+                        <tr>
+
+                            {{-- ID --}}
+                            <td class="shipping-id">
+                                #{{ $shipping->id }}
+                            </td>
+
+
+                            {{-- Method --}}
+                            <td>
+
+                                <div class="shipping-method">
+
+                                    <div class="shipping-method-icon">
+                                        <i class="bi bi-truck"></i>
+                                    </div>
+
+                                    <span>
+                                        {{ $shipping->name }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            {{-- Description --}}
+                            <td>
+
+                                <span class="shipping-description">
+
+                                    {{ Str::limit($shipping->description, 55) ?: '—' }}
+
+                                </span>
+
+                            </td>
+
+
+                            {{-- Price --}}
+                            <td>
+
+                                @if($shipping->price == 0)
+
+                                    <span class="shipping-price shipping-price-free">
+                                        Free
+                                    </span>
+
+                                @else
+
+                                    <span class="shipping-price">
+                                        {{ number_format($shipping->price, 2) }} AZN
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+
+                            {{-- Delivery --}}
+                            <td>
+
+                                <span class="shipping-delivery">
+                                    <i class="bi bi-clock"></i>
+                                    {{ $shipping->delivery_time }}
+                                </span>
+
+                            </td>
+
+
+                            {{-- Status --}}
+                            <td>
+
+                                @if($shipping->status)
+
+                                    <span class="shipping-status-pill shipping-status-active">
+                                        <span></span>
+                                        Active
+                                    </span>
+
+                                @else
+
+                                    <span class="shipping-status-pill shipping-status-inactive">
+                                        <span></span>
+                                        Inactive
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+
+                            {{-- Actions --}}
+                            <td>
+
+                                <div class="shipping-actions">
+
+                                    {{-- Edit --}}
+                                    <a href="{{ route('admin.shipping.edit', $shipping->id) }}"
+                                       class="shipping-action-btn shipping-edit-btn"
+                                       title="Edit">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+
+                                    {{-- Delete --}}
+                                    <form action="{{ route('admin.shipping.destroy', $shipping->id) }}"
+                                          method="POST"
+                                          class="delete-shipping-form">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                class="shipping-action-btn shipping-delete-btn"
+                                                title="Delete">
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="7">
+
+                                <div class="shipping-empty-state">
+
+                                    <div class="shipping-empty-icon">
+                                        <i class="bi bi-truck"></i>
+                                    </div>
+
+                                    <h6>No shipping methods found.</h6>
+
+                                    <p>
+                                        Try changing your filters or search.
+                                    </p>
+
+                                    <a href="{{ route('admin.shipping.create') }}"
+                                       class="shipping-empty-btn">
+
+                                        <i class="bi bi-plus-lg"></i>
+                                        Add Shipping
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
 
         </div>
 
 
         {{-- =====================================================
-             SHIPPING TABLE
+             PAGINATION
         ====================================================== --}}
-        <div class="card border-0 shadow-sm shipping-table-card">
-
-            <div class="card-body">
-
-                <div class="table-responsive">
-
-                    <table class="table align-middle mb-0">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>
-                                    #
-                                </th>
-
-                                <th>
-                                    Method
-                                </th>
-
-                                <th>
-                                    Description
-                                </th>
-
-                                <th>
-                                    Price
-                                </th>
-
-                                <th>
-                                    Delivery Time
-                                </th>
-
-                                <th>
-                                    Status
-                                </th>
-
-                                <th>
-                                    Action
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody>
-
-                            @forelse($shippings as $shipping)
-
-                                <tr>
-
-                                    {{-- ID --}}
-                                    <td>
-                                        {{ $shipping->id }}
-                                    </td>
-
-
-                                    {{-- Method --}}
-                                    <td>
-
-                                        <span class="shipping-name">
-                                            {{ $shipping->name }}
-                                        </span>
-
-                                    </td>
-
-
-                                    {{-- Description --}}
-                                    <td>
-
-                                        <span class="text-muted">
-                                            {{ Str::limit($shipping->description, 50) ?: '—' }}
-                                        </span>
-
-                                    </td>
-
-
-                                    {{-- Price --}}
-                                    <td>
-
-                                        @if($shipping->price == 0)
-
-                                            <span class="fw-semibold text-success">
-                                                Free
-                                            </span>
-
-                                        @else
-
-                                            <span class="fw-semibold">
-                                                {{ number_format($shipping->price, 2) }} AZN
-                                            </span>
-
-                                        @endif
-
-                                    </td>
-
-
-                                    {{-- Delivery Time --}}
-                                    <td>
-
-                                        {{ $shipping->delivery_time }}
-
-                                    </td>
-
-
-                                    {{-- Status --}}
-                                    <td>
-
-                                        @if($shipping->status)
-
-                                            <span class="badge bg-success">
-                                                Active
-                                            </span>
-
-                                        @else
-
-                                            <span class="badge bg-secondary">
-                                                Inactive
-                                            </span>
-
-                                        @endif
-
-                                    </td>
-
-
-                                    {{-- Actions --}}
-                                    <td>
-
-                                        <div class="shipping-actions">
-
-                                            {{-- Edit --}}
-                                            <a href="{{ route('admin.shipping.edit', $shipping->id) }}"
-                                               class="btn btn-sm btn-light"
-                                               title="Edit">
-
-                                                <i class="bi bi-pencil"></i>
-
-                                            </a>
-
-
-                                            {{-- Delete --}}
-                                            <form action="{{ route('admin.shipping.destroy', $shipping->id) }}"
-                                                  method="POST"
-                                                  class="d-inline delete-shipping-form">
-
-                                                @csrf
-
-                                                @method('DELETE')
-
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-danger delete-shipping-btn"
-                                                        title="Delete">
-
-                                                    <i class="bi bi-trash"></i>
-
-                                                </button>
-
-                                            </form>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-
-                            @empty
-
-                                <tr>
-
-                                    <td colspan="7"
-                                        class="text-center py-5">
-
-                                        <div class="shipping-empty-state">
-
-                                            <i class="bi bi-truck fs-1 d-block mb-2"></i>
-
-                                            <div class="fw-semibold">
-                                                No shipping methods found.
-                                            </div>
-
-                                            <small>
-                                                Try changing your filters or search.
-                                            </small>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                            @endforelse
-
-                        </tbody>
-
-                    </table>
+        @if($shippings->hasPages())
+
+            <div class="shipping-pagination">
+
+                <div class="shipping-pagination-info">
+
+                    Showing
+                    <strong>{{ $shippings->firstItem() }}</strong>
+                    to
+                    <strong>{{ $shippings->lastItem() }}</strong>
+                    of
+                    <strong>{{ $shippings->total() }}</strong>
+                    shipping methods
 
                 </div>
 
+                <div class="shipping-pagination-pages">
 
-                {{-- Pagination --}}
-                @if($shippings->hasPages())
+                    @if($shippings->onFirstPage())
 
-                    <div class="mt-3">
+                        <span class="shipping-pager-btn disabled">
+                            <i class="bi bi-chevron-left"></i>
+                        </span>
 
-                        {{ $shippings->links() }}
+                    @else
 
-                    </div>
+                        <a href="{{ $shippings->previousPageUrl() }}"
+                           class="shipping-pager-btn">
 
-                @endif
+                            <i class="bi bi-chevron-left"></i>
+
+                        </a>
+
+                    @endif
+
+
+                    @foreach($shippings->getUrlRange(
+                        max(1, $shippings->currentPage() - 2),
+                        min($shippings->lastPage(), $shippings->currentPage() + 2)
+                    ) as $page => $url)
+
+                        @if($page == $shippings->currentPage())
+
+                            <span class="shipping-pager-btn active">
+                                {{ $page }}
+                            </span>
+
+                        @else
+
+                            <a href="{{ $url }}"
+                               class="shipping-pager-btn">
+
+                                {{ $page }}
+
+                            </a>
+
+                        @endif
+
+                    @endforeach
+
+
+                    @if($shippings->hasMorePages())
+
+                        <a href="{{ $shippings->nextPageUrl() }}"
+                           class="shipping-pager-btn">
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
+                    @else
+
+                        <span class="shipping-pager-btn disabled">
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+
+                    @endif
+
+                </div>
 
             </div>
 
-        </div>
+        @endif
 
-    </div>
+    </section>
 
+</div>
 
-    {{-- =====================================================
-         DELETE CONFIRMATION
-    ====================================================== --}}
+@endsection
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@push('js')
 
-    <script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-        document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.delete-shipping-form').forEach(function (form) {
 
-            const deleteForms =
-                document.querySelectorAll('.delete-shipping-form');
+        form.addEventListener('submit', async function (event) {
 
+            event.preventDefault();
 
-            deleteForms.forEach(function (form) {
+            const row = form.closest('tr');
+            const button = form.querySelector('button');
 
-                form.addEventListener('submit', function (event) {
+            const result = await Swal.fire({
 
-                    event.preventDefault();
+                title: 'Delete shipping method?',
 
+                text: 'This shipping method will be permanently deleted.',
 
-                    Swal.fire({
+                icon: 'warning',
 
-                        title: 'Are you sure?',
+                showCancelButton: true,
 
-                        text: 'This shipping method will be permanently deleted.',
+                confirmButtonColor: '#dc3545',
 
-                        icon: 'warning',
+                cancelButtonColor: '#6c757d',
 
-                        showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
 
-                        confirmButtonColor: '#dc3545',
+                cancelButtonText: 'Cancel',
 
-                        cancelButtonColor: '#6c757d',
-
-                        confirmButtonText: 'Yes, delete it!',
-
-                        cancelButtonText: 'Cancel'
-
-                    }).then((result) => {
-
-                        if (result.isConfirmed) {
-
-                            form.submit();
-
-                        }
-
-                    });
-
-                });
+                reverseButtons: true
 
             });
 
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Prevent double click
+            |--------------------------------------------------------------------------
+            */
+
+            if (button) {
+                button.disabled = true;
+            }
+
+            try {
+
+                const csrfToken = document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
+
+                const response = await fetch(form.action, {
+
+                    method: 'POST',
+
+                    headers: {
+
+                        'X-CSRF-TOKEN': csrfToken,
+
+                        'Accept': 'application/json',
+
+                        'X-Requested-With': 'XMLHttpRequest',
+
+                        'Content-Type':
+                            'application/x-www-form-urlencoded; charset=UTF-8'
+
+                    },
+
+                    body: new URLSearchParams({
+
+                        _token: csrfToken,
+
+                        _method: 'DELETE'
+
+                    })
+
+                });
+
+                const contentType =
+                    response.headers.get('content-type') || '';
+
+                let data = {};
+
+                if (contentType.includes('application/json')) {
+                    data = await response.json();
+                }
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        'Unable to delete the shipping method.'
+                    );
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Remove row without refreshing page
+                |--------------------------------------------------------------------------
+                */
+
+                if (row) {
+
+                    row.style.transition =
+                        'opacity 0.3s ease, transform 0.3s ease';
+
+                    row.style.opacity = '0';
+
+                    row.style.transform = 'translateX(20px)';
+
+                    setTimeout(function () {
+
+                        row.remove();
+
+                    }, 300);
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Success alert
+                |--------------------------------------------------------------------------
+                */
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'Shipping deleted',
+
+                    text:
+                        data.message ||
+                        'The shipping method has been deleted successfully.',
+
+                    timer: 1800,
+
+                    showConfirmButton: false
+
+                });
+
+            } catch (error) {
+
+                console.error('Shipping delete error:', error);
+
+                if (button) {
+                    button.disabled = false;
+                }
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Delete failed',
+
+                    text:
+                        error.message ||
+                        'Unable to delete the shipping method.',
+
+                    confirmButtonColor: '#2563eb'
+
+                });
+
+            }
+
         });
 
-    </script>
+    });
 
-@endsection
+});
+</script>
+
+@endpush

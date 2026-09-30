@@ -1,6 +1,6 @@
 @extends('layout.admin.master')
 
-@section('title', 'Add Coupon')
+@section('title', 'Create Coupon')
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('admin/css/coupons.css') }}">
@@ -8,300 +8,409 @@
 
 @section('content')
 
-<div class="container-fluid p-4">
+<div class="coupons-edit-page">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    {{-- HEADER --}}
+    <div class="coupons-edit-header">
 
-        <div>
+        <div class="coupons-edit-heading">
 
-            <h2 class="fw-bold mb-1">
-                <i class="bi bi-ticket-perforated me-2"></i>
-                Add Coupon
-            </h2>
+            <div class="coupons-edit-eyebrow">
+                <i class="bi bi-ticket-perforated"></i>
+                Coupon Management
+            </div>
 
-            <p class="text-muted mb-0">
-                Create a new discount coupon.
-            </p>
+            <h1>Create Coupon</h1>
+
+            <p>Create a new discount coupon manually.</p>
 
         </div>
 
         <a href="{{ route('admin.coupons.index') }}"
-           class="btn btn-light">
+           class="coupons-edit-back">
 
-            <i class="bi bi-arrow-left me-2"></i>
-
-            Back
+            <i class="bi bi-arrow-left"></i>
+            <span>Back to Coupons</span>
 
         </a>
 
     </div>
 
 
-    <div class="card border-0 shadow-sm">
+    {{-- CARD --}}
+    <div class="coupons-edit-card">
 
-        <div class="card-body p-4">
+        <div class="coupons-edit-card-header">
 
-            <form method="POST"
-                  action="{{ route('admin.coupons.store') }}" class="coupon-form">
+            <div class="coupons-edit-card-icon">
+                <i class="bi bi-ticket-perforated"></i>
+            </div>
+
+            <div class="coupons-edit-card-title">
+                <strong>New Coupon</strong>
+                <span>
+                    Fill in the information associated with this coupon.
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="coupons-edit-card-body">
+
+            {{-- VALIDATION ERRORS --}}
+            @if($errors->any())
+
+                <div class="coupons-edit-errors">
+
+                    <div class="coupons-edit-errors-title">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Please fix the following errors:
+                    </div>
+
+                    <ul>
+
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+
+                    </ul>
+
+                </div>
+
+            @endif
+
+
+            <form action="{{ route('admin.coupons.store') }}"
+                  method="POST">
 
                 @csrf
 
-                <div class="row g-4">
 
-                    {{-- Code --}}
-                    <div class="col-md-6">
+                {{-- COUPON INFORMATION --}}
+                <div class="coupons-edit-section">
 
-                        <label class="form-label fw-semibold">
-                            Coupon Code
-                        </label>
-
-                        <input type="text"
-                               name="code"
-                               value="{{ old('code') }}"
-                               class="form-control @error('code') is-invalid @enderror"
-                               placeholder="WELCOME10">
-
-                        @error('code')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
+                    <div class="coupons-edit-section-heading">
+                        <i class="bi bi-ticket-perforated"></i>
+                        <span>Coupon Information</span>
                     </div>
 
 
-                    {{-- Type --}}
-                    <div class="col-md-6">
-
-                        <label class="form-label fw-semibold">
-                            Discount Type
-                        </label>
-
-                        <select name="type"
-                                id="couponType"
-                                class="form-select @error('type') is-invalid @enderror">
-
-                            <option value="">
-                                Select Type
-                            </option>
+                    <div class="coupons-edit-grid">
 
-                            <option value="percentage"
-                                {{ old('type') == 'percentage' ? 'selected' : '' }}>
-                                Percentage (%)
-                            </option>
+                        {{-- CODE --}}
+                        <div class="coupons-edit-field span-6">
 
-                            <option value="fixed"
-                                {{ old('type') == 'fixed' ? 'selected' : '' }}>
-                                Fixed Amount ($)
-                            </option>
+                            <label for="code"
+                                   class="coupons-edit-label">
 
-                        </select>
+                                Coupon Code
+                                <span class="required">*</span>
 
-                        @error('type')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                            </label>
 
-                    </div>
-
-
-                    {{-- Value --}}
-                    <div class="col-md-6">
+                            <input
+                                id="code"
+                                type="text"
+                                name="code"
+                                class="coupons-edit-input @error('code') is-invalid @enderror"
+                                placeholder="WELCOME10"
+                                value="{{ old('code') }}"
+                            >
 
-                        <label class="form-label fw-semibold">
-                            Discount Value
-                        </label>
+                            @error('code')
+                                <div class="coupons-edit-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                        <input type="number"
-                               name="value"
-                               value="{{ old('value') }}"
-                               step="0.01"
-                               min="0.01"
-                               class="form-control @error('value') is-invalid @enderror"
-                               placeholder="10">
+                        </div>
 
-                        @error('value')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
 
-                    </div>
+                        {{-- TYPE --}}
+                        <div class="coupons-edit-field span-6">
 
+                            <label for="type"
+                                   class="coupons-edit-label">
 
-                    {{-- Minimum Order --}}
-                    <div class="col-md-6">
+                                Discount Type
+                                <span class="required">*</span>
 
-                        <label class="form-label fw-semibold">
-                            Minimum Order Amount
-                        </label>
+                            </label>
 
-                        <input type="number"
-                               name="minimum_order_amount"
-                               value="{{ old('minimum_order_amount', 0) }}"
-                               step="0.01"
-                               min="0"
-                               class="form-control @error('minimum_order_amount') is-invalid @enderror"
-                               placeholder="20">
+                            <select
+                                id="type"
+                                name="type"
+                                class="coupons-edit-select @error('type') is-invalid @enderror"
+                            >
 
-                        @error('minimum_order_amount')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                                <option value="">
+                                    Select Type
+                                </option>
 
-                    </div>
+                                <option value="percentage"
+                                    @selected(old('type') === 'percentage')>
+                                    Percentage (%)
+                                </option>
 
+                                <option value="fixed"
+                                    @selected(old('type') === 'fixed')>
+                                    Fixed Amount ($)
+                                </option>
 
-                    {{-- Maximum Discount --}}
-                    <div class="col-md-6">
+                            </select>
 
-                        <label class="form-label fw-semibold">
-                            Maximum Discount Amount
-                        </label>
+                            @error('type')
+                                <div class="coupons-edit-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                        <input type="number"
-                               name="maximum_discount_amount"
-                               value="{{ old('maximum_discount_amount') }}"
-                               step="0.01"
-                               min="0"
-                               class="form-control @error('maximum_discount_amount') is-invalid @enderror"
-                               placeholder="50">
+                        </div>
 
-                        <small class="text-muted">
-                            Mainly useful for percentage coupons.
-                        </small>
 
-                        @error('maximum_discount_amount')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        {{-- VALUE --}}
+                        <div class="coupons-edit-field span-6">
 
-                    </div>
+                            <label for="value"
+                                   class="coupons-edit-label">
 
+                                Discount Value
+                                <span class="required">*</span>
 
-                    {{-- Usage Limit --}}
-                    <div class="col-md-6">
+                            </label>
 
-                        <label class="form-label fw-semibold">
-                            Usage Limit
-                        </label>
+                            <input
+                                id="value"
+                                type="number"
+                                name="value"
+                                step="0.01"
+                                min="0.01"
+                                class="coupons-edit-input @error('value') is-invalid @enderror"
+                                placeholder="10"
+                                value="{{ old('value') }}"
+                            >
 
-                        <input type="number"
-                               name="usage_limit"
-                               value="{{ old('usage_limit') }}"
-                               min="1"
-                               class="form-control @error('usage_limit') is-invalid @enderror"
-                               placeholder="100">
+                            @error('value')
+                                <div class="coupons-edit-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                        <small class="text-muted">
-                            Leave empty for unlimited usage.
-                        </small>
+                        </div>
 
-                        @error('usage_limit')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
 
-                    </div>
+                        {{-- MINIMUM ORDER --}}
+                        <div class="coupons-edit-field span-6">
 
+                            <label for="minimum_order_amount"
+                                   class="coupons-edit-label">
 
-                    {{-- Starts --}}
-                    <div class="col-md-6">
+                                Minimum Order Amount
 
-                        <label class="form-label fw-semibold">
-                            Starts At
-                        </label>
+                            </label>
 
-                        <input type="datetime-local"
-                               name="starts_at"
-                               value="{{ old('starts_at') }}"
-                               class="form-control @error('starts_at') is-invalid @enderror">
+                            <input
+                                id="minimum_order_amount"
+                                type="number"
+                                name="minimum_order_amount"
+                                step="0.01"
+                                min="0"
+                                class="coupons-edit-input @error('minimum_order_amount') is-invalid @enderror"
+                                placeholder="20"
+                                value="{{ old('minimum_order_amount', 0) }}"
+                            >
 
-                        @error('starts_at')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                            @error('minimum_order_amount')
+                                <div class="coupons-edit-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                    </div>
+                        </div>
 
 
-                    {{-- Expires --}}
-                    <div class="col-md-6">
+                        {{-- MAXIMUM DISCOUNT --}}
+                        <div class="coupons-edit-field span-6">
 
-                        <label class="form-label fw-semibold">
-                            Expires At
-                        </label>
+                            <label for="maximum_discount_amount"
+                                   class="coupons-edit-label">
 
-                        <input type="datetime-local"
-                               name="expires_at"
-                               value="{{ old('expires_at') }}"
-                               class="form-control @error('expires_at') is-invalid @enderror">
+                                Maximum Discount Amount
 
-                        @error('expires_at')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                            </label>
 
-                    </div>
+                            <input
+                                id="maximum_discount_amount"
+                                type="number"
+                                name="maximum_discount_amount"
+                                step="0.01"
+                                min="0"
+                                class="coupons-edit-input @error('maximum_discount_amount') is-invalid @enderror"
+                                placeholder="50"
+                                value="{{ old('maximum_discount_amount') }}"
+                            >
 
+                            @error('maximum_discount_amount')
+                                <div class="coupons-edit-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                    {{-- Status --}}
-                    <div class="col-md-6">
+                        </div>
 
-                        <label class="form-label fw-semibold">
-                            Status
-                        </label>
 
-                        <select name="status"
-                                class="form-select">
+                        {{-- USAGE LIMIT --}}
+                        <div class="coupons-edit-field span-6">
 
-                            <option value="1"
-                                {{ old('status', '1') == '1' ? 'selected' : '' }}>
-                                Active
-                            </option>
+                            <label for="usage_limit"
+                                   class="coupons-edit-label">
 
-                            <option value="0"
-                                {{ old('status') == '0' ? 'selected' : '' }}>
-                                Inactive
-                            </option>
+                                Usage Limit
 
-                        </select>
+                            </label>
 
-                    </div>
+                            <input
+                                id="usage_limit"
+                                type="number"
+                                name="usage_limit"
+                                min="1"
+                                class="coupons-edit-input @error('usage_limit') is-invalid @enderror"
+                                placeholder="100"
+                                value="{{ old('usage_limit') }}"
+                            >
 
-
-                    {{-- Buttons --}}
-                    <div class="col-12">
-
-                        <hr>
-
-                        <div class="d-flex justify-content-end gap-2">
-
-                            <a href="{{ route('admin.coupons.index') }}"
-                               class="btn btn-light">
-
-                                Cancel
-
-                            </a>
-
-                            <button type="submit"
-                                    class="btn btn-primary">
-
-                                <i class="bi bi-check-lg me-2"></i>
-
-                                Create Coupon
-
-                            </button>
+                            @error('usage_limit')
+                                <div class="coupons-edit-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
                         </div>
 
                     </div>
+
+                </div>
+
+
+                {{-- VALIDITY & STATUS --}}
+                <div class="coupons-edit-section">
+
+                    <div class="coupons-edit-section-heading">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Validity & Status</span>
+                    </div>
+
+
+                    <div class="coupons-edit-grid">
+
+                        {{-- STARTS AT --}}
+                        <div class="coupons-edit-field span-6">
+
+                            <label for="starts_at"
+                                   class="coupons-edit-label">
+
+                                Starts At
+
+                            </label>
+
+                            <input
+                                id="starts_at"
+                                type="datetime-local"
+                                name="starts_at"
+                                class="coupons-edit-input @error('starts_at') is-invalid @enderror"
+                                value="{{ old('starts_at') }}"
+                            >
+
+                            @error('starts_at')
+                                <div class="coupons-edit-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+
+                        {{-- EXPIRES AT --}}
+                        <div class="coupons-edit-field span-6">
+
+                            <label for="expires_at"
+                                   class="coupons-edit-label">
+
+                                Expires At
+
+                            </label>
+
+                            <input
+                                id="expires_at"
+                                type="datetime-local"
+                                name="expires_at"
+                                class="coupons-edit-input @error('expires_at') is-invalid @enderror"
+                                value="{{ old('expires_at') }}"
+                            >
+
+                            @error('expires_at')
+                                <div class="coupons-edit-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+
+                        {{-- STATUS --}}
+                        <div class="coupons-edit-field span-6">
+
+                            <label for="status"
+                                   class="coupons-edit-label">
+
+                                Status
+
+                            </label>
+
+                            <select
+                                id="status"
+                                name="status"
+                                class="coupons-edit-select"
+                            >
+
+                                <option value="1"
+                                    @selected(old('status', '1') == '1')>
+                                    Active
+                                </option>
+
+                                <option value="0"
+                                    @selected(old('status') == '0')>
+                                    Inactive
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- ACTIONS --}}
+                <div class="coupons-edit-footer">
+
+                    <a href="{{ route('admin.coupons.index') }}"
+                       class="coupons-edit-cancel">
+
+                        <i class="bi bi-x-lg"></i>
+                        Cancel
+
+                    </a>
+
+                    <button type="submit"
+                            class="coupons-edit-submit">
+
+                        <i class="bi bi-check-circle"></i>
+                        Create Coupon
+
+                    </button>
 
                 </div>
 
@@ -314,3 +423,4 @@
 </div>
 
 @endsection
+

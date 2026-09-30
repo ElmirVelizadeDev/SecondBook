@@ -2,47 +2,87 @@
 
 @section('title', 'Edit Payment')
 
-@push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/payments.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/orders.css') }}"> <link rel="stylesheet" href="{{ asset('admin/css/payments.css') }}">
 @endpush
 
 @section('content')
 
-<div class="container-fluid p-4">
+<div class="orders-edit-page">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
 
-    <div>
-        <h2 class="fw-bold mb-1">
-            <i class="bi bi-pencil-square me-2"></i>
-            Edit Payment
-        </h2>
+{{-- =========================================================
+     HEADER
+     ========================================================= --}}
 
-        <p class="text-muted mb-0">
-            Update payment information and status.
+<div class="orders-edit-header">
+
+    <div class="orders-edit-heading">
+
+        <div class="orders-edit-eyebrow">
+            <i class="bi bi-credit-card"></i>
+            Payment Management
+        </div>
+
+        <h1>Edit Payment</h1>
+
+        <p>
+            Update transaction, order, payment and status information.
         </p>
+
     </div>
 
     <a href="{{ route('admin.payments.index') }}"
-       class="btn btn-secondary">
+       class="orders-edit-back">
 
-        <i class="bi bi-arrow-left me-2"></i>
-        Back
+        <i class="bi bi-arrow-left"></i>
+        <span>Back to Payments</span>
 
     </a>
 
 </div>
 
 
-<div class="card border-0 shadow-sm">
+{{-- =========================================================
+     MAIN CARD
+     ========================================================= --}}
 
-    <div class="card-body p-4">
+<div class="orders-edit-card">
+
+    <div class="orders-edit-card-header">
+
+        <div class="orders-edit-card-icon">
+            <i class="bi bi-credit-card"></i>
+        </div>
+
+        <div class="orders-edit-card-title">
+
+            <strong>Payment #{{ $payment->id }}</strong>
+
+            <span>
+                Modify the information associated with this payment.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="orders-edit-card-body">
+
+        {{-- =================================================
+             ERRORS
+             ================================================= --}}
 
         @if($errors->any())
 
-            <div class="alert alert-danger">
+            <div class="orders-edit-errors">
 
-                <ul class="mb-0">
+                <div class="orders-edit-errors-title">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Please fix the following errors:
+                </div>
+
+                <ul>
 
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -55,200 +95,387 @@
         @endif
 
 
-        <form action="{{ route('admin.payments.update', $payment->id) }}"
-              method="POST"
-              class="payment-form">
+        <form
+            action="{{ route('admin.payments.update', $payment->id) }}"
+            method="POST"
+        >
 
             @csrf
             @method('PUT')
 
 
-            <div class="row g-4">
+            {{-- =================================================
+                 TRANSACTION & ORDER
+                 ================================================= --}}
 
+            <div class="orders-edit-section">
 
-                {{-- Transaction ID --}}
-                <div class="col-md-6">
+                <div class="orders-edit-section-heading">
 
-                    <label class="form-label">
-                        Transaction ID
-                    </label>
+                    <i class="bi bi-receipt"></i>
 
-                    <input type="text"
-                           class="form-control"
-                           value="{{ $payment->transaction_id }}"
-                           disabled>
+                    <span>Transaction & Order</span>
 
                 </div>
 
 
-                {{-- Order --}}
-                <div class="col-md-6">
+                <div class="orders-edit-grid">
 
-                    <label class="form-label">
-                        Order
-                    </label>
+                    {{-- Transaction ID --}}
 
-                    <select name="order_id"
-                            class="form-select"
-                            required>
+                    <div class="orders-edit-field span-6">
 
-                        @foreach($orders as $order)
+                        <label
+                            for="transaction_id"
+                            class="orders-edit-label"
+                        >
+                            Transaction ID
+                        </label>
 
-                            <option value="{{ $order->id }}"
-                                {{ $payment->order_id == $order->id ? 'selected' : '' }}>
+                        <input
+                            id="transaction_id"
+                            type="text"
+                            class="orders-edit-input"
+                            value="{{ $payment->transaction_id }}"
+                            disabled
+                        >
 
-                                {{ $order->order_number }}
-                                -
-                                {{ $order->user->first_name }}
-                                {{ $order->user->last_name }}
-
-                            </option>
-
-                        @endforeach
-
-                    </select>
-
-                </div>
+                    </div>
 
 
-                {{-- Amount --}}
-                <div class="col-md-6">
+                    {{-- Order --}}
 
-                    <label class="form-label">
-                        Amount
-                    </label>
+                    <div class="orders-edit-field span-6">
 
-                    <input type="number"
-                           name="amount"
-                           class="form-control"
-                           step="0.01"
-                           min="0"
-                           value="{{ $payment->amount }}"
-                           required>
+                        <label
+                            for="order_id"
+                            class="orders-edit-label"
+                        >
+                            Order
+                            <span class="required">*</span>
+                        </label>
 
-                </div>
+                        <select
+                            id="order_id"
+                            name="order_id"
+                            class="orders-edit-select"
+                            required
+                        >
 
+                            @foreach($orders as $order)
 
-                {{-- Payment Method --}}
-                <div class="col-md-6">
+                                <option
+                                    value="{{ $order->id }}"
+                                    @selected($payment->order_id == $order->id)
+                                >
+                                    {{ $order->order_number }}
+                                    -
+                                    {{ trim(
+                                        ($order->user->first_name ?? '') . ' ' .
+                                        ($order->user->last_name ?? '')
+                                    ) ?: ($order->user->name ?? $order->user->username ?? 'User') }}
+                                </option>
 
-                    <label class="form-label">
-                        Payment Method
-                    </label>
+                            @endforeach
 
-                    <select name="payment_method"
-                            class="form-select"
-                            required>
+                        </select>
 
-                        <option value="cash_on_delivery"
-                            {{ $payment->payment_method == 'cash_on_delivery' ? 'selected' : '' }}>
-                            Cash On Delivery
-                        </option>
-
-                        <option value="credit_card"
-                            {{ $payment->payment_method == 'credit_card' ? 'selected' : '' }}>
-                            Credit Card
-                        </option>
-
-                        <option value="debit_card"
-                            {{ $payment->payment_method == 'debit_card' ? 'selected' : '' }}>
-                            Debit Card
-                        </option>
-
-                        <option value="paypal"
-                            {{ $payment->payment_method == 'paypal' ? 'selected' : '' }}>
-                            PayPal
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                {{-- Payment Status --}}
-                <div class="col-md-6">
-
-                    <label class="form-label">
-                        Payment Status
-                    </label>
-
-                    <select name="payment_status"
-                            class="form-select"
-                            required>
-
-                        <option value="pending"
-                            {{ $payment->payment_status == 'pending' ? 'selected' : '' }}>
-                            Pending
-                        </option>
-
-                        <option value="paid"
-                            {{ $payment->payment_status == 'paid' ? 'selected' : '' }}>
-                            Paid
-                        </option>
-
-                        <option value="failed"
-                            {{ $payment->payment_status == 'failed' ? 'selected' : '' }}>
-                            Failed
-                        </option>
-
-                        <option value="refunded"
-                            {{ $payment->payment_status == 'refunded' ? 'selected' : '' }}>
-                            Refunded
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                {{-- Paid At --}}
-                <div class="col-md-6">
-
-                    <label class="form-label">
-                        Paid At
-                    </label>
-
-                    <input type="datetime-local"
-                           name="paid_at"
-                           class="form-control"
-                           value="{{ $payment->paid_at ? $payment->paid_at->format('Y-m-d\TH:i') : '' }}">
-
-                </div>
-
-
-                {{-- Note --}}
-                <div class="col-12">
-
-                    <label class="form-label">
-                        Note
-                    </label>
-
-                    <textarea name="note"
-                              class="form-control"
-                              rows="3">{{ $payment->note }}</textarea>
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <div class="mt-4 text-end">
+            {{-- =================================================
+                 PAYMENT INFORMATION
+                 ================================================= --}}
 
-                <button type="submit"
-                        class="btn btn-primary">
+            <div class="orders-edit-section">
 
-                    <i class="bi bi-check-circle me-2"></i>
+                <div class="orders-edit-section-heading">
+
+                    <i class="bi bi-wallet2"></i>
+
+                    <span>Payment Information</span>
+
+                </div>
+
+
+                <div class="orders-edit-grid">
+
+                    {{-- Amount --}}
+
+                    <div class="orders-edit-field span-6">
+
+                        <label
+                            for="amount"
+                            class="orders-edit-label"
+                        >
+                            Amount
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            id="amount"
+                            type="number"
+                            name="amount"
+                            class="orders-edit-input"
+                            step="0.01"
+                            min="0"
+                            value="{{ old('amount', $payment->amount) }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    {{-- Payment Method --}}
+
+                    <div class="orders-edit-field span-6">
+
+                        <label
+                            for="payment_method"
+                            class="orders-edit-label"
+                        >
+                            Payment Method
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            id="payment_method"
+                            name="payment_method"
+                            class="orders-edit-select"
+                            required
+                        >
+
+                            <option
+                                value="cash_on_delivery"
+                                @selected(
+                                    old(
+                                        'payment_method',
+                                        $payment->payment_method
+                                    ) === 'cash_on_delivery'
+                                )
+                            >
+                                Cash On Delivery
+                            </option>
+
+                            <option
+                                value="credit_card"
+                                @selected(
+                                    old(
+                                        'payment_method',
+                                        $payment->payment_method
+                                    ) === 'credit_card'
+                                )
+                            >
+                                Credit Card
+                            </option>
+
+                            <option
+                                value="debit_card"
+                                @selected(
+                                    old(
+                                        'payment_method',
+                                        $payment->payment_method
+                                    ) === 'debit_card'
+                                )
+                            >
+                                Debit Card
+                            </option>
+
+                            <option
+                                value="paypal"
+                                @selected(
+                                    old(
+                                        'payment_method',
+                                        $payment->payment_method
+                                    ) === 'paypal'
+                                )
+                            >
+                                PayPal
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    {{-- Payment Status --}}
+
+                    <div class="orders-edit-field span-6">
+
+                        <label
+                            for="payment_status"
+                            class="orders-edit-label"
+                        >
+                            Payment Status
+                        </label>
+
+                        <select
+                            id="payment_status"
+                            name="payment_status"
+                            class="orders-edit-select"
+                        >
+
+                            <option
+                                value="pending"
+                                @selected(
+                                    old(
+                                        'payment_status',
+                                        $payment->payment_status
+                                    ) === 'pending'
+                                )
+                            >
+                                Pending
+                            </option>
+
+                            <option
+                                value="paid"
+                                @selected(
+                                    old(
+                                        'payment_status',
+                                        $payment->payment_status
+                                    ) === 'paid'
+                                )
+                            >
+                                Paid
+                            </option>
+
+                            <option
+                                value="failed"
+                                @selected(
+                                    old(
+                                        'payment_status',
+                                        $payment->payment_status
+                                    ) === 'failed'
+                                )
+                            >
+                                Failed
+                            </option>
+
+                            <option
+                                value="refunded"
+                                @selected(
+                                    old(
+                                        'payment_status',
+                                        $payment->payment_status
+                                    ) === 'refunded'
+                                )
+                            >
+                                Refunded
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    {{-- Paid At --}}
+
+                    <div class="orders-edit-field span-6">
+
+                        <label
+                            for="paid_at"
+                            class="orders-edit-label"
+                        >
+                            Paid At
+                        </label>
+
+                        <input
+                            id="paid_at"
+                            type="datetime-local"
+                            name="paid_at"
+                            class="orders-edit-input"
+                            value="{{ old(
+                                'paid_at',
+                                $payment->paid_at
+                                    ? $payment->paid_at->format('Y-m-d\TH:i')
+                                    : ''
+                            ) }}"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- =================================================
+                 PAYMENT NOTE
+                 ================================================= --}}
+
+            <div class="orders-edit-section">
+
+                <div class="orders-edit-section-heading">
+
+                    <i class="bi bi-chat-left-text"></i>
+
+                    <span>Payment Note</span>
+
+                </div>
+
+
+                <div class="orders-edit-grid">
+
+                    <div class="orders-edit-field span-12">
+
+                        <label
+                            for="note"
+                            class="orders-edit-label"
+                        >
+                            Note
+                        </label>
+
+                        <textarea
+                            id="note"
+                            name="note"
+                            class="orders-edit-textarea"
+                            rows="3"
+                            placeholder="Add an internal note about this payment..."
+                        >{{ old('note', $payment->note) }}</textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- =================================================
+                 ACTIONS
+                 ================================================= --}}
+
+            <div class="orders-edit-footer">
+
+                <a
+                    href="{{ route('admin.payments.index') }}"
+                    class="orders-edit-cancel"
+                >
+                    <i class="bi bi-x-lg"></i>
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="orders-edit-submit"
+                >
+                    <i class="bi bi-check-circle"></i>
                     Update Payment
-
                 </button>
 
             </div>
+
 
         </form>
 
     </div>
 
 </div>
+
 
 </div>
 

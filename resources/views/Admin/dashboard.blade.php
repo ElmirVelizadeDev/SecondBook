@@ -4,488 +4,352 @@
 
 @section('content')
 
-<div class="dashboard-section">
+@php
 
-{{-- =========================================
-    HERO SECTION
-========================================= --}}
+    /* ---------- Status maps (same statuses as before) ---------- */
 
-<div class="hero-section mb-4">
+    $bookStatus = [
+        'approved' => ['green', 'Approved'],
+        'pending'  => ['amber', 'Pending'],
+        'rejected' => ['red',   'Rejected'],
+    ];
 
-    <div class="hero-content">
+    $orderStatus = [
+        'pending'    => ['amber', 'Pending'],
+        'processing' => ['blue',  'Processing'],
+        'shipped'    => ['cyan',  'Shipped'],
+        'delivered'  => ['green', 'Delivered'],
+        'cancelled'  => ['red',   'Cancelled'],
+    ];
 
-        <span class="hero-badge">
-            <i class="bi bi-stars"></i>
-            SecondBook Admin
-        </span>
+    /* ---------- Stat cards ---------- */
 
-        <h2>Welcome Back, Admin 👋</h2>
+    $stats = [
+        ['Total Books', $totalBooks,      'bi-book',          'blue',  'admin.books.index'],
+        ['Total Users', $totalUsers,      'bi-people',        'green', 'admin.users.index'],
+        ['Categories',  $totalCategories, 'bi-grid',          'amber', 'admin.categories.index'],
+        ['Authors',     $totalAuthors,    'bi-pencil-square', 'rose',  'admin.authors.index'],
+    ];
 
-        <p>
-            Manage your books, users and categories from one place.
-        </p>
+    /* ---------- Hero "latest month" glance ---------- */
 
-            <div class="hero-buttons">
+    $glanceLabel   = collect($monthlyLabels)->last();
+    $glanceOrders  = collect($monthlyOrders)->last() ?? 0;
+    $glanceRevenue = collect($monthlyRevenue)->last() ?? 0;
 
-                <a href="{{ route('admin.books.index') }}" class="btn btn-light">
-                    <i class="bi bi-book me-2"></i>
-                    View Books
-                </a>
+@endphp
 
-                <a href="{{ route('admin.books.create') }}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle me-2"></i>
+<div class="dashboard-section dx-page">
+
+    {{-- =========================================
+        HERO
+    ========================================= --}}
+    <div class="dx-hero">
+
+        <div class="dx-hero-body">
+
+            <div class="dx-hero-crumb">
+                <i class="bi bi-speedometer2"></i>
+                SecondBook Admin
+            </div>
+
+            <h1>Welcome back, Admin</h1>
+
+            <p>Manage your books, users and categories from one place.</p>
+
+            <div class="dx-hero-actions">
+
+                <a href="{{ route('admin.books.create') }}" class="dx-btn dx-btn-primary">
+                    <i class="bi bi-plus-lg"></i>
                     Add Book
                 </a>
 
-            </div>
-
-        </div>
-
-        <div class="hero-icon">
-
-            <i class="bi bi-book-half"></i>
-
-        </div>
-
-    </div>
-</div>
-
-{{-- =========================================
-    STATISTICS CARDS
-========================================= --}}
-
-<div class="row g-4 mx-2 ">
-
-    <div class="col-12 col-sm-6 col-xl-3">
-
-        <div class="dashboard-card blue">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <h6 class="mb-0">
-                    Total Books
-                </h6>
-
-                <div class="card-icon blue">
+                <a href="{{ route('admin.books.index') }}" class="dx-btn dx-btn-ghost">
                     <i class="bi bi-book"></i>
-                </div>
-
-            </div>
-
-            <h2 class="mt-4 mb-1">{{ $totalBooks }}</h2>
-
-            <p class="text-success mb-0">
-                <i class="bi bi-arrow-up"></i>
-                0% This Month
-            </p>
-
-            <div class="dashboard-card-footer">
-
-                <a href="{{ route('admin.books.index') }}">
-                    View Details
-                    <i class="bi bi-arrow-right ms-1"></i>
+                    View Books
                 </a>
 
             </div>
 
         </div>
 
-    </div>
+        <div class="dx-hero-glance">
 
-    <div class="col-12 col-sm-6 col-xl-3">
-
-        <div class="dashboard-card">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <h6 class="mb-0">
-                    Total Users
-                </h6>
-
-                <div class="card-icon green">
-                    <i class="bi bi-people"></i>
-                </div>
-
+            <div class="dx-glance-title">
+                <i class="bi bi-calendar3"></i>
+                {{ $glanceLabel ?: 'Latest month' }}
             </div>
 
-            <h2 class="mt-4 mb-1">{{ $totalUsers }}</h2>
+            <div class="dx-glance-row">
+                <span>Orders</span>
+                <strong>{{ number_format((float) $glanceOrders) }}</strong>
+            </div>
 
-            <p class="text-success mb-0">
-                <i class="bi bi-arrow-up"></i>
-                0% This Month
-            </p>
-
-            <div class="dashboard-card-footer">
-
-                <a href="{{ route('admin.users.index') }}">
-                    View Details
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-
+            <div class="dx-glance-row">
+                <span>Revenue</span>
+                <strong>{{ number_format((float) $glanceRevenue, 2) }}<small>AZN</small></strong>
             </div>
 
         </div>
 
     </div>
 
-    <div class="col-12 col-sm-6 col-xl-3">
 
-        <div class="dashboard-card">
+    {{-- =========================================
+        STATISTICS
+    ========================================= --}}
+    <div class="dx-stats">
 
-            <div class="d-flex justify-content-between align-items-center">
+        @foreach($stats as [$label, $value, $icon, $tone, $routeName])
 
-                <h6 class="mb-0">
-                    Categories
-                </h6>
+            <div class="dx-stat">
 
-                <div class="card-icon orange">
-                    <i class="bi bi-grid"></i>
+                <div class="dx-stat-top">
+                    <span class="dx-stat-label">{{ $label }}</span>
+
+                    <span class="dx-chip dx-tone-{{ $tone }}">
+                        <i class="bi {{ $icon }}"></i>
+                    </span>
                 </div>
 
-            </div>
+                <div class="dx-stat-value">{{ number_format((float) $value) }}</div>
 
-            <h2 class="mt-4 mb-1">{{ $totalCategories }}</h2>
-
-            <p class="text-success mb-0">
-                <i class="bi bi-arrow-up"></i>
-                0% This Month
-            </p>
-
-            <div class="dashboard-card-footer">
-
-                <a href="{{ route('admin.categories.index') }}">
-                    View Details
-                    <i class="bi bi-arrow-right ms-1"></i>
+                <a href="{{ route($routeName) }}" class="dx-stat-link">
+                    View details
+                    <i class="bi bi-arrow-right"></i>
                 </a>
 
             </div>
 
-        </div>
+        @endforeach
 
     </div>
 
-    <div class="col-12 col-sm-6 col-xl-3">
 
-        <div class="dashboard-card">
+    {{-- =========================================
+        CHART & ACTIVITY
+    ========================================= --}}
+    <div class="dx-split">
 
-            <div class="d-flex justify-content-between align-items-center">
+        <div class="dx-panel">
 
-                <h6 class="mb-0">
-                    Authors
-                </h6>
+            <div class="dx-panel-head">
 
-                <div class="card-icon red">
-                    <i class="bi bi-pencil-square"></i>
+                <div>
+                    <h2>Monthly Overview</h2>
+                    <p>Orders and revenue by month</p>
+                </div>
+
+                <div class="dx-legend">
+                    <span><i></i>Orders</span>
+                    <span><i></i>Revenue</span>
                 </div>
 
             </div>
 
-            <h2 class="mt-4 mb-1">{{ $totalAuthors }}</h2>
-
-            <p class="text-success mb-0">
-                <i class="bi bi-arrow-up"></i>
-                0% This Month
-            </p>
-
-            <div class="dashboard-card-footer">
-
-                <a href="{{ route('admin.authors.index') }}">
-                    View Details
-                    <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-</div>
-
-{{-- =========================================
-    CHART & ACTIVITY
-========================================= --}}
-
-<div class="row g-4 mx-2 mt-2 mt-md-4">
-
-    <!-- Left Side -->
-    <div class="col-12 col-lg-8">
-
-        <div class="dashboard-panel">
-
-            <div class="panel-header">
-
-                <h5>Monthly Overview</h5>
-
-                <button class="btn btn-light btn-sm">
-                    This Month
-                </button>
-
-            </div>
-
-            <div class="chart-container">
+            <div class="dx-chart">
                 <canvas id="monthlyOverviewChart"></canvas>
             </div>
 
         </div>
 
-    </div>
 
-    <!-- Right Side -->
-    <div class="col-12 col-lg-4">
+        <div class="dx-panel">
 
-        <div class="dashboard-panel">
-
-            <div class="panel-header">
-                <h5>Recent Activity</h5>
+            <div class="dx-panel-head">
+                <div>
+                    <h2>Recent Activity</h2>
+                    <p>Latest changes on the platform</p>
+                </div>
             </div>
 
-            <div class="activity-list">
+            @if($recentBooks->isNotEmpty() || $recentUsers->isNotEmpty() || $recentCategories->isNotEmpty())
 
-                @if($recentBooks->isNotEmpty())
+                <ul class="dx-activity">
 
-                    <div class="activity-item">
+                    @if($recentBooks->isNotEmpty())
+                        <li>
+                            <span class="dx-chip dx-tone-blue"><i class="bi bi-book"></i></span>
+                            <div>
+                                <strong>New Book Added</strong>
+                                <p>{{ $recentBooks->first()->title }}</p>
+                                @if($recentBooks->first()->created_at)
+                                    <small>{{ $recentBooks->first()->created_at->diffForHumans() }}</small>
+                                @endif
+                            </div>
+                        </li>
+                    @endif
 
-                        <div class="activity-icon bg-primary">
-                            <i class="bi bi-book"></i>
-                        </div>
+                    @if($recentUsers->isNotEmpty())
+                        <li>
+                            <span class="dx-chip dx-tone-green"><i class="bi bi-person"></i></span>
+                            <div>
+                                <strong>New User</strong>
+                                <p>{{ $recentUsers->first()->name }} registered</p>
+                                @if($recentUsers->first()->created_at)
+                                    <small>{{ $recentUsers->first()->created_at->diffForHumans() }}</small>
+                                @endif
+                            </div>
+                        </li>
+                    @endif
 
-                        <div>
-                            <strong>New Book Added</strong>
-                            <p>{{ $recentBooks->first()->title }}</p>
-                        </div>
+                    @if($recentCategories->isNotEmpty())
+                        <li>
+                            <span class="dx-chip dx-tone-amber"><i class="bi bi-grid"></i></span>
+                            <div>
+                                <strong>Category Created</strong>
+                                <p>{{ $recentCategories->first()->name }}</p>
+                                @if($recentCategories->first()->created_at)
+                                    <small>{{ $recentCategories->first()->created_at->diffForHumans() }}</small>
+                                @endif
+                            </div>
+                        </li>
+                    @endif
 
-                    </div>
+                </ul>
 
-                @endif
+            @else
 
-                @if($recentUsers->isNotEmpty())
+                <div class="dx-empty">
+                    <i class="bi bi-inbox"></i>
+                    <strong>No activity yet</strong>
+                    <span>New books, users and categories will show up here.</span>
+                </div>
 
-                    <div class="activity-item">
-
-                        <div class="activity-icon bg-success">
-                            <i class="bi bi-person"></i>
-                        </div>
-
-                        <div>
-                            <strong>New User</strong>
-                            <p>{{ $recentUsers->first()->name }} registered</p>
-                        </div>
-
-                    </div>
-
-                @endif
-
-                @if($recentCategories->isNotEmpty())
-
-                    <div class="activity-item">
-
-                        <div class="activity-icon bg-warning">
-                            <i class="bi bi-grid"></i>
-                        </div>
-
-                        <div>
-                            <strong>Category Created</strong>
-                            <p>{{ $recentCategories->first()->name }}</p>
-                        </div>
-
-                    </div>
-
-                @endif
-
-            </div>
+            @endif
 
         </div>
 
     </div>
 
-</div>
 
-{{-- =========================================
-    RECENT BOOKS
-========================================= --}}
+    {{-- =========================================
+        RECENT BOOKS
+    ========================================= --}}
+    <div class="dx-panel">
 
-<div class="dashboard-panel mx-2 mt-2 mt-md-4">
+        <div class="dx-panel-head">
 
-    <div class="panel-header">
+            <div>
+                <h2>Recent Books</h2>
+                <p>The latest titles added to the marketplace</p>
+            </div>
 
-        <h5>Recent Books</h5>
+            <a href="{{ route('admin.books.index') }}" class="dx-btn dx-btn-soft">
+                View all
+                <i class="bi bi-arrow-right"></i>
+            </a>
 
-        <a href="{{ route('admin.books.index') }}" class="btn btn-primary btn-sm">
-            View All
-        </a>
+        </div>
 
-    </div>
+        <div class="dx-table-wrap">
 
-    <div class="table-responsive">
+            <table class="dx-table">
 
-        <table class="table table-hover align-middle mb-0">
-
-            <thead>
-                <tr>
-                    <th>Book</th>
-                    <th class="d-none d-md-table-cell">Category</th>
-                    <th class="d-none d-lg-table-cell">Seller</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                @forelse($recentBooks as $book)
-
+                <thead>
                     <tr>
+                        <th>Book</th>
+                        <th class="dx-hide-md">Category</th>
+                        <th class="dx-hide-lg">Seller</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
 
-                        {{-- Book --}}
-                        <td>
+                <tbody>
 
-                            <div class="d-flex align-items-center gap-3">
+                    @forelse($recentBooks as $book)
 
-                                @if($book->cover)
+                        <tr>
 
-                                    <img
-                                        src="{{ asset('storage/' . $book->cover) }}"
-                                        alt="{{ $book->title }}"
-                                        width="45"
-                                        height="55"
-                                        style="object-fit: cover; border-radius: 8px;"
-                                    >
+                            <td>
+                                <div class="dx-book">
 
-                                @else
-
-                                    <div
-                                        class="d-flex align-items-center justify-content-center"
-                                        style="
-                                            width: 45px;
-                                            height: 55px;
-                                            border-radius: 8px;
-                                            background: #f1f5f9;
-                                        "
-                                    >
-                                        <i class="bi bi-book"></i>
+                                    <div class="dx-cover">
+                                        @if($book->cover)
+                                            <img
+                                                src="{{ asset('storage/' . $book->cover) }}"
+                                                alt="{{ $book->title }}"
+                                                loading="lazy"
+                                            >
+                                        @else
+                                            <i class="bi bi-book"></i>
+                                        @endif
                                     </div>
 
-                                @endif
+                                    <div>
+                                        <span class="dx-title">{{ $book->title }}</span>
 
-                                <div>
-
-                                    <div class="fw-semibold">
-                                        {{ $book->title }}
+                                        @if($book->isbn)
+                                            <span class="dx-sub">ISBN: {{ $book->isbn }}</span>
+                                        @endif
                                     </div>
-
-                                    @if($book->isbn)
-                                        <small class="text-muted">
-                                            ISBN: {{ $book->isbn }}
-                                        </small>
-                                    @endif
 
                                 </div>
+                            </td>
 
-                            </div>
+                            <td class="dx-hide-md">{{ $book->category->name ?? 'No Category' }}</td>
 
-                        </td>
+                            <td class="dx-hide-lg">{{ $book->seller->name ?? 'No Seller' }}</td>
 
-                        {{-- Category --}}
-                        <td class="d-none d-md-table-cell">
+                            <td class="dx-num">{{ number_format($book->price, 2) }} AZN</td>
 
-                            {{ $book->category->name ?? 'No Category' }}
+                            <td>
+                                @php
+                                    [$tone, $text] = $bookStatus[$book->status] ?? ['slate', ucfirst($book->status)];
+                                @endphp
 
-                        </td>
+                                <span class="dx-pill dx-pill-{{ $tone }}">{{ $text }}</span>
+                            </td>
 
-                        {{-- Seller --}}
-                        <td class="d-none d-lg-table-cell">
+                        </tr>
 
-                            {{ $book->seller->name ?? 'No Seller' }}
+                    @empty
 
-                        </td>
+                        <tr>
+                            <td colspan="5">
+                                <div class="dx-empty">
+                                    <i class="bi bi-book"></i>
+                                    <strong>No books found</strong>
+                                    <span>Add your first book to see it here.</span>
+                                </div>
+                            </td>
+                        </tr>
 
-                        {{-- Price --}}
-                        <td>
+                    @endforelse
 
-                            {{ number_format($book->price, 2) }} AZN
+                </tbody>
 
-                        </td>
+            </table>
 
-                        {{-- Status --}}
-                        <td>
-
-                            @if($book->status === 'approved')
-
-                                <span class="badge bg-success">
-                                    Approved
-                                </span>
-
-                            @elseif($book->status === 'pending')
-
-                                <span class="badge bg-warning text-dark">
-                                    Pending
-                                </span>
-
-                            @elseif($book->status === 'rejected')
-
-                                <span class="badge bg-danger">
-                                    Rejected
-                                </span>
-
-                            @else
-
-                                <span class="badge bg-secondary">
-                                    {{ ucfirst($book->status) }}
-                                </span>
-
-                            @endif
-
-                        </td>
-
-                    </tr>
-
-                @empty
-
-                    <tr>
-
-                        <td colspan="5" class="text-center py-4">
-
-                            <div class="text-muted">
-
-                                <i class="bi bi-book fs-3 d-block mb-2"></i>
-
-                                No books found.
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                @endforelse
-
-            </tbody>
-
-        </table>
+        </div>
 
     </div>
 
-</div>
 
-{{-- =========================================
-    ORDER OVERVIEW & QUICK ACTIONS
-========================================= --}}
+    {{-- =========================================
+        ORDERS & QUICK ACTIONS
+    ========================================= --}}
+    <div class="dx-split">
 
-<div class="row g-4 mx-2 mt-2 mt-md-4">
+        <div class="dx-panel">
 
-    {{-- Order Overview --}}
-    <div class="col-12 col-lg-8">
-        <div class="card shadow-sm h-100">
+            <div class="dx-panel-head">
+                <div>
+                    <h2>Recent Orders</h2>
+                    <p>Latest customer purchases</p>
+                </div>
+            </div>
 
-            <div class="table-responsive">
+            <div class="dx-table-wrap">
 
-                <table class="table table-hover align-middle mb-0">
+                <table class="dx-table">
 
                     <thead>
                         <tr>
-                            <th class="d-none d-sm-table-cell">#</th>
+                            <th class="dx-hide-md">#</th>
                             <th>Order</th>
-                            <th class="d-none d-md-table-cell">Customer</th>
+                            <th class="dx-hide-md">Customer</th>
                             <th>Total</th>
                             <th>Status</th>
                         </tr>
@@ -497,77 +361,28 @@
 
                             <tr>
 
-                                {{-- # --}}
-                                <td class="d-none d-sm-table-cell">
-                                    {{ $loop->iteration }}
-                                </td>
+                                <td class="dx-hide-md">{{ $loop->iteration }}</td>
 
-                                {{-- Order --}}
                                 <td>
-                                    <div>
-                                        <div class="fw-semibold">
-                                            #{{ $order->order_number }}
-                                        </div>
+                                    <span class="dx-title">#{{ $order->order_number }}</span>
 
-                                        @if($order->book)
-                                            <small class="text-muted">
-                                                {{ $order->book->title }}
-                                            </small>
-                                        @endif
-                                    </div>
+                                    @if($order->book)
+                                        <span class="dx-sub">{{ $order->book->title }}</span>
+                                    @endif
                                 </td>
 
-                                {{-- Customer --}}
-                                <td class="d-none d-md-table-cell">
+                                <td class="dx-hide-md">
                                     {{ $order->user->name ?? $order->full_name }}
                                 </td>
 
-                                {{-- Total --}}
+                                <td class="dx-num">{{ number_format($order->total_price, 2) }} AZN</td>
+
                                 <td>
-                                    {{ number_format($order->total_price, 2) }} AZN
-                                </td>
+                                    @php
+                                        [$tone, $text] = $orderStatus[$order->order_status] ?? ['slate', ucfirst($order->order_status)];
+                                    @endphp
 
-                                {{-- Status --}}
-                                <td>
-
-                                    @if($order->order_status === 'pending')
-
-                                        <span class="badge bg-warning text-dark">
-                                            Pending
-                                        </span>
-
-                                    @elseif($order->order_status === 'processing')
-
-                                        <span class="badge bg-primary">
-                                            Processing
-                                        </span>
-
-                                    @elseif($order->order_status === 'shipped')
-
-                                        <span class="badge bg-info text-dark">
-                                            Shipped
-                                        </span>
-
-                                    @elseif($order->order_status === 'delivered')
-
-                                        <span class="badge bg-success">
-                                            Delivered
-                                        </span>
-
-                                    @elseif($order->order_status === 'cancelled')
-
-                                        <span class="badge bg-danger">
-                                            Cancelled
-                                        </span>
-
-                                    @else
-
-                                        <span class="badge bg-secondary">
-                                            {{ ucfirst($order->order_status) }}
-                                        </span>
-
-                                    @endif
-
+                                    <span class="dx-pill dx-pill-{{ $tone }}">{{ $text }}</span>
                                 </td>
 
                             </tr>
@@ -575,16 +390,12 @@
                         @empty
 
                             <tr>
-                                <td colspan="5" class="text-center py-4">
-
-                                    <div class="text-muted">
-
-                                        <i class="bi bi-cart-x fs-3 d-block mb-2"></i>
-
-                                        No orders found.
-
+                                <td colspan="5">
+                                    <div class="dx-empty">
+                                        <i class="bi bi-bag"></i>
+                                        <strong>No orders found</strong>
+                                        <span>Orders will appear here once customers check out.</span>
                                     </div>
-
                                 </td>
                             </tr>
 
@@ -597,47 +408,48 @@
             </div>
 
         </div>
-    </div>
 
 
-    {{-- Quick Actions --}}
-    <div class="col-12 col-lg-4">
+        <div class="dx-panel">
 
-        <div class="card shadow-sm h-100">
-
-            <div class="card-header bg-white fw-semibold">
-                Quick Actions
+            <div class="dx-panel-head">
+                <div>
+                    <h2>Quick Actions</h2>
+                    <p>Jump straight to common tasks</p>
+                </div>
             </div>
 
-            <div class="card-body d-grid gap-3">
+            <div class="dx-actions">
 
-                <a href="{{ route('admin.books.create') }}"
-                   class="btn btn-primary">
-                    Add Book
-                </a>
+                @foreach([
+                    ['admin.books.create',      'Add Book',     'Publish a new title',      'bi-book',      'blue'],
+                    ['admin.categories.create', 'Add Category', 'Organize your catalog',    'bi-grid',      'green'],
+                    ['admin.authors.create',    'Add Author',   'Create an author profile', 'bi-pencil-square', 'amber'],
+                    ['admin.users.index',       'View Users',   'Manage customer accounts', 'bi-people',    'slate'],
+                ] as [$routeName, $title, $hint, $icon, $tone])
 
-                <a href="{{ route('admin.categories.create') }}"
-                   class="btn btn-success">
-                    Add Category
-                </a>
+                    <a href="{{ route($routeName) }}" class="dx-action">
 
-                <a href="{{ route('admin.authors.create') }}"
-                   class="btn btn-warning">
-                    Add Author
-                </a>
+                        <span class="dx-chip dx-tone-{{ $tone }}">
+                            <i class="bi {{ $icon }}"></i>
+                        </span>
 
-                <a href="{{ route('admin.users.index') }}"
-                   class="btn btn-dark">
-                    View Users
-                </a>
+                        <span>
+                            <strong>{{ $title }}</strong>
+                            <small>{{ $hint }}</small>
+                        </span>
+
+                        <i class="bi bi-chevron-right"></i>
+
+                    </a>
+
+                @endforeach
 
             </div>
 
         </div>
 
     </div>
-
-</div>
 
 </div>
 
@@ -653,90 +465,163 @@ document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('monthlyOverviewChart');
 
     if (!canvas) {
-        console.log('Monthly Overview canvas not found.');
         return;
     }
 
-    const monthlyLabels = @json($monthlyLabels);
-    const monthlyOrders = @json($monthlyOrders);
+    const monthlyLabels  = @json($monthlyLabels);
+    const monthlyOrders  = @json($monthlyOrders);
     const monthlyRevenue = @json($monthlyRevenue);
 
-    console.log('Labels:', monthlyLabels);
-    console.log('Orders:', monthlyOrders);
-    console.log('Revenue:', monthlyRevenue);
+    const scope = canvas.closest('.dashboard-section');
+    let chart = null;
 
-    new Chart(canvas, {
+    /* Read theme colors from CSS variables */
+    const token = function (name) {
+        return getComputedStyle(scope).getPropertyValue(name).trim();
+    };
 
-        type: 'line',
+    /* Soft gradient under each line */
+    const gradient = function (ctx, hex) {
+        const g = ctx.createLinearGradient(0, 0, 0, canvas.clientHeight || 340);
+        g.addColorStop(0, hex + '33');
+        g.addColorStop(1, hex + '00');
+        return g;
+    };
 
-        data: {
-            labels: monthlyLabels,
+    const build = function () {
 
-            datasets: [
-                {
-                    label: 'Orders',
-                    data: monthlyOrders,
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: false,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    yAxisID: 'orders'
+        if (chart) {
+            chart.destroy();
+        }
+
+        const ctx = canvas.getContext('2d');
+        const orders = token('--dx-chart-orders');
+        const revenue = token('--dx-chart-revenue');
+        const grid = token('--dx-chart-grid');
+        const text = token('--dx-chart-text');
+
+        Chart.defaults.font.family = '"Plus Jakarta Sans", system-ui, sans-serif';
+        Chart.defaults.color = text;
+
+        chart = new Chart(canvas, {
+
+            type: 'line',
+
+            data: {
+                labels: monthlyLabels,
+
+                datasets: [
+                    {
+                        label: 'Orders',
+                        data: monthlyOrders,
+                        borderColor: orders,
+                        backgroundColor: gradient(ctx, orders),
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHoverBorderWidth: 3,
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: orders,
+                        yAxisID: 'orders'
+                    },
+
+                    {
+                        label: 'Revenue',
+                        data: monthlyRevenue,
+                        borderColor: revenue,
+                        backgroundColor: gradient(ctx, revenue),
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHoverBorderWidth: 3,
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: revenue,
+                        yAxisID: 'revenue'
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
                 },
 
-                {
-                    label: 'Revenue',
-                    data: monthlyRevenue,
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: false,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    yAxisID: 'revenue'
-                }
-            ]
-        },
+                plugins: {
+                    legend: {
+                        display: false          /* custom legend in the panel header */
+                    },
 
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
+                    tooltip: {
+                        padding: 12,
+                        cornerRadius: 10,
+                        boxPadding: 5,
+                        usePointStyle: true,
+                        backgroundColor: '#101828',
+                        titleColor: '#fff',
+                        bodyColor: '#d0d5dd',
+                        callbacks: {
+                            label: function (item) {
+                                if (item.dataset.yAxisID === 'revenue') {
+                                    return ' Revenue: ' +
+                                        Number(item.parsed.y).toLocaleString(undefined, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        }) + ' AZN';
+                                }
 
-            interaction: {
-                intersect: false,
-                mode: 'index'
-            },
-
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                }
-            },
-
-            scales: {
-
-                orders: {
-                    type: 'linear',
-                    position: 'left',
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0
+                                return ' Orders: ' + item.parsed.y;
+                            }
+                        }
                     }
                 },
 
-                revenue: {
-                    type: 'linear',
-                    position: 'right',
-                    beginAtZero: true,
-                    grid: {
-                        drawOnChartArea: false
+                scales: {
+
+                    x: {
+                        grid: { display: false },
+                        border: { display: false }
+                    },
+
+                    orders: {
+                        type: 'linear',
+                        position: 'left',
+                        beginAtZero: true,
+                        border: { display: false },
+                        grid: { color: grid },
+                        ticks: { precision: 0, padding: 8 }
+                    },
+
+                    revenue: {
+                        type: 'linear',
+                        position: 'right',
+                        beginAtZero: true,
+                        border: { display: false },
+                        grid: { drawOnChartArea: false },
+                        ticks: { padding: 8 }
                     }
+
                 }
 
             }
 
-        }
+        });
 
+    };
+
+    build();
+
+    /* Re-draw with the right colors when the theme is switched */
+    new MutationObserver(build).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
     });
 
 });

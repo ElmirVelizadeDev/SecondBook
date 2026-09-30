@@ -8,167 +8,247 @@
 
 @section('content')
 
-<div class="container-fluid p-4">
+<div class="shipping-page">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    {{-- HEADER --}}
+    <div class="shipping-panel">
 
-        <div>
-            <h2 class="fw-bold mb-1">
-                <i class="bi bi-truck me-2"></i>
-                Add Shipping
-            </h2>
+        <div class="shipping-panel-header">
 
-            <p class="text-muted mb-0">
-                Create a new shipping method.
-            </p>
+            <div class="shipping-heading-content">
+
+                <span class="eyebrow">
+                    <i class="bi bi-truck me-1"></i>
+                    Shipping Management
+                </span>
+
+                <h5>
+                    Add Shipping
+                </h5>
+
+                <p>
+                    Create a new shipping method with pricing,
+                    delivery time and availability.
+                </p>
+
+            </div>
+
+            <div class="shipping-header-action">
+
+                <a
+                    href="{{ route('admin.shipping.index') }}"
+                    class="shipping-back-btn"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Back to Shipping</span>
+                </a>
+
+            </div>
+
         </div>
 
-        <a href="{{ route('admin.shipping.index') }}"
-           class="btn btn-light">
 
-            <i class="bi bi-arrow-left me-2"></i>
-            Back
-        </a>
+        {{-- FORM BODY --}}
+        <div class="shipping-form-body">
 
-    </div>
+            {{-- ERRORS --}}
+            @if($errors->any())
+
+                <div class="shipping-errors">
+
+                    <div class="shipping-errors-title">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Please fix the following errors:
+                    </div>
+
+                    <ul>
+
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+
+                    </ul>
+
+                </div>
+
+            @endif
 
 
-    <div class="card border-0 shadow-sm">
-
-        <div class="card-body p-4">
-
-            <form action="{{ route('admin.shipping.store') }}"
-                  method="POST">
+            <form
+                action="{{ route('admin.shipping.store') }}"
+                method="POST"
+            >
 
                 @csrf
 
-                <div class="row g-4">
 
-                    <div class="col-md-6">
+                {{-- SHIPPING INFORMATION --}}
+                <div class="shipping-form-section">
 
-                        <label class="form-label fw-semibold">
-                            Shipping Method Name
-                        </label>
-
-                        <input type="text"
-                               name="name"
-                               class="form-control @error('name') is-invalid @enderror"
-                               value="{{ old('name') }}"
-                               placeholder="e.g. Standard Shipping">
-
-                        @error('name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
+                    <div class="shipping-section-heading">
+                        <i class="bi bi-truck"></i>
+                        <span>Shipping Information</span>
                     </div>
 
 
-                    <div class="col-md-6">
+                    <div class="shipping-form-grid">
 
-                        <label class="form-label fw-semibold">
-                            Price
-                        </label>
+                        {{-- NAME --}}
+                        <div class="shipping-field">
 
-                        <input type="number"
-                               name="price"
-                               step="0.01"
-                               min="0"
-                               class="form-control @error('price') is-invalid @enderror"
-                               value="{{ old('price', 0) }}"
-                               placeholder="0.00">
+                            <label for="name">
+                                Shipping Method Name
+                                <span class="required">*</span>
+                            </label>
 
-                        @error('price')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                            <input
+                                id="name"
+                                type="text"
+                                name="name"
+                                class="@error('name') is-invalid @enderror"
+                                value="{{ old('name') }}"
+                                placeholder="e.g. Standard Shipping"
+                            >
 
-                    </div>
+                            @error('name')
+                                <div class="shipping-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-
-                    <div class="col-md-6">
-
-                        <label class="form-label fw-semibold">
-                            Delivery Time
-                        </label>
-
-                        <input type="text"
-                               name="delivery_time"
-                               class="form-control @error('delivery_time') is-invalid @enderror"
-                               value="{{ old('delivery_time') }}"
-                               placeholder="e.g. 3-5 Business Days">
-
-                        @error('delivery_time')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                    </div>
+                        </div>
 
 
-                    <div class="col-md-6">
+                        {{-- PRICE --}}
+                        <div class="shipping-field">
 
-                        <label class="form-label fw-semibold">
-                            Status
-                        </label>
+                            <label for="price">
+                                Price
+                                <span class="required">*</span>
+                            </label>
 
-                        <select name="status"
-                                class="form-select">
+                            <input
+                                id="price"
+                                type="number"
+                                name="price"
+                                step="0.01"
+                                min="0"
+                                class="@error('price') is-invalid @enderror"
+                                value="{{ old('price', 0) }}"
+                                placeholder="0.00"
+                            >
 
-                            <option value="1"
-                                {{ old('status', '1') == '1' ? 'selected' : '' }}>
-                                Active
-                            </option>
+                            @error('price')
+                                <div class="shipping-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                            <option value="0"
-                                {{ old('status') === '0' ? 'selected' : '' }}>
-                                Inactive
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="col-12">
-
-                        <label class="form-label fw-semibold">
-                            Description
-                        </label>
-
-                        <textarea name="description"
-                                  rows="5"
-                                  class="form-control"
-                                  placeholder="Describe this shipping method...">{{ old('description') }}</textarea>
-
-                    </div>
+                        </div>
 
 
-                    <div class="col-12">
+                        {{-- DELIVERY TIME --}}
+                        <div class="shipping-field">
 
-                        <div class="d-flex justify-content-end gap-2">
+                            <label for="delivery_time">
+                                Delivery Time
+                                <span class="required">*</span>
+                            </label>
 
-                            <a href="{{ route('admin.shipping.index') }}"
-                               class="btn btn-light">
+                            <input
+                                id="delivery_time"
+                                type="text"
+                                name="delivery_time"
+                                class="@error('delivery_time') is-invalid @enderror"
+                                value="{{ old('delivery_time') }}"
+                                placeholder="e.g. 3-5 Business Days"
+                            >
 
-                                Cancel
+                            @error('delivery_time')
+                                <div class="shipping-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                            </a>
+                        </div>
 
-                            <button type="submit"
-                                    class="btn btn-primary">
 
-                                <i class="bi bi-check-lg me-2"></i>
-                                Create Shipping
+                        {{-- STATUS --}}
+                        <div class="shipping-field">
 
-                            </button>
+                            <label for="status">
+                                Status
+                            </label>
+
+                            <select
+                                id="status"
+                                name="status"
+                            >
+
+                                <option
+                                    value="1"
+                                    @selected(old('status', '1') == '1')
+                                >
+                                    Active
+                                </option>
+
+                                <option
+                                    value="0"
+                                    @selected(old('status') == '0')
+                                >
+                                    Inactive
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        {{-- DESCRIPTION --}}
+                        <div class="shipping-field shipping-field-full">
+
+                            <label for="description">
+                                Description
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                rows="5"
+                                placeholder="Describe this shipping method..."
+                            >{{ old('description') }}</textarea>
+
+                            @error('description')
+                                <div class="shipping-field-error">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
                         </div>
 
                     </div>
+
+                </div>
+
+
+                {{-- ACTIONS --}}
+                <div class="shipping-form-footer">
+
+                    <a
+                        href="{{ route('admin.shipping.index') }}"
+                        class="shipping-cancel-btn"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="shipping-submit-btn"
+                    >
+                        <i class="bi bi-check-circle"></i>
+                        Create Shipping
+                    </button>
 
                 </div>
 

@@ -8,169 +8,152 @@
 
 @section('content')
 
-<div class="dashboard-section refunds-page">
+<div class="refunds-page">
 
     {{-- =========================================================
-        HERO
-    ========================================================= --}}
+         HERO
+    ========================================================== --}}
+    <section class="refund-hero">
 
-    <div class="refunds-hero mb-4">
-        <div class="refunds-hero-content">
+        <div class="refund-hero-content">
 
-            <span class="hero-badge">
+            <span class="refund-hero-badge">
                 <i class="bi bi-arrow-counterclockwise"></i>
                 Payments Recovery
             </span>
 
-            <h1>Refunds</h1>
+            <h1>Every refund, under control.</h1>
 
             <p>
-                Manage customer refund requests, review decisions,
-                and track returned payments.
+                Manage customer refund requests, review decisions and
+                track returned payments from one organised workspace.
             </p>
 
         </div>
 
-        <div class="refunds-hero-mark">
-            <i class="bi bi-arrow-counterclockwise"></i>
+        <div class="refund-hero-mark" aria-hidden="true">
+            <i class="bi bi-receipt-cutoff"></i>
         </div>
 
-        <a
-            href="{{ route('admin.refunds.create') }}"
-            class="refunds-hero-button"
-        >
-            <i class="bi bi-plus-lg"></i>
-            <span>Add Refund</span>
-        </a>
-    </div>
+    </section>
 
 
     {{-- =========================================================
-        ALERTS
-    ========================================================= --}}
+         STATISTICS
+    ========================================================== --}}
+    <section class="refund-stats">
 
-    @if(session('success'))
-        <div class="refund-alert refund-alert-success">
-            <i class="bi bi-check-circle-fill"></i>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
+        <div class="refund-stat stat-blue">
 
-    @if(session('error'))
-        <div class="refund-alert refund-alert-danger">
-            <i class="bi bi-exclamation-circle-fill"></i>
-            <span>{{ session('error') }}</span>
+            <div class="refund-stat-content">
+                <span>Total Refunds</span>
+                <strong>
+                    {{ number_format($stats['total']) }}
+                </strong>
+            </div>
+
+            <div class="refund-stat-icon">
+                <i class="bi bi-receipt"></i>
+            </div>
+
         </div>
-    @endif
+
+
+        <div class="refund-stat stat-orange">
+
+            <div class="refund-stat-content">
+                <span>Pending</span>
+                <strong>
+                    {{ number_format($stats['pending']) }}
+                </strong>
+            </div>
+
+            <div class="refund-stat-icon">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+
+        </div>
+
+
+        <div class="refund-stat stat-green">
+
+            <div class="refund-stat-content">
+                <span>Processed</span>
+                <strong>
+                    {{ number_format($stats['processed']) }}
+                </strong>
+            </div>
+
+            <div class="refund-stat-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+        </div>
+
+
+        <div class="refund-stat stat-purple">
+
+            <div class="refund-stat-content">
+                <span>Refunded Amount</span>
+                <strong>
+                    ${{ number_format($stats['amount'], 2) }}
+                </strong>
+            </div>
+
+            <div class="refund-stat-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+
+        </div>
+
+    </section>
 
 
     {{-- =========================================================
-        STATISTICS
-    ========================================================= --}}
+         MAIN PANEL
+    ========================================================== --}}
+    <section class="refund-panel">
 
-    <div class="row g-4 mb-4">
+        {{-- =====================================================
+             HEADER
+        ====================================================== --}}
+        <div class="refund-panel-header">
 
-        {{-- Total --}}
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="refund-stat-card stat-blue">
+            <div class="refund-panel-heading">
 
-                <div class="refund-stat-content">
-                    <span>Total refunds</span>
-                    <strong>{{ number_format($stats['total']) }}</strong>
-                </div>
-
-                <div class="refund-stat-icon">
-                    <i class="bi bi-receipt"></i>
-                </div>
-
-            </div>
-        </div>
-
-
-        {{-- Pending --}}
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="refund-stat-card stat-orange">
-
-                <div class="refund-stat-content">
-                    <span>Pending</span>
-                    <strong>{{ number_format($stats['pending']) }}</strong>
-                </div>
-
-                <div class="refund-stat-icon">
-                    <i class="bi bi-clock-history"></i>
-                </div>
-
-            </div>
-        </div>
-
-
-        {{-- Processed --}}
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="refund-stat-card stat-green">
-
-                <div class="refund-stat-content">
-                    <span>Processed</span>
-                    <strong>{{ number_format($stats['processed']) }}</strong>
-                </div>
-
-                <div class="refund-stat-icon">
-                    <i class="bi bi-check-circle"></i>
-                </div>
-
-            </div>
-        </div>
-
-
-        {{-- Amount --}}
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="refund-stat-card stat-purple">
-
-                <div class="refund-stat-content">
-                    <span>Refunded amount</span>
-
-                    <strong>
-                        ${{ number_format($stats['amount'], 2) }}
-                    </strong>
-                </div>
-
-                <div class="refund-stat-icon">
-                    <i class="bi bi-cash-stack"></i>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-
-    {{-- =========================================================
-        REFUND DIRECTORY
-    ========================================================= --}}
-
-    <div class="dashboard-panel refunds-panel">
-
-        {{-- Header --}}
-        <div class="panel-header refunds-panel-header">
-
-            <div>
                 <span class="eyebrow">
-                    Refund directory
+                    Refund Directory
                 </span>
 
-                <h5>All refunds</h5>
+                <h5>
+                    All Refunds
+                </h5>
 
                 <p>
-                    Review refund requests, decisions, and processed payments.
+                    Search, filter and review every customer refund request.
                 </p>
+
+            </div>
+
+
+            <div class="refund-hero-actions">
+
+                <a
+                    href="{{ route('admin.refunds.create') }}"
+                    class="refund-add-btn"
+                >
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Add Refund</span>
+                </a>
+
             </div>
 
         </div>
 
 
         {{-- =====================================================
-            FILTERS
-        ===================================================== --}}
-
+             FILTERS
+        ====================================================== --}}
         <form
             method="GET"
             action="{{ route('admin.refunds.index') }}"
@@ -185,8 +168,9 @@
                 <input
                     type="search"
                     name="search"
-                    value="{{ $search }}"
-                    placeholder="Search refund, order or customer..."
+                    value="{{ request('search') }}"
+                    placeholder="Refund number, order, customer..."
+                    autocomplete="off"
                     aria-label="Search refunds"
                 >
 
@@ -196,10 +180,13 @@
             {{-- Status --}}
             <select
                 name="status"
-                class="form-select refund-select"
-                aria-label="Filter by status"
+                class="refund-select"
+                aria-label="Refund status"
             >
-                <option value="">All statuses</option>
+
+                <option value="">
+                    All Status
+                </option>
 
                 @foreach([
                     'pending',
@@ -211,111 +198,158 @@
 
                     <option
                         value="{{ $item }}"
-                        @selected($status === $item)
+                        @selected(request('status') === $item)
                     >
                         {{ ucfirst($item) }}
                     </option>
 
                 @endforeach
+
             </select>
 
 
             {{-- Sort --}}
             <select
                 name="sort"
-                class="form-select refund-select"
+                class="refund-select"
                 aria-label="Sort refunds"
             >
+
                 <option
                     value="newest"
-                    @selected($sort === 'newest')
+                    @selected(request('sort', 'newest') === 'newest')
                 >
                     Newest
                 </option>
 
                 <option
                     value="oldest"
-                    @selected($sort === 'oldest')
+                    @selected(request('sort') === 'oldest')
                 >
                     Oldest
                 </option>
 
                 <option
                     value="highest"
-                    @selected($sort === 'highest')
+                    @selected(request('sort') === 'highest')
                 >
-                    Highest amount
+                    Highest Amount
                 </option>
 
                 <option
                     value="lowest"
-                    @selected($sort === 'lowest')
+                    @selected(request('sort') === 'lowest')
                 >
-                    Lowest amount
+                    Lowest Amount
                 </option>
+
             </select>
 
 
-            {{-- Filter --}}
-            <button
-                type="submit"
-                class="btn btn-primary refund-filter-button"
-            >
-                <i class="bi bi-funnel"></i>
-                <span>Filter</span>
-            </button>
+            {{-- Filter Actions --}}
+            <div class="refund-filter-actions">
 
-
-            {{-- Reset --}}
-            @if($search || $status || $sort !== 'newest')
-                <a
-                    href="{{ route('admin.refunds.index') }}"
-                    class="refund-reset-button"
+                <button
+                    type="submit"
+                    class="refund-filter-btn"
                 >
-                    <i class="bi bi-arrow-counterclockwise"></i>
-                    <span>Reset</span>
-                </a>
-            @endif
+                    <i class="bi bi-funnel"></i>
+                    <span>Filter</span>
+                </button>
+
+
+                @if(
+                    request('search') ||
+                    request('status') ||
+                    request('sort', 'newest') !== 'newest'
+                )
+
+                    <a
+                        href="{{ route('admin.refunds.index') }}"
+                        class="refund-reset-btn"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        <span>Clear</span>
+                    </a>
+
+                @endif
+
+            </div>
 
         </form>
 
 
         {{-- =====================================================
-            TABLE
-        ===================================================== --}}
+             TABLE
+        ====================================================== --}}
+        <div class="refund-table-wrap">
 
-        <div class="table-responsive refunds-table-wrap">
-
-            <table class="table refunds-table align-middle">
-
-                <colgroup>
-                    <col class="refund-col-number">
-                    <col class="refund-col-order">
-                    <col class="refund-col-customer">
-                    <col class="refund-col-amount">
-                    <col class="refund-col-reason">
-                    <col class="refund-col-status">
-                    <col class="refund-col-date">
-                    <col class="refund-col-actions">
-                </colgroup>
+            <table class="refund-table">
 
                 <thead>
+
                     <tr>
-                        <th>Refund</th>
-                        <th>Order</th>
-                        <th>Customer</th>
-                        <th>Amount</th>
-                        <th>Reason</th>
-                        <th>Status</th>
-                        <th>Requested</th>
-                        <th class="text-end">Actions</th>
+
+                        <th class="refund-col-number">
+                            Refund
+                        </th>
+
+                        <th class="refund-col-order">
+                            Order
+                        </th>
+
+                        <th class="refund-col-customer">
+                            Customer
+                        </th>
+
+                        <th class="refund-col-amount">
+                            Amount
+                        </th>
+
+                        <th class="refund-col-reason">
+                            Reason
+                        </th>
+
+                        <th class="refund-col-status">
+                            Status
+                        </th>
+
+                        <th class="refund-col-date">
+                            Date
+                        </th>
+
+                        <th class="refund-col-actions">
+                            Actions
+                        </th>
+
                     </tr>
+
                 </thead>
 
 
                 <tbody>
 
                     @forelse($refunds as $refund)
+
+                        @php
+
+                            $customerName = trim(
+                                ($refund->user->first_name ?? '') . ' ' .
+                                ($refund->user->last_name ?? '')
+                            );
+
+                            $customerName = $customerName ?: (
+                                $refund->user->name ??
+                                $refund->user->username ??
+                                'Customer'
+                            );
+
+                            $customerInitial = strtoupper(
+                                mb_substr($customerName, 0, 1)
+                            );
+
+                        @endphp
+
 
                         <tr>
 
@@ -329,13 +363,15 @@
                                     </div>
 
                                     <div>
+
                                         <strong>
                                             {{ $refund->refund_number }}
                                         </strong>
 
                                         <small>
-                                            Refund request
+                                            Refund Request
                                         </small>
+
                                     </div>
 
                                 </div>
@@ -347,7 +383,9 @@
                             <td>
 
                                 <span class="refund-order-number">
+
                                     #{{ $refund->order?->order_number ?? '-' }}
+
                                 </span>
 
                             </td>
@@ -359,26 +397,22 @@
                                 <div class="refund-customer-cell">
 
                                     <div class="refund-customer-avatar">
-                                        {{ strtoupper(
-                                            substr(
-                                                $refund->user?->name ?? 'U',
-                                                0,
-                                                1
-                                            )
-                                        ) }}
+                                        {{ $customerInitial }}
                                     </div>
 
                                     <div class="refund-customer-info">
 
-                                        <strong>
-                                            {{ $refund->user?->name ?? '-' }}
+                                        <strong
+                                            title="{{ $customerName }}"
+                                        >
+                                            {{ $customerName }}
                                         </strong>
 
-                                        @if($refund->user?->email)
-                                            <small>
-                                                {{ $refund->user->email }}
-                                            </small>
-                                        @endif
+                                        <small
+                                            title="{{ $refund->user?->email ?? '' }}"
+                                        >
+                                            {{ $refund->user?->email ?? '—' }}
+                                        </small>
 
                                     </div>
 
@@ -416,32 +450,48 @@
                                 <span
                                     class="refund-status status-{{ $refund->status }}"
                                 >
+
                                     <i class="bi bi-circle-fill"></i>
+
                                     {{ ucfirst($refund->status) }}
+
                                 </span>
 
                             </td>
 
 
-                            {{-- Requested --}}
+                            {{-- Date --}}
                             <td>
 
-                                <span class="refund-date">
-                                    {{ $refund->requested_at?->format('d M Y') ?? '-' }}
-                                </span>
+                                <div class="refund-date-block">
+
+                                    <span class="refund-date">
+
+                                        {{ $refund->requested_at?->format('d M Y') ?? '—' }}
+
+                                    </span>
+
+                                    <small>
+
+                                        {{ $refund->requested_at?->format('H:i') ?? '' }}
+
+                                    </small>
+
+                                </div>
 
                             </td>
 
 
                             {{-- Actions --}}
-                            <td>
+                            <td class="refund-row">
 
                                 <div class="refund-actions">
+
 
                                     {{-- View --}}
                                     <a
                                         href="{{ route('admin.refunds.show', $refund) }}"
-                                        class="refund-action-btn action-view"
+                                        class="refund-action action-view"
                                         title="View refund"
                                         aria-label="View refund"
                                     >
@@ -449,117 +499,132 @@
                                     </a>
 
 
+                                    {{-- Edit --}}
                                     @if($refund->status !== 'processed')
 
-                                        {{-- Edit --}}
                                         <a
                                             href="{{ route('admin.refunds.edit', $refund) }}"
-                                            class="refund-action-btn action-edit"
+                                            class="refund-action action-edit"
                                             title="Edit refund"
                                             aria-label="Edit refund"
                                         >
                                             <i class="bi bi-pencil"></i>
                                         </a>
 
+                                    @endif
 
-                                        {{-- Pending --}}
-                                        @if($refund->status === 'pending')
 
-                                            {{-- Approve --}}
-                                            <form
-                                                method="POST"
-                                                action="{{ route('admin.refunds.status', $refund) }}"
+                                    {{-- Pending Actions --}}
+                                    @if($refund->status === 'pending')
+
+                                        {{-- Approve --}}
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.refunds.status', $refund) }}"
+                                            class="refund-status-form"
+                                        >
+
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <input
+                                                type="hidden"
+                                                name="status"
+                                                value="approved"
                                             >
-                                                @csrf
-                                                @method('PATCH')
 
-                                                <input
-                                                    type="hidden"
-                                                    name="status"
-                                                    value="approved"
-                                                >
-
-                                                <button
-                                                    type="submit"
-                                                    class="refund-action-btn action-approve"
-                                                    title="Approve refund"
-                                                    aria-label="Approve refund"
-                                                >
-                                                    <i class="bi bi-check-lg"></i>
-                                                </button>
-                                            </form>
-
-
-                                            {{-- Reject --}}
-                                            <form
-                                                method="POST"
-                                                action="{{ route('admin.refunds.status', $refund) }}"
+                                            <button
+                                                type="submit"
+                                                class="refund-action action-approve"
+                                                title="Approve refund"
+                                                aria-label="Approve refund"
                                             >
-                                                @csrf
-                                                @method('PATCH')
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
 
-                                                <input
-                                                    type="hidden"
-                                                    name="status"
-                                                    value="rejected"
-                                                >
+                                        </form>
 
-                                                <button
-                                                    type="submit"
-                                                    class="refund-action-btn action-reject"
-                                                    title="Reject refund"
-                                                    aria-label="Reject refund"
-                                                >
-                                                    <i class="bi bi-x-lg"></i>
-                                                </button>
-                                            </form>
 
-                                        @elseif($refund->status === 'approved')
+                                        {{-- Reject --}}
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.refunds.status', $refund) }}"
+                                            class="refund-status-form"
+                                        >
 
-                                            {{-- Process --}}
-                                            <form
-                                                method="POST"
-                                                action="{{ route('admin.refunds.status', $refund) }}"
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <input
+                                                type="hidden"
+                                                name="status"
+                                                value="rejected"
                                             >
-                                                @csrf
-                                                @method('PATCH')
 
-                                                <input
-                                                    type="hidden"
-                                                    name="status"
-                                                    value="processed"
-                                                >
+                                            <button
+                                                type="submit"
+                                                class="refund-action action-reject"
+                                                title="Reject refund"
+                                                aria-label="Reject refund"
+                                            >
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
 
-                                                <button
-                                                    type="submit"
-                                                    class="refund-action-btn action-process"
-                                                    title="Process refund"
-                                                    aria-label="Process refund"
-                                                >
-                                                    <i class="bi bi-arrow-repeat"></i>
-                                                </button>
-                                            </form>
+                                        </form>
 
-                                        @endif
+                                    @elseif($refund->status === 'approved')
+
+                                        {{-- Process --}}
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.refunds.status', $refund) }}"
+                                        >
+
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <input
+                                                type="hidden"
+                                                name="status"
+                                                value="processed"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="refund-action action-process"
+                                                title="Process refund"
+                                                aria-label="Process refund"
+                                            >
+                                                <i class="bi bi-arrow-repeat"></i>
+                                            </button>
+
+                                        </form>
+
+                                    @endif
 
 
-                                        {{-- Delete --}}
+                                    {{-- Delete --}}
+                                    @if($refund->status !== 'processed')
+
                                         <form
                                             method="POST"
                                             action="{{ route('admin.refunds.destroy', $refund) }}"
                                             class="delete-refund-form"
+                                            data-refund-number="{{ $refund->refund_number }}"
                                         >
+
                                             @csrf
                                             @method('DELETE')
 
                                             <button
                                                 type="submit"
-                                                class="refund-action-btn action-delete"
+                                                class="refund-action action-delete"
                                                 title="Delete refund"
                                                 aria-label="Delete refund"
                                             >
-                                                <i class="bi bi-trash3"></i>
+                                                <i class="bi bi-trash"></i>
                                             </button>
+
                                         </form>
 
                                     @endif
@@ -569,6 +634,7 @@
                             </td>
 
                         </tr>
+
 
                     @empty
 
@@ -582,20 +648,13 @@
                                         <i class="bi bi-receipt"></i>
                                     </div>
 
-                                    <strong>No refunds found</strong>
+                                    <strong>
+                                        No refunds found
+                                    </strong>
 
                                     <span>
-                                        There are no refund records matching
-                                        your current filters.
+                                        Try changing your filters or search criteria.
                                     </span>
-
-                                    <a
-                                        href="{{ route('admin.refunds.create') }}"
-                                        class="btn btn-primary"
-                                    >
-                                        <i class="bi bi-plus-lg me-2"></i>
-                                        Create refund
-                                    </a>
 
                                 </div>
 
@@ -613,18 +672,163 @@
 
 
         {{-- =====================================================
-            PAGINATION
-        ===================================================== --}}
-
+             PAGINATION
+        ====================================================== --}}
         @if($refunds->hasPages())
 
+            @php
+
+                $refunds->appends(request()->query());
+
+                $current = $refunds->currentPage();
+                $last    = $refunds->lastPage();
+
+                $start = max(1, $current - 2);
+                $end   = min($last, $current + 2);
+
+            @endphp
+
+
             <div class="refund-pagination">
-                {{ $refunds->links() }}
+
+                <div class="refund-pagination-info">
+
+                    Showing
+                    <strong>{{ $refunds->firstItem() }}</strong>
+                    to
+                    <strong>{{ $refunds->lastItem() }}</strong>
+                    of
+                    <strong>{{ $refunds->total() }}</strong>
+                    refunds
+
+                </div>
+
+
+                <nav
+                    class="refund-pagination-pages"
+                    aria-label="Refund pagination"
+                >
+
+                    {{-- Previous --}}
+                    @if($refunds->onFirstPage())
+
+                        <span
+                            class="refund-pager-btn disabled"
+                            aria-disabled="true"
+                        >
+                            <i class="bi bi-chevron-left"></i>
+                        </span>
+
+                    @else
+
+                        <a
+                            href="{{ $refunds->previousPageUrl() }}"
+                            class="refund-pager-btn"
+                            aria-label="Previous page"
+                        >
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+
+                    @endif
+
+
+                    {{-- First Page --}}
+                    @if($start > 1)
+
+                        <a
+                            href="{{ $refunds->url(1) }}"
+                            class="refund-pager-btn"
+                        >
+                            1
+                        </a>
+
+                        @if($start > 2)
+
+                            <span class="refund-pager-dots">
+                                …
+                            </span>
+
+                        @endif
+
+                    @endif
+
+
+                    {{-- Page Window --}}
+                    @for($page = $start; $page <= $end; $page++)
+
+                        @if($page === $current)
+
+                            <span
+                                class="refund-pager-btn active"
+                                aria-current="page"
+                            >
+                                {{ $page }}
+                            </span>
+
+                        @else
+
+                            <a
+                                href="{{ $refunds->url($page) }}"
+                                class="refund-pager-btn"
+                            >
+                                {{ $page }}
+                            </a>
+
+                        @endif
+
+                    @endfor
+
+
+                    {{-- Last Page --}}
+                    @if($end < $last)
+
+                        @if($end < $last - 1)
+
+                            <span class="refund-pager-dots">
+                                …
+                            </span>
+
+                        @endif
+
+                        <a
+                            href="{{ $refunds->url($last) }}"
+                            class="refund-pager-btn"
+                        >
+                            {{ $last }}
+                        </a>
+
+                    @endif
+
+
+                    {{-- Next --}}
+                    @if($refunds->hasMorePages())
+
+                        <a
+                            href="{{ $refunds->nextPageUrl() }}"
+                            class="refund-pager-btn"
+                            aria-label="Next page"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                    @else
+
+                        <span
+                            class="refund-pager-btn disabled"
+                            aria-disabled="true"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+
+                    @endif
+
+                </nav>
+
             </div>
 
         @endif
 
-    </div>
+    </section>
 
 </div>
 
@@ -636,28 +840,600 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    document.querySelectorAll('.delete-refund-form').forEach(function (form) {
+    /*
+    |--------------------------------------------------------------------------
+    | APPROVE / REJECT / PROCESS REFUND
+    |--------------------------------------------------------------------------
+    */
 
-        form.addEventListener('submit', function (event) {
+    document.querySelectorAll('.refund-status-form').forEach(function (form) {
+
+        form.addEventListener('submit', async function (event) {
 
             event.preventDefault();
 
-            Swal.fire({
-                title: 'Delete refund?',
-                text: 'Are you sure you want to permanently delete this refund?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Delete refund',
-                cancelButtonText: 'Cancel',
-                confirmButtonColor: '#bd3d53',
-                reverseButtons: true
-            }).then(function (result) {
+            const button = form.querySelector('button');
+            const row = form.closest('tr');
+            const status = form.querySelector('input[name="status"]')?.value;
 
-                if (result.isConfirmed) {
-                    form.submit();
-                }
+            let title = '';
+            let text = '';
+            let confirmButtonText = '';
+            let icon = 'warning';
+            let confirmButtonColor = '#2563eb';
+
+            if (status === 'approved') {
+
+                title = 'Approve refund?';
+                text = 'Are you sure you want to approve this refund?';
+                confirmButtonText = 'Approve refund';
+                icon = 'question';
+                confirmButtonColor = '#16a34a';
+
+            } else if (status === 'rejected') {
+
+                title = 'Reject refund?';
+                text = 'Are you sure you want to reject this refund?';
+                confirmButtonText = 'Reject refund';
+                icon = 'warning';
+                confirmButtonColor = '#dc2626';
+
+            } else if (status === 'processed') {
+
+                title = 'Process refund?';
+                text = 'Are you sure you want to process this refund?';
+                confirmButtonText = 'Process refund';
+                icon = 'question';
+                confirmButtonColor = '#2563eb';
+
+            } else {
+
+                title = 'Change refund status?';
+                text = 'Are you sure you want to change this refund status?';
+                confirmButtonText = 'Confirm';
+            }
+
+            const result = await Swal.fire({
+
+                title: title,
+                text: text,
+                icon: icon,
+
+                showCancelButton: true,
+
+                confirmButtonText: confirmButtonText,
+                cancelButtonText: 'Cancel',
+
+                confirmButtonColor: confirmButtonColor,
+
+                reverseButtons: true
 
             });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Prevent double click
+            |--------------------------------------------------------------------------
+            */
+
+            if (button) {
+                button.disabled = true;
+            }
+
+            try {
+
+                const csrfToken = document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
+
+                const response = await fetch(form.action, {
+
+                    method: 'POST',
+
+                    headers: {
+
+                        'X-CSRF-TOKEN': csrfToken,
+
+                        'Accept': 'application/json',
+
+                        'X-Requested-With': 'XMLHttpRequest',
+
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+
+                    },
+
+                    body: new URLSearchParams({
+
+                        _token: csrfToken,
+
+                        _method: 'PATCH',
+
+                        status: status
+
+                    })
+
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message || 'Unable to update the refund status.'
+                    );
+
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Update status badge without page refresh
+                |--------------------------------------------------------------------------
+                */
+
+                if (row) {
+
+                    const statusBadge = row.querySelector('.refund-status');
+
+                    if (statusBadge) {
+
+                        statusBadge.className =
+                            'refund-status status-' + status;
+
+                        statusBadge.innerHTML =
+                            '<i class="bi bi-circle-fill"></i> ' +
+                            status.charAt(0).toUpperCase() +
+                            status.slice(1);
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Update action buttons
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const actions = row.querySelector('.refund-actions');
+
+                    if (actions) {
+
+                        /*
+                        | Remove old approve/reject/process forms
+                        */
+
+                        actions
+                            .querySelectorAll(
+                                'form:not(.delete-refund-form)'
+                            )
+                            .forEach(function (oldForm) {
+                                oldForm.remove();
+                            });
+
+                        /*
+                        | Remove edit button because approved/rejected
+                        | status can still be edited according to your logic,
+                        | so we keep it.
+                        */
+
+                        if (status === 'approved') {
+
+                            const processForm = document.createElement('form');
+
+                            processForm.method = 'POST';
+                            processForm.action = form.action;
+
+                            processForm.className = 'refund-status-form';
+
+                            processForm.innerHTML = `
+                                <input type="hidden" name="_token" value="${csrfToken}">
+                                <input type="hidden" name="_method" value="PATCH">
+                                <input type="hidden" name="status" value="processed">
+
+                                <button
+                                    type="submit"
+                                    class="refund-action action-process"
+                                    title="Process refund"
+                                    aria-label="Process refund"
+                                >
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </button>
+                            `;
+
+                            /*
+                            | Insert before delete form
+                            */
+
+                            const deleteForm = actions.querySelector(
+                                '.delete-refund-form'
+                            );
+
+                            if (deleteForm) {
+                                actions.insertBefore(processForm, deleteForm);
+                            } else {
+                                actions.appendChild(processForm);
+                            }
+
+                            /*
+                            | Bind newly created form
+                            */
+
+                            bindStatusForm(processForm);
+                        }
+                    }
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Success message
+                |--------------------------------------------------------------------------
+                */
+
+                let successTitle = 'Refund updated';
+
+                if (status === 'approved') {
+                    successTitle = 'Refund approved';
+                }
+
+                if (status === 'rejected') {
+                    successTitle = 'Refund rejected';
+                }
+
+                if (status === 'processed') {
+                    successTitle = 'Refund processed';
+                }
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: successTitle,
+
+                    text:
+                        data.message ||
+                        'The refund status has been updated successfully.',
+
+                    timer: 1800,
+
+                    showConfirmButton: false
+
+                });
+
+            } catch (error) {
+
+                console.error('Refund status error:', error);
+
+                if (button) {
+                    button.disabled = false;
+                }
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Update failed',
+
+                    text:
+                        error.message ||
+                        'Unable to update the refund status.',
+
+                    confirmButtonColor: '#2563eb'
+
+                });
+            }
+
+        });
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | STATUS FORM BIND FUNCTION
+    |--------------------------------------------------------------------------
+    */
+
+    function bindStatusForm(form) {
+
+        form.addEventListener('submit', async function (event) {
+
+            event.preventDefault();
+
+            const button = form.querySelector('button');
+
+            const status =
+                form.querySelector('input[name="status"]')?.value;
+
+            let title = 'Change refund status?';
+            let text = 'Are you sure you want to change this refund status?';
+            let confirmButtonText = 'Confirm';
+            let icon = 'question';
+            let confirmButtonColor = '#2563eb';
+
+            if (status === 'approved') {
+
+                title = 'Approve refund?';
+                text = 'Are you sure you want to approve this refund?';
+                confirmButtonText = 'Approve refund';
+                confirmButtonColor = '#16a34a';
+
+            } else if (status === 'rejected') {
+
+                title = 'Reject refund?';
+                text = 'Are you sure you want to reject this refund?';
+                confirmButtonText = 'Reject refund';
+                icon = 'warning';
+                confirmButtonColor = '#dc2626';
+
+            } else if (status === 'processed') {
+
+                title = 'Process refund?';
+                text = 'Are you sure you want to process this refund?';
+                confirmButtonText = 'Process refund';
+                confirmButtonColor = '#2563eb';
+            }
+
+            const result = await Swal.fire({
+
+                title: title,
+                text: text,
+                icon: icon,
+
+                showCancelButton: true,
+
+                confirmButtonText: confirmButtonText,
+                cancelButtonText: 'Cancel',
+
+                confirmButtonColor: confirmButtonColor,
+
+                reverseButtons: true
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            if (button) {
+                button.disabled = true;
+            }
+
+            try {
+
+                const csrfToken = document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
+
+                const response = await fetch(form.action, {
+
+                    method: 'POST',
+
+                    headers: {
+
+                        'X-CSRF-TOKEN': csrfToken,
+
+                        'Accept': 'application/json',
+
+                        'X-Requested-With': 'XMLHttpRequest',
+
+                        'Content-Type':
+                            'application/x-www-form-urlencoded; charset=UTF-8'
+                    },
+
+                    body: new URLSearchParams({
+
+                        _token: csrfToken,
+
+                        _method: 'PATCH',
+
+                        status: status
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        'Unable to update the refund status.'
+                    );
+                }
+
+                const row = form.closest('tr');
+
+                if (row) {
+
+                    const statusBadge =
+                        row.querySelector('.refund-status');
+
+                    if (statusBadge) {
+
+                        statusBadge.className =
+                            'refund-status status-' + status;
+
+                        statusBadge.innerHTML =
+                            '<i class="bi bi-circle-fill"></i> ' +
+                            status.charAt(0).toUpperCase() +
+                            status.slice(1);
+                    }
+                }
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'Refund updated',
+
+                    text:
+                        data.message ||
+                        'The refund status has been updated successfully.',
+
+                    timer: 1800,
+
+                    showConfirmButton: false
+                });
+
+            } catch (error) {
+
+                console.error('Refund status error:', error);
+
+                if (button) {
+                    button.disabled = false;
+                }
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Update failed',
+
+                    text:
+                        error.message ||
+                        'Unable to update the refund status.',
+
+                    confirmButtonColor: '#2563eb'
+                });
+            }
+
+        });
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE REFUND
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll('.delete-refund-form').forEach(function (form) {
+
+        form.addEventListener('submit', async function (event) {
+
+            event.preventDefault();
+
+            const row = form.closest('tr');
+
+            const refundNumber =
+                form.dataset.refundNumber || 'this refund';
+
+            const result = await Swal.fire({
+
+                title: 'Delete refund?',
+
+                text:
+                    `Are you sure you want to permanently delete ${refundNumber}?`,
+
+                icon: 'warning',
+
+                showCancelButton: true,
+
+                confirmButtonText: 'Delete refund',
+
+                cancelButtonText: 'Cancel',
+
+                confirmButtonColor: '#bd3d53',
+
+                reverseButtons: true
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            const button = form.querySelector('button');
+
+            if (button) {
+                button.disabled = true;
+            }
+
+            try {
+
+                const csrfToken = document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
+
+                const response = await fetch(form.action, {
+
+                    method: 'POST',
+
+                    headers: {
+
+                        'X-CSRF-TOKEN': csrfToken,
+
+                        'Accept': 'application/json',
+
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+
+                    body: new URLSearchParams({
+
+                        _token: csrfToken,
+
+                        _method: 'DELETE'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        'Unable to delete the refund.'
+                    );
+                }
+
+                if (row) {
+
+                    row.style.transition =
+                        'opacity 0.3s ease, transform 0.3s ease';
+
+                    row.style.opacity = '0';
+
+                    row.style.transform = 'translateX(20px)';
+
+                    setTimeout(function () {
+                        row.remove();
+                    }, 300);
+                }
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'Refund deleted',
+
+                    text:
+                        data.message ||
+                        'The refund has been deleted successfully.',
+
+                    timer: 1800,
+
+                    showConfirmButton: false
+                });
+
+            } catch (error) {
+
+                console.error('Refund delete error:', error);
+
+                if (button) {
+                    button.disabled = false;
+                }
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Delete failed',
+
+                    text:
+                        error.message ||
+                        'Unable to delete the refund.',
+
+                    confirmButtonColor: '#2563eb'
+                });
+            }
 
         });
 

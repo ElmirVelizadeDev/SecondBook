@@ -8,25 +8,16 @@
 
 @section('content')
 
-<div class="dashboard-section refunds-page">
+<div class="refunds-page">
 
     {{-- =========================================================
-        PAGE HEADER
+        HERO
     ========================================================= --}}
+    <div class="refund-hero">
 
-    <div class="refund-form-hero mb-4">
+        <div class="refund-hero-content">
 
-        <div class="refund-form-hero-content">
-
-            <a
-                href="{{ route('admin.refunds.index') }}"
-                class="refund-back-link"
-            >
-                <i class="bi bi-arrow-left"></i>
-                Back to Refunds
-            </a>
-
-            <span class="hero-badge">
+            <span class="refund-hero-badge">
                 <i class="bi bi-arrow-counterclockwise"></i>
                 Payments Recovery
             </span>
@@ -39,8 +30,16 @@
 
         </div>
 
-        <div class="refund-form-hero-mark">
-            <i class="bi bi-receipt"></i>
+        <div class="refund-hero-actions">
+
+            <a
+                href="{{ route('admin.refunds.index') }}"
+                class="refund-back-btn"
+            >
+                <i class="bi bi-arrow-left"></i>
+                <span>Back to Refunds</span>
+            </a>
+
         </div>
 
     </div>
@@ -49,21 +48,24 @@
     {{-- =========================================================
         VALIDATION ERRORS
     ========================================================= --}}
-
     @if($errors->any())
 
         <div class="refund-alert refund-alert-danger">
 
-            <i class="bi bi-exclamation-circle-fill"></i>
+            <i class="bi bi-exclamation-triangle"></i>
 
             <div>
-                <strong>Please check the form.</strong>
 
-                <ul class="mb-0 mt-1">
+                <strong>
+                    Please fix the following errors:
+                </strong>
+
+                <ul>
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
+
             </div>
 
         </div>
@@ -72,20 +74,22 @@
 
 
     {{-- =========================================================
-        FORM
+        MAIN PANEL
     ========================================================= --}}
+    <div class="refund-panel">
 
-    <div class="dashboard-panel refund-form-panel">
+        {{-- PANEL HEADER --}}
+        <div class="refund-panel-header">
 
-        <div class="panel-header refund-form-panel-header">
-
-            <div>
+            <div class="refund-panel-heading">
 
                 <span class="eyebrow">
                     Refund Details
                 </span>
 
-                <h5>New Refund</h5>
+                <h5>
+                    New Refund
+                </h5>
 
                 <p>
                     Select the order and provide the refund information.
@@ -96,6 +100,9 @@
         </div>
 
 
+        {{-- =====================================================
+            FORM
+        ===================================================== --}}
         <form
             method="POST"
             action="{{ route('admin.refunds.store') }}"
@@ -106,40 +113,47 @@
 
 
             {{-- =================================================
-                ORDER
+                ORDER INFORMATION
             ================================================= --}}
-
             <div class="refund-form-section">
 
-                <div class="refund-form-section-heading">
+                <div class="refund-section-heading">
 
-                    <div class="refund-form-section-icon">
+                    <div class="refund-section-icon">
                         <i class="bi bi-bag-check"></i>
                     </div>
 
                     <div>
-                        <h6>Order Information</h6>
-                        <p>Select the order that requires a refund.</p>
+
+                        <h6>
+                            Order Information
+                        </h6>
+
+                        <p>
+                            Select the order that requires a refund.
+                        </p>
+
                     </div>
 
                 </div>
 
 
-                <div class="row g-4">
+                <div class="refund-form-grid">
 
-                    <div class="col-12">
+                    <div class="refund-field-full">
 
                         <label
                             for="order_id"
                             class="refund-form-label"
                         >
-                            Order <span>*</span>
+                            Order
+                            <span class="required">*</span>
                         </label>
 
                         <select
                             name="order_id"
                             id="order_id"
-                            class="form-select refund-form-control @error('order_id') is-invalid @enderror"
+                            class="refund-form-control @error('order_id') is-invalid @enderror"
                             required
                         >
 
@@ -154,9 +168,14 @@
                                     data-total="{{ $order->payment?->amount ?? $order->total_price }}"
                                     @selected(old('order_id') == $order->id)
                                 >
+
                                     #{{ $order->order_number }}
                                     — {{ $order->user?->name ?? 'Unknown customer' }}
-                                    — ${{ number_format($order->payment?->amount ?? $order->total_price, 2) }}
+                                    — ${{ number_format(
+                                        $order->payment?->amount ?? $order->total_price,
+                                        2
+                                    ) }}
+
                                 </option>
 
                             @endforeach
@@ -164,9 +183,11 @@
                         </select>
 
                         @error('order_id')
-                            <div class="invalid-feedback">
+
+                            <div class="refund-field-error">
                                 {{ $message }}
                             </div>
+
                         @enderror
 
                     </div>
@@ -177,78 +198,80 @@
 
 
             {{-- =================================================
-                REFUND DETAILS
+                REFUND INFORMATION
             ================================================= --}}
-
             <div class="refund-form-section">
 
-                <div class="refund-form-section-heading">
+                <div class="refund-section-heading">
 
-                    <div class="refund-form-section-icon">
+                    <div class="refund-section-icon">
                         <i class="bi bi-cash-stack"></i>
                     </div>
 
                     <div>
-                        <h6>Refund Details</h6>
-                        <p>Enter the amount and reason for the refund.</p>
+
+                        <h6>
+                            Refund Information
+                        </h6>
+
+                        <p>
+                            Enter the amount and reason for the refund.
+                        </p>
+
                     </div>
 
                 </div>
 
 
-                <div class="row g-4">
+                <div class="refund-form-grid">
 
-                    {{-- Amount --}}
-                    <div class="col-md-6">
+                    {{-- AMOUNT --}}
+                    <div>
 
                         <label
                             for="amount"
                             class="refund-form-label"
                         >
-                            Refund Amount <span>*</span>
+                            Refund Amount
+                            <span class="required">*</span>
                         </label>
 
-                        <div class="refund-input-group">
-
-                            <span class="refund-input-prefix">
-                                $
-                            </span>
-
-                            <input
-                                type="number"
-                                name="amount"
-                                id="amount"
-                                value="{{ old('amount') }}"
-                                class="form-control refund-form-control refund-amount-input @error('amount') is-invalid @enderror"
-                                placeholder="0.00"
-                                min="0.01"
-                                step="0.01"
-                                required
-                            >
-
-                        </div>
+                        <input
+                            type="number"
+                            name="amount"
+                            id="amount"
+                            value="{{ old('amount') }}"
+                            class="refund-form-control @error('amount') is-invalid @enderror"
+                            placeholder="0.00"
+                            min="0.01"
+                            step="0.01"
+                            required
+                        >
 
                         @error('amount')
+
                             <div class="refund-field-error">
                                 {{ $message }}
                             </div>
+
                         @enderror
 
-                        <small class="refund-form-help">
+                        <span class="refund-field-help">
                             The amount cannot exceed the refundable order amount.
-                        </small>
+                        </span>
 
                     </div>
 
 
-                    {{-- Reason --}}
-                    <div class="col-md-6">
+                    {{-- REASON --}}
+                    <div>
 
                         <label
                             for="reason"
                             class="refund-form-label"
                         >
-                            Reason <span>*</span>
+                            Refund Reason
+                            <span class="required">*</span>
                         </label>
 
                         <input
@@ -256,23 +279,25 @@
                             name="reason"
                             id="reason"
                             value="{{ old('reason') }}"
-                            class="form-control refund-form-control @error('reason') is-invalid @enderror"
+                            class="refund-form-control @error('reason') is-invalid @enderror"
                             placeholder="Enter refund reason"
                             maxlength="255"
                             required
                         >
 
                         @error('reason')
+
                             <div class="refund-field-error">
                                 {{ $message }}
                             </div>
+
                         @enderror
 
                     </div>
 
 
-                    {{-- Note --}}
-                    <div class="col-12">
+                    {{-- INTERNAL NOTE --}}
+                    <div class="refund-field-full">
 
                         <label
                             for="note"
@@ -286,25 +311,21 @@
                             id="note"
                             rows="5"
                             maxlength="2000"
-                            class="form-control refund-form-control refund-textarea @error('note') is-invalid @enderror"
+                            class="refund-form-control @error('note') is-invalid @enderror"
                             placeholder="Add any additional information about this refund..."
                         >{{ old('note') }}</textarea>
 
                         @error('note')
+
                             <div class="refund-field-error">
                                 {{ $message }}
                             </div>
+
                         @enderror
 
-                        <div class="refund-textarea-footer">
-                            <small class="refund-form-help">
-                                This note is for administrative records.
-                            </small>
-
-                            <small class="refund-character-count">
-                                <span id="noteCount">0</span>/2000
-                            </small>
-                        </div>
+                        <span class="refund-field-help">
+                            This note is for administrative records.
+                        </span>
 
                     </div>
 
@@ -316,15 +337,17 @@
             {{-- =================================================
                 INFORMATION
             ================================================= --}}
-
-            <div class="refund-info-box">
+            <div class="refund-info">
 
                 <div class="refund-info-icon">
                     <i class="bi bi-info-circle"></i>
                 </div>
 
                 <div>
-                    <strong>Refund workflow</strong>
+
+                    <strong>
+                        Refund Workflow
+                    </strong>
 
                     <p>
                         New refunds are created with
@@ -333,30 +356,36 @@
                         reject, or process the refund from the refund
                         management page.
                     </p>
+
                 </div>
 
             </div>
 
 
             {{-- =================================================
-                ACTIONS
+                FORM FOOTER
             ================================================= --}}
-
-            <div class="refund-form-actions">
+            <div class="refund-form-footer">
 
                 <a
                     href="{{ route('admin.refunds.index') }}"
-                    class="refund-cancel-button"
+                    class="refund-cancel-btn"
                 >
+
+                    <i class="bi bi-x-lg"></i>
                     Cancel
+
                 </a>
+
 
                 <button
                     type="submit"
-                    class="refund-submit-button"
+                    class="refund-submit-btn"
                 >
-                    <i class="bi bi-plus-lg"></i>
+
+                    <i class="bi bi-check-circle"></i>
                     Create Refund
+
                 </button>
 
             </div>
@@ -375,41 +404,47 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const note = document.getElementById('note');
-    const noteCount = document.getElementById('noteCount');
-
-    if (note && noteCount) {
-
-        function updateNoteCount() {
-            noteCount.textContent = note.value.length;
-        }
-
-        note.addEventListener('input', updateNoteCount);
-
-        updateNoteCount();
-    }
-
+    /*
+    |--------------------------------------------------------------------------
+    | Set maximum refundable amount
+    |--------------------------------------------------------------------------
+    */
 
     const orderSelect = document.getElementById('order_id');
     const amountInput = document.getElementById('amount');
 
+    function updateRefundAmountLimit() {
+
+        if (!orderSelect || !amountInput) {
+            return;
+        }
+
+        const selectedOption =
+            orderSelect.options[orderSelect.selectedIndex];
+
+        const total =
+            selectedOption?.dataset?.total;
+
+        if (total) {
+
+            amountInput.max = parseFloat(total).toFixed(2);
+
+        } else {
+
+            amountInput.removeAttribute('max');
+
+        }
+
+    }
+
     if (orderSelect && amountInput) {
 
-        orderSelect.addEventListener('change', function () {
+        orderSelect.addEventListener(
+            'change',
+            updateRefundAmountLimit
+        );
 
-            const selectedOption =
-                this.options[this.selectedIndex];
-
-            const total =
-                selectedOption.dataset.total;
-
-            if (total) {
-                amountInput.max = total;
-            } else {
-                amountInput.removeAttribute('max');
-            }
-
-        });
+        updateRefundAmountLimit();
 
     }
 

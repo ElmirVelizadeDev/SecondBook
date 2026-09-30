@@ -1,409 +1,574 @@
 @extends('layout.admin.master')
 
-@section('title', 'Orders')
-
+@section('title', 'Edit Order')
 
 @push('css')
-<link rel="stylesheet" href="{{ asset('admin/css/orders.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/orders.css') }}">
 @endpush
-
 
 @section('content')
 
-<div class="container-fluid p-4">
+<div class="orders-edit-page">
 
+    {{-- =========================================================
+         HEADER
+         ========================================================= --}}
 
-    {{-- Header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4" style="flex-wrap: wrap; gap: 10px;">
+    <div class="orders-edit-header">
 
-        <div>
-            <h2 class="fw-bold mb-1">
-                <i class="bi bi-pencil-square me-2"></i>
-                Edit Order
-            </h2>
+        <div class="orders-edit-heading">
 
-            <p class="text-muted mb-0">
-                Update order information and status.
+            <div class="orders-edit-eyebrow">
+                <i class="bi bi-pencil-square"></i>
+                Order Management
+            </div>
+
+            <h1>Edit Order</h1>
+
+            <p>
+                Update customer, payment, delivery and order information.
             </p>
+
         </div>
 
-
-        <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
-            <i class="bi bi-arrow-left me-2"></i>
-            Back
+        <a href="{{ route('admin.orders.index') }}" class="orders-edit-back">
+            <i class="bi bi-arrow-left"></i>
+            <span>Back to Orders</span>
         </a>
 
     </div>
 
 
-    {{-- Form --}}
-    <div class="card border-0 shadow-sm">
+    {{-- =========================================================
+         MAIN CARD
+         ========================================================= --}}
 
-        <div class="card-body p-4">
+    <div class="orders-edit-card">
+
+        <div class="orders-edit-card-header">
+
+            <div class="orders-edit-card-icon">
+                <i class="bi bi-cart-check"></i>
+            </div>
+
+            <div class="orders-edit-card-title">
+                <strong>Order #{{ $order->id }}</strong>
+                <span>
+                    Modify the information associated with this order.
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="orders-edit-card-body">
+
+            {{-- =================================================
+                 ERRORS
+                 ================================================= --}}
 
             @if($errors->any())
-                <div class="alert alert-danger">
+
+                <div class="orders-edit-errors">
+
+                    <div class="orders-edit-errors-title">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Please fix the following errors:
+                    </div>
+
                     <ul>
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
+
                 </div>
+
             @endif
 
 
-            <form action="{{ route('admin.orders.update',$order->id) }}"
-                  method="POST">
+            <form
+                action="{{ route('admin.orders.update', $order->id) }}"
+                method="POST"
+            >
 
                 @csrf
                 @method('PUT')
 
 
+                {{-- =================================================
+                     CUSTOMER & BOOK
+                     ================================================= --}}
 
-                <div class="row g-4">
+                <div class="orders-edit-section">
 
-
-                    {{-- Customer --}}
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            Customer
-                        </label>
-
-
-                        <select name="user_id" class="form-select">
-
-
-                            @foreach($users as $user)
-
-                                <option value="{{ $user->id }}"
-                                    {{ $order->user_id == $user->id ? 'selected':'' }}>
-
-                                    {{ $user->first_name }}
-                                    {{ $user->last_name }}
-
-                                </option>
-
-                            @endforeach
-
-
-                        </select>
-
+                    <div class="orders-edit-section-heading">
+                        <i class="bi bi-person-vcard"></i>
+                        <span>Customer & Book</span>
                     </div>
 
+                    <div class="orders-edit-grid">
 
-                    {{-- Book --}}
-                    <div class="col-md-6">
+                        {{-- Customer --}}
+                        <div class="orders-edit-field span-6">
 
-                        <label class="form-label">
-                            Book
-                        </label>
+                            <label for="user_id" class="orders-edit-label">
+                                Customer
+                                <span class="required">*</span>
+                            </label>
 
+                            <select
+                                id="user_id"
+                                name="user_id"
+                                class="orders-edit-select"
+                            >
 
-                        <select name="book_id" class="form-select">
+                                @foreach($users as $user)
 
+                                    <option
+                                        value="{{ $user->id }}"
+                                        @selected($order->user_id == $user->id)
+                                    >
+                                        {{ trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?: ($user->name ?? $user->username ?? 'User') }}
+                                    </option>
 
-                            @foreach($books as $book)
+                                @endforeach
 
-                                <option value="{{ $book->id }}"
-                                    {{ $order->book_id == $book->id ? 'selected':'' }}>
+                            </select>
 
-                                    {{ $book->title }}
-
-                                </option>
-
-                            @endforeach
-
-
-                        </select>
-
-                    </div>
-
-
-                    {{-- Full Name --}}
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            Full Name
-                        </label>
+                        </div>
 
 
-                        <input type="text"
-                               name="full_name"
-                               class="form-control"
-                               value="{{ $order->full_name }}">
+                        {{-- Book --}}
+                        <div class="orders-edit-field span-6">
 
-                    </div>
+                            <label for="book_id" class="orders-edit-label">
+                                Book
+                                <span class="required">*</span>
+                            </label>
 
+                            <select
+                                id="book_id"
+                                name="book_id"
+                                class="orders-edit-select"
+                            >
 
-                    {{-- Phone --}}
-                    <div class="col-md-6">
+                                @foreach($books as $book)
 
-                        <label class="form-label">
-                            Phone
-                        </label>
+                                    <option
+                                        value="{{ $book->id }}"
+                                        @selected($order->book_id == $book->id)
+                                    >
+                                        {{ $book->title }}
+                                    </option>
 
+                                @endforeach
 
-                        <input type="text"
-                               name="phone"
-                               class="form-control"
-                               value="{{ $order->phone }}">
+                            </select>
 
-                    </div>
-
-
-                    {{-- Quantity --}}
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            Quantity
-                        </label>
-
-
-                        <input type="number"
-                               name="quantity"
-                               class="form-control"
-                               min="1"
-                               value="{{ $order->quantity }}">
+                        </div>
 
                     </div>
-
-
-                    {{-- Price --}}
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            Book Price
-                        </label>
-
-
-                        <input type="number"
-                               name="book_price"
-                               class="form-control"
-                               step="0.01"
-                               value="{{ $order->book_price }}">
-
-                    </div>
-
-
-                    {{-- Payment Method --}}
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            Payment Method
-                        </label>
-
-
-                        <select name="payment_method"
-                                class="form-select">
-
-
-                            <option value="cash_on_delivery"
-                            {{ $order->payment_method == 'cash_on_delivery' ? 'selected':'' }}>
-                                Cash On Delivery
-                            </option>
-
-
-                            <option value="credit_card"
-                            {{ $order->payment_method == 'credit_card' ? 'selected':'' }}>
-                                Credit Card
-                            </option>
-
-
-                            <option value="debit_card"
-                            {{ $order->payment_method == 'debit_card' ? 'selected':'' }}>
-                                Debit Card
-                            </option>
-
-
-                            <option value="paypal"
-                            {{ $order->payment_method == 'paypal' ? 'selected':'' }}>
-                                PayPal
-                            </option>
-
-
-                        </select>
-
-                    </div>
-
-
-                    {{-- Payment Status --}}
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            Payment Status
-                        </label>
-
-
-                        <select name="payment_status"
-                                class="form-select">
-
-
-                            <option value="pending"
-                            {{ $order->payment_status == 'pending' ? 'selected':'' }}>
-                                Pending
-                            </option>
-
-
-                            <option value="paid"
-                            {{ $order->payment_status == 'paid' ? 'selected':'' }}>
-                                Paid
-                            </option>
-
-
-                            <option value="failed"
-                            {{ $order->payment_status == 'failed' ? 'selected':'' }}>
-                                Failed
-                            </option>
-
-
-                            <option value="refunded"
-                            {{ $order->payment_status == 'refunded' ? 'selected':'' }}>
-                                Refunded
-                            </option>
-
-
-                        </select>
-
-                    </div>
-
-
-                    {{-- Order Status --}}
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            Order Status
-                        </label>
-
-
-                        <select name="order_status"
-                                class="form-select">
-
-
-                            <option value="pending"
-                            {{ $order->order_status == 'pending' ? 'selected':'' }}>
-                                Pending
-                            </option>
-
-
-                            <option value="processing"
-                            {{ $order->order_status == 'processing' ? 'selected':'' }}>
-                                Processing
-                            </option>
-
-
-                            <option value="shipped"
-                            {{ $order->order_status == 'shipped' ? 'selected':'' }}>
-                                Shipped
-                            </option>
-
-
-                            <option value="delivered"
-                            {{ $order->order_status == 'delivered' ? 'selected':'' }}>
-                                Delivered
-                            </option>
-
-
-                            <option value="cancelled"
-                            {{ $order->order_status == 'cancelled' ? 'selected':'' }}>
-                                Cancelled
-                            </option>
-
-
-                        </select>
-
-                    </div>
-
-
-                    {{-- Country --}}
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            Country
-                        </label>
-
-
-                        <input type="text"
-                               name="country"
-                               class="form-control"
-                               value="{{ $order->country }}">
-
-                    </div>
-
-
-                    {{-- City --}}
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            City
-                        </label>
-
-
-                        <input type="text"
-                               name="city"
-                               class="form-control"
-                               value="{{ $order->city }}">
-
-                    </div>
-
-
-                    {{-- Postal Code --}}
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            Postal Code
-                        </label>
-
-
-                        <input type="text"
-                               name="postal_code"
-                               class="form-control"
-                               value="{{ $order->postal_code }}">
-
-                    </div>
-
-
-                    {{-- Address --}}
-                    <div class="col-md-12">
-
-                        <label class="form-label">
-                            Address
-                        </label>
-
-
-                        <textarea name="address"
-                                  class="form-control"
-                                  rows="3">{{ $order->address }}</textarea>
-
-                    </div>
-
-
-                    {{-- Note --}}
-                    <div class="col-md-12">
-
-                        <label class="form-label">
-                            Note
-                        </label>
-
-
-                        <textarea name="note"
-                                  class="form-control"
-                                  rows="3">{{ $order->note }}</textarea>
-
-                    </div>
-
 
                 </div>
 
 
-                <div class="mt-4 text-end">
+                {{-- =================================================
+                     CUSTOMER INFORMATION
+                     ================================================= --}}
 
-                    <button type="submit"
-                            class="btn btn-primary">
+                <div class="orders-edit-section">
 
-                        <i class="bi bi-check-circle me-2"></i>
+                    <div class="orders-edit-section-heading">
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span>Customer Information</span>
+                    </div>
+
+                    <div class="orders-edit-grid">
+
+                        {{-- Full Name --}}
+                        <div class="orders-edit-field span-6">
+
+                            <label for="full_name" class="orders-edit-label">
+                                Full Name
+                            </label>
+
+                            <input
+                                id="full_name"
+                                type="text"
+                                name="full_name"
+                                class="orders-edit-input"
+                                value="{{ old('full_name', $order->full_name) }}"
+                            >
+
+                        </div>
+
+
+                        {{-- Phone --}}
+                        <div class="orders-edit-field span-6">
+
+                            <label for="phone" class="orders-edit-label">
+                                Phone
+                            </label>
+
+                            <input
+                                id="phone"
+                                type="text"
+                                name="phone"
+                                class="orders-edit-input"
+                                value="{{ old('phone', $order->phone) }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- =================================================
+                     ORDER & PAYMENT
+                     ================================================= --}}
+
+                <div class="orders-edit-section">
+
+                    <div class="orders-edit-section-heading">
+                        <i class="bi bi-receipt"></i>
+                        <span>Order & Payment</span>
+                    </div>
+
+                    <div class="orders-edit-grid">
+
+                        {{-- Quantity --}}
+                        <div class="orders-edit-field span-4">
+
+                            <label for="quantity" class="orders-edit-label">
+                                Quantity
+                            </label>
+
+                            <input
+                                id="quantity"
+                                type="number"
+                                name="quantity"
+                                class="orders-edit-input"
+                                min="1"
+                                value="{{ old('quantity', $order->quantity) }}"
+                            >
+
+                        </div>
+
+
+                        {{-- Price --}}
+                        <div class="orders-edit-field span-4">
+
+                            <label for="book_price" class="orders-edit-label">
+                                Book Price
+                            </label>
+
+                            <input
+                                id="book_price"
+                                type="number"
+                                name="book_price"
+                                class="orders-edit-input"
+                                step="0.01"
+                                min="0"
+                                value="{{ old('book_price', $order->book_price) }}"
+                            >
+
+                        </div>
+
+
+                        {{-- Payment Method --}}
+                        <div class="orders-edit-field span-4">
+
+                            <label for="payment_method" class="orders-edit-label">
+                                Payment Method
+                            </label>
+
+                            <select
+                                id="payment_method"
+                                name="payment_method"
+                                class="orders-edit-select"
+                            >
+
+                                <option
+                                    value="cash_on_delivery"
+                                    @selected($order->payment_method == 'cash_on_delivery')
+                                >
+                                    Cash On Delivery
+                                </option>
+
+                                <option
+                                    value="credit_card"
+                                    @selected($order->payment_method == 'credit_card')
+                                >
+                                    Credit Card
+                                </option>
+
+                                <option
+                                    value="debit_card"
+                                    @selected($order->payment_method == 'debit_card')
+                                >
+                                    Debit Card
+                                </option>
+
+                                <option
+                                    value="paypal"
+                                    @selected($order->payment_method == 'paypal')
+                                >
+                                    PayPal
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        {{-- Payment Status --}}
+                        <div class="orders-edit-field span-6">
+
+                            <label for="payment_status" class="orders-edit-label">
+                                Payment Status
+                            </label>
+
+                            <select
+                                id="payment_status"
+                                name="payment_status"
+                                class="orders-edit-select"
+                            >
+
+                                <option
+                                    value="pending"
+                                    @selected($order->payment_status == 'pending')
+                                >
+                                    Pending
+                                </option>
+
+                                <option
+                                    value="paid"
+                                    @selected($order->payment_status == 'paid')
+                                >
+                                    Paid
+                                </option>
+
+                                <option
+                                    value="failed"
+                                    @selected($order->payment_status == 'failed')
+                                >
+                                    Failed
+                                </option>
+
+                                <option
+                                    value="refunded"
+                                    @selected($order->payment_status == 'refunded')
+                                >
+                                    Refunded
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        {{-- Order Status --}}
+                        <div class="orders-edit-field span-6">
+
+                            <label for="order_status" class="orders-edit-label">
+                                Order Status
+                            </label>
+
+                            <select
+                                id="order_status"
+                                name="order_status"
+                                class="orders-edit-select"
+                            >
+
+                                <option
+                                    value="pending"
+                                    @selected($order->order_status == 'pending')
+                                >
+                                    Pending
+                                </option>
+
+                                <option
+                                    value="processing"
+                                    @selected($order->order_status == 'processing')
+                                >
+                                    Processing
+                                </option>
+
+                                <option
+                                    value="shipped"
+                                    @selected($order->order_status == 'shipped')
+                                >
+                                    Shipped
+                                </option>
+
+                                <option
+                                    value="delivered"
+                                    @selected($order->order_status == 'delivered')
+                                >
+                                    Delivered
+                                </option>
+
+                                <option
+                                    value="cancelled"
+                                    @selected($order->order_status == 'cancelled')
+                                >
+                                    Cancelled
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- =================================================
+                     SHIPPING ADDRESS
+                     ================================================= --}}
+
+                <div class="orders-edit-section">
+
+                    <div class="orders-edit-section-heading">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>Shipping Address</span>
+                    </div>
+
+                    <div class="orders-edit-grid">
+
+                        {{-- Country --}}
+                        <div class="orders-edit-field span-4">
+
+                            <label for="country" class="orders-edit-label">
+                                Country
+                            </label>
+
+                            <input
+                                id="country"
+                                type="text"
+                                name="country"
+                                class="orders-edit-input"
+                                value="{{ old('country', $order->country) }}"
+                            >
+
+                        </div>
+
+
+                        {{-- City --}}
+                        <div class="orders-edit-field span-4">
+
+                            <label for="city" class="orders-edit-label">
+                                City
+                            </label>
+
+                            <input
+                                id="city"
+                                type="text"
+                                name="city"
+                                class="orders-edit-input"
+                                value="{{ old('city', $order->city) }}"
+                            >
+
+                        </div>
+
+
+                        {{-- Postal Code --}}
+                        <div class="orders-edit-field span-4">
+
+                            <label for="postal_code" class="orders-edit-label">
+                                Postal Code
+                            </label>
+
+                            <input
+                                id="postal_code"
+                                type="text"
+                                name="postal_code"
+                                class="orders-edit-input"
+                                value="{{ old('postal_code', $order->postal_code) }}"
+                            >
+
+                        </div>
+
+
+                        {{-- Address --}}
+                        <div class="orders-edit-field span-12">
+
+                            <label for="address" class="orders-edit-label">
+                                Address
+                            </label>
+
+                            <textarea
+                                id="address"
+                                name="address"
+                                class="orders-edit-textarea"
+                                rows="3"
+                            >{{ old('address', $order->address) }}</textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- =================================================
+                     ORDER NOTE
+                     ================================================= --}}
+
+                <div class="orders-edit-section">
+
+                    <div class="orders-edit-section-heading">
+                        <i class="bi bi-chat-left-text"></i>
+                        <span>Order Note</span>
+                    </div>
+
+                    <div class="orders-edit-grid">
+
+                        <div class="orders-edit-field span-12">
+
+                            <label for="note" class="orders-edit-label">
+                                Note
+                            </label>
+
+                            <textarea
+                                id="note"
+                                name="note"
+                                class="orders-edit-textarea"
+                                rows="3"
+                                placeholder="Add an internal note about this order..."
+                            >{{ old('note', $order->note) }}</textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- =================================================
+                     ACTIONS
+                     ================================================= --}}
+
+                <div class="orders-edit-footer">
+
+                    <a
+                        href="{{ route('admin.orders.index') }}"
+                        class="orders-edit-cancel"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="orders-edit-submit"
+                    >
+                        <i class="bi bi-check-circle"></i>
                         Update Order
-
                     </button>
 
                 </div>
@@ -415,6 +580,5 @@
     </div>
 
 </div>
-
 
 @endsection

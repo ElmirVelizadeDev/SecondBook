@@ -1,27 +1,203 @@
-<div class="sidebar show">
+@php
 
-    {{-- Logo --}}
-    <div class="logo">
+    /* =========================================================
+       MENU DEFINITION
+       Permissions, routes and active patterns are preserved.
+    ========================================================= */
 
-        <div class="logo-brand">
+    $pending = $pendingSellerApplicationsCount ?? 0;
 
-            <div class="logo-icon">
-                <img
-                    src="{{ asset('admin/images/logo2.png') }}"
-                    alt="SecondBook Logo"
-                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block;"
-                >
-            </div>
+    $groups = [
 
-            <div class="logo-text">
-                <h4>SecondBook</h4>
-                <small>Admin Panel</small>
-            </div>
+        [
+            'id'     => 'bookMenu',
+            'label'  => 'Book Management',
+            'icon'   => 'bi-book',
+            'tone'   => 'blue',
+            'perms'  => [
+                'books.view',
+                'book_conditions.view',
+                'book_requests.view',
+                'categories.view',
+                'authors.view',
+                'publishers.view',
+            ],
+            'routes' => [
+                'admin.books.*',
+                'admin.categories.*',
+                'admin.authors.*',
+                'admin.publishers.*',
+                'admin.book.conditions.*',
+                'admin.book.requests.*',
+            ],
+            'items' => [
+                ['Books',           'books.view',           'admin.books.index',           'admin.books.*'],
+                ['Categories',      'categories.view',      'admin.categories.index',      'admin.categories.*'],
+                ['Authors',         'authors.view',         'admin.authors.index',         'admin.authors.*'],
+                ['Publishers',      'publishers.view',      'admin.publishers.index',      'admin.publishers.*'],
+                ['Book Conditions', 'book_conditions.view', 'admin.book.conditions.index', 'admin.book.conditions.*'],
+                ['Book Requests',   'book_requests.view',   'admin.book.requests.index',   'admin.book.requests.*'],
+            ],
+        ],
 
+        [
+            'id'     => 'salesMenu',
+            'label'  => 'Sales Management',
+            'icon'   => 'bi-cart3',
+            'tone'   => 'green',
+            'perms'  => [
+                'orders.view',
+                'payments.view',
+                'coupons.view',
+                'shipping.view',
+                'refunds.view',
+            ],
+            'routes' => [
+                'admin.orders.*',
+                'admin.payments.*',
+                'admin.coupons.*',
+                'admin.shipping.*',
+                'admin.refunds.*',
+            ],
+            'items' => [
+                ['Orders',   'orders.view',   'admin.orders.index',   'admin.orders.*'],
+                ['Payments', 'payments.view', 'admin.payments.index', 'admin.payments.*'],
+                ['Coupons',  'coupons.view',  'admin.coupons.index',  'admin.coupons.*'],
+                ['Shipping', 'shipping.view', 'admin.shipping.index', 'admin.shipping.*'],
+                ['Refunds',  'refunds.view',  'admin.refunds.index',  'admin.refunds.*'],
+            ],
+        ],
+
+        [
+            'id'     => 'userMenu',
+            'label'  => 'User Management',
+            'icon'   => 'bi-people',
+            'tone'   => 'violet',
+            'dot'    => $pending,
+            'perms'  => [
+                'users.view',
+                'sellers.view',
+                'seller_applications.view',
+                'roles.view',
+            ],
+            'routes' => [
+                'admin.users.*',
+                'admin.sellers.*',
+                'admin.seller-applications.*',
+                'admin.roles.*',
+            ],
+            'items' => [
+                ['Users',               'users.view',              'admin.users.index',               'admin.users.*'],
+                ['Sellers',             'sellers.view',            'admin.sellers.index',             'admin.sellers.*'],
+                ['Seller Requests',     'seller_applications.view','admin.seller-applications.index', 'admin.seller-applications.*', 'badge' => $pending],
+                ['Roles & Permissions', 'roles.view',              'admin.roles.index',               'admin.roles.*'],
+            ],
+        ],
+
+        [
+            'id'     => 'contentMenu',
+            'label'  => 'Content Management',
+            'icon'   => 'bi-file-earmark-text',
+            'tone'   => 'amber',
+            'perms'  => [
+                'reviews.view',
+                'banners.view',
+                'blogs.view',
+                'faq.view',
+            ],
+            'routes' => [
+                'admin.reviews.*',
+                'admin.banners.*',
+                'admin.blogs.*',
+                'admin.faq.*',
+            ],
+            'items' => [
+                ['Reviews', 'reviews.view', 'admin.reviews.index', 'admin.reviews.*'],
+                ['Banners', 'banners.view', 'admin.banners.index', 'admin.banners.*'],
+                ['Blog',    'blogs.view',   'admin.blogs.index',   'admin.blogs.*'],
+                ['FAQ',     'faq.view',     'admin.faq.index',     'admin.faq.*'],
+            ],
+        ],
+
+        [
+            'id'     => 'analyticsMenu',
+            'label'  => 'Analytics',
+            'icon'   => 'bi-bar-chart-line',
+            'tone'   => 'cyan',
+            'perms'  => [
+                'reports.view',
+                'analytics.view',
+            ],
+            'routes' => [
+                'admin.reports.*',
+                'admin.analytics.*',
+            ],
+            'items' => [
+                ['Reports',   'reports.view',   'admin.reports.index',   'admin.reports.*'],
+                ['Analytics', 'analytics.view', 'admin.analytics.index', 'admin.analytics.*'],
+            ],
+        ],
+
+        [
+            'id'     => 'systemMenu',
+            'label'  => 'System',
+            'icon'   => 'bi-gear',
+            'tone'   => 'slate',
+            'perms'  => [
+                'settings.view',
+                'email_settings.view',
+                'notifications.view',
+                'activity_logs.view',
+                'backup.view',
+            ],
+            'routes' => [
+                'admin.settings.*',
+                'admin.email-settings.*',
+                'admin.notifications.*',
+                'admin.activity.logs.*',
+                'admin.backup.*',
+            ],
+            'items' => [
+                ['Settings',       'settings.view',       'admin.settings.index',       'admin.settings.*'],
+                ['Email Settings', 'email_settings.view', 'admin.email-settings.index', 'admin.email-settings.*'],
+                ['Notifications',  'notifications.view',  'admin.notifications.index',  'admin.notifications.*'],
+                ['Activity Logs',  'activity_logs.view',  'admin.activity.logs.index',  'admin.activity.logs.*'],
+                ['Backup',         'backup.view',         'admin.backup.index',         'admin.backup.*'],
+            ],
+        ],
+
+    ];
+
+    $index = 0;
+
+@endphp
+
+
+<div
+    class="sidebar sb show"
+    id="adminSidebar"
+    aria-label="Admin sidebar"
+>
+
+    {{-- =====================================================
+         BRAND
+    ====================================================== --}}
+    <div class="sb-brand">
+
+        <div class="sb-logo">
+            <img
+                src="{{ asset('admin/images/logo2.png') }}"
+                alt="SecondBook Logo"
+            >
+        </div>
+
+        <div class="sb-brand-text">
+            <strong>SecondBook</strong>
+            <small>Admin Panel</small>
         </div>
 
         <button
-            class="sidebar-close"
+            class="sidebar-close sb-close"
             id="closeSidebar"
             type="button"
             aria-label="Close menu"
@@ -32,769 +208,176 @@
     </div>
 
 
-    {{-- Scrollable Menu --}}
-    <div class="sidebar-menu">
+    {{-- =====================================================
+         NAVIGATION
+    ====================================================== --}}
+    <nav
+        class="sb-scroll"
+        aria-label="Admin navigation"
+    >
 
         {{-- Dashboard --}}
         @can('dashboard.view')
 
-            <ul class="menu dashboard-menu">
+            <a
+                href="{{ route('admin.dashboard') }}"
+                class="sb-dash {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
+                style="--i: {{ $index++ }}"
+                @if(request()->routeIs('admin.dashboard'))
+                    aria-current="page"
+                @endif
+            >
+                <span class="sb-ic sb-tone-blue">
+                    <i class="bi bi-grid"></i>
+                </span>
 
-                <li class="sidebar-item dashboard-item">
-
-                    <a
-                        href="{{ route('admin.dashboard') }}"
-                        class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
-                    >
-
-                        <div>
-                            <i class="bi bi-grid"></i>
-                            <span>Dashboard</span>
-                        </div>
-
-                    </a>
-
-                </li>
-
-            </ul>
+                <span>Dashboard</span>
+            </a>
 
         @endcan
 
 
-        <span class="menu-title">CONTROL PANEL</span>
+        {{-- Section label --}}
+        <span
+            class="sb-label"
+            style="--i: {{ $index++ }}"
+        >
+            Control panel
+        </span>
 
 
-        {{-- =========================================================
-             BOOK MANAGEMENT
-        ========================================================== --}}
-        @canany([
-            'books.view',
-            'book_conditions.view',
-            'book_requests.view',
-            'categories.view',
-            'authors.view',
-            'publishers.view'
-        ])
+        {{-- Groups --}}
+        @foreach($groups as $group)
 
-            <ul class="menu">
+            @canany($group['perms'])
 
-                <li>
+                @php
+                    $open = request()->routeIs(...$group['routes']);
+                @endphp
+
+                <div
+                    class="sb-group {{ $open ? 'is-current' : '' }}"
+                    style="--i: {{ $index++ }}"
+                >
 
                     <a
+                        class="sb-toggle sb-tone-{{ $group['tone'] }}"
                         data-bs-toggle="collapse"
-                        href="#bookMenu"
+                        href="#{{ $group['id'] }}"
                         role="button"
-                        aria-expanded="{{ request()->routeIs(
-                            'admin.books.*',
-                            'admin.categories.*',
-                            'admin.authors.*',
-                            'admin.publishers.*',
-                            'admin.book.conditions.*',
-                            'admin.book.requests.*'
-                        ) ? 'true' : 'false' }}"
+                        aria-expanded="{{ $open ? 'true' : 'false' }}"
+                        aria-controls="{{ $group['id'] }}"
                     >
 
-                        <div>
-                            <i class="bi bi-book"></i>
-                            <span>Book Management</span>
-                        </div>
+                        <span class="sb-ic">
+                            <i class="bi {{ $group['icon'] }}"></i>
+                        </span>
 
-                        <i class="bi bi-chevron-down"></i>
+                        <span class="sb-name">
+                            {{ $group['label'] }}
+                        </span>
+
+                        @if(($group['dot'] ?? 0) > 0)
+
+                            <span
+                                class="sb-dot"
+                                title="Pending requests"
+                                aria-label="Pending requests"
+                            ></span>
+
+                        @endif
+
+                        <i class="bi bi-chevron-down sb-caret"></i>
 
                     </a>
 
 
                     <div
-                        class="collapse {{ request()->routeIs(
-                            'admin.books.*',
-                            'admin.categories.*',
-                            'admin.authors.*',
-                            'admin.publishers.*',
-                            'admin.book.conditions.*',
-                            'admin.book.requests.*'
-                        ) ? 'show' : '' }}"
-                        id="bookMenu"
+                        class="collapse {{ $open ? 'show' : '' }}"
+                        id="{{ $group['id'] }}"
                     >
 
-                        <ul class="menu">
+                        <div class="sb-sub">
 
-                            {{-- Books --}}
-                            @can('books.view')
-                                <li>
+                            @foreach($group['items'] as $item)
+
+                                @can($item[1])
+
+                                    @php
+                                        $current = request()->routeIs($item[3]);
+                                        $badge   = $item['badge'] ?? 0;
+                                    @endphp
+
                                     <a
-                                        href="{{ route('admin.books.index') }}"
-                                        class="{{ request()->routeIs('admin.books.*') ? 'active' : '' }}"
-                                    >
-                                        Books
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Categories --}}
-                            @can('categories.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.categories.index') }}"
-                                        class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}"
-                                    >
-                                        Categories
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Authors --}}
-                            @can('authors.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.authors.index') }}"
-                                        class="{{ request()->routeIs('admin.authors.*') ? 'active' : '' }}"
-                                    >
-                                        Authors
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Publishers --}}
-                            @can('publishers.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.publishers.index') }}"
-                                        class="{{ request()->routeIs('admin.publishers.*') ? 'active' : '' }}"
-                                    >
-                                        Publishers
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Book Conditions --}}
-                            @can('book_conditions.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.book.conditions.index') }}"
-                                        class="{{ request()->routeIs('admin.book.conditions.*') ? 'active' : '' }}"
-                                    >
-                                        Book Conditions
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Book Requests --}}
-                            @can('book_requests.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.book.requests.index') }}"
-                                        class="{{ request()->routeIs('admin.book.requests.*') ? 'active' : '' }}"
-                                    >
-                                        Book Requests
-                                    </a>
-                                </li>
-                            @endcan
-
-                        </ul>
-
-                    </div>
-
-                </li>
-
-            </ul>
-
-        @endcanany
-
-
-        {{-- =========================================================
-             SALES MANAGEMENT
-        ========================================================== --}}
-        @canany([
-            'orders.view',
-            'payments.view',
-            'coupons.view',
-            'shipping.view',
-            'refunds.view'
-        ])
-
-            <ul class="menu">
-
-                <li>
-
-                    <a
-                        data-bs-toggle="collapse"
-                        href="#salesMenu"
-                        role="button"
-                        aria-expanded="{{ request()->routeIs(
-                            'admin.orders.*',
-                            'admin.payments.*',
-                            'admin.coupons.*',
-                            'admin.shipping.*',
-                            'admin.refunds.*'
-                        ) ? 'true' : 'false' }}"
-                    >
-
-                        <div>
-                            <i class="bi bi-cart3"></i>
-                            <span>Sales Management</span>
-                        </div>
-
-                        <i class="bi bi-chevron-down"></i>
-
-                    </a>
-
-
-                    <div
-                        id="salesMenu"
-                        class="collapse {{ request()->routeIs(
-                            'admin.orders.*',
-                            'admin.payments.*',
-                            'admin.coupons.*',
-                            'admin.shipping.*',
-                            'admin.refunds.*'
-                        ) ? 'show' : '' }}"
-                    >
-
-                        <ul class="menu">
-
-                            {{-- Orders --}}
-                            @can('orders.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.orders.index') }}"
-                                        class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}"
-                                    >
-                                        Orders
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Payments --}}
-                            @can('payments.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.payments.index') }}"
-                                        class="{{ request()->routeIs('admin.payments.*') ? 'active' : '' }}"
-                                    >
-                                        Payments
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Coupons --}}
-                            @can('coupons.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.coupons.index') }}"
-                                        class="{{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}"
-                                    >
-                                        Coupons
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Shipping --}}
-                            @can('shipping.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.shipping.index') }}"
-                                        class="{{ request()->routeIs('admin.shipping.*') ? 'active' : '' }}"
-                                    >
-                                        Shipping
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Refunds --}}
-                            @can('refunds.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.refunds.index') }}"
-                                        class="{{ request()->routeIs('admin.refunds.*') ? 'active' : '' }}"
-                                    >
-                                        Refunds
-                                    </a>
-                                </li>
-                            @endcan
-
-                        </ul>
-
-                    </div>
-
-                </li>
-
-            </ul>
-
-        @endcanany
-
-
-        {{-- =========================================================
-             USER MANAGEMENT
-        ========================================================== --}}
-        @canany([
-            'users.view',
-            'sellers.view',
-            'seller_applications.view',
-            'roles.view'
-        ])
-
-            <ul class="menu">
-
-                <li>
-
-                    <a
-                        data-bs-toggle="collapse"
-                        href="#userMenu"
-                        role="button"
-                        aria-expanded="{{ request()->routeIs(
-                            'admin.users.*',
-                            'admin.sellers.*',
-                            'admin.seller-applications.*',
-                            'admin.roles.*'
-                        ) ? 'true' : 'false' }}"
-                    >
-
-                        <div>
-                            <i class="bi bi-people"></i>
-                            <span>User Management</span>
-                        </div>
-
-                        <i class="bi bi-chevron-down"></i>
-
-                    </a>
-
-
-                    <div
-                        id="userMenu"
-                        class="collapse {{ request()->routeIs(
-                            'admin.users.*',
-                            'admin.sellers.*',
-                            'admin.seller-applications.*',
-                            'admin.roles.*'
-                        ) ? 'show' : '' }}"
-                    >
-
-                        <ul class="menu">
-
-                            {{-- Users --}}
-                            @can('users.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.users.index') }}"
-                                        class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
-                                    >
-                                        Users
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Sellers --}}
-                            @can('sellers.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.sellers.index') }}"
-                                        class="{{ request()->routeIs('admin.sellers.*') ? 'active' : '' }}"
-                                    >
-                                        Sellers
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Seller Requests --}}
-                            @can('seller_applications.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.seller-applications.index') }}"
-                                        class="d-flex align-items-center justify-content-between {{ request()->routeIs('admin.seller-applications.*') ? 'active' : '' }}"
+                                        href="{{ route($item[2]) }}"
+                                        class="sb-sublink {{ $current ? 'active' : '' }}"
+                                        @if($current)
+                                            aria-current="page"
+                                        @endif
                                     >
 
-                                        <span>Seller Requests</span>
+                                        <span>
+                                            {{ $item[0] }}
+                                        </span>
 
-                                        @if(isset($pendingSellerApplicationsCount) && $pendingSellerApplicationsCount > 0)
+                                        @if($badge > 0)
 
-                                            <span class="sidebar-badge">
-                                                {{ $pendingSellerApplicationsCount > 99
-                                                    ? '99+'
-                                                    : $pendingSellerApplicationsCount }}
+                                            <span class="sb-badge">
+                                                {{ $badge > 99 ? '99+' : $badge }}
                                             </span>
 
                                         @endif
 
                                     </a>
-                                </li>
-                            @endcan
 
+                                @endcan
 
-                            {{-- Roles & Permissions --}}
-                            @can('roles.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.roles.index') }}"
-                                        class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}"
-                                    >
-                                        Roles & Permissions
-                                    </a>
-                                </li>
-                            @endcan
+                            @endforeach
 
-                        </ul>
-
-                    </div>
-
-                </li>
-
-            </ul>
-
-        @endcanany
-
-
-        {{-- =========================================================
-             CONTENT MANAGEMENT
-        ========================================================== --}}
-        @canany([
-            'reviews.view',
-            'banners.view',
-            'blogs.view',
-            'faq.view'
-        ])
-
-            <ul class="menu">
-
-                <li>
-
-                    <a
-                        data-bs-toggle="collapse"
-                        href="#contentMenu"
-                        role="button"
-                        aria-expanded="{{ request()->routeIs(
-                            'admin.reviews.*',
-                            'admin.banners.*',
-                            'admin.blogs.*',
-                            'admin.faq.*'
-                        ) ? 'true' : 'false' }}"
-                    >
-
-                        <div>
-                            <i class="bi bi-file-earmark-text"></i>
-                            <span>Content Management</span>
                         </div>
 
-                        <i class="bi bi-chevron-down"></i>
-
-                    </a>
-
-
-                    <div
-                        id="contentMenu"
-                        class="collapse {{ request()->routeIs(
-                            'admin.reviews.*',
-                            'admin.banners.*',
-                            'admin.blogs.*',
-                            'admin.faq.*'
-                        ) ? 'show' : '' }}"
-                    >
-
-                        <ul class="menu">
-
-                            {{-- Reviews --}}
-                            @can('reviews.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.reviews.index') }}"
-                                        class="{{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}"
-                                    >
-                                        Reviews
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Banners --}}
-                            @can('banners.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.banners.index') }}"
-                                        class="{{ request()->routeIs('admin.banners.*') ? 'active' : '' }}"
-                                    >
-                                        Banners
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Blogs --}}
-                            @can('blogs.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.blogs.index') }}"
-                                        class="{{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}"
-                                    >
-                                        Blog
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- FAQ --}}
-                            @can('faq.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.faq.index') }}"
-                                        class="{{ request()->routeIs('admin.faq.*') ? 'active' : '' }}"
-                                    >
-                                        FAQ
-                                    </a>
-                                </li>
-                            @endcan
-
-                        </ul>
-
                     </div>
 
-                </li>
+                </div>
 
-            </ul>
+            @endcanany
 
-        @endcanany
+        @endforeach
 
-
-        {{-- =========================================================
-             ANALYTICS
-        ========================================================== --}}
-        @canany([
-            'reports.view',
-            'analytics.view'
-        ])
-
-            <ul class="menu">
-
-                <li>
-
-                    <a
-                        data-bs-toggle="collapse"
-                        href="#analyticsMenu"
-                        role="button"
-                        aria-expanded="{{ request()->routeIs(
-                            'admin.reports.*',
-                            'admin.analytics.*'
-                        ) ? 'true' : 'false' }}"
-                    >
-
-                        <div>
-                            <i class="bi bi-bar-chart-line"></i>
-                            <span>Analytics</span>
-                        </div>
-
-                        <i class="bi bi-chevron-down"></i>
-
-                    </a>
+    </nav>
 
 
-                    <div
-                        id="analyticsMenu"
-                        class="collapse {{ request()->routeIs(
-                            'admin.reports.*',
-                            'admin.analytics.*'
-                        ) ? 'show' : '' }}"
-                    >
+    {{-- =====================================================
+         FOOTER
+    ====================================================== --}}
+    <div class="sb-footer">
 
-                        <ul class="menu">
+        <div class="sb-foot-grid">
 
-                            {{-- Reports --}}
-                            @can('reports.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.reports.index') }}"
-                                        class="{{ request()->routeIs('admin.reports.*') ? 'active' : '' }}"
-                                    >
-                                        Reports
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Analytics --}}
-                            @can('analytics.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.analytics.index') }}"
-                                        class="{{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}"
-                                    >
-                                        Analytics
-                                    </a>
-                                </li>
-                            @endcan
-
-                        </ul>
-
-                    </div>
-
-                </li>
-
-            </ul>
-
-        @endcanany
-
-
-        {{-- =========================================================
-             SYSTEM
-        ========================================================== --}}
-        @canany([
-            'settings.view',
-            'email_settings.view',
-            'notifications.view',
-            'activity_logs.view',
-            'backup.view'
-        ])
-
-            <ul class="menu">
-
-                <li>
-
-                    <a
-                        data-bs-toggle="collapse"
-                        href="#systemMenu"
-                        role="button"
-                        aria-expanded="{{ request()->routeIs(
-                            'admin.settings.*',
-                            'admin.email-settings.*',
-                            'admin.notifications.*',
-                            'admin.activity.logs.*',
-                            'admin.backup.*'
-                        ) ? 'true' : 'false' }}"
-                    >
-
-                        <div>
-                            <i class="bi bi-gear"></i>
-                            <span>System</span>
-                        </div>
-
-                        <i class="bi bi-chevron-down"></i>
-
-                    </a>
-
-
-                    <div
-                        id="systemMenu"
-                        class="collapse {{ request()->routeIs(
-                            'admin.settings.*',
-                            'admin.email-settings.*',
-                            'admin.notifications.*',
-                            'admin.activity.logs.*',
-                            'admin.backup.*'
-                        ) ? 'show' : '' }}"
-                    >
-
-                        <ul class="menu">
-
-                            {{-- Settings --}}
-                            @can('settings.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.settings.index') }}"
-                                        class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"
-                                    >
-                                        Settings
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Email Settings --}}
-                            @can('email_settings.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.email-settings.index') }}"
-                                        class="{{ request()->routeIs('admin.email-settings.*') ? 'active' : '' }}"
-                                    >
-                                        Email Settings
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Notifications --}}
-                            @can('notifications.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.notifications.index') }}"
-                                        class="{{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}"
-                                    >
-                                        Notifications
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Activity Logs --}}
-                            @can('activity_logs.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.activity.logs.index') }}"
-                                        class="{{ request()->routeIs('admin.activity.logs.*') ? 'active' : '' }}"
-                                    >
-                                        Activity Logs
-                                    </a>
-                                </li>
-                            @endcan
-
-
-                            {{-- Backup --}}
-                            @can('backup.view')
-                                <li>
-                                    <a
-                                        href="{{ route('admin.backup.index') }}"
-                                        class="{{ request()->routeIs('admin.backup.*') ? 'active' : '' }}"
-                                    >
-                                        Backup
-                                    </a>
-                                </li>
-                            @endcan
-
-                        </ul>
-
-                    </div>
-
-                </li>
-
-            </ul>
-
-        @endcanany
-
-    </div>
-
-
-    {{-- =============================================================
-         SIDEBAR FOOTER
-    ============================================================== --}}
-    <div class="sidebar-footer">
-
-        {{-- Home --}}
-        <a
-            href="{{ route('frontend.home') }}"
-            class="sidebar-link"
-        >
-            <i class="bi bi-house-door"></i>
-            <span>Home</span>
-        </a>
-
-
-        {{-- Settings --}}
-        @can('settings.view')
+            {{-- Home --}}
             <a
-                href="{{ route('admin.settings.index') }}"
-                class="sidebar-link"
+                href="{{ route('frontend.home') }}"
+                class="sb-foot-link"
             >
-                <i class="bi bi-gear"></i>
-                <span>Settings</span>
+                <i class="bi bi-house-door"></i>
+                <span>Home</span>
             </a>
-        @endcan
+
+
+            {{-- Settings --}}
+            @can('settings.view')
+
+                <a
+                    href="{{ route('admin.settings.index') }}"
+                    class="sb-foot-link"
+                >
+                    <i class="bi bi-gear"></i>
+                    <span>Settings</span>
+                </a>
+
+            @endcan
+
+        </div>
 
 
         {{-- Logout --}}
@@ -808,13 +391,11 @@
 
             <button
                 type="button"
-                class="sidebar-link sidebar-btn"
+                class="sb-logout"
                 id="sidebarLogoutBtn"
             >
-
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Logout</span>
-
             </button>
 
         </form>
@@ -822,4 +403,3 @@
     </div>
 
 </div>
-

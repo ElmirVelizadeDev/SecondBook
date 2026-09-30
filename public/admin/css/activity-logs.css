@@ -800,23 +800,214 @@
 }
 
 /* =========================================================
-   PAGINATION
+   ACTIVITY LOGS PAGINATION
 ========================================================= */
 
 .activity-logs-pagination {
     display: flex;
-    justify-content: flex-start !important;
     align-items: center;
+    justify-content: space-between;
+
     width: 100%;
-    margin-top: 24px;
+    padding: 18px 20px;
+
+    border-top: 1px solid #edf0f3;
 }
 
-.activity-logs-pagination nav {
-    margin-left: 0 !important;
-    margin-right: auto !important;
+
+/* =========================================================
+   PAGINATION INFO - LEFT
+========================================================= */
+
+.activity-pagination-info {
+    flex-shrink: 0;
+
+    color: #8a9098;
+    font-size: 12px;
+    font-weight: 500;
 }
 
-.activity-logs-pagination .pagination {
-    justify-content: flex-start !important;
-    margin: 0 !important;
+.activity-pagination-info strong {
+    color: #444950;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PAGINATION PAGES - RIGHT
+========================================================= */
+
+.activity-pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+/* Page */
+
+.activity-page {
+    min-width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 9px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #666c74;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* Hover */
+
+.activity-page:not(.disabled):not(.active):hover {
+    border-color: #cbd8f7;
+    background: #eff6ff;
+    color: #2563eb;
+    text-decoration: none;
+
+    transform: translateY(-1px);
+}
+
+
+/* Active */
+
+.activity-page.active {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+
+/* Disabled */
+
+.activity-page.disabled {
+    background: #f8f9fb;
+    border-color: #e5e7eb;
+    color: #b0b5bc;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+:root[data-theme="dark"] .activity-logs-pagination {
+    border-top-color: #30343a;
+}
+
+:root[data-theme="dark"] .activity-pagination-info {
+    color: #858c95;
+}
+
+:root[data-theme="dark"] .activity-pagination-info strong {
+    color: #dfe2e6;
+}
+
+:root[data-theme="dark"] .activity-page {
+    border-color: #353940;
+    background: #282b30;
+    color: #b6bcc4;
+}
+
+:root[data-theme="dark"] .activity-page:not(.disabled):not(.active):hover {
+    border-color: #46659d;
+    background: #1d3764;
+    color: #9bbcff;
+}
+
+:root[data-theme="dark"] .activity-page.active {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+:root[data-theme="dark"] .activity-page.disabled {
+    background: #222529;
+    border-color: #353940;
+    color: #60666e;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .activity-logs-pagination {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .activity-pagination-pages {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+:root[data-theme="dark"] .activity-logs-pagination {
+    border-top-color: #30343a;
+}
+
+:root[data-theme="dark"] .activity-logs-pagination-links .page-link {
+    border-color: #353940;
+    background: #282b30;
+    color: #b6bcc4;
+}
+
+:root[data-theme="dark"] .activity-logs-pagination-links .page-link:hover {
+    border-color: #46659d;
+    background: #1d3764;
+    color: #9bbcff;
+}
+
+:root[data-theme="dark"] .activity-logs-pagination-links .page-item.active .page-link {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+:root[data-theme="dark"] .activity-logs-pagination-links .page-item.disabled .page-link {
+    background: #222529;
+    color: #60666e;
+}
+
+
+:root[data-theme="dark"] .activity-logs-pagination {
+    border-top-color: #30343a;
+}
+
+:root[data-theme="dark"] .activity-logs-pagination nav > div:first-child > div:first-child {
+    color: #858c95;
+}
+
+:root[data-theme="dark"] .activity-logs-pagination nav > div:first-child > div:first-child strong {
+    color: #dfe2e6;
 }

@@ -21,6 +21,7 @@ class CouponSeeder extends Seeder
                 'days' => 60,
                 'status' => true,
             ],
+
             [
                 'code' => 'BOOK15',
                 'type' => 'percentage',
@@ -32,6 +33,7 @@ class CouponSeeder extends Seeder
                 'days' => 45,
                 'status' => true,
             ],
+
             [
                 'code' => 'SAVE5',
                 'type' => 'fixed',
@@ -43,6 +45,7 @@ class CouponSeeder extends Seeder
                 'days' => 90,
                 'status' => true,
             ],
+
             [
                 'code' => 'READ20',
                 'type' => 'percentage',
@@ -54,6 +57,7 @@ class CouponSeeder extends Seeder
                 'days' => 30,
                 'status' => true,
             ],
+
             [
                 'code' => 'SECOND10',
                 'type' => 'fixed',
@@ -65,6 +69,7 @@ class CouponSeeder extends Seeder
                 'days' => 75,
                 'status' => true,
             ],
+
             [
                 'code' => 'EXPIRED20',
                 'type' => 'percentage',
@@ -80,15 +85,16 @@ class CouponSeeder extends Seeder
 
         foreach ($coupons as $coupon) {
             $days = $coupon['days'];
+
             unset($coupon['days']);
 
-            $startsAt = $days < 0
-                ? now()->subDays(40)
-                : now()->subDays(5);
-
-            $expiresAt = $days < 0
-                ? now()->subDays(abs($days))
-                : now()->addDays($days);
+            if ($days < 0) {
+                $startsAt = now()->subDays(40);
+                $expiresAt = now()->subDays(abs($days));
+            } else {
+                $startsAt = now()->subDays(5);
+                $expiresAt = now()->addDays($days);
+            }
 
             DB::table('coupons')->updateOrInsert(
                 ['code' => $coupon['code']],

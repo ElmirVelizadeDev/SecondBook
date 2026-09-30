@@ -6,560 +6,555 @@
     <link rel="stylesheet" href="{{ asset('admin/css/orders.css') }}">
 @endpush
 
-
 @section('content')
 
-<div class="container-fluid p-4">
+<div class="dashboard-section orders-page">
 
-    {{-- Header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-            <h2 class="fw-bold mb-1">
-                <i class="bi bi-cart3 me-2"></i>
-                Orders
-            </h2>
-
-            <p class="text-muted mb-0">
-                Manage customer orders, payments and delivery status.
+    {{-- ================= HERO ================= --}}
+    <section class="orders-hero">
+        <div class="orders-hero-content">
+            <span class="orders-hero-badge">
+                <i class="bi bi-bag-check"></i>
+                Marketplace Operations
+            </span>
+            <h1>Every order, under control.</h1>
+            <p>
+                Manage customer orders, payments and delivery progress
+                from one organised workspace.
             </p>
         </div>
 
-        <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-2"></i>
-            Add Order
-        </a>
-
-    </div>
+        <div class="orders-hero-mark" aria-hidden="true">
+            <i class="bi bi-cart3"></i>
+        </div>
+    </section>
 
 
-    {{-- Statistics --}}
-    <div class="row g-4 mb-4">
+    {{-- ================= STATISTICS ================= --}}
+    <section class="orders-stats">
 
-        {{-- Total Orders --}}
-        <div class="col-xl-3 col-md-6">
+        <div class="order-stat-card stat-blue">
+            <div class="order-stat-content">
+                <span>Total Orders</span>
+                <strong>{{ $totalOrders }}</strong>
+            </div>
+            <div class="order-stat-icon"><i class="bi bi-cart-check"></i></div>
+        </div>
 
-            <div class="order-card">
+        <div class="order-stat-card stat-orange">
+            <div class="order-stat-content">
+                <span>Pending</span>
+                <strong>{{ $totalPending }}</strong>
+            </div>
+            <div class="order-stat-icon"><i class="bi bi-hourglass-split"></i></div>
+        </div>
 
-                <div>
-                    <span>Total Orders</span>
-                    <h3>{{ $totalOrders }}</h3>
-                </div>
+        <div class="order-stat-card stat-green">
+            <div class="order-stat-content">
+                <span>Delivered</span>
+                <strong>{{ $totalDelivered }}</strong>
+            </div>
+            <div class="order-stat-icon"><i class="bi bi-check-circle"></i></div>
+        </div>
 
-                <i class="bi bi-cart-check"></i>
+        <div class="order-stat-card stat-purple">
+            <div class="order-stat-content">
+                <span>Revenue</span>
+                <strong>${{ number_format($revenue, 2) }}</strong>
+            </div>
+            <div class="order-stat-icon"><i class="bi bi-currency-dollar"></i></div>
+        </div>
 
+    </section>
+
+
+    {{-- ================= MAIN PANEL ================= --}}
+    <section class="dashboard-panel orders-panel">
+
+        {{-- Header --}}
+        <div class="orders-panel-header">
+            <div class="orders-heading-content">
+                <span class="eyebrow">Order directory</span>
+                <h5>All Orders</h5>
+                <p>Search, filter and review every marketplace order.</p>
             </div>
 
+            <div class="orders-header-action">
+                <a href="{{ route('admin.orders.create') }}" class="orders-add-btn">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Add Order</span>
+                </a>
+            </div>
         </div>
 
 
-        {{-- Pending --}}
-        <div class="col-xl-3 col-md-6">
+        {{-- Filters --}}
+        <form
+            method="GET"
+            action="{{ route('admin.orders.index') }}"
+            class="order-filters"
+        >
 
-            <div class="order-card">
-
-                <div>
-                    <span>Pending</span>
-                    <h3>{{ $totalPending }}</h3>
-                </div>
-
-                <i class="bi bi-hourglass-split"></i>
-
-            </div>
-
-        </div>
-
-
-        {{-- Delivered --}}
-        <div class="col-xl-3 col-md-6">
-
-            <div class="order-card">
-
-                <div>
-                    <span>Delivered</span>
-                    <h3>{{ $totalDelivered }}</h3>
-                </div>
-
-                <i class="bi bi-check-circle"></i>
-
-            </div>
-
-        </div>
-
-
-        {{-- Revenue --}}
-        <div class="col-xl-3 col-md-6">
-
-            <div class="order-card">
-
-                <div>
-                    <span>Revenue</span>
-                    <h3>${{ number_format($revenue, 2) }}</h3>
-                </div>
-
-                <i class="bi bi-currency-dollar"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    {{-- Filters --}}
-    <div class="dashboard-panel mb-4">
-
-        <form method="GET"
-              action="{{ route('admin.orders.index') }}"
-              class="row g-3 align-items-end">
-
-            {{-- Search --}}
-            <div class="col-12 col-md-6 col-lg-4">
-
-                <label class="form-label small text-muted fw-semibold">
-                    Search
-                </label>
-
-                <div class="input-group">
-
-                    <span class="input-group-text bg-white border-end-0">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
-
+            <div class="order-filter-group order-filter-search">
+                <label for="order-search">Search</label>
+                <div class="order-search-field">
+                    <i class="bi bi-search"></i>
                     <input
+                        id="order-search"
                         type="text"
                         name="search"
                         value="{{ request('search') }}"
-                        class="form-control border-start-0"
                         placeholder="Order number, customer, book..."
+                        autocomplete="off"
                     >
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary">
-                        Search
-                    </button>
-
                 </div>
-
             </div>
 
-
-            {{-- Order Status --}}
-            <div class="col-6 col-md-3 col-lg-2">
-
-                <label class="form-label small text-muted fw-semibold">
-                    Status
-                </label>
-
-                <select name="status" class="form-select">
-
-                    <option value="">
-                        All Status
-                    </option>
-
-                    <option value="pending"
-                        @selected(request('status') === 'pending')>
-                        Pending
-                    </option>
-
-                    <option value="processing"
-                        @selected(request('status') === 'processing')>
-                        Processing
-                    </option>
-
-                    <option value="shipped"
-                        @selected(request('status') === 'shipped')>
-                        Shipped
-                    </option>
-
-                    <option value="delivered"
-                        @selected(request('status') === 'delivered')>
-                        Delivered
-                    </option>
-
-                    <option value="cancelled"
-                        @selected(request('status') === 'cancelled')>
-                        Cancelled
-                    </option>
-
+            <div class="order-filter-group">
+                <label for="order-status">Order Status</label>
+                <select id="order-status" name="status" class="order-filter-select">
+                    <option value="">All Status</option>
+                    @foreach(['pending', 'processing', 'shipped', 'delivered', 'cancelled'] as $s)
+                        <option value="{{ $s }}" @selected(request('status') === $s)>
+                            {{ ucfirst($s) }}
+                        </option>
+                    @endforeach
                 </select>
-
             </div>
 
-
-            {{-- Payment Status --}}
-            <div class="col-6 col-md-3 col-lg-2">
-
-                <label class="form-label small text-muted fw-semibold">
-                    Payment
-                </label>
-
-                <select name="payment" class="form-select">
-
-                    <option value="">
-                        All Payments
-                    </option>
-
-                    <option value="paid"
-                        @selected(request('payment') === 'paid')>
-                        Paid
-                    </option>
-
-                    <option value="pending"
-                        @selected(request('payment') === 'pending')>
-                        Pending
-                    </option>
-
-                    <option value="failed"
-                        @selected(request('payment') === 'failed')>
-                        Failed
-                    </option>
-
-                    <option value="refunded"
-                        @selected(request('payment') === 'refunded')>
-                        Refunded
-                    </option>
-
+            <div class="order-filter-group">
+                <label for="order-payment">Payment</label>
+                <select id="order-payment" name="payment" class="order-filter-select">
+                    <option value="">All Payments</option>
+                    @foreach(['paid', 'pending', 'failed', 'refunded'] as $p)
+                        <option value="{{ $p }}" @selected(request('payment') === $p)>
+                            {{ ucfirst($p) }}
+                        </option>
+                    @endforeach
                 </select>
-
             </div>
 
-
-            {{-- Date --}}
-            <div class="col-12 col-md-6 col-lg-2">
-
-                <label class="form-label small text-muted fw-semibold">
-                    Date
-                </label>
-
-                <input
-                    type="date"
-                    name="date"
-                    value="{{ request('date') }}"
-                    class="form-control"
-                >
-
+            <div class="order-filter-group">
+                <label for="order-date">Order Date</label>
+                <div class="order-date-field">
+                    <i class="bi bi-calendar3"></i>
+                    <input
+                        id="order-date"
+                        type="date"
+                        name="date"
+                        value="{{ request('date') }}"
+                    >
+                </div>
             </div>
 
-
-            {{-- Buttons --}}
-            <div class="col-12 col-md-6 col-lg-2 d-flex gap-2 order-filter-buttons">
-
-                <button type="submit"
-                        class="btn btn-primary filter-btn">
-                    <i class="bi bi-funnel me-1"></i>
+            <div class="order-filter-actions">
+                <button type="submit" class="order-filter-btn">
+                    <i class="bi bi-funnel"></i>
                     <span>Filter</span>
                 </button>
 
-                <a
-                    href="{{ route('admin.orders.index') }}"
-                    class="btn btn-light reset-btn">
-
-                    Reset
-
-                </a>
-
+                @if(request()->hasAny(['search', 'status', 'payment', 'date']))
+                    <a href="{{ route('admin.orders.index') }}" class="order-clear-filter">
+                        <i class="bi bi-x-lg"></i>
+                        <span>Clear</span>
+                    </a>
+                @endif
             </div>
 
         </form>
 
-    </div>
 
+        {{-- Table --}}
+        <div class="orders-table-wrap">
+            <table class="orders-table">
 
-    {{-- Orders Table --}}
-    <div class="card border-0 shadow-sm">
+                <thead>
+                    <tr>
+                        <th class="orders-col-id">#</th>
+                        <th class="orders-col-customer">Customer</th>
+                        <th class="orders-col-book">Book</th>
+                        <th class="orders-col-total">Total</th>
+                        <th class="orders-col-payment">Payment</th>
+                        <th class="orders-col-status">Status</th>
+                        <th class="orders-col-date">Date</th>
+                        <th class="orders-col-actions">Actions</th>
+                    </tr>
+                </thead>
 
-        <div class="card-body">
+                <tbody>
 
-            <div class="table-responsive">
+                    @forelse($orders as $order)
 
-                <table class="table align-middle">
+                        @php
+                            $customerName = trim(
+                                ($order->user->first_name ?? '') . ' ' .
+                                ($order->user->last_name ?? '')
+                            );
 
-                    <thead>
+                            $customerName = $customerName ?: (
+                                $order->user->name ??
+                                $order->user->username ??
+                                'Customer'
+                            );
 
-                        <tr>
-                            <th>#</th>
-                            <th>Customer</th>
-                            <th>Book</th>
-                            <th>Total</th>
-                            <th>Payment</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Action</th>
+                            $customerInitial = strtoupper(mb_substr($customerName, 0, 1));
+
+                            $paymentStatus = strtolower($order->payment_status ?? 'pending');
+                            $orderStatus   = strtolower($order->order_status ?? 'pending');
+
+                            $knownPayments = ['paid', 'pending', 'failed', 'refunded'];
+                            $knownStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+
+                            $paymentClass = in_array($paymentStatus, $knownPayments)
+                                ? 'payment-' . $paymentStatus
+                                : 'payment-default';
+
+                            $statusClass = in_array($orderStatus, $knownStatuses)
+                                ? 'order-status-' . $orderStatus
+                                : 'order-status-default';
+                        @endphp
+
+                        <tr id="order-row-{{ $order->id }}">
+
+                            <td>
+                                <span class="order-id">#{{ $order->id }}</span>
+                            </td>
+
+                            <td>
+                                <div class="order-customer-cell">
+                                    <div class="order-customer-avatar">{{ $customerInitial }}</div>
+                                    <div class="order-customer-info">
+                                        <strong title="{{ $customerName }}">{{ $customerName }}</strong>
+                                        <small title="{{ $order->user->email ?? '' }}">
+                                            {{ $order->user->email ?? '—' }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="order-book-cell">
+                                    <div class="order-book-icon"><i class="bi bi-book"></i></div>
+                                    <div class="order-book-info">
+                                        <strong title="{{ $order->book->title ?? 'Unknown book' }}">
+                                            {{ $order->book->title ?? 'Unknown book' }}
+                                        </strong>
+                                        <small>Book item</small>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="order-total">
+                                    ${{ number_format($order->total_price, 2) }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="order-status-pill {{ $paymentClass }}">
+                                    <i class="bi bi-circle-fill"></i>
+                                    {{ ucfirst($paymentStatus) }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="order-status-pill {{ $statusClass }}">
+                                    <i class="bi bi-circle-fill"></i>
+                                    {{ ucfirst($orderStatus) }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="order-date-block">
+                                    <span class="order-date">
+                                        {{ $order->created_at->format('d M Y') }}
+                                    </span>
+                                    <small class="order-time">
+                                        {{ $order->created_at->format('H:i') }}
+                                    </small>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="order-actions">
+
+                                    <a
+                                        href="{{ route('admin.orders.show', $order->id) }}"
+                                        class="order-action-btn order-view-btn"
+                                        title="View order"
+                                        aria-label="View order #{{ $order->id }}"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+
+                                    <a
+                                        href="{{ route('admin.orders.edit', $order->id) }}"
+                                        class="order-action-btn order-edit-btn"
+                                        title="Edit order"
+                                        aria-label="Edit order #{{ $order->id }}"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <form
+                                        action="{{ route('admin.orders.destroy', $order->id) }}"
+                                        method="POST"
+                                        class="order-delete-form"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="order-action-btn order-delete-btn"
+                                            title="Delete order"
+                                            aria-label="Delete order #{{ $order->id }}"
+                                        >
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+
                         </tr>
 
-                    </thead>
+                    @empty
+
+                        <tr>
+                            <td colspan="8">
+                                <div class="orders-empty-state">
+                                    <div class="orders-empty-icon"><i class="bi bi-cart-x"></i></div>
+                                    <strong>No orders found</strong>
+                                    <span>Try changing your filters or search criteria.</span>
+                                </div>
+                            </td>
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+        </div>
 
 
-                    <tbody>
+        {{-- Pagination --}}
+        @if($orders->hasPages())
 
-                        @forelse ($orders as $order)
+            @php
+                $orders->appends(request()->query());
 
-                            <tr>
+                $current = $orders->currentPage();
+                $last    = $orders->lastPage();
+                $start   = max(1, $current - 2);
+                $end     = min($last, $current + 2);
+            @endphp
 
-                                {{-- ID --}}
-                                <td>
-                                    {{ $order->id }}
-                                </td>
+            <div class="orders-pagination">
 
+                <div class="orders-pagination-info">
+                    Showing
+                    <strong>{{ $orders->firstItem() }}</strong>
+                    to
+                    <strong>{{ $orders->lastItem() }}</strong>
+                    of
+                    <strong>{{ $orders->total() }}</strong>
+                    orders
+                </div>
 
-                                {{-- Customer --}}
-                                <td>
+                <nav class="orders-pagination-pages" aria-label="Orders pagination">
 
-                                    <div class="fw-semibold">
-                                        {{ $order->user->first_name }}
-                                        {{ $order->user->last_name }}
-                                    </div>
+                    {{-- Previous --}}
+                    @if($orders->onFirstPage())
+                        <span class="orders-pager-btn disabled" aria-disabled="true">
+                            <i class="bi bi-chevron-left"></i>
+                        </span>
+                    @else
+                        <a href="{{ $orders->previousPageUrl() }}" class="orders-pager-btn" aria-label="Previous page">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    @endif
 
-                                    <small class="text-muted">
-                                        {{ $order->user->email }}
-                                    </small>
+                    {{-- First page --}}
+                    @if($start > 1)
+                        <a href="{{ $orders->url(1) }}" class="orders-pager-btn">1</a>
+                        @if($start > 2)
+                            <span class="orders-pager-dots">…</span>
+                        @endif
+                    @endif
 
-                                </td>
+                    {{-- Window --}}
+                    @for($page = $start; $page <= $end; $page++)
+                        @if($page === $current)
+                            <span class="orders-pager-btn active" aria-current="page">{{ $page }}</span>
+                        @else
+                            <a href="{{ $orders->url($page) }}" class="orders-pager-btn">{{ $page }}</a>
+                        @endif
+                    @endfor
 
+                    {{-- Last page --}}
+                    @if($end < $last)
+                        @if($end < $last - 1)
+                            <span class="orders-pager-dots">…</span>
+                        @endif
+                        <a href="{{ $orders->url($last) }}" class="orders-pager-btn">{{ $last }}</a>
+                    @endif
 
-                                {{-- Book --}}
-                                <td>
-                                    {{ $order->book->title }}
-                                </td>
+                    {{-- Next --}}
+                    @if($orders->hasMorePages())
+                        <a href="{{ $orders->nextPageUrl() }}" class="orders-pager-btn" aria-label="Next page">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    @else
+                        <span class="orders-pager-btn disabled" aria-disabled="true">
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+                    @endif
 
-
-                                {{-- Total --}}
-                                <td>
-                                    ${{ number_format($order->total_price, 2) }}
-                                </td>
-
-
-                                {{-- Payment --}}
-                                <td>
-
-                                    <span class="badge bg-success">
-                                        {{ ucfirst($order->payment_status) }}
-                                    </span>
-
-                                </td>
-
-
-                                {{-- Status --}}
-                                <td>
-
-                                    <span class="badge bg-warning text-dark">
-                                        {{ ucfirst($order->order_status) }}
-                                    </span>
-
-                                </td>
-
-
-                                {{-- Date --}}
-                                <td>
-                                    {{ $order->created_at->format('d M Y') }}
-                                </td>
-
-
-                                {{-- Actions --}}
-                                <td>
-
-                                    <div class="order-actions">
-
-                                        {{-- Show --}}
-                                        <a
-                                            href="{{ route('admin.orders.show', $order->id) }}"
-                                            class="btn btn-sm btn-light"
-                                            title="View">
-
-                                            <i class="bi bi-eye"></i>
-
-                                        </a>
-
-
-                                        {{-- Edit --}}
-                                        <a
-                                            href="{{ route('admin.orders.edit', $order->id) }}"
-                                            class="btn btn-sm btn-light"
-                                            title="Edit">
-
-                                            <i class="bi bi-pencil"></i>
-
-                                        </a>
-
-
-                                        {{-- Delete --}}
-                                        <form
-                                            action="{{ route('admin.orders.destroy', $order->id) }}"
-                                            method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('Are you sure you want to delete this order?');">
-
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button
-                                                type="submit"
-                                                class="btn btn-sm btn-danger"
-                                                title="Delete">
-
-                                                <i class="bi bi-trash"></i>
-
-                                            </button>
-
-                                        </form>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-                        @empty
-
-                            <tr>
-
-                                <td colspan="8" class="text-center py-5">
-
-                                    <div class="text-muted">
-
-                                        <i class="bi bi-cart-x fs-1 d-block mb-2"></i>
-
-                                        <div class="fw-semibold">
-                                            No orders found
-                                        </div>
-
-                                        <small>
-                                            Try changing your filters or search.
-                                        </small>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-                        @endforelse
-
-                    </tbody>
-
-                </table>
+                </nav>
 
             </div>
 
+        @endif
 
-            {{-- Pagination --}}
-
-            @if ($orders->hasPages())
-
-                <div class="orders-pagination">
-
-                    {{-- Info --}}
-                    <div class="orders-pagination-info">
-                        Showing
-                        <strong>{{ $orders->firstItem() }}</strong>
-                        to
-                        <strong>{{ $orders->lastItem() }}</strong>
-                        of
-                        <strong>{{ $orders->total() }}</strong>
-                        orders
-                    </div>
-
-
-                    {{-- Pagination --}}
-                    <div class="orders-pagination-links">
-
-                        <nav aria-label="Orders pagination">
-
-                            <ul class="pagination mb-0">
-
-                                {{-- Previous --}}
-                                <li class="page-item {{ $orders->onFirstPage() ? 'disabled' : '' }}">
-
-                                    @if ($orders->onFirstPage())
-
-                                        <span class="page-link">
-                                            <i class="bi bi-chevron-left"></i>
-                                        </span>
-
-                                    @else
-
-                                        <a
-                                            class="page-link"
-                                            href="{{ $orders->previousPageUrl() }}"
-                                            aria-label="Previous">
-
-                                            <i class="bi bi-chevron-left"></i>
-
-                                        </a>
-
-                                    @endif
-
-                                </li>
-
-
-                                {{-- Pages --}}
-                                @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
-
-                                    <li class="page-item {{ $page == $orders->currentPage() ? 'active' : '' }}">
-
-                                        @if ($page == $orders->currentPage())
-
-                                            <span class="page-link">
-                                                {{ $page }}
-                                            </span>
-
-                                        @else
-
-                                            <a
-                                                class="page-link"
-                                                href="{{ $url }}">
-
-                                                {{ $page }}
-
-                                            </a>
-
-                                        @endif
-
-                                    </li>
-
-                                @endforeach
-
-
-                                {{-- Next --}}
-                                <li class="page-item {{ $orders->hasMorePages() ? '' : 'disabled' }}">
-
-                                    @if ($orders->hasMorePages())
-
-                                        <a
-                                            class="page-link"
-                                            href="{{ $orders->nextPageUrl() }}"
-                                            aria-label="Next">
-
-                                            <i class="bi bi-chevron-right"></i>
-
-                                        </a>
-
-                                    @else
-
-                                        <span class="page-link">
-                                            <i class="bi bi-chevron-right"></i>
-                                        </span>
-
-                                    @endif
-
-                                </li>
-
-                            </ul>
-
-                        </nav>
-
-                    </div>
-
-                </div>
-
-            @endif
-
-        </div>
-
-    </div>
+    </section>
 
 </div>
 
 @endsection
+
+
+@push('js')
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* =========================================================
+       DELETE ORDER — AJAX
+    ========================================================= */
+
+    document.querySelectorAll('.order-delete-form').forEach(function (form) {
+
+        form.addEventListener('submit', async function (event) {
+
+            event.preventDefault();
+
+            const row = form.closest('tr');
+            const button = form.querySelector('button');
+
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'This order will be permanently deleted.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            if (button) {
+                button.disabled = true;
+            }
+
+            try {
+
+                const csrfToken = document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
+
+                const response = await fetch(form.action, {
+
+                    method: 'POST',
+
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type':
+                            'application/x-www-form-urlencoded; charset=UTF-8'
+                    },
+
+                    body: new URLSearchParams({
+                        _token: csrfToken,
+                        _method: 'DELETE'
+                    })
+                });
+
+                const contentType =
+                    response.headers.get('content-type') || '';
+
+                let data = {};
+
+                if (contentType.includes('application/json')) {
+                    data = await response.json();
+                }
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message ||
+                        'Unable to delete the order.'
+                    );
+                }
+
+                /* =================================================
+                   REMOVE ROW WITHOUT PAGE REFRESH
+                ================================================= */
+
+                if (row) {
+
+                    row.style.transition =
+                        'opacity 0.3s ease, transform 0.3s ease';
+
+                    row.style.opacity = '0';
+
+                    row.style.transform =
+                        'translateX(20px)';
+
+                    setTimeout(function () {
+                        row.remove();
+                    }, 300);
+                }
+
+                /* =================================================
+                   SUCCESS ALERT
+                ================================================= */
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Order deleted',
+                    text: data.message ||
+                        'The order has been deleted successfully.',
+                    timer: 1600,
+                    showConfirmButton: false
+                });
+
+            } catch (error) {
+
+                if (button) {
+                    button.disabled = false;
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Delete failed',
+                    text: error.message ||
+                        'Unable to delete the order.',
+                    confirmButtonColor: '#2563eb'
+                });
+            }
+
+        });
+
+    });
+
+});
+</script>
+
+@endpush
