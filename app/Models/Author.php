@@ -15,4 +15,19 @@ class Author extends Model
         'photo',
         'status',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Books written by this author.
+     */
+    public function books()
+    {
+        return $this->hasMany(Book::class, 'author_id');
+    }
 }
+

@@ -2,189 +2,253 @@
 
 @section('title', 'Edit Category')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/categories.css') }}">
+@endpush
+
 @section('content')
 
-<div class="dashboard-section category-page">
+<div class="categories-page">
 
-    {{-- PAGE HEADER --}}
-    <div class="dashboard-panel mb-4">
+    {{-- =========================================================
+         HEADER
+         ========================================================= --}}
 
-        <div class="panel-header mb-0">
+    <div class="categories-panel">
 
-            <div>
-                <h5 class="mb-1">Edit Category</h5>
-                <p class="text-muted mb-0 small">
-                    Update category details
+        <div class="categories-panel-header">
+
+            <div class="categories-heading-content">
+
+                <span class="eyebrow">
+                    <i class="bi bi-tags"></i>
+                    Category Management
+                </span>
+
+                <h5>
+                    Edit Category
+                </h5>
+
+                <p>
+                    Update category information, description, image and status.
                 </p>
+
             </div>
 
-            <a
-                href="{{ route('admin.categories.index') }}"
-                class="btn btn-light border">
+            <div class="categories-header-action">
 
-                <i class="bi bi-arrow-left me-2"></i>
-                Back to Categories
+                <a
+                    href="{{ route('admin.categories.index') }}"
+                    class="categories-add-btn"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Categories
+                </a>
 
-            </a>
+            </div>
 
         </div>
 
-    </div>
 
+        {{-- =========================================================
+             BODY
+             ========================================================= --}}
 
-    {{-- FORM PANEL --}}
-    <div class="dashboard-panel">
+        <div class="categories-form-body">
 
-        {{-- VALIDATION ERRORS --}}
-        @if ($errors->any())
+            {{-- =====================================================
+                 ERRORS
+                 ===================================================== --}}
 
-            <div class="alert alert-danger mb-4">
+            @if($errors->any())
 
-                <div class="fw-semibold mb-2">
-                    Please fix the following errors:
-                </div>
+                <div class="alert alert-danger category-form-alert">
 
-                <ul class="mb-0 ps-3">
-
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-
-                </ul>
-
-            </div>
-
-        @endif
-
-
-        <form
-            action="{{ route('admin.categories.update', $category->id) }}"
-            method="POST"
-            enctype="multipart/form-data">
-
-            @csrf
-            @method('PUT')
-
-
-            <div class="row g-4">
-
-                {{-- LEFT SIDE --}}
-                <div class="col-12 col-lg-8">
-
-                    {{-- CATEGORY NAME --}}
-                    <div class="mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Category Name
-                            <span class="text-danger">*</span>
-                        </label>
-
-                        <input
-                            type="text"
-                            class="form-control @error('name') is-invalid @enderror"
-                            name="name"
-                            value="{{ old('name', $category->name) }}"
-                            placeholder="Enter category name"
-                            required>
-
-                        @error('name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
+                    <div class="fw-bold mb-2">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        Please fix the following errors:
                     </div>
 
+                    <ul class="mb-0 ps-3">
 
-                    {{-- SLUG --}}
-                    <div class="mb-4">
+                        @foreach($errors->all() as $error)
 
-                        <label class="form-label fw-semibold">
-                            Slug
-                        </label>
+                            <li>{{ $error }}</li>
 
-                        <input
-                            type="text"
-                            class="form-control @error('slug') is-invalid @enderror"
-                            name="slug"
-                            value="{{ old('slug', $category->slug) }}"
-                            placeholder="example: fiction-books">
+                        @endforeach
 
-                        @error('slug')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                        <small class="text-muted">
-                            Use a unique URL-friendly slug for this category.
-                        </small>
-
-                    </div>
-
-
-                    {{-- DESCRIPTION --}}
-                    <div class="mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Description
-                        </label>
-
-                        <textarea
-                            class="form-control @error('description') is-invalid @enderror"
-                            name="description"
-                            rows="6"
-                            placeholder="Write a short description for this category...">{{ old('description', $category->description) }}</textarea>
-
-                        @error('description')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                    </div>
-
-
-                    {{-- STATUS --}}
-                    <div class="form-check mt-4">
-
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="status"
-                            value="1"
-                            id="status"
-                            {{ old('status', $category->status) ? 'checked' : '' }}>
-
-                        <label
-                            class="form-check-label fw-medium"
-                            for="status">
-
-                            Active category
-
-                        </label>
-
-                    </div>
+                    </ul>
 
                 </div>
 
+            @endif
 
-                {{-- RIGHT SIDE --}}
-                <div class="col-12 col-lg-4">
 
-                    <div class="category-image-upload">
+            <form
+                action="{{ route('admin.categories.update', $category->id) }}"
+                method="POST"
+                enctype="multipart/form-data"
+            >
 
-                        <label class="form-label fw-semibold">
+                @csrf
+                @method('PUT')
+
+
+                {{-- =================================================
+                     BASIC INFORMATION
+                     ================================================= --}}
+
+                <div class="category-form-section">
+
+                    <div class="category-section-heading">
+
+                        <span class="category-section-icon">
+                            <i class="bi bi-tags"></i>
+                        </span>
+
+                        <span>
+                            Basic Information
+                        </span>
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        {{-- Category Name --}}
+                        <div class="col-lg-8">
+
+                            <label
+                                for="name"
+                                class="form-label"
+                            >
+                                Category Name
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="category-input-field">
+
+                                <input
+                                    id="name"
+                                    type="text"
+                                    name="name"
+                                    value="{{ old('name', $category->name) }}"
+                                    placeholder="Enter category name"
+                                    required
+                                >
+
+                            </div>
+
+                            @error('name')
+
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+
+                        {{-- Slug --}}
+                        <div class="col-lg-4">
+
+                            <label
+                                for="slug"
+                                class="form-label"
+                            >
+                                Slug
+                            </label>
+
+                            <div class="category-input-field">
+
+                                <input
+                                    id="slug"
+                                    type="text"
+                                    name="slug"
+                                    value="{{ old('slug', $category->slug) }}"
+                                    placeholder="example: fiction-books"
+                                >
+
+                            </div>
+
+                            @error('slug')
+
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+
+                        {{-- Description --}}
+                        <div class="col-12">
+
+                            <label
+                                for="description"
+                                class="form-label"
+                            >
+                                Description
+                            </label>
+
+                            <div class="category-input-field">
+
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    rows="5"
+                                    placeholder="Write a short description for this category..."
+                                >{{ old('description', $category->description) }}</textarea>
+
+                            </div>
+
+                            @error('description')
+
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- =================================================
+                     CATEGORY IMAGE
+                     ================================================= --}}
+
+                <div class="category-form-section">
+
+                    <div class="category-section-heading">
+
+                        <span class="category-section-icon">
+                            <i class="bi bi-image"></i>
+                        </span>
+
+                        <span>
                             Category Image
-                        </label>
+                        </span>
+
+                    </div>
 
 
-                        {{-- CURRENT IMAGE / PREVIEW --}}
-                        <div
-                            class="category-image-preview mb-3"
-                            id="categoryImagePreview">
+                    <div class="row g-3 align-items-end">
 
-                            @if(!empty($category->image))
+                        {{-- Current Image --}}
+                        <div class="col-lg-6">
+
+                            <label class="form-label">
+                                Current Image
+                            </label>
+
+
+                            @if($category->image)
 
                                 @php
 
@@ -197,15 +261,33 @@
 
                                 @endphp
 
-                                <img
-                                    src="{{ $categoryImageUrl }}"
-                                    alt="{{ $category->name }}"
-                                    class="img-fluid rounded border category-preview-image"
-                                    loading="lazy">
+
+                                <div class="category-current-image">
+
+                                    <img
+                                        src="{{ $categoryImageUrl }}"
+                                        alt="{{ $category->name }}"
+                                        class="category-preview-image"
+                                    >
+
+                                    <div class="category-current-image-info">
+
+                                        <span class="category-image-status">
+                                            <i class="bi bi-check-circle"></i>
+                                            Current image
+                                        </span>
+
+                                        <small>
+                                            Upload a new image to replace it.
+                                        </small>
+
+                                    </div>
+
+                                </div>
 
                             @else
 
-                                <div class="category-image-placeholder">
+                                <div class="category-no-image">
 
                                     <i class="bi bi-image"></i>
 
@@ -220,45 +302,67 @@
                         </div>
 
 
-                        {{-- FILE INPUT --}}
-                        <input
-                            type="file"
-                            class="form-control @error('image') is-invalid @enderror"
-                            name="image"
-                            id="categoryImage"
-                            accept="image/*">
+                        {{-- New Image --}}
+                        <div class="col-lg-6">
 
-                        @error('image')
-                            <div class="invalid-feedback">
-                                {{ $message }}
+                            <label
+                                for="image"
+                                class="form-label"
+                            >
+                                Replace Image
+                            </label>
+
+
+                            <div class="category-file-upload">
+
+                                <input
+                                    id="image"
+                                    type="file"
+                                    name="image"
+                                    class="category-file-native"
+                                    accept="image/*"
+                                >
+
+                                <label
+                                    for="image"
+                                    class="category-file-label"
+                                >
+
+                                    <span class="category-file-icon">
+                                        <i class="bi bi-cloud-arrow-up"></i>
+                                    </span>
+
+                                    <span class="category-file-content">
+
+                                        <span class="category-file-title">
+                                            Choose Category Image
+                                        </span>
+
+                                        <span
+                                            class="category-file-name"
+                                            id="categoryFileName"
+                                        >
+                                            No file chosen
+                                        </span>
+
+                                    </span>
+
+                                    <span class="category-file-button">
+                                        Browse
+                                    </span>
+
+                                </label>
+
                             </div>
-                        @enderror
 
 
-                        <small class="text-muted d-block mt-2">
-                            Leave empty to keep the current image.
-                        </small>
+                            @error('image')
 
-                    </div>
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
 
-
-                    {{-- TIP --}}
-                    <div class="p-3 rounded border small tip-box mt-4">
-
-                        <div class="d-flex align-items-start gap-2">
-
-                            <i class="bi bi-lightbulb mt-1"></i>
-
-                            <div>
-
-                                <strong class="d-block mb-1">
-                                    Tip
-                                </strong>
-
-                                Use a clear, square image for better consistency
-                                across category cards.
-
-                            </div>
+                            @enderror
 
                         </div>
 
@@ -266,78 +370,136 @@
 
                 </div>
 
-            </div>
+
+                {{-- =================================================
+                     STATUS
+                     ================================================= --}}
+
+                <div class="category-form-section">
+
+                    <div class="category-section-heading">
+
+                        <span class="category-section-icon">
+                            <i class="bi bi-toggle-on"></i>
+                        </span>
+
+                        <span>
+                            Category Status
+                        </span>
+
+                    </div>
 
 
-            {{-- ACTIONS --}}
-            <div class="d-flex flex-wrap gap-2 mt-4 pt-3 border-top">
+                    <div class="row g-3">
 
-                <button
-                    type="submit"
-                    class="btn btn-primary px-4">
+                        <div class="col-lg-6">
 
-                    <i class="bi bi-check2-circle me-2"></i>
-                    Update Category
+                            <label
+                                for="status"
+                                class="form-label"
+                            >
+                                Status
+                                <span class="text-danger">*</span>
+                            </label>
 
-                </button>
+                            <select
+                                id="status"
+                                name="status"
+                                class="category-filter-select"
+                                required
+                            >
+
+                                <option
+                                    value="1"
+                                    @selected(old('status', $category->status))
+                                >
+                                    Active
+                                </option>
+
+                                <option
+                                    value="0"
+                                    @selected(!old('status', $category->status))
+                                >
+                                    Inactive
+                                </option>
+
+                            </select>
+
+                            @error('status')
+
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+                </div>
 
 
-                <a
-                    href="{{ route('admin.categories.index') }}"
-                    class="btn btn-light border px-4">
+                {{-- =================================================
+                     ACTIONS
+                     ================================================= --}}
 
-                    Cancel
+                <div class="category-form-actions">
 
-                </a>
+                    <a
+                        href="{{ route('admin.categories.index') }}"
+                        class="category-clear-filter"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        Cancel
+                    </a>
 
-            </div>
+                    <button
+                        type="submit"
+                        class="categories-add-btn"
+                    >
+                        <i class="bi bi-check-circle"></i>
+                        Update Category
+                    </button>
 
-        </form>
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
 
 </div>
 
+@endsection
 
-{{-- IMAGE PREVIEW SCRIPT --}}
-@push('scripts')
+
+@push('js')
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const imageInput = document.getElementById('categoryImage');
-    const imagePreview = document.getElementById('categoryImagePreview');
+    const imageInput = document.getElementById('image');
+    const fileName = document.getElementById('categoryFileName');
 
-    if (!imageInput || !imagePreview) {
+    if (!imageInput || !fileName) {
         return;
     }
 
-    imageInput.addEventListener('change', function (event) {
+    imageInput.addEventListener('change', function () {
 
-        const file = event.target.files[0];
+        if (this.files && this.files.length > 0) {
 
-        if (!file) {
-            return;
+            fileName.textContent = this.files[0].name;
+            fileName.classList.add('has-file');
+
+        } else {
+
+            fileName.textContent = 'No file chosen';
+            fileName.classList.remove('has-file');
+
         }
-
-        if (!file.type.startsWith('image/')) {
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-
-            imagePreview.innerHTML = `
-                <img
-                    src="${e.target.result}"
-                    alt="New category preview"
-                    class="img-fluid rounded border category-preview-image">
-            `;
-
-        };
-
-        reader.readAsDataURL(file);
 
     });
 
@@ -345,6 +507,3 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 @endpush
-
-@endsection
-

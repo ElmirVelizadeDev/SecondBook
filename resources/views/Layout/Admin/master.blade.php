@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="csrf-token"
+        content="{{ csrf_token() }}"
+    >
 
     <title>SecondBook Admin</title>
 
@@ -24,52 +30,149 @@
         }}"
     >
 
-    {{-- Google Font --}}
+    {{-- =========================================================
+         GOOGLE FONT
+    ========================================================== --}}
+
     <link
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
 
-    {{-- Bootstrap --}}
+    {{-- =========================================================
+         BOOTSTRAP
+    ========================================================== --}}
+
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
-    {{-- Bootstrap Icons --}}
+    {{-- =========================================================
+         BOOTSTRAP ICONS
+    ========================================================== --}}
+
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
 
-    {{-- Custom CSS --}}
-    <link rel="stylesheet" href="{{ asset('admin/css/dashboard-premium.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/header.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/sidebar.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/responsive.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/books.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/users.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/reviews.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/banner.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/blog.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/book-requests.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/book-condition.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/analysis.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/authors.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/category.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/publishers.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/sellers.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/roles.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/css/settings.css') }}">
+    {{-- =========================================================
+         CUSTOM CSS
+    ========================================================== --}}
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/dashboard-premium.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/header.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/sidebar.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/dashboard.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/responsive.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/books.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/users.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/reviews.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/banner.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/blog.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/book-requests.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/book-condition.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/analysis.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/authors.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/category.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/publishers.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/sellers.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/roles.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('admin/css/settings.css') }}"
+    >
 
     @stack('css')
 
-    {{-- SweetAlert2 --}}
+    {{-- =========================================================
+         SWEETALERT2
+    ========================================================== --}}
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    {{-- Apply saved theme before page loads --}}
+    {{-- =========================================================
+         APPLY SAVED THEME BEFORE PAGE LOAD
+    ========================================================== --}}
+
     <script>
         (function () {
 
@@ -98,7 +201,7 @@
 
         /* =========================================================
            DARK MODE
-        ========================================================= */
+        ========================================================== */
 
         :root[data-theme="dark"] body {
             background: #0f172a;
@@ -232,8 +335,81 @@
 
 
         /* =========================================================
+           GLOBAL ADMIN LAYOUT
+           
+           SIDEBAR:
+           Desktop = fixed / 260px
+           Main    = leaves 260px space
+
+           Mobile:
+           Main    = full width
+           Sidebar = overlay drawer
+        ========================================================== */
+
+        html,
+        body {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            overflow-x: clip;
+        }
+
+        body {
+            overflow-x: clip;
+        }
+
+        .wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /*
+         * IMPORTANT:
+         * Sidebar is fixed, therefore .main must reserve
+         * the sidebar width on desktop.
+         */
+
+        .main {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+            width: calc(100% - 260px);
+            margin-left: 260px;
+        }
+
+        .main > .container-fluid {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        @media (min-width: 992px) {
+
+            .main {
+                width: calc(100% - 260px);
+                margin-left: 260px;
+            }
+
+        }
+
+        @media (max-width: 991.98px) {
+
+            .main {
+                width: 100%;
+                margin-left: 0;
+            }
+
+        }
+
+
+        /* =========================================================
            SWEETALERT2 GLOBAL THEME
-        ========================================================= */
+        ========================================================== */
 
         .swal2-popup {
             color: #111827 !important;
@@ -262,7 +438,7 @@
 
         /* =========================================================
            ADMIN LOGOUT ALERT
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-popup {
             overflow: hidden !important;
@@ -291,16 +467,14 @@
 
         /* =========================================================
            LOGOUT TITLE
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-title {
             margin: 0 !important;
             padding: 28px 28px 4px !important;
-
             color: #101828 !important;
             font-size: 21px !important;
             font-weight: 800 !important;
-
             letter-spacing: -.025em;
             line-height: 1.3 !important;
         }
@@ -308,12 +482,11 @@
 
         /* =========================================================
            LOGOUT BODY
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-body {
             margin: 0 !important;
             padding: 0 28px !important;
-
             color: #667085 !important;
             font-size: 13px !important;
             line-height: 1.65 !important;
@@ -328,7 +501,7 @@
 
         /* =========================================================
            LOGOUT ICON
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-icon {
             width: 64px;
@@ -367,12 +540,11 @@
 
         /* =========================================================
            LOGOUT TEXT
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-content p {
             max-width: 300px;
             margin: 0 auto !important;
-
             color: #667085 !important;
             font-size: 13px !important;
             font-weight: 500;
@@ -382,7 +554,7 @@
 
         /* =========================================================
            LOGOUT ACTIONS
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-actions {
             width: 100%;
@@ -397,7 +569,7 @@
 
         /* =========================================================
            BUTTON BASE
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-confirm,
         .admin-logout-cancel {
@@ -430,7 +602,7 @@
 
         /* =========================================================
            BUTTON CONTENT
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-btn,
         .admin-cancel-btn {
@@ -448,17 +620,12 @@
 
         /* =========================================================
            CANCEL BUTTON
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-cancel {
-            border:
-                1px solid #dfe3ea !important;
-
-            background:
-                #ffffff !important;
-
-            color:
-                #475467 !important;
+            border: 1px solid #dfe3ea !important;
+            background: #ffffff !important;
+            color: #475467 !important;
 
             box-shadow:
                 0 2px 5px
@@ -466,17 +633,11 @@
         }
 
         .admin-logout-cancel:hover {
-            transform:
-                translateY(-1px);
+            transform: translateY(-1px);
 
-            border-color:
-                #cfd4dc !important;
-
-            background:
-                #f8fafc !important;
-
-            color:
-                #101828 !important;
+            border-color: #cfd4dc !important;
+            background: #f8fafc !important;
+            color: #101828 !important;
 
             box-shadow:
                 0 8px 20px -14px
@@ -486,11 +647,10 @@
 
         /* =========================================================
            LOGOUT BUTTON
-        ========================================================= */
+        ========================================================== */
 
         .admin-logout-confirm {
-            border:
-                1px solid #d92d20 !important;
+            border: 1px solid #d92d20 !important;
 
             background:
                 linear-gradient(
@@ -499,8 +659,7 @@
                     #d92d20
                 ) !important;
 
-            color:
-                #ffffff !important;
+            color: #ffffff !important;
 
             box-shadow:
                 0 10px 24px -13px
@@ -508,11 +667,9 @@
         }
 
         .admin-logout-confirm:hover {
-            transform:
-                translateY(-1px);
+            transform: translateY(-1px);
 
-            border-color:
-                #c5261b !important;
+            border-color: #c5261b !important;
 
             background:
                 linear-gradient(
@@ -521,8 +678,7 @@
                     #c9251b
                 ) !important;
 
-            color:
-                #ffffff !important;
+            color: #ffffff !important;
 
             box-shadow:
                 0 14px 28px -14px
@@ -531,18 +687,16 @@
 
         .admin-logout-confirm:active,
         .admin-logout-cancel:active {
-            transform:
-                translateY(0);
+            transform: translateY(0);
         }
 
 
         /* =========================================================
            DARK MODE - LOGOUT
-        ========================================================= */
+        ========================================================== */
 
         :root[data-theme="dark"] .admin-logout-popup {
-            border-color:
-                #26334d !important;
+            border-color: #26334d !important;
 
             background:
                 linear-gradient(
@@ -560,13 +714,11 @@
         }
 
         :root[data-theme="dark"] .admin-logout-title {
-            color:
-                #f2f4f7 !important;
+            color: #f2f4f7 !important;
         }
 
         :root[data-theme="dark"] .admin-logout-content p {
-            color:
-                #98a7bd !important;
+            color: #98a7bd !important;
         }
 
         :root[data-theme="dark"] .admin-logout-icon {
@@ -577,8 +729,7 @@
                     rgba(127, 29, 29, .20)
                 );
 
-            color:
-                #ff8178;
+            color: #ff8178;
 
             box-shadow:
                 inset 0 0 0 1px
@@ -589,40 +740,27 @@
         }
 
         :root[data-theme="dark"] .admin-logout-cancel {
-            border-color:
-                #2d3a52 !important;
-
-            background:
-                #172033 !important;
-
-            color:
-                #b8c3d6 !important;
-
-            box-shadow:
-                none;
+            border-color: #2d3a52 !important;
+            background: #172033 !important;
+            color: #b8c3d6 !important;
+            box-shadow: none;
         }
 
         :root[data-theme="dark"] .admin-logout-cancel:hover {
-            border-color:
-                #3b4a66 !important;
-
-            background:
-                #1c2940 !important;
-
-            color:
-                #f2f4f7 !important;
+            border-color: #3b4a66 !important;
+            background: #1c2940 !important;
+            color: #f2f4f7 !important;
         }
 
 
         /* =========================================================
            LOGOUT ANIMATION
-        ========================================================= */
+        ========================================================== */
 
         @keyframes adminLogoutShow {
 
             from {
                 opacity: 0;
-
                 transform:
                     translateY(12px)
                     scale(.97);
@@ -630,7 +768,6 @@
 
             to {
                 opacity: 1;
-
                 transform:
                     translateY(0)
                     scale(1);
@@ -642,7 +779,6 @@
 
             from {
                 opacity: 1;
-
                 transform:
                     translateY(0)
                     scale(1);
@@ -650,7 +786,6 @@
 
             to {
                 opacity: 0;
-
                 transform:
                     translateY(8px)
                     scale(.98);
@@ -672,7 +807,7 @@
 
         /* =========================================================
            MOBILE LOGOUT
-        ========================================================= */
+        ========================================================== */
 
         @media (max-width: 480px) {
 
@@ -706,37 +841,8 @@
 
 
         /* =========================================================
-           GLOBAL SCROLL / STICKY FIX
-           
-           IMPORTANT:
-           Do NOT use overflow-x:hidden on ancestors of
-           position:sticky elements.
-        ========================================================= */
-
-        html,
-        body {
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            overflow-x: clip;
-        }
-
-        body {
-            overflow-x: clip;
-        }
-
-        /*
-         * Main wrapper must not become a scrolling container.
-         * clip prevents horizontal overflow without creating
-         * the same scrolling context as overflow:hidden.
-         */
-        /* =========================================================
-        SETTINGS STICKY SUPPORT
-        ========================================================= */
+           SETTINGS STICKY SUPPORT
+        ========================================================== */
 
         @media (min-width: 992px) {
 
@@ -748,8 +854,12 @@
 
             .settings-page .sx-layout {
                 display: grid;
-                grid-template-columns: 232px minmax(0, 1fr);
+
+                grid-template-columns:
+                    232px minmax(0, 1fr);
+
                 gap: 24px;
+
                 align-items: start;
 
                 width: 100%;
@@ -780,6 +890,7 @@
                 min-width: 0;
                 width: 100%;
             }
+
         }
 
         .container-fluid {
@@ -788,19 +899,129 @@
             min-width: 0;
         }
 
-        /*
-         * Settings sticky ancestors
-         */
+
+        /* =========================================================
+           SETTINGS STICKY ANCESTORS
+        ========================================================== */
+
         .main .settings-page,
         .main .settings-page .sx-layout {
             overflow: visible !important;
         }
 
-        /*
-         * Sidebar overlay should not affect normal page scrolling.
-         */
+
+        /* =========================================================
+           SIDEBAR OVERLAY
+           
+           Overlay:
+           - fixed
+           - below sidebar
+           - hidden on desktop
+           - active only when JS adds .show
+        ========================================================== */
+
         .sidebar-overlay {
-            overflow: hidden;
+            position: fixed;
+            inset: 0;
+
+            z-index: 1035;
+
+            background:
+                rgba(15, 23, 42, .45);
+
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+
+            transition:
+                opacity .25s ease,
+                visibility .25s ease;
+
+            -webkit-backdrop-filter: blur(3px);
+            backdrop-filter: blur(3px);
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+
+        /* =========================================================
+           SIDEBAR ABOVE OVERLAY
+        ========================================================== */
+
+        .sidebar.sb {
+            z-index: 1040;
+        }
+
+
+        /* =========================================================
+           DESKTOP SIDEBAR
+        ========================================================== */
+
+        @media (min-width: 992px) {
+
+            .sidebar-overlay {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
+
+            .sidebar.sb {
+                z-index: 1040;
+            }
+
+            body.sidebar-open {
+                overflow-x: clip;
+            }
+
+        }
+
+
+        /* =========================================================
+           MOBILE SIDEBAR
+        ========================================================== */
+
+        @media (max-width: 991.98px) {
+
+            .main {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .sidebar-overlay {
+                display: block;
+            }
+
+            .sidebar.sb {
+                z-index: 1040;
+            }
+
+            body.sidebar-open {
+                overflow: hidden;
+            }
+
+        }
+
+
+        /* =========================================================
+           REDUCED MOTION
+        ========================================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+
         }
 
     </style>
@@ -808,34 +1029,38 @@
 </head>
 
 
-<body class="sidebar-open">
+<body>
 
 <div class="wrapper">
 
     {{-- =========================================================
          SIDEBAR
-    ========================================================= --}}
+    ========================================================== --}}
 
     @include('layout.admin.sidebar')
 
 
     {{-- =========================================================
          SIDEBAR OVERLAY
-    ========================================================= --}}
+    ========================================================== --}}
 
     <div
         class="sidebar-overlay"
         id="sidebarOverlay"
+        aria-hidden="true"
     ></div>
 
 
     {{-- =========================================================
          MAIN
-    ========================================================= --}}
+    ========================================================== --}}
 
     <div class="main">
 
-        {{-- Header --}}
+        {{-- =====================================================
+             HEADER
+        ====================================================== --}}
+
         @include('layout.admin.header')
 
 
@@ -850,7 +1075,10 @@
         </div>
 
 
-        {{-- Footer --}}
+        {{-- =====================================================
+             FOOTER
+        ====================================================== --}}
+
         @include('layout.admin.footer')
 
     </div>
@@ -1025,7 +1253,7 @@
 
             function confirmLogout(formId) {
 
-                const isDark =
+                var isDark =
                     document.documentElement.getAttribute(
                         'data-theme'
                     ) === 'dark';
@@ -1037,24 +1265,18 @@
 
 
                     html: `
-
                         <div class="admin-logout-content">
 
                             <div class="admin-logout-icon">
-
                                 <i class="bi bi-box-arrow-right"></i>
-
                             </div>
 
                             <p>
-
                                 Are you sure you want to sign out
                                 of your admin account?
-
                             </p>
 
                         </div>
-
                     `,
 
 
@@ -1062,28 +1284,18 @@
 
 
                     confirmButtonText: `
-
                         <span class="admin-logout-btn">
-
                             <i class="bi bi-box-arrow-right"></i>
-
                             Logout
-
                         </span>
-
                     `,
 
 
                     cancelButtonText: `
-
                         <span class="admin-cancel-btn">
-
                             <i class="bi bi-x-lg"></i>
-
                             Cancel
-
                         </span>
-
                     `,
 
 
@@ -1169,9 +1381,7 @@
 
 
                             if (form) {
-
                                 form.submit();
-
                             }
 
                         }

@@ -2,86 +2,232 @@
 
 @section('title', 'Categories')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/categories.css') }}">
+@endpush
+
 @section('content')
 
-<div class="dashboard-section category-page">
+@php
+    $totalCategories = $categories->total();
 
-    <div class="dashboard-panel mb-4">
+    /*
+    |--------------------------------------------------------------------------
+    | Statistics
+    |--------------------------------------------------------------------------
+    | These queries keep the page independent from controller-provided
+    | statistics while the same categories.css can be reused everywhere.
+    */
+    $activeCategories = \App\Models\Category::where('status', true)->count();
+    $inactiveCategories = \App\Models\Category::where('status', false)->count();
+    $categoriesWithBooks = \App\Models\Category::has('books')->count();
+@endphp
 
-        <div class="panel-header mb-0">
+<div class="dashboard-section categories-page">
 
-            <div>
-                <h5 class="mb-1">Categories</h5>
+    {{-- =========================================================
+        HERO
+    ========================================================== --}}
+    <section class="categories-hero">
 
-                <p class="text-muted mb-0 small">
-                    Manage all book categories on SecondBook
-                </p>
-            </div>
+        <div class="categories-hero-content">
 
-            <a
-                href="{{ route('admin.categories.create') }}"
-                class="btn btn-primary"
-            >
-                <i class="bi bi-plus-circle me-2"></i>
-                Add Category
-            </a>
+            <span class="categories-hero-badge">
+                <i class="bi bi-tags"></i>
+                Marketplace Library
+            </span>
+
+            <h1>
+                Categories, beautifully organised.
+            </h1>
+
+            <p>
+                Create, organise and manage the categories used across
+                the SecondBook marketplace.
+            </p>
 
         </div>
 
-    </div>
+        <div class="categories-hero-mark" aria-hidden="true">
+            <i class="bi bi-tags"></i>
+        </div>
+
+    </section>
 
 
-    {{-- FILTER --}}
-    <div class="dashboard-panel mb-4">
+    {{-- =========================================================
+        STATISTICS
+    ========================================================== --}}
+    <section class="categories-stats">
 
+        {{-- Total --}}
+        <div class="category-stat-card stat-blue">
+
+            <div class="category-stat-content">
+                <span>Total Categories</span>
+                <strong>{{ $totalCategories }}</strong>
+            </div>
+
+            <div class="category-stat-icon">
+                <i class="bi bi-tags"></i>
+            </div>
+
+        </div>
+
+
+        {{-- Active --}}
+        <div class="category-stat-card stat-green">
+
+            <div class="category-stat-content">
+                <span>Active</span>
+                <strong>{{ $activeCategories }}</strong>
+            </div>
+
+            <div class="category-stat-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+        </div>
+
+
+        {{-- Inactive --}}
+        <div class="category-stat-card stat-orange">
+
+            <div class="category-stat-content">
+                <span>Inactive</span>
+                <strong>{{ $inactiveCategories }}</strong>
+            </div>
+
+            <div class="category-stat-icon">
+                <i class="bi bi-pause-circle"></i>
+            </div>
+
+        </div>
+
+
+        {{-- Used by Books --}}
+        <div class="category-stat-card stat-purple">
+
+            <div class="category-stat-content">
+                <span>Used by Books</span>
+                <strong>{{ $categoriesWithBooks }}</strong>
+            </div>
+
+            <div class="category-stat-icon">
+                <i class="bi bi-book"></i>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {{-- =========================================================
+        CATEGORY PANEL
+    ========================================================== --}}
+    <section class="dashboard-panel categories-panel">
+
+        {{-- =====================================================
+            PANEL HEADER
+        ====================================================== --}}
+        <div class="categories-panel-header">
+
+            <div class="categories-heading-content">
+
+                <span class="eyebrow">
+                    Category Directory
+                </span>
+
+                <h5>
+                    All Categories
+                </h5>
+
+                <p>
+                    Search, filter and manage your marketplace categories.
+                </p>
+
+            </div>
+
+
+            <div class="categories-header-action">
+
+                <a
+                    href="{{ route('admin.categories.create') }}"
+                    class="categories-add-btn"
+                >
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Add Category</span>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {{-- =====================================================
+            SUCCESS MESSAGE
+        ====================================================== --}}
+        @if(session('success'))
+
+            <div class="category-alert category-alert-success">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                    {{ session('success') }}
+                </span>
+
+            </div>
+
+        @endif
+
+
+        {{-- =====================================================
+            FILTERS
+        ====================================================== --}}
         <form
             method="GET"
             action="{{ route('admin.categories.index') }}"
-            class="row g-3 align-items-end"
+            class="category-filters"
         >
 
-            <div class="col-12 col-md-6 col-lg-6">
+            {{-- Search --}}
+            <div class="category-filter-search">
 
-                <label class="form-label small text-muted fw-semibold">
+                <label for="category-search">
                     Search
                 </label>
 
-                <div class="input-group">
+                <div class="category-search-field">
 
-                    <span class="input-group-text bg-white border-end-0">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
+                    <i class="bi bi-search"></i>
 
                     <input
+                        id="category-search"
                         type="text"
                         name="search"
                         value="{{ request('search') }}"
-                        class="form-control border-start-0"
                         placeholder="Category name, slug or description..."
                     >
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        Search
-                    </button>
 
                 </div>
 
             </div>
 
 
-            <div class="col-6 col-md-3 col-lg-2">
+            {{-- Status --}}
+            <div class="category-filter-group">
 
-                <label class="form-label small text-muted fw-semibold">
+                <label for="category-status">
                     Status
                 </label>
 
                 <select
+                    id="category-status"
                     name="status"
-                    class="form-select"
+                    class="category-filter-select"
                 >
+
                     <option value="">
                         All Status
                     </option>
@@ -105,92 +251,106 @@
             </div>
 
 
-            <div class="col-6 col-md-3 col-lg-4 d-flex gap-2">
+            {{-- Actions --}}
+            <div class="category-filter-actions">
 
                 <button
                     type="submit"
-                    class="btn btn-primary flex-grow-1 flex-lg-grow-0 px-4"
+                    class="category-filter-btn"
                 >
-                    <i class="bi bi-funnel me-1"></i>
-                    Filter
+                    <i class="bi bi-funnel"></i>
+                    <span>Filter</span>
                 </button>
 
-                <a
-                    href="{{ route('admin.categories.index') }}"
-                    class="btn btn-light border"
-                >
-                    Reset
-                </a>
+                @if(request()->hasAny(['search', 'status']))
+
+                    <a
+                        href="{{ route('admin.categories.index') }}"
+                        class="category-clear-filter"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        <span>Reset</span>
+                    </a>
+
+                @endif
 
             </div>
 
         </form>
 
-    </div>
 
+        {{-- =====================================================
+            TABLE HEADER
+        ====================================================== --}}
+        <div class="categories-list-header">
 
-    {{-- SUCCESS MESSAGE --}}
-    @if(session('success'))
+            <div class="categories-list-heading">
 
-        <div class="alert alert-success mb-4">
-            {{ session('success') }}
+                <span class="eyebrow">
+                    Category Management
+                </span>
+
+                <h5>
+                    Category List
+                </h5>
+
+                <p>
+                    {{ $totalCategories }}
+                    {{ $totalCategories === 1 ? 'category' : 'categories' }}
+                    available in the marketplace.
+                </p>
+
+            </div>
+
+            <div class="categories-count-badge">
+                <i class="bi bi-collection"></i>
+                <span>{{ $totalCategories }}</span>
+            </div>
+
         </div>
 
-    @endif
 
+        {{-- =====================================================
+            TABLE
+        ====================================================== --}}
+        <div class="categories-table-wrap">
 
-    {{-- CATEGORY LIST --}}
-    <div class="dashboard-panel">
-
-        <div class="panel-header">
-
-            <h5>
-                Category List
-            </h5>
-
-            <span class="badge bg-primary">
-                {{ $categories->total() }} categories
-            </span>
-
-        </div>
-
-
-        <div class="table-responsive">
-
-            <table class="table table-hover align-middle">
+            <table class="categories-table">
 
                 <thead>
 
                     <tr>
 
-                        <th>ID</th>
+                        <th class="categories-col-id">
+                            ID
+                        </th>
 
-                        <th>Image</th>
+                        <th class="categories-col-category">
+                            Category
+                        </th>
 
-                        <th>Name</th>
-
-                        <th class="d-none d-md-table-cell">
+                        <th class="categories-col-slug">
                             Slug
                         </th>
 
-                        <th class="d-none d-lg-table-cell">
+                        <th class="categories-col-description">
                             Description
                         </th>
 
-                        <th class="d-none d-lg-table-cell">
-                            Book Count
+                        <th class="categories-col-books">
+                            Books
                         </th>
 
-                        <th>
+                        <th class="categories-col-status">
                             Status
                         </th>
 
-                        <th class="d-none d-lg-table-cell">
-                            Created Date
+                        <th class="categories-col-date">
+                            Created
                         </th>
 
-                        <th class="text-end">
-                            Action
+                        <th class="categories-col-actions">
+                            Actions
                         </th>
 
                     </tr>
@@ -202,61 +362,64 @@
 
                     @forelse($categories as $category)
 
-                        <tr>
+                        <tr data-category-id="{{ $category->id }}">
 
-                            {{-- ID --}}
-                            <td>
-                                {{ $category->id }}
-                            </td>
-
-
-                            {{-- IMAGE --}}
+                            {{-- =================================================
+                                ID
+                            ================================================== --}}
                             <td>
 
-                                @if(!empty($category->image))
-
-                                    @php
-
-                                        $categoryImageUrl = filter_var(
-                                            $category->image,
-                                            FILTER_VALIDATE_URL
-                                        )
-                                            ? $category->image
-                                            : asset('storage/' . $category->image);
-
-                                    @endphp
-
-                                    <img
-                                        src="{{ $categoryImageUrl }}"
-                                        alt="{{ $category->name }}"
-                                        class="category-thumb rounded border"
-                                        loading="lazy"
-                                    >
-
-                                @else
-
-                                    <div class="book-cover-thumb">
-                                        <i class="bi bi-image"></i>
-                                    </div>
-
-                                @endif
+                                <span class="category-id">
+                                    #{{ $category->id }}
+                                </span>
 
                             </td>
 
 
-                            {{-- NAME --}}
+                            {{-- =================================================
+                                CATEGORY
+                            ================================================== --}}
                             <td>
 
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="category-item-cell">
 
-                                    <div>
+                                    @if(!empty($category->image))
 
-                                        <strong class="d-block">
+                                        @php
+                                            $categoryImageUrl = filter_var(
+                                                $category->image,
+                                                FILTER_VALIDATE_URL
+                                            )
+                                                ? $category->image
+                                                : asset('storage/' . $category->image);
+                                        @endphp
+
+                                        <img
+                                            src="{{ $categoryImageUrl }}"
+                                            alt="{{ $category->name }}"
+                                            class="category-image"
+                                            loading="lazy"
+                                        >
+
+                                    @else
+
+                                        <div class="category-image-placeholder">
+                                            <i class="bi bi-tags"></i>
+                                        </div>
+
+                                    @endif
+
+
+                                    <div class="category-item-info">
+
+                                        <strong
+                                            title="{{ $category->name }}"
+                                        >
                                             {{ $category->name }}
                                         </strong>
 
-                                        <small class="text-muted d-md-none">
-                                            {{ $category->slug }}
+                                        <small>
+                                            Category #{{ $category->id }}
                                         </small>
 
                                     </div>
@@ -266,42 +429,77 @@
                             </td>
 
 
-                            {{-- SLUG --}}
-                            <td class="d-none d-md-table-cell">
-                                {{ $category->slug }}
-                            </td>
+                            {{-- =================================================
+                                SLUG
+                            ================================================== --}}
+                            <td>
 
-
-                            {{-- DESCRIPTION --}}
-                            <td class="d-none d-lg-table-cell">
-
-                                {{ \Illuminate\Support\Str::limit(
-                                    $category->description ?? '-',
-                                    60
-                                ) }}
+                                <span
+                                    class="category-slug"
+                                    title="{{ $category->slug }}"
+                                >
+                                    {{ $category->slug }}
+                                </span>
 
                             </td>
 
 
-                            {{-- BOOK COUNT --}}
-                            <td class="d-none d-lg-table-cell">
-                                {{ $category->books_count }}
+                            {{-- =================================================
+                                DESCRIPTION
+                            ================================================== --}}
+                            <td>
+
+                                <div class="category-description">
+
+                                    {{ \Illuminate\Support\Str::limit(
+                                        $category->description ?? '—',
+                                        65
+                                    ) }}
+
+                                </div>
+
                             </td>
 
 
-                            {{-- STATUS --}}
+                            {{-- =================================================
+                                BOOK COUNT
+                            ================================================== --}}
+                            <td>
+
+                                <span class="category-book-count">
+
+                                    <i class="bi bi-book"></i>
+
+                                    {{ $category->books_count ?? 0 }}
+
+                                </span>
+
+                            </td>
+
+
+                            {{-- =================================================
+                                STATUS
+                            ================================================== --}}
                             <td>
 
                                 @if($category->status)
 
-                                    <span class="badge bg-success">
+                                    <span class="category-status-pill category-status-active">
+
+                                        <i class="bi bi-circle-fill"></i>
+
                                         Active
+
                                     </span>
 
                                 @else
 
-                                    <span class="badge bg-secondary">
+                                    <span class="category-status-pill category-status-inactive">
+
+                                        <i class="bi bi-circle-fill"></i>
+
                                         Inactive
+
                                     </span>
 
                                 @endif
@@ -309,24 +507,31 @@
                             </td>
 
 
-                            {{-- CREATED DATE --}}
-                            <td class="d-none d-lg-table-cell">
+                            {{-- =================================================
+                                CREATED
+                            ================================================== --}}
+                            <td>
 
-                                {{ $category->created_at?->format('d M Y') }}
+                                <span class="category-date">
+                                    {{ $category->created_at?->format('d M Y') ?? '—' }}
+                                </span>
 
                             </td>
 
 
-                            {{-- ACTIONS --}}
+                            {{-- =================================================
+                                ACTIONS
+                            ================================================== --}}
                             <td>
 
-                                <div class="d-flex justify-content-end gap-2">
+                                <div class="category-actions">
 
                                     {{-- View --}}
                                     <a
                                         href="{{ route('admin.categories.show', $category->id) }}"
-                                        class="btn btn-light btn-sm border"
-                                        title="View"
+                                        class="category-action-btn category-action-view"
+                                        title="View Category"
+                                        aria-label="View Category"
                                     >
                                         <i class="bi bi-eye"></i>
                                     </a>
@@ -336,6 +541,7 @@
                                     <form
                                         action="{{ route('admin.categories.status', $category->id) }}"
                                         method="POST"
+                                        class="category-status-form"
                                     >
 
                                         @csrf
@@ -343,13 +549,16 @@
 
                                         <button
                                             type="submit"
-                                            class="btn btn-sm {{ $category->status ? 'btn-warning text-dark' : 'btn-success' }}"
+                                            class="category-action-btn {{ $category->status
+                                                ? 'category-action-warning'
+                                                : 'category-action-success' }}"
                                             title="{{ $category->status ? 'Deactivate' : 'Activate' }}"
+                                            aria-label="{{ $category->status ? 'Deactivate' : 'Activate' }}"
                                         >
 
-                                            <i
-                                                class="bi {{ $category->status ? 'bi-pause-circle' : 'bi-check-circle' }}"
-                                            ></i>
+                                            <i class="bi {{ $category->status
+                                                ? 'bi-pause-circle'
+                                                : 'bi-check-circle' }}"></i>
 
                                         </button>
 
@@ -359,8 +568,9 @@
                                     {{-- Edit --}}
                                     <a
                                         href="{{ route('admin.categories.edit', $category->id) }}"
-                                        class="btn btn-warning btn-sm"
-                                        title="Edit"
+                                        class="category-action-btn category-action-edit"
+                                        title="Edit Category"
+                                        aria-label="Edit Category"
                                     >
                                         <i class="bi bi-pencil"></i>
                                     </a>
@@ -370,7 +580,7 @@
                                     <form
                                         action="{{ route('admin.categories.destroy', $category->id) }}"
                                         method="POST"
-                                        onsubmit="return confirm('Delete this category?')"
+                                        class="category-delete-form"
                                     >
 
                                         @csrf
@@ -378,10 +588,11 @@
 
                                         <button
                                             type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            title="Delete"
+                                            class="category-action-btn category-action-delete"
+                                            title="Delete Category"
+                                            aria-label="Delete Category"
                                         >
-                                            <i class="bi bi-trash"></i>
+                                            <i class="bi bi-trash3"></i>
                                         </button>
 
                                     </form>
@@ -396,28 +607,28 @@
 
                         <tr>
 
-                            <td
-                                colspan="9"
-                                class="text-center py-5"
-                            >
+                            <td colspan="8">
 
-                                <div class="chart-placeholder category-empty-state">
+                                <div class="categories-empty-state">
 
-                                    <i class="bi bi-tags"></i>
+                                    <div class="categories-empty-icon">
+                                        <i class="bi bi-tags"></i>
+                                    </div>
 
                                     <h6>
                                         No categories found
                                     </h6>
 
                                     <p>
-                                        Create your first category to get started.
+                                        There are no categories matching your
+                                        current filters.
                                     </p>
 
                                     <a
                                         href="{{ route('admin.categories.create') }}"
-                                        class="btn btn-primary mt-3"
+                                        class="categories-empty-btn"
                                     >
-                                        <i class="bi bi-plus-circle me-2"></i>
+                                        <i class="bi bi-plus-lg"></i>
                                         Add Category
                                     </a>
 
@@ -436,18 +647,350 @@
         </div>
 
 
-        {{-- PAGINATION --}}
+        {{-- =====================================================
+            PAGINATION
+        ====================================================== --}}
         @if($categories->hasPages())
 
-            <div class="pt-3">
-                {{ $categories->links() }}
+            <div class="categories-pagination">
+
+                <div class="categories-pagination-info">
+
+                    Showing
+
+                    <strong>
+                        {{ $categories->firstItem() }}
+                    </strong>
+
+                    to
+
+                    <strong>
+                        {{ $categories->lastItem() }}
+                    </strong>
+
+                    of
+
+                    <strong>
+                        {{ $categories->total() }}
+                    </strong>
+
+                    categories
+
+                </div>
+
+
+                <nav
+                    class="categories-pagination-pages"
+                    aria-label="Categories pagination"
+                >
+
+                    {{-- Previous --}}
+                    @if($categories->onFirstPage())
+
+                        <span class="categories-pager-btn disabled">
+                            <i class="bi bi-chevron-left"></i>
+                        </span>
+
+                    @else
+
+                        <a
+                            href="{{ $categories->previousPageUrl() }}"
+                            class="categories-pager-btn"
+                            aria-label="Previous page"
+                        >
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+
+                    @endif
+
+
+                    {{-- Pages --}}
+                    @foreach($categories->getUrlRange(
+                        max(1, $categories->currentPage() - 2),
+                        min($categories->lastPage(), $categories->currentPage() + 2)
+                    ) as $page => $url)
+
+                        @if($page == $categories->currentPage())
+
+                            <span class="categories-pager-btn active">
+                                {{ $page }}
+                            </span>
+
+                        @else
+
+                            <a
+                                href="{{ $url }}"
+                                class="categories-pager-btn"
+                            >
+                                {{ $page }}
+                            </a>
+
+                        @endif
+
+                    @endforeach
+
+
+                    {{-- Next --}}
+                    @if($categories->hasMorePages())
+
+                        <a
+                            href="{{ $categories->nextPageUrl() }}"
+                            class="categories-pager-btn"
+                            aria-label="Next page"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                    @else
+
+                        <span class="categories-pager-btn disabled">
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+
+                    @endif
+
+                </nav>
+
             </div>
 
         @endif
 
-    </div>
+    </section>
 
 </div>
 
 @endsection
 
+
+@push('js')
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Delete Category
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll('.category-delete-form').forEach(function (form) {
+
+        form.addEventListener('submit', function (event) {
+
+            event.preventDefault();
+
+            /*
+            |--------------------------------------------------------------------------
+            | SweetAlert is not available
+            |--------------------------------------------------------------------------
+            */
+
+            if (typeof Swal === 'undefined') {
+                form.submit();
+                return;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Confirmation
+            |--------------------------------------------------------------------------
+            */
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This category will be permanently deleted.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then(function (result) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | User cancelled
+                |--------------------------------------------------------------------------
+                */
+
+                if (!result.isConfirmed) {
+                    return;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Delete request
+                |--------------------------------------------------------------------------
+                */
+
+                const row = form.closest('tr');
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document
+                            .querySelector('meta[name="csrf-token"]')
+                            ?.getAttribute('content'),
+
+                        'Accept': 'application/json',
+
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+
+                    body: new URLSearchParams(
+                        new FormData(form)
+                    )
+                })
+
+                .then(function (response) {
+
+                    if (!response.ok) {
+                        throw new Error('Delete request failed.');
+                    }
+
+                    return response.json().catch(function () {
+                        return {};
+                    });
+                })
+
+                .then(function () {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Remove row animation
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (row) {
+
+                        row.style.transition =
+                            'opacity .25s ease, transform .25s ease';
+
+                        row.style.opacity = '0';
+
+                        row.style.transform = 'translateX(10px)';
+
+                        setTimeout(function () {
+
+                            row.remove();
+
+                            window.location.reload();
+
+                        }, 250);
+
+                    } else {
+
+                        window.location.reload();
+
+                    }
+                })
+
+                .catch(function () {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Delete error
+                    |--------------------------------------------------------------------------
+                    */
+
+                    Swal.fire({
+                        title: 'Unable to delete',
+                        text: 'The category could not be deleted. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'Close'
+                    });
+
+                });
+
+            });
+
+        });
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Status Toggle
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll('.category-status-form').forEach(function (form) {
+
+        form.addEventListener('submit', function (event) {
+
+            event.preventDefault();
+
+            const button = form.querySelector('button');
+
+            if (!button) {
+                return;
+            }
+
+            button.disabled = true;
+
+            fetch(form.action, {
+                method: 'POST',
+
+                headers: {
+                    'X-CSRF-TOKEN': document
+                        .querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute('content'),
+
+                    'Accept': 'application/json',
+
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+
+                body: new URLSearchParams(
+                    new FormData(form)
+                )
+            })
+
+            .then(function (response) {
+
+                if (!response.ok) {
+                    throw new Error('Status update failed.');
+                }
+
+                return response.json().catch(function () {
+                    return {};
+                });
+
+            })
+
+            .then(function () {
+
+                window.location.reload();
+
+            })
+
+            .catch(function () {
+
+                button.disabled = false;
+
+                if (typeof Swal !== 'undefined') {
+
+                    Swal.fire({
+                        title: 'Unable to update status',
+                        text: 'Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'Close'
+                    });
+
+                } else {
+
+                    window.location.reload();
+
+                }
+
+            });
+
+        });
+
+    });
+
+});
+</script>
+
+@endpush

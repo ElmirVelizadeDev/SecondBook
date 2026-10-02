@@ -1,19 +1,89 @@
 /* =========================================================
-   SECOND BOOK — PREMIUM FOOTER
-   ========================================================= */
+   SECOND BOOK — FOOTER + BOTTOM BAR
+   Premium redesign. Same markup, same class names.
+   Same palette and motion language as header.css.
+
+   01 Tokens + motion          05 Contact
+   02 Footer shell             06 In-footer tagline row
+   03 Brand + socials          07 Bottom bar (#footer-bottom)
+   04 Titles + links           08 Responsive + reduced motion
+========================================================= */
+
+
+/* =========================================================
+   01 TOKENS + MOTION
+========================================================= */
+
+#footer,
+#footer-bottom {
+    --ft-brown: #8b5e3c;
+    --ft-brown-dark: #6f472d;
+    --ft-brown-light: #a87648;
+    --ft-gold: #d7b08c;
+    --ft-gold-soft: #c9a27e;
+    --ft-ink: #302a26;
+    --ft-text: #70665e;
+    --ft-soft: #766c64;
+    --ft-faint: #9a9088;
+    --ft-line: #ded3c9;
+    --ft-cream: #f3eee8;
+    --ft-cream-2: #faf8f5;
+    --ft-espresso: #2d2723;
+    --ft-espresso-deep: #211c19;
+    --ft-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes ft-rise {
+    from { opacity: 0; translate: 0 28px; }
+    to   { opacity: 1; translate: 0 0; }
+}
+
+
+/* =========================================================
+   02 FOOTER SHELL
+========================================================= */
 
 #footer.site-footer {
     position: relative;
+
     margin-top: 100px;
-    padding: 78px 0 0;
-    background: #f3eee8;
-    border-top: 1px solid #e2d8cf;
-    color: #6f665f;
+    padding: 84px 0 0;
+    overflow: hidden;
+
+    color: var(--ft-text);
+
+    background:
+        radial-gradient(circle at 0% 0%, rgba(215, 176, 140, 0.20), transparent 38%),
+        radial-gradient(circle at 100% 100%, rgba(139, 94, 60, 0.07), transparent 40%),
+        linear-gradient(180deg, #f6f1eb 0%, var(--ft-cream) 100%);
+
+    border-top: 0;
 }
 
-/* =========================================================
-   FOOTER MAIN
-   ========================================================= */
+/* brown → gold hairline across the top edge */
+#footer.site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            var(--ft-brown) 30%,
+            var(--ft-gold-soft) 50%,
+            var(--ft-brown) 70%,
+            transparent 100%
+        );
+}
+
+#footer .container {
+    position: relative;
+    z-index: 1;
+}
 
 #footer .footer-main {
     display: grid;
@@ -27,9 +97,10 @@
     align-items: start;
 }
 
+
 /* =========================================================
-   BRAND
-   ========================================================= */
+   03 BRAND + SOCIALS
+========================================================= */
 
 #footer .footer-brand {
     padding-right: 25px;
@@ -38,8 +109,10 @@
 #footer .footer-logo-link {
     display: inline-flex;
     align-items: center;
-    text-decoration: none;
+
     margin-bottom: 25px;
+
+    text-decoration: none;
 }
 
 #footer .footer-logo {
@@ -48,83 +121,116 @@
     max-width: 185px;
     max-height: 68px;
     height: auto;
+
     object-fit: contain;
+
+    transition: transform 0.4s var(--ft-ease), opacity 0.3s ease;
+}
+
+#footer .footer-logo-link:hover .footer-logo {
+    transform: scale(1.04);
+    opacity: 0.92;
 }
 
 #footer .footer-description {
     max-width: 310px;
     margin: 0;
-    color: #766c64;
+
+    color: var(--ft-soft);
     font-family: var(--body-font);
     font-size: 14px;
     line-height: 1.85;
 }
 
-/* =========================================================
-   SOCIAL
-   ========================================================= */
-
 #footer .footer-socials {
     display: flex;
     align-items: center;
-    gap: 9px;
-    margin-top: 25px;
+    gap: 10px;
+
+    margin-top: 26px;
 }
 
 #footer .footer-socials a {
+    position: relative;
+
+    width: 40px;
+    height: 40px;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 39px;
-    height: 39px;
+
+    overflow: hidden;
+
     border: 1px solid #d7c9bd;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.45);
+
     color: #76553e;
+    background: rgba(255, 255, 255, 0.55);
+
     text-decoration: none;
+
     transition:
-        color 0.25s ease,
-        background-color 0.25s ease,
-        border-color 0.25s ease,
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+        color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.35s var(--ft-ease),
+        box-shadow 0.35s var(--ft-ease);
+}
+
+/* brown fill rises from the bottom on hover */
+#footer .footer-socials a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(135deg, var(--ft-brown-light), var(--ft-brown-dark));
+
+    translate: 0 100%;
+    transition: translate 0.35s var(--ft-ease);
 }
 
 #footer .footer-socials a i {
-    font-size: 14px;
+    position: relative;
+    z-index: 1;
+
+    font-size: 15px;
     line-height: 1;
 }
 
 #footer .footer-socials a:hover {
     color: #ffffff;
-    background: #8b5e3c;
-    border-color: #8b5e3c;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 18px rgba(92, 61, 40, 0.15);
+    border-color: var(--ft-brown);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(92, 61, 40, 0.22);
 }
 
-/* =========================================================
-   COPYRIGHT
-   ========================================================= */
+#footer .footer-socials a:hover::before {
+    translate: 0 0;
+}
 
 #footer .footer-copyright {
-    margin: 25px 0 0;
-    color: #9a9088;
+    margin: 26px 0 0;
+
+    color: var(--ft-faint);
     font-family: var(--body-font);
     font-size: 12px;
     line-height: 1.6;
 }
 
+
 /* =========================================================
-   FOOTER TITLES
-   ========================================================= */
+   04 TITLES + LINKS
+========================================================= */
 
 #footer .footer-title {
     position: relative;
+
     display: inline-block;
-    margin: 0 0 25px;
-    padding-bottom: 11px;
-    color: #302a26;
+
+    margin: 0 0 26px;
+    padding-bottom: 12px;
+
+    color: var(--ft-ink);
     font-family: var(--heading-font);
     font-size: 17px;
     font-weight: 500;
@@ -137,22 +243,29 @@
     position: absolute;
     left: 0;
     bottom: 0;
+
     width: 30px;
     height: 2px;
+
     border-radius: 2px;
-    background: #8b5e3c;
+
+    background: linear-gradient(90deg, var(--ft-brown), var(--ft-gold-soft));
+
+    transition: width 0.45s var(--ft-ease);
 }
 
-/* =========================================================
-   FOOTER LINKS
-   ========================================================= */
+#footer .footer-column:hover .footer-title::after {
+    width: 100%;
+}
 
 #footer .footer-links {
     display: flex;
     flex-direction: column;
     gap: 10px;
+
     margin: 0;
     padding: 0;
+
     list-style: none;
 }
 
@@ -164,59 +277,78 @@
 
 #footer .footer-links a {
     position: relative;
+
     display: inline-block;
+
     padding: 2px 0;
-    color: #70665e;
+
+    color: var(--ft-text);
     font-family: var(--body-font);
     font-size: 14px;
     line-height: 1.65;
     text-decoration: none;
+
     transition:
-        color 0.25s ease,
-        padding-left 0.25s ease;
+        color 0.3s ease,
+        translate 0.35s var(--ft-ease);
 }
 
+/* small line slides in from the left; text moves, layout does not */
 #footer .footer-links a::before {
     content: "";
     position: absolute;
-    left: 0;
+    left: -16px;
     top: 50%;
-    width: 0;
+
+    width: 9px;
     height: 1px;
-    background: #8b5e3c;
-    transform: translateY(-50%);
-    transition: width 0.25s ease;
+
+    background: var(--ft-brown);
+
+    opacity: 0;
+    scale: 0 1;
+    transform-origin: left center;
+
+    transition:
+        opacity 0.3s ease,
+        scale 0.35s var(--ft-ease);
 }
 
 #footer .footer-links a:hover {
-    padding-left: 12px;
-    color: #8b5e3c;
+    color: var(--ft-brown);
+    translate: 10px 0;
 }
 
 #footer .footer-links a:hover::before {
-    width: 6px;
+    opacity: 1;
+    scale: 1 1;
 }
 
+
 /* =========================================================
-   CONTACT
-   ========================================================= */
+   05 CONTACT
+========================================================= */
 
 #footer .footer-contact-list {
     display: flex;
     flex-direction: column;
     gap: 14px;
+
     margin: 0;
     padding: 0;
+
     list-style: none;
 }
 
 #footer .footer-contact-list li {
     display: flex;
     align-items: flex-start;
-    gap: 11px;
+    gap: 12px;
+
     margin: 0;
     padding: 0;
-    color: #70665e;
+
+    color: var(--ft-text);
     font-family: var(--body-font);
     font-size: 14px;
     line-height: 1.65;
@@ -224,47 +356,269 @@
 }
 
 #footer .footer-contact-list i {
-    flex: 0 0 17px;
-    width: 17px;
-    margin-top: 4px;
-    color: #8b5e3c;
-    font-size: 15px;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+
+    border: 1px solid #e3d7cc;
+    border-radius: 10px;
+
+    color: var(--ft-brown);
+    background: rgba(255, 255, 255, 0.6);
+
+    font-size: 14px;
     line-height: 1;
+
+    transition:
+        color 0.3s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.35s var(--ft-ease);
+}
+
+#footer .footer-contact-list li:hover i {
+    color: #ffffff;
+    border-color: var(--ft-brown);
+    background: var(--ft-brown);
+    transform: translateY(-2px) rotate(-6deg);
 }
 
 #footer .footer-contact-list span {
     min-width: 0;
+    padding-top: 4px;
+
+    overflow-wrap: anywhere;
 }
 
+
 /* =========================================================
-   BOTTOM BAR
-   ========================================================= */
+   06 IN-FOOTER TAGLINE ROW
+========================================================= */
 
 #footer .footer-bottom {
+    position: relative;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 13px;
-    margin-top: 65px;
-    padding: 22px 0;
-    border-top: 1px solid #ded3c9;
-    color: #968b83;
+    gap: 14px;
+
+    margin-top: 68px;
+    padding: 24px 0;
+
+    border-top: 0;
+
+    color: var(--ft-faint);
     font-family: var(--body-font);
     font-size: 12px;
     line-height: 1.5;
     text-align: center;
 }
 
-#footer .footer-bottom-separator {
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: #b9aaa0;
+#footer .footer-bottom::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--ft-line) 20%,
+            var(--ft-gold-soft) 50%,
+            var(--ft-line) 80%,
+            transparent
+        );
 }
 
+#footer .footer-bottom > span:first-child {
+    color: var(--ft-brown);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+#footer .footer-bottom-separator {
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+
+    background: var(--ft-gold-soft);
+}
+
+
 /* =========================================================
-   LARGE TABLET
-   ========================================================= */
+   07 BOTTOM BAR  (#footer-bottom)
+   Dark espresso, mirrors the header top bar.
+========================================================= */
+
+#footer-bottom.footer-bottom-bar {
+    position: relative;
+
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    border-top: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--ft-espresso-deep) 0%,
+            var(--ft-espresso) 50%,
+            var(--ft-espresso-deep) 100%
+        );
+}
+
+#footer-bottom.footer-bottom-bar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(215, 176, 140, 0.55),
+            transparent
+        );
+}
+
+#footer-bottom .footer-bottom-inner {
+    min-height: 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+#footer-bottom .footer-copyright {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.58);
+    font-family: var(--body-font);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+#footer-bottom .footer-legal {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+#footer-bottom .footer-legal a {
+    position: relative;
+
+    display: inline-block;
+
+    padding: 2px 0;
+
+    color: rgba(255, 255, 255, 0.78);
+    font-family: var(--body-font);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
+    text-decoration: none;
+
+    transition: color 0.3s ease;
+}
+
+/* gold underline grows from the left */
+#footer-bottom .footer-legal a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 1px;
+
+    background: var(--ft-gold);
+
+    scale: 0 1;
+    transform-origin: left center;
+
+    transition: scale 0.4s var(--ft-ease);
+}
+
+#footer-bottom .footer-legal a:hover {
+    color: var(--ft-gold);
+}
+
+#footer-bottom .footer-legal a:hover::after {
+    scale: 1 1;
+}
+
+#footer-bottom .footer-legal-divider {
+    display: block;
+    width: 4px;
+    height: 4px;
+    flex: 0 0 4px;
+
+    border-radius: 50%;
+
+    background: var(--ft-gold-soft);
+    opacity: 0.6;
+}
+
+
+/* =========================================================
+   SCROLL REVEAL (CSS only)
+   Columns rise one after another as the footer enters the screen.
+   Browsers without scroll-driven animations just show it static.
+========================================================= */
+
+@supports (animation-timeline: view()) {
+
+    #footer .footer-column {
+        animation: ft-rise linear both;
+        animation-timeline: view();
+    }
+
+    #footer .footer-column:nth-child(1) { animation-range: entry 0%  entry 55%; }
+    #footer .footer-column:nth-child(2) { animation-range: entry 6%  entry 61%; }
+    #footer .footer-column:nth-child(3) { animation-range: entry 12% entry 67%; }
+    #footer .footer-column:nth-child(4) { animation-range: entry 18% entry 73%; }
+    #footer .footer-column:nth-child(5) { animation-range: entry 24% entry 79%; }
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+#footer a:focus-visible {
+    outline: 2px solid rgba(139, 94, 60, 0.5);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+#footer-bottom a:focus-visible {
+    outline: 2px solid rgba(215, 176, 140, 0.75);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+
+/* =========================================================
+   08 RESPONSIVE
+========================================================= */
 
 @media screen and (max-width: 1199px) {
 
@@ -285,15 +639,11 @@
     }
 }
 
-/* =========================================================
-   TABLET
-   ========================================================= */
-
 @media screen and (max-width: 991px) {
 
     #footer.site-footer {
         margin-top: 80px;
-        padding-top: 65px;
+        padding-top: 68px;
     }
 
     #footer .footer-main {
@@ -319,15 +669,11 @@
     }
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
 @media screen and (max-width: 767px) {
 
     #footer.site-footer {
         margin-top: 65px;
-        padding-top: 55px;
+        padding-top: 56px;
     }
 
     #footer .footer-main {
@@ -354,13 +700,9 @@
         font-size: 13px;
     }
 
-    #footer .footer-socials {
-        margin-top: 22px;
-    }
-
     #footer .footer-socials a {
-        width: 37px;
-        height: 37px;
+        width: 38px;
+        height: 38px;
     }
 
     #footer .footer-bottom {
@@ -369,17 +711,27 @@
         margin-top: 45px;
         padding: 20px 0;
     }
-}
 
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
+    #footer-bottom .footer-bottom-inner {
+        min-height: 62px;
+        gap: 15px;
+    }
+
+    #footer-bottom .footer-copyright,
+    #footer-bottom .footer-legal a {
+        font-size: 11px;
+    }
+
+    #footer-bottom .footer-legal {
+        gap: 12px;
+    }
+}
 
 @media screen and (max-width: 575px) {
 
     #footer.site-footer {
         margin-top: 55px;
-        padding-top: 45px;
+        padding-top: 46px;
     }
 
     #footer .footer-main {
@@ -396,8 +748,8 @@
     }
 
     #footer .footer-title {
-        font-size: 16px;
         margin-bottom: 18px;
+        font-size: 16px;
     }
 
     #footer .footer-links {
@@ -415,5 +767,44 @@
 
     #footer .footer-bottom-separator {
         display: none;
+    }
+
+    #footer-bottom .footer-bottom-inner {
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+
+        padding: 18px 0;
+
+        text-align: center;
+    }
+
+    #footer-bottom .footer-legal {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #footer *,
+    #footer *::before,
+    #footer *::after,
+    #footer-bottom *,
+    #footer-bottom *::before,
+    #footer-bottom *::after {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    #footer .footer-column {
+        opacity: 1 !important;
+        translate: none !important;
     }
 }

@@ -1,393 +1,520 @@
 .banners-page {
-width: 100%;
+    width: 100%;
 }
 
 /* =========================================================
-HEADER
-========================================================= */
+   HEADER
+   ========================================================= */
 
 .banners-page .dashboard-panel {
-border-radius: 16px;
+    border-radius: 16px;
 }
 
 .banners-page .panel-header h5 {
-color: #172033;
-font-weight: 700;
+    color: #172033;
+    font-weight: 700;
 }
 
 .banners-page .panel-header p {
-color: #6c757d;
+    color: #6c757d;
 }
 
-.banners-page .btn-primary {
-background: #3b5bdb;
-border-color: #3b5bdb;
-border-radius: 10px;
-font-weight: 600;
-padding: 10px 16px;
-display: inline-flex;
-align-items: center;
-gap: 7px;
-transition: 0.2s ease;
+.banners-page .panel-header > .btn-primary {
+    min-height: 40px;
+    height: 40px;
+    padding: 0 14px;
+
+    border: 1px solid #3b5bdb;
+    border-radius: 9px;
+
+    background: #3b5bdb;
+    color: #ffffff;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    box-shadow: none;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.banners-page .btn-primary:hover {
-background: #324fc2;
-border-color: #324fc2;
+.banners-page .panel-header > .btn-primary i {
+    margin: 0 !important;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+    line-height: 1;
+}
+
+.banners-page .panel-header > .btn-primary:hover {
+    background: #324fc2;
+    border-color: #324fc2;
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 14px rgba(59, 91, 219, 0.18);
 }
 
 /* =========================================================
-FILTERS
-========================================================= */
+   FILTERS
+   ========================================================= */
 
 .banner-filters {
-display: flex;
-align-items: center;
-gap: 12px;
-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
 }
 
 .banner-search-group {
-display: flex;
-align-items: stretch;
-flex: 1;
+    display: flex;
+    align-items: stretch;
+    flex: 1;
 }
 
 .banner-search-group .form-control {
-height: 46px;
-border: 1px solid #e5e7eb;
-border-right: 0;
-border-radius: 14px 0 0 14px;
-padding: 0 15px;
-color: #172033;
-background: #ffffff;
-box-shadow: none;
+    height: 46px;
+    border: 1px solid #e5e7eb;
+    border-right: 0;
+    border-radius: 14px 0 0 14px;
+    padding: 0 15px;
+
+    color: #172033;
+    background: #ffffff;
+
+    box-shadow: none;
 }
 
 .banner-search-group .form-control:focus {
-border-color: #3b5bdb;
-box-shadow: none;
+    border-color: #3b5bdb;
+    box-shadow: none;
 }
 
 .banner-search-group .form-control::placeholder {
-color: #8a94a6;
+    color: #8a94a6;
 }
 
 .banner-search-group .btn {
-height: 46px;
-border-radius: 0 14px 14px 0;
-padding: 0 18px;
+    height: 46px;
+    border-radius: 0 14px 14px 0;
+    padding: 0 18px;
 }
 
 .banner-status-filter {
-width: 180px;
+    width: 180px;
 }
 
 .banner-status-filter .form-select {
-height: 46px;
-border: 1px solid #e5e7eb;
-border-radius: 14px;
-padding: 0 14px;
-color: #172033;
-background-color: #ffffff;
-box-shadow: none;
+    height: 46px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    padding: 0 14px;
+
+    color: #172033;
+    background-color: #ffffff;
+
+    box-shadow: none;
 }
 
 .banner-status-filter .form-select:focus {
-border-color: #3b5bdb;
-box-shadow: none;
+    border-color: #3b5bdb;
+    box-shadow: none;
 }
 
 .banner-reset-btn {
-height: 46px;
-padding: 0 16px;
-border: 1px solid #e5e7eb;
-border-radius: 14px;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-gap: 7px;
-color: #172033;
-background: #ffffff;
-font-weight: 600;
-white-space: nowrap;
+    height: 46px;
+    padding: 0 16px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    color: #172033;
+    background: #ffffff;
+
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .banner-reset-btn:hover {
-background: #f8f9fb;
-border-color: #d9dde5;
-color: #172033;
+    background: #f8f9fb;
+    border-color: #d9dde5;
+    color: #172033;
 }
 
 /* =========================================================
-TABLE
-========================================================= */
+   TABLE
+   ========================================================= */
 
 .banners-table {
-min-width: 950px;
-margin: 0;
+    min-width: 950px;
+    margin: 0;
 }
 
 .banners-table thead th {
-padding: 13px 16px;
-border-bottom: 1px solid #e5e7eb;
-color: #6c757d;
-background: #fafbfc;
-font-size: 12px;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.03em;
-white-space: nowrap;
+    padding: 13px 16px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    color: #6c757d;
+    background: #fafbfc;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+
+    white-space: nowrap;
 }
 
 .banners-table tbody td {
-padding: 10px 16px;
-border-bottom: 1px solid #eef0f3;
-color: #172033;
-font-size: 13px;
-vertical-align: middle;
+    padding: 10px 16px;
+
+    border-bottom: 1px solid #eef0f3;
+
+    color: #172033;
+
+    font-size: 13px;
+    vertical-align: middle;
 }
 
 .banners-table tbody tr:last-child td {
-border-bottom: 0;
+    border-bottom: 0;
 }
 
 .banners-table tbody tr {
-transition: background 0.2s ease;
+    transition: background 0.2s ease;
 }
 
 .banners-table tbody tr:hover {
-background: #fafbff;
+    background: #fafbff;
 }
 
 /* =========================================================
-IMAGE
-========================================================= */
+   IMAGE
+   ========================================================= */
 
 .banner-image-wrapper {
-width: 90px;
-height: 52px;
-overflow: hidden;
-border-radius: 9px;
-background: #f1f3f6;
-border: 1px solid #e5e7eb;
+    width: 90px;
+    height: 52px;
+
+    overflow: hidden;
+
+    border-radius: 9px;
+    border: 1px solid #e5e7eb;
+
+    background: #f1f3f6;
 }
 
 .banner-image {
-width: 100%;
-height: 100%;
-object-fit: cover;
-display: block;
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
 }
 
 /* =========================================================
-TITLE
-========================================================= */
+   TITLE
+   ========================================================= */
 
 .banner-title {
-color: #172033;
-font-size: 14px;
-font-weight: 700;
-line-height: 1.4;
-max-width: 300px;
+    max-width: 300px;
+
+    color: #172033;
+
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
 }
 
 .banner-subtitle {
-margin-top: 3px;
-color: #8a94a6;
-font-size: 12px;
-line-height: 1.4;
-max-width: 300px;
+    max-width: 300px;
+
+    margin-top: 3px;
+
+    color: #8a94a6;
+
+    font-size: 12px;
+    line-height: 1.4;
 }
 
 /* =========================================================
-POSITION
-========================================================= */
+   POSITION
+   ========================================================= */
 
 .position-badge {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-min-width: 34px;
-height: 28px;
-padding: 0 9px;
-border-radius: 8px;
-background: #f1f3f8;
-color: #172033;
-font-size: 12px;
-font-weight: 700;
+    min-width: 34px;
+    height: 28px;
+
+    padding: 0 9px;
+
+    border-radius: 8px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f1f3f8;
+    color: #172033;
+
+    font-size: 12px;
+    font-weight: 700;
 }
 
 /* =========================================================
-STATUS
-========================================================= */
+   STATUS
+   ========================================================= */
 
 .status-badge {
-display: inline-flex;
-align-items: center;
-gap: 7px;
-min-width: 86px;
-padding: 6px 10px;
-border-radius: 20px;
-font-size: 11px;
-font-weight: 700;
+    min-width: 86px;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .status-dot {
-width: 7px;
-height: 7px;
-border-radius: 50%;
-display: inline-block;
+    width: 7px;
+    height: 7px;
+
+    display: inline-block;
+
+    border-radius: 50%;
 }
 
 .status-active {
-background: #ecfdf3;
-color: #15803d;
+    background: #ecfdf3;
+    color: #15803d;
 }
 
 .status-active .status-dot {
-background: #22c55e;
+    background: #22c55e;
 }
 
 .status-inactive {
-background: #f3f4f6;
-color: #6b7280;
+    background: #f3f4f6;
+    color: #6b7280;
 }
 
 .status-inactive .status-dot {
-background: #9ca3af;
+    background: #9ca3af;
 }
 
 /* =========================================================
-DATES
-========================================================= */
+   DATES
+   ========================================================= */
 
 .banner-dates {
-display: flex;
-flex-direction: column;
-gap: 4px;
-color: #6c757d;
-font-size: 12px;
-white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    color: #6c757d;
+
+    font-size: 12px;
+
+    white-space: nowrap;
 }
 
 .banner-dates i {
-margin-right: 5px;
-color: #3b5bdb;
+    margin-right: 5px;
+    color: #3b5bdb;
 }
 
 /* =========================================================
-ACTIONS
-========================================================= */
+   ACTIONS
+   ========================================================= */
 
 .banner-actions {
-display: flex;
-align-items: center;
-justify-content: flex-end;
-gap: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 7px;
 }
 
 .action-btn {
-width: 34px;
-height: 34px;
-padding: 0;
-border-radius: 9px;
-border: 1px solid #e5e7eb;
-background: #ffffff;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-text-decoration: none;
-transition: 0.2s ease;
-cursor: pointer;
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
 }
 
 .action-btn i {
-font-size: 14px;
+    font-size: 14px;
 }
 
 .action-edit {
-color: #3b5bdb;
+    color: #3b5bdb;
 }
 
 .action-edit:hover {
-background: #eef2ff;
-border-color: #c7d2fe;
-color: #324fc2;
+    background: #eef2ff;
+    border-color: #c7d2fe;
+    color: #324fc2;
 }
 
 .action-delete {
-color: #dc3545;
+    color: #dc3545;
 }
 
 .action-delete:hover {
-background: #fff1f2;
-border-color: #fecdd3;
-color: #b91c1c;
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #b91c1c;
 }
 
 /* =========================================================
-EMPTY STATE
-========================================================= */
+   EMPTY STATE
+   ========================================================= */
 
 .empty-state {
-padding: 55px 20px;
-text-align: center;
+    padding: 55px 20px;
+    text-align: center;
 }
 
 .empty-icon {
-width: 62px;
-height: 62px;
-margin: 0 auto 15px;
-border-radius: 16px;
-background: #eef2ff;
-color: #3b5bdb;
-display: flex;
-align-items: center;
-justify-content: center;
+    width: 62px;
+    height: 62px;
+
+    margin: 0 auto 15px;
+
+    border-radius: 16px;
+
+    background: #eef2ff;
+    color: #3b5bdb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .empty-icon i {
-font-size: 25px;
+    font-size: 25px;
 }
 
 .empty-state h6 {
-margin-bottom: 7px;
-color: #172033;
-font-size: 15px;
-font-weight: 700;
+    margin-bottom: 7px;
+
+    color: #172033;
+
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .empty-state p {
-margin-bottom: 18px;
-color: #8a94a6;
-font-size: 13px;
+    margin-bottom: 18px;
+
+    color: #8a94a6;
+
+    font-size: 13px;
+}
+
+/* Empty State Add Banner */
+.empty-state .btn-primary {
+    min-height: 40px;
+    height: 40px;
+
+    padding: 0 14px;
+
+    border-radius: 9px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
 }
 
 /* =========================================================
-ALERT
-========================================================= */
+   ALERT
+   ========================================================= */
 
 .banners-page .alert {
-border-radius: 12px;
-border: 0;
-font-size: 13px;
+    border: 0;
+    border-radius: 12px;
+
+    font-size: 13px;
 }
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
 
 .banners-pagination {
     width: 100%;
+
     padding: 22px 24px;
+
     border-top: 1px solid #e5e7eb;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 20px;
 }
 
 .banners-pagination-info {
-    font-size: 13px;
     color: #64748b;
+    font-size: 13px;
 }
 
 .banners-pagination-info strong {
@@ -398,6 +525,7 @@ font-size: 13px;
 .banners-pagination-links {
     display: flex;
     align-items: center;
+
     gap: 6px;
 }
 
@@ -405,21 +533,22 @@ font-size: 13px;
     width: 38px;
     height: 38px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
     border: 1px solid #e5e7eb;
     border-radius: 9px;
 
-    background: #fff;
+    background: #ffffff;
     color: #475569;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     font-size: 13px;
     font-weight: 600;
 
     text-decoration: none;
-    transition: .2s ease;
+
+    transition: 0.2s ease;
 }
 
 .banner-page-btn:hover {
@@ -431,7 +560,7 @@ font-size: 13px;
 .banner-page-btn.active {
     background: #2563eb;
     border-color: #2563eb;
-    color: #fff;
+    color: #ffffff;
 }
 
 .banner-page-btn.disabled {
@@ -440,8 +569,9 @@ font-size: 13px;
     cursor: default;
 }
 
-
-/* DARK MODE */
+/* =========================================================
+   DARK PAGINATION
+   ========================================================= */
 
 [data-theme="dark"] .banners-pagination {
     border-top-color: #263244;
@@ -470,7 +600,7 @@ font-size: 13px;
 [data-theme="dark"] .banner-page-btn.active {
     background: #2563eb;
     border-color: #2563eb;
-    color: #fff;
+    color: #ffffff;
 }
 
 [data-theme="dark"] .banner-page-btn.disabled {
@@ -478,551 +608,597 @@ font-size: 13px;
     color: #64748b;
 }
 
-
-/* MOBILE */
-
-@media (max-width: 767.98px) {
-    .banners-pagination {
-        flex-direction: column;
-        justify-content: center;
-        padding: 18px 16px;
-    }
-
-    .banners-pagination-links {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
-
 /* =========================================================
-DARK MODE
-========================================================= */
+   DARK MODE
+   ========================================================= */
 
 .dark-mode .banners-page .dashboard-panel,
 .dark-theme .banners-page .dashboard-panel,
 [data-theme="dark"] .banners-page .dashboard-panel {
-background: #111827;
-border-color: #334155;
+    background: #111827;
+    border-color: #334155;
 }
 
 .dark-mode .banners-page .panel-header h5,
 .dark-theme .banners-page .panel-header h5,
 [data-theme="dark"] .banners-page .panel-header h5 {
-color: #f8fafc;
+    color: #f8fafc;
 }
 
 .dark-mode .banners-page .panel-header p,
 .dark-theme .banners-page .panel-header p,
 [data-theme="dark"] .banners-page .panel-header p {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
 /* =========================================================
-DARK FILTERS
-========================================================= */
+   DARK HEADER BUTTON
+   ========================================================= */
+
+.dark-mode .banners-page .panel-header > .btn-primary,
+.dark-theme .banners-page .panel-header > .btn-primary,
+[data-theme="dark"] .banners-page .panel-header > .btn-primary {
+    background: #3b5bdb;
+    border-color: #3b5bdb;
+    color: #ffffff;
+}
+
+.dark-mode .banners-page .panel-header > .btn-primary:hover,
+.dark-theme .banners-page .panel-header > .btn-primary:hover,
+[data-theme="dark"] .banners-page .panel-header > .btn-primary:hover {
+    background: #4c6ef5;
+    border-color: #4c6ef5;
+    color: #ffffff;
+}
+
+/* =========================================================
+   DARK FILTERS
+   ========================================================= */
 
 .dark-mode .banner-search-group .form-control,
 .dark-theme .banner-search-group .form-control,
 [data-theme="dark"] .banner-search-group .form-control {
-background: #0b1323;
-border-color: #334155;
-color: #f8fafc;
+    background: #0b1323;
+    border-color: #334155;
+    color: #f8fafc;
 }
 
 .dark-mode .banner-search-group .form-control::placeholder,
 .dark-theme .banner-search-group .form-control::placeholder,
 [data-theme="dark"] .banner-search-group .form-control::placeholder {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
 .dark-mode .banner-search-group .form-control:focus,
 .dark-theme .banner-search-group .form-control:focus,
 [data-theme="dark"] .banner-search-group .form-control:focus {
-border-color: #3b5bdb;
+    border-color: #3b5bdb;
 }
 
 .dark-mode .banner-status-filter .form-select,
 .dark-theme .banner-status-filter .form-select,
 [data-theme="dark"] .banner-status-filter .form-select {
-background-color: #0b1323;
-border-color: #334155;
-color: #f8fafc;
+    background-color: #0b1323;
+    border-color: #334155;
+    color: #f8fafc;
 }
 
 .dark-mode .banner-reset-btn,
 .dark-theme .banner-reset-btn,
 [data-theme="dark"] .banner-reset-btn {
-background: #0b1323;
-border-color: #334155;
-color: #f8fafc;
+    background: #0b1323;
+    border-color: #334155;
+    color: #f8fafc;
 }
 
 .dark-mode .banner-reset-btn:hover,
 .dark-theme .banner-reset-btn:hover,
 [data-theme="dark"] .banner-reset-btn:hover {
-background: #172033;
-border-color: #475569;
-color: #ffffff;
+    background: #172033;
+    border-color: #475569;
+    color: #ffffff;
 }
 
 /* =========================================================
-DARK TABLE
-========================================================= */
+   DARK TABLE
+   ========================================================= */
 
 .dark-mode .banners-table thead th,
 .dark-theme .banners-table thead th,
 [data-theme="dark"] .banners-table thead th {
-background: #0f172a;
-border-color: #334155;
-color: #94a3b8;
+    background: #0f172a;
+    border-color: #334155;
+    color: #94a3b8;
 }
 
 .dark-mode .banners-table tbody td,
 .dark-theme .banners-table tbody td,
 [data-theme="dark"] .banners-table tbody td {
-border-color: #243244;
-color: #f8fafc;
+    border-color: #243244;
+    color: #f8fafc;
 }
 
 .dark-mode .banners-table tbody tr:hover,
 .dark-theme .banners-table tbody tr:hover,
 [data-theme="dark"] .banners-table tbody tr:hover {
-background: #172033;
+    background: #172033;
 }
 
 /* =========================================================
-DARK IMAGE
-========================================================= */
+   DARK IMAGE
+   ========================================================= */
 
 .dark-mode .banner-image-wrapper,
 .dark-theme .banner-image-wrapper,
 [data-theme="dark"] .banner-image-wrapper {
-background: #0b1323;
-border-color: #334155;
+    background: #0b1323;
+    border-color: #334155;
 }
 
 /* =========================================================
-DARK TITLE
-========================================================= */
+   DARK TITLE
+   ========================================================= */
 
 .dark-mode .banner-title,
 .dark-theme .banner-title,
 [data-theme="dark"] .banner-title {
-color: #f8fafc;
+    color: #f8fafc;
 }
 
 .dark-mode .banner-subtitle,
 .dark-theme .banner-subtitle,
 [data-theme="dark"] .banner-subtitle {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
 /* =========================================================
-DARK POSITION
-========================================================= */
+   DARK POSITION
+   ========================================================= */
 
 .dark-mode .position-badge,
 .dark-theme .position-badge,
 [data-theme="dark"] .position-badge {
-background: #1e293b;
-color: #e2e8f0;
+    background: #1e293b;
+    color: #e2e8f0;
 }
 
 /* =========================================================
-DARK STATUS
-========================================================= */
+   DARK STATUS
+   ========================================================= */
 
 .dark-mode .status-active,
 .dark-theme .status-active,
 [data-theme="dark"] .status-active {
-background: rgba(34, 197, 94, 0.12);
-color: #86efac;
+    background: rgba(34, 197, 94, 0.12);
+    color: #86efac;
 }
 
 .dark-mode .status-inactive,
 .dark-theme .status-inactive,
 [data-theme="dark"] .status-inactive {
-background: #1e293b;
-color: #94a3b8;
+    background: #1e293b;
+    color: #94a3b8;
 }
 
 /* =========================================================
-DARK DATES
-========================================================= */
+   DARK DATES
+   ========================================================= */
 
 .dark-mode .banner-dates,
 .dark-theme .banner-dates,
 [data-theme="dark"] .banner-dates {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
 /* =========================================================
-DARK ACTIONS
-========================================================= */
+   DARK ACTIONS
+   ========================================================= */
 
 .dark-mode .action-btn,
 .dark-theme .action-btn,
 [data-theme="dark"] .action-btn {
-background: #0b1323;
-border-color: #334155;
+    background: #0b1323;
+    border-color: #334155;
 }
 
 .dark-mode .action-edit,
 .dark-theme .action-edit,
 [data-theme="dark"] .action-edit {
-color: #93a8ff;
+    color: #93a8ff;
 }
 
 .dark-mode .action-edit:hover,
 .dark-theme .action-edit:hover,
 [data-theme="dark"] .action-edit:hover {
-background: rgba(59, 91, 219, 0.15);
-border-color: #3b5bdb;
+    background: rgba(59, 91, 219, 0.15);
+    border-color: #3b5bdb;
 }
 
 .dark-mode .action-delete,
 .dark-theme .action-delete,
 [data-theme="dark"] .action-delete {
-color: #f87171;
+    color: #f87171;
 }
 
 .dark-mode .action-delete:hover,
 .dark-theme .action-delete:hover,
 [data-theme="dark"] .action-delete:hover {
-background: rgba(220, 53, 69, 0.12);
-border-color: #7f1d1d;
+    background: rgba(220, 53, 69, 0.12);
+    border-color: #7f1d1d;
 }
 
 /* =========================================================
-DARK EMPTY STATE
-========================================================= */
+   DARK EMPTY STATE
+   ========================================================= */
 
 .dark-mode .empty-icon,
 .dark-theme .empty-icon,
 [data-theme="dark"] .empty-icon {
-background: rgba(59, 91, 219, 0.14);
-color: #93a8ff;
+    background: rgba(59, 91, 219, 0.14);
+    color: #93a8ff;
 }
 
 .dark-mode .empty-state h6,
 .dark-theme .empty-state h6,
 [data-theme="dark"] .empty-state h6 {
-color: #f8fafc;
+    color: #f8fafc;
 }
 
 .dark-mode .empty-state p,
 .dark-theme .empty-state p,
 [data-theme="dark"] .empty-state p {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
 /* =========================================================
-DARK PAGINATION
-========================================================= */
+   DARK PAGINATION — BOOTSTRAP FALLBACK
+   ========================================================= */
 
 .dark-mode .banners-pagination .page-link,
 .dark-theme .banners-pagination .page-link,
 [data-theme="dark"] .banners-pagination .page-link {
-background: #0b1323;
-border-color: #334155;
-color: #e2e8f0;
+    background: #0b1323;
+    border-color: #334155;
+    color: #e2e8f0;
 }
 
 .dark-mode .banners-pagination .page-link:hover,
 .dark-theme .banners-pagination .page-link:hover,
 [data-theme="dark"] .banners-pagination .page-link:hover {
-background: #172033;
-border-color: #475569;
-color: #ffffff;
+    background: #172033;
+    border-color: #475569;
+    color: #ffffff;
 }
 
 .dark-mode .banners-pagination .page-item.active .page-link,
 .dark-theme .banners-pagination .page-item.active .page-link,
 [data-theme="dark"] .banners-pagination .page-item.active .page-link {
-background: #3b5bdb;
-border-color: #3b5bdb;
-color: #ffffff;
+    background: #3b5bdb;
+    border-color: #3b5bdb;
+    color: #ffffff;
 }
 
 /* =========================================================
-RESPONSIVE
-========================================================= */
+   RESPONSIVE — INDEX
+   ========================================================= */
 
 @media (max-width: 768px) {
 
+    .banner-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-.banner-filters {
-    flex-direction: column;
-    align-items: stretch;
-}
+    .banner-search-group {
+        width: 100%;
+    }
 
-.banner-search-group {
-    width: 100%;
-}
+    .banner-status-filter {
+        width: 100%;
+    }
 
-.banner-status-filter {
-    width: 100%;
-}
+    .banner-reset-btn {
+        width: 100%;
+    }
 
-.banner-reset-btn {
-    width: 100%;
-}
+    .banners-page .panel-header {
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
 
-.banners-page .panel-header {
-    gap: 15px;
-    flex-wrap: wrap;
-}
+    .banners-page .panel-header > .btn-primary {
+        width: 100%;
+        height: 40px;
+        min-height: 40px;
 
-.banners-page .panel-header .btn {
-    width: 100%;
-    justify-content: center;
-}
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.banners-pagination {
-    justify-content: center;
-}
-
-
-}
-
-@media (max-width: 576px) {
-
-
-.banners-table {
-    min-width: 850px;
-}
-
-.banner-image-wrapper {
-    width: 80px;
-    height: 48px;
-}
-
-.banners-table thead th,
-.banners-table tbody td {
-    padding-left: 12px;
-    padding-right: 12px;
-}
-
-
+    .banners-pagination {
+        justify-content: center;
+    }
 }
 
 /* =========================================================
-CREATE / EDIT FORM
-========================================================= */
+   RESPONSIVE — SMALL
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .banners-table {
+        min-width: 850px;
+    }
+
+    .banner-image-wrapper {
+        width: 80px;
+        height: 48px;
+    }
+
+    .banners-table thead th,
+    .banners-table tbody td {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+/* =========================================================
+   CREATE / EDIT FORM
+   ========================================================= */
 
 .banner-form-panel {
-height: 100%;
+    height: 100%;
 }
 
 .banner-form-heading {
-margin-bottom: 24px;
+    margin-bottom: 24px;
 }
 
 .banner-form-heading h6 {
-margin-bottom: 5px;
-color: #172033;
-font-size: 15px;
-font-weight: 700;
+    margin-bottom: 5px;
+
+    color: #172033;
+
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .banner-form-heading p {
-margin: 0;
-color: #8a94a6;
-font-size: 12px;
-line-height: 1.5;
+    margin: 0;
+
+    color: #8a94a6;
+
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 .banner-form-panel .form-label {
-margin-bottom: 8px;
-color: #172033;
-font-size: 13px;
-font-weight: 600;
+    margin-bottom: 8px;
+
+    color: #172033;
+
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .banner-form-panel .form-control,
 .banner-form-panel .form-select {
-min-height: 46px;
-border: 1px solid #e5e7eb;
-border-radius: 12px;
-background: #ffffff;
-color: #172033;
-font-size: 13px;
-box-shadow: none;
-transition: 0.2s ease;
+    min-height: 46px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+
+    background: #ffffff;
+    color: #172033;
+
+    font-size: 13px;
+
+    box-shadow: none;
+
+    transition: 0.2s ease;
 }
 
 .banner-form-panel .form-control {
-padding: 10px 14px;
+    padding: 10px 14px;
 }
 
 .banner-form-panel .form-select {
-padding: 10px 38px 10px 14px;
+    padding: 10px 38px 10px 14px;
 }
 
 .banner-form-panel .form-control:focus,
 .banner-form-panel .form-select:focus {
-border-color: #3b5bdb;
-box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.08);
+    border-color: #3b5bdb;
+
+    box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.08);
 }
 
 .banner-form-panel .form-control::placeholder {
-color: #8a94a6;
+    color: #8a94a6;
 }
 
 .banner-form-panel .form-text {
-margin-top: 7px;
-color: #8a94a6;
-font-size: 11px;
+    margin-top: 7px;
+
+    color: #8a94a6;
+
+    font-size: 11px;
 }
 
 .banner-form-panel textarea.form-control {
-min-height: 120px;
-resize: vertical;
+    min-height: 120px;
+    resize: vertical;
 }
 
 .banner-form-panel .is-invalid {
-border-color: #dc3545;
+    border-color: #dc3545;
 }
 
 .banner-form-panel .invalid-feedback {
-font-size: 11px;
+    font-size: 11px;
 }
 
 /* =========================================================
-IMAGE UPLOAD
-========================================================= */
+   IMAGE UPLOAD
+   ========================================================= */
 
 .banner-upload-area {
-display: flex;
-align-items: center;
-gap: 24px;
+    display: flex;
+    align-items: center;
+
+    gap: 24px;
 }
 
 .banner-preview-wrapper {
-width: 300px;
-height: 165px;
-flex-shrink: 0;
-overflow: hidden;
-border: 1px solid #e5e7eb;
-border-radius: 14px;
-background: #f8f9fb;
+    width: 300px;
+    height: 165px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    background: #f8f9fb;
 }
 
 .banner-preview-placeholder {
-width: 100%;
-height: 100%;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-gap: 8px;
-color: #8a94a6;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    color: #8a94a6;
 }
 
 .banner-preview-placeholder i {
-font-size: 30px;
+    font-size: 30px;
 }
 
 .banner-preview-placeholder span {
-font-size: 12px;
-font-weight: 500;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 .banner-preview-image {
-width: 100%;
-height: 100%;
-object-fit: cover;
-display: none;
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    object-fit: cover;
 }
 
 .banner-upload-content {
-flex: 1;
+    flex: 1;
 }
 
 .banner-upload-content .form-control {
-cursor: pointer;
+    cursor: pointer;
 }
 
 /* =========================================================
-FORM ACTIONS
-========================================================= */
+   FORM ACTIONS
+   ========================================================= */
 
 .banner-form-actions {
-margin-top: 24px;
-display: flex;
-align-items: center;
-justify-content: flex-end;
-gap: 10px;
+    margin-top: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
 }
 
 .banner-form-actions .btn {
-min-height: 44px;
-padding: 9px 17px;
-border-radius: 10px;
-font-size: 13px;
-font-weight: 600;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-gap: 7px;
+    min-height: 44px;
+
+    padding: 9px 17px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
 }
 
 .banner-cancel-btn {
-border: 1px solid #e5e7eb;
-background: #ffffff;
-color: #172033;
+    border: 1px solid #e5e7eb;
+
+    background: #ffffff;
+    color: #172033;
 }
 
 .banner-cancel-btn:hover {
-border-color: #d9dde5;
-background: #f8f9fb;
-color: #172033;
+    border-color: #d9dde5;
+    background: #f8f9fb;
+    color: #172033;
 }
 
 /* =========================================================
-BACK BUTTON
-========================================================= */
+   BACK BUTTON
+   ========================================================= */
 
 .banner-back-btn {
-min-height: 42px;
-padding: 9px 15px;
-border: 1px solid #e5e7eb;
-border-radius: 10px;
-background: #ffffff;
-color: #172033;
-font-size: 13px;
-font-weight: 600;
-display: inline-flex;
-align-items: center;
-gap: 7px;
+    min-height: 42px;
+
+    padding: 9px 15px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #172033;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
 }
 
 .banner-back-btn:hover {
-border-color: #d9dde5;
-background: #f8f9fb;
-color: #172033;
+    border-color: #d9dde5;
+    background: #f8f9fb;
+    color: #172033;
 }
 
 /* =========================================================
-DARK MODE - FORM
-========================================================= */
+   DARK MODE — FORM
+   ========================================================= */
 
 .dark-mode .banner-form-heading h6,
 .dark-theme .banner-form-heading h6,
 [data-theme="dark"] .banner-form-heading h6 {
-color: #f8fafc;
+    color: #f8fafc;
 }
 
 .dark-mode .banner-form-heading p,
 .dark-theme .banner-form-heading p,
 [data-theme="dark"] .banner-form-heading p {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
 .dark-mode .banner-form-panel .form-label,
 .dark-theme .banner-form-panel .form-label,
 [data-theme="dark"] .banner-form-panel .form-label {
-color: #e2e8f0;
+    color: #e2e8f0;
 }
 
 .dark-mode .banner-form-panel .form-control,
@@ -1031,9 +1207,9 @@ color: #e2e8f0;
 .dark-theme .banner-form-panel .form-select,
 [data-theme="dark"] .banner-form-panel .form-control,
 [data-theme="dark"] .banner-form-panel .form-select {
-background: #0b1323;
-border-color: #334155;
-color: #f8fafc;
+    background: #0b1323;
+    border-color: #334155;
+    color: #f8fafc;
 }
 
 .dark-mode .banner-form-panel .form-control:focus,
@@ -1042,85 +1218,93 @@ color: #f8fafc;
 .dark-theme .banner-form-panel .form-select:focus,
 [data-theme="dark"] .banner-form-panel .form-control:focus,
 [data-theme="dark"] .banner-form-panel .form-select:focus {
-border-color: #3b5bdb;
-box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.15);
+    border-color: #3b5bdb;
+
+    box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.15);
 }
 
 .dark-mode .banner-form-panel .form-control::placeholder,
 .dark-theme .banner-form-panel .form-control::placeholder,
 [data-theme="dark"] .banner-form-panel .form-control::placeholder {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
 .dark-mode .banner-form-panel .form-text,
 .dark-theme .banner-form-panel .form-text,
 [data-theme="dark"] .banner-form-panel .form-text {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
 /* =========================================================
-DARK DATE INPUTS
-========================================================= */
+   DARK DATE INPUTS
+   ========================================================= */
 
 .dark-mode .banner-form-panel input[type="date"],
 .dark-theme .banner-form-panel input[type="date"],
 [data-theme="dark"] .banner-form-panel input[type="date"] {
-color-scheme: dark;
+    color-scheme: dark;
 }
 
 /* =========================================================
-DARK IMAGE UPLOAD
-========================================================= */
+   DARK IMAGE UPLOAD
+   ========================================================= */
 
 .dark-mode .banner-preview-wrapper,
 .dark-theme .banner-preview-wrapper,
 [data-theme="dark"] .banner-preview-wrapper {
-background: #0b1323;
-border-color: #334155;
+    background: #0b1323;
+    border-color: #334155;
 }
 
 .dark-mode .banner-preview-placeholder,
 .dark-theme .banner-preview-placeholder,
 [data-theme="dark"] .banner-preview-placeholder {
-color: #94a3b8;
+    color: #94a3b8;
 }
 
-/* File input — keep the same form design */
+/* File input */
 .dark-mode .banner-form-panel input[type="file"],
 .dark-theme .banner-form-panel input[type="file"],
 [data-theme="dark"] .banner-form-panel input[type="file"] {
-color: #cbd5e1;
-background: #0b1323;
-border-color: #334155;
+    color: #cbd5e1;
+    background: #0b1323;
+    border-color: #334155;
 }
 
 .dark-mode .banner-form-panel input[type="file"]::file-selector-button,
 .dark-theme .banner-form-panel input[type="file"]::file-selector-button,
 [data-theme="dark"] .banner-form-panel input[type="file"]::file-selector-button {
-min-height: 44px;
-margin: -10px 14px -10px -14px;
-padding: 0 16px;
-border: 0;
-border-right: 1px solid #334155;
-border-radius: 11px 0 0 11px;
-background: #1e293b;
-color: #f8fafc;
-font-family: inherit;
-font-size: 13px;
-font-weight: 600;
-cursor: pointer;
-transition: 0.2s ease;
+    min-height: 44px;
+
+    margin: -10px 14px -10px -14px;
+
+    padding: 0 16px;
+
+    border: 0;
+    border-right: 1px solid #334155;
+    border-radius: 11px 0 0 11px;
+
+    background: #1e293b;
+    color: #f8fafc;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
 }
 
 .dark-mode .banner-form-panel input[type="file"]::file-selector-button:hover,
 .dark-theme .banner-form-panel input[type="file"]::file-selector-button:hover,
 [data-theme="dark"] .banner-form-panel input[type="file"]::file-selector-button:hover {
-background: #263449;
+    background: #263449;
 }
 
 /* =========================================================
-DARK BUTTONS
-========================================================= */
+   DARK BUTTONS
+   ========================================================= */
 
 .dark-mode .banner-cancel-btn,
 .dark-theme .banner-cancel-btn,
@@ -1128,9 +1312,9 @@ DARK BUTTONS
 .dark-mode .banner-back-btn,
 .dark-theme .banner-back-btn,
 [data-theme="dark"] .banner-back-btn {
-background: #0b1323;
-border-color: #334155;
-color: #f8fafc;
+    background: #0b1323;
+    border-color: #334155;
+    color: #f8fafc;
 }
 
 .dark-mode .banner-cancel-btn:hover,
@@ -1139,203 +1323,257 @@ color: #f8fafc;
 .dark-mode .banner-back-btn:hover,
 .dark-theme .banner-back-btn:hover,
 [data-theme="dark"] .banner-back-btn:hover {
-background: #172033;
-border-color: #475569;
-color: #ffffff;
+    background: #172033;
+    border-color: #475569;
+    color: #ffffff;
 }
 
 /* =========================================================
-BANNER DELETE — SWEETALERT
-========================================================= */
+   BANNER DELETE — SWEETALERT
+   ========================================================= */
 
 .banner-delete-popup.swal2-popup {
-width: 430px !important;
-padding: 30px !important;
-border-radius: 18px !important;
+    width: 430px !important;
+
+    padding: 30px !important;
+
+    border-radius: 18px !important;
 }
 
 .banner-delete-popup .swal2-title {
-margin: 0 !important;
-font-size: 21px !important;
-font-weight: 700 !important;
-line-height: 1.3 !important;
+    margin: 0 !important;
+
+    font-size: 21px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
 }
 
 .banner-delete-popup .swal2-html-container {
-margin: 10px 0 0 !important;
-padding: 0 !important;
-font-size: 13px !important;
-line-height: 1.6 !important;
+    margin: 10px 0 0 !important;
+    padding: 0 !important;
+
+    font-size: 13px !important;
+    line-height: 1.6 !important;
 }
 
 .banner-delete-popup .swal2-actions {
-width: 100% !important;
-margin: 24px 0 0 !important;
-display: flex !important;
-align-items: center !important;
-justify-content: center !important;
-gap: 10px !important;
+    width: 100% !important;
+
+    margin: 24px 0 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 10px !important;
 }
 
 .banner-delete-popup .banner-delete-confirm,
 .banner-delete-popup .banner-delete-cancel {
-min-width: 110px !important;
-height: 42px !important;
-margin: 0 !important;
-padding: 0 20px !important;
-border: 0 !important;
-border-radius: 9px !important;
-font-family: inherit !important;
-font-size: 13px !important;
-font-weight: 700 !important;
-cursor: pointer !important;
-outline: none !important;
-transition:
-background-color 0.2s ease,
-color 0.2s ease,
-transform 0.2s ease,
-box-shadow 0.2s ease !important;
+    min-width: 110px !important;
+    height: 42px !important;
+
+    margin: 0 !important;
+    padding: 0 20px !important;
+
+    border: 0 !important;
+    border-radius: 9px !important;
+
+    font-family: inherit !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+
+    cursor: pointer !important;
+
+    outline: none !important;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease !important;
 }
 
 .banner-delete-popup .banner-delete-confirm {
-background: #dc3545 !important;
-color: #ffffff !important;
-box-shadow: 0 6px 16px rgba(220, 53, 69, 0.20) !important;
+    background: #dc3545 !important;
+    color: #ffffff !important;
+
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.20) !important;
 }
 
 .banner-delete-popup .banner-delete-confirm:hover {
-background: #c82333 !important;
-color: #ffffff !important;
-transform: translateY(-1px) !important;
-box-shadow: 0 9px 20px rgba(220, 53, 69, 0.26) !important;
+    background: #c82333 !important;
+    color: #ffffff !important;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 9px 20px rgba(220, 53, 69, 0.26) !important;
 }
 
 .banner-delete-popup .banner-delete-cancel {
-background: #f1f3f5 !important;
-color: #495057 !important;
-box-shadow: none !important;
+    background: #f1f3f5 !important;
+    color: #495057 !important;
+
+    box-shadow: none !important;
 }
 
 .banner-delete-popup .banner-delete-cancel:hover {
-background: #e2e6ea !important;
-color: #212529 !important;
-transform: translateY(-1px) !important;
+    background: #e2e6ea !important;
+    color: #212529 !important;
+
+    transform: translateY(-1px);
 }
 
 .banner-delete-popup .banner-delete-confirm:focus,
 .banner-delete-popup .banner-delete-cancel:focus {
-outline: none !important;
-box-shadow: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* =========================================================
-SWEETALERT DARK MODE
-========================================================= */
+   SWEETALERT DARK MODE
+   ========================================================= */
 
 :root .banner-delete-popup.swal2-popup {
-background: #111827 !important;
+    background: #111827 !important;
 }
 
 :root .banner-delete-popup .swal2-title {
-color: #f8fafc !important;
+    color: #f8fafc !important;
 }
 
 :root .banner-delete-popup .swal2-html-container {
-color: #94a3b8 !important;
+    color: #94a3b8 !important;
 }
 
 :root .banner-delete-popup .banner-delete-cancel {
-background: #1f2937 !important;
-color: #d1d5db !important;
+    background: #1f2937 !important;
+    color: #d1d5db !important;
 }
 
 :root .banner-delete-popup .banner-delete-cancel:hover {
-background: #374151 !important;
-color: #ffffff !important;
+    background: #374151 !important;
+    color: #ffffff !important;
 }
 
 /* =========================================================
-MOBILE
-========================================================= */
+   MOBILE — SWEETALERT
+   ========================================================= */
 
 @media (max-width: 480px) {
 
+    .banner-delete-popup.swal2-popup {
+        width: calc(100% - 28px) !important;
+        max-width: 430px !important;
 
-.banner-delete-popup.swal2-popup {
-    width: calc(100% - 28px) !important;
-    max-width: 430px !important;
-    padding: 25px 20px !important;
-    border-radius: 16px !important;
-}
+        padding: 25px 20px !important;
 
-.banner-delete-popup .swal2-title {
-    font-size: 19px !important;
-}
+        border-radius: 16px !important;
+    }
 
-.banner-delete-popup .swal2-html-container {
-    font-size: 12px !important;
-}
+    .banner-delete-popup .swal2-title {
+        font-size: 19px !important;
+    }
 
-.banner-delete-popup .swal2-actions {
-    margin-top: 20px !important;
-    gap: 8px !important;
-}
+    .banner-delete-popup .swal2-html-container {
+        font-size: 12px !important;
+    }
 
-.banner-delete-popup .banner-delete-confirm,
-.banner-delete-popup .banner-delete-cancel {
-    min-width: 100px !important;
-    height: 40px !important;
-    padding: 0 16px !important;
-    font-size: 12px !important;
-}
+    .banner-delete-popup .swal2-actions {
+        margin-top: 20px !important;
+        gap: 8px !important;
+    }
 
+    .banner-delete-popup .banner-delete-confirm,
+    .banner-delete-popup .banner-delete-cancel {
+        min-width: 100px !important;
+        height: 40px !important;
 
+        padding: 0 16px !important;
+
+        font-size: 12px !important;
+    }
 }
 
 /* =========================================================
-RESPONSIVE - FORM
-========================================================= */
+   RESPONSIVE — FORM
+   ========================================================= */
 
 @media (max-width: 991px) {
 
+    .banner-upload-area {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 
-.banner-upload-area {
-    align-items: flex-start;
-    flex-direction: column;
-}
+    .banner-preview-wrapper {
+        width: 100%;
+        max-width: 500px;
+        height: 220px;
+    }
 
-.banner-preview-wrapper {
-    width: 100%;
-    max-width: 500px;
-    height: 220px;
-}
-
-.banner-upload-content {
-    width: 100%;
-}
-
-
+    .banner-upload-content {
+        width: 100%;
+    }
 }
 
 @media (max-width: 576px) {
 
+    .banner-preview-wrapper {
+        height: 180px;
+    }
 
-.banner-preview-wrapper {
-    height: 180px;
+    .banner-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .banner-form-actions .btn {
+        width: 100%;
+    }
+
+    .banner-back-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
-.banner-form-actions {
-    flex-direction: column-reverse;
-    align-items: stretch;
-}
+/* =========================================================
+   ADD BANNER BUTTON — PERFECT CENTER
+   ========================================================= */
 
-.banner-form-actions .btn {
-    width: 100%;
-}
-
-.banner-back-btn {
-    width: 100%;
+.banners-page .panel-header > .btn-primary,
+.banners-page .empty-state .btn-primary {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    vertical-align: middle;
+
+    gap: 7px;
+
+    line-height: 1;
+    text-align: center;
 }
 
+/* Plus icon */
+.banners-page .panel-header > .btn-primary .bi-plus-lg,
+.banners-page .empty-state .btn-primary .bi-plus-lg {
+    width: 13px;
+    height: 13px;
+
+    margin: 0 !important;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 13px;
+
+    font-size: 13px;
+    line-height: 13px;
+
+    vertical-align: middle;
+    position: relative;
+    top: 0;
 }

@@ -6,57 +6,110 @@
 
 <div class="dashboard-section roles-page role-edit-page">
 
+    {{-- =====================================================
+         PAGE HEADER
+         ===================================================== --}}
+    <div class="dashboard-panel role-edit-header-panel">
 
-<div class="dashboard-panel role-edit-header-panel">
-    <div class="role-edit-header">
+        <div class="role-edit-header">
 
-        <div class="role-edit-heading">
-            <span class="eyebrow">
-                <i class="bi bi-shield-lock"></i>
-                Access control
-            </span>
+            <div class="role-edit-heading">
 
-            <h5>Edit role</h5>
+                <div class="role-edit-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
 
-            <p>
-                Update {{ $role->display_name }} access permissions.
-            </p>
-        </div>
+                <div class="role-edit-heading-content">
 
-        <div class="role-edit-header-action">
-            <a
-                href="{{ route('admin.roles.show', $role) }}"
-                class="btn role-back-btn"
-            >
-                <i class="bi bi-arrow-left"></i>
-                <span>Back to role</span>
-            </a>
+                    <span class="eyebrow">
+                        Access control
+                    </span>
+
+                    <h1>Edit Role</h1>
+
+                    <p>
+                        Update permissions and access settings for
+                        <strong>{{ $role->display_name }}</strong>.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="role-edit-header-action">
+
+                <a
+                    href="{{ route('admin.roles.index') }}"
+                    class="btn role-back-btn"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Back to Role</span>
+                </a>
+
+            </div>
+
         </div>
 
     </div>
-</div>
 
-<div class="dashboard-panel role-form-panel">
 
-    <form
-        action="{{ route('admin.roles.update', $role) }}"
-        method="POST"
-        class="role-edit-form"
-    >
-        @csrf
-        @method('PUT')
+    {{-- =====================================================
+         FORM
+         ===================================================== --}}
+    <div class="dashboard-panel role-form-panel">
 
-        @include('Admin.roles._form')
-    </form>
+        <div class="role-edit-form-header">
 
-</div>
+            <div>
+                <span class="eyebrow">
+                    Role configuration
+                </span>
 
+                <h5>
+                    Permissions & Access
+                </h5>
+
+                <p>
+                    Configure what this role can access and manage.
+                </p>
+            </div>
+
+            <div class="role-edit-current">
+
+                <i class="bi bi-shield-check"></i>
+
+                <div>
+                    <span>Editing</span>
+                    <strong>{{ $role->display_name }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <form
+            action="{{ route('admin.roles.update', $role) }}"
+            method="POST"
+            class="role-edit-form"
+        >
+
+            @csrf
+            @method('PUT')
+
+            @include('Admin.roles._form')
+
+        </form>
+
+    </div>
 
 </div>
 
 @endsection
 
+
 @push('js')
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -72,12 +125,18 @@ document.addEventListener('DOMContentLoaded', function () {
         '[data-select-group]'
     );
 
+
     if (!checkboxes.length) {
         return;
     }
 
-    // Select all permissions
+
+    /* =====================================================
+       SELECT / CLEAR ALL PERMISSIONS
+       ===================================================== */
+
     if (selectAllButton) {
+
         selectAllButton.addEventListener('click', function () {
 
             const allChecked = Array.from(checkboxes).every(
@@ -92,7 +151,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Select all permissions in a group
+
+    /* =====================================================
+       SELECT / CLEAR PERMISSION GROUP
+       ===================================================== */
+
     groupButtons.forEach(function (button) {
 
         button.addEventListener('click', function () {
@@ -119,9 +182,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             updateGroupButtons();
         });
+
     });
 
-    // Update group button text
+
+    /* =====================================================
+       UPDATE GROUP BUTTON LABELS
+       ===================================================== */
+
     function updateGroupButtons() {
 
         document
@@ -150,8 +218,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
+
     updateGroupButtons();
 
 });
 </script>
+
 @endpush

@@ -11,15 +11,54 @@ use Illuminate\Http\Request;
 
 class AnalyticsController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Get Date Range
+    |--------------------------------------------------------------------------
+    |
+    | When no dates are selected, analytics starts from the first order
+    | available in the database instead of only the current month.
+    |
+    */
+
+    private function getDateRange(Request $request): array
+    {
+        $validated = $request->validate([
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+        ]);
+
+        $firstOrderDate = Order::min('created_at');
+
+        $startDate = !empty($validated['start_date'])
+            ? Carbon::parse($validated['start_date'])->startOfDay()
+            : (
+                $firstOrderDate
+                    ? Carbon::parse($firstOrderDate)->startOfDay()
+                    : now()->startOfMonth()
+            );
+
+        $endDate = !empty($validated['end_date'])
+            ? Carbon::parse($validated['end_date'])->endOfDay()
+            : now()->endOfDay();
+
+        return [
+            $startDate,
+            $endDate,
+        ];
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Analytics Dashboard
+    |--------------------------------------------------------------------------
+    */
+
     public function index(Request $request)
     {
-        $startDate = $request->filled('start_date')
-            ? Carbon::parse($request->start_date)->startOfDay()
-            : now()->startOfMonth();
+        [$startDate, $endDate] = $this->getDateRange($request);
 
-        $endDate = $request->filled('end_date')
-            ? Carbon::parse($request->end_date)->endOfDay()
-            : now()->endOfDay();
 
         /*
         |--------------------------------------------------------------------------
@@ -27,12 +66,14 @@ class AnalyticsController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $ordersQuery = Order::whereBetween(
-            'created_at',
-            [$startDate, $endDate]
-        );
+        $ordersQuery = Order::query()
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate,
+            ]);
 
-        $totalOrders = (clone $ordersQuery)->count();
+        $totalOrders = (clone $ordersQuery)
+            ->count();
 
         $deliveredOrders = (clone $ordersQuery)
             ->where('order_status', 'delivered')
@@ -46,34 +87,43 @@ class AnalyticsController extends Controller
             ->where('order_status', 'cancelled')
             ->count();
 
+
         /*
         |--------------------------------------------------------------------------
         | Revenue
         |--------------------------------------------------------------------------
         */
 
-        $totalRevenue = (clone $ordersQuery)
-            ->where('order_status', 'delivered')
+        $deliveredOrdersQuery = (clone $ordersQuery)
+            ->where('order_status', 'delivered');
+
+        $totalRevenue = (clone $deliveredOrdersQuery)
             ->sum('total_price');
 
-        $booksSold = (clone $ordersQuery)
-            ->where('order_status', 'delivered')
+        $booksSold = (clone $deliveredOrdersQuery)
             ->sum('quantity');
 
         $averageOrderValue = $deliveredOrders > 0
             ? $totalRevenue / $deliveredOrders
             : 0;
 
+
         /*
         |--------------------------------------------------------------------------
         | Users
         |--------------------------------------------------------------------------
+        |
+        | Users registered during the selected date range.
+        |
         */
 
-        $newUsers = User::whereBetween(
-            'created_at',
-            [$startDate, $endDate]
-        )->count();
+        $newUsers = User::query()
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate,
+            ])
+            ->count();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -83,9 +133,14 @@ class AnalyticsController extends Controller
 
         $totalBooks = Book::count();
 
-        $lowStockBooks = Book::where('stock', '<=', 5)->count();
+        $lowStockBooks = Book::query()
+            ->whereBetween('stock', [1, 5])
+            ->count();
 
-        $outOfStockBooks = Book::where('stock', 0)->count();
+        $outOfStockBooks = Book::query()
+            ->where('stock', '<=', 0)
+            ->count();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -98,10 +153,14 @@ class AnalyticsController extends Controller
                 'DATE(created_at) as date, SUM(total_price) as revenue'
             )
             ->where('order_status', 'delivered')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate,
+            ])
             ->groupByRaw('DATE(created_at)')
             ->orderBy('date')
             ->get();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -111,10 +170,14 @@ class AnalyticsController extends Controller
 
         $ordersByStatus = Order::query()
             ->selectRaw('order_status, COUNT(*) as total')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate,
+            ])
             ->groupBy('order_status')
             ->orderByDesc('total')
             ->get();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -128,11 +191,16 @@ class AnalyticsController extends Controller
             )
             ->with('book')
             ->where('order_status', 'delivered')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate,
+            ])
+            ->whereNotNull('book_id')
             ->groupBy('book_id')
             ->orderByDesc('total_sold')
             ->limit(10)
             ->get();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -140,11 +208,18 @@ class AnalyticsController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $recentOrders = Order::with(['user', 'book'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->latest()
+        $recentOrders = Order::with([
+                'user',
+                'book',
+            ])
+            ->whereBetween('created_at', [
+                $startDate,
+                $endDate,
+            ])
+            ->latest('created_at')
             ->limit(10)
             ->get();
+
 
         /*
         |--------------------------------------------------------------------------

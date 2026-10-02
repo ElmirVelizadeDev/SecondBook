@@ -36,7 +36,7 @@
             </div>
 
             <a
-                href="{{ route('admin.sellers.show', $seller) }}"
+                href="{{ route('admin.sellers.index', $seller) }}"
                 class="btn btn-light seller-edit-back"
             >
                 <i class="bi bi-arrow-left"></i>

@@ -385,7 +385,57 @@ class OrdersController extends Controller
      */
     public function destroy(Order $order)
     {
+        // Orders with refunds cannot be deleted.
+        if ($order->refunds()->exists()) {
+            $message = 'This order cannot be deleted because it has refund records.';
+
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 422);
+            }
+
+            return redirect()
+                ->route('admin.orders.index')
+                ->with('error', $message);
+        }
+
+        // Paid orders cannot be deleted.
+        if ($order->payment_status === 'paid') {
+            $message = 'This order cannot be deleted because the payment has already been completed.';
+
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 422);
+            }
+
+            return redirect()
+                ->route('admin.orders.index')
+                ->with('error', $message);
+        }
+
+        // Delivered orders cannot be deleted.
+        if ($order->order_status === 'delivered') {
+            $message = 'This order cannot be deleted because it has already been delivered.';
+
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 422);
+            }
+
+            return redirect()
+                ->route('admin.orders.index')
+                ->with('error', $message);
+        }
+
         $orderNumber = $order->order_number;
+
+        $order->delete();
 
         $this->activityLogService->log(
             'deleted',
@@ -393,7 +443,12 @@ class OrdersController extends Controller
             "Order \"{$orderNumber}\" was deleted."
         );
 
-        $order->delete();
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Order deleted successfully.',
+            ]);
+        }
 
         return redirect()
             ->route('admin.orders.index')

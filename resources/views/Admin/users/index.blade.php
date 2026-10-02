@@ -12,9 +12,7 @@
 
     {{-- Hero --}}
     <div class="users-hero mb-4">
-
         <div class="users-hero-content">
-
             <span class="hero-badge">
                 <i class="bi bi-shield-check"></i>
                 SecondBook Community
@@ -27,13 +25,11 @@
             <p>
                 Keep your reader community organised, verified and ready to grow.
             </p>
-
         </div>
 
         <div class="users-hero-mark">
             <i class="bi bi-people-fill"></i>
         </div>
-
     </div>
 
 
@@ -42,68 +38,53 @@
 
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="user-stat-card stat-blue">
-
                 <div>
                     <span>Total users</span>
-
                     <strong>
                         {{ number_format($stats['total']) }}
                     </strong>
                 </div>
 
                 <i class="bi bi-people"></i>
-
             </div>
         </div>
 
-
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="user-stat-card stat-green">
-
                 <div>
                     <span>Active users</span>
-
                     <strong>
                         {{ number_format($stats['active']) }}
                     </strong>
                 </div>
 
                 <i class="bi bi-person-check"></i>
-
             </div>
         </div>
 
-
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="user-stat-card stat-orange">
-
                 <div>
                     <span>Inactive / banned</span>
-
                     <strong>
                         {{ number_format($stats['inactive']) }}
                     </strong>
                 </div>
 
                 <i class="bi bi-person-slash"></i>
-
             </div>
         </div>
 
-
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="user-stat-card stat-purple">
-
                 <div>
                     <span>Admin users</span>
-
                     <strong>
                         {{ number_format($stats['admins']) }}
                     </strong>
                 </div>
 
                 <i class="bi bi-shield-lock"></i>
-
             </div>
         </div>
 
@@ -131,7 +112,6 @@
                 </p>
 
             </div>
-
 
             <div class="users-header-action">
 
@@ -265,7 +245,6 @@
             <table class="table users-table align-middle">
 
                 <thead>
-
                     <tr>
 
                         <th>
@@ -297,7 +276,6 @@
                         </th>
 
                     </tr>
-
                 </thead>
 
 
@@ -306,12 +284,9 @@
                     @forelse($users as $user)
 
                         @php
-
                             $displayName = $user->full_name
                                 ?: ($user->name ?: $user->username);
-
                         @endphp
-
 
                         <tr id="user-row-{{ $user->id }}">
 
@@ -392,10 +367,18 @@
 
                             {{-- Role --}}
                             <td>
+
                                 @php
                                     $primaryRole = $user->roles->first();
-                                    $roleName = $primaryRole?->name ?? $user->role ?? 'user';
-                                    $roleDisplayName = $primaryRole?->display_name ?? ucfirst($user->role ?? 'user');
+
+                                    $roleName =
+                                        $primaryRole?->name
+                                        ?? $user->role
+                                        ?? 'user';
+
+                                    $roleDisplayName =
+                                        $primaryRole?->display_name
+                                        ?? ucfirst($user->role ?? 'user');
                                 @endphp
 
                                 <span
@@ -405,6 +388,7 @@
                                             : 'role-member'
                                     }}"
                                 >
+
                                     <i class="bi {{
                                         $roleName === 'super-admin'
                                             ? 'bi-shield-fill-check'
@@ -414,14 +398,18 @@
                                     }}"></i>
 
                                     {{ $roleDisplayName }}
+
                                 </span>
+
                             </td>
 
 
                             {{-- Status --}}
                             <td>
 
-                                <span class="status-pill status-{{ $user->status }}">
+                                <span
+                                    class="status-pill status-{{ $user->status }}"
+                                >
 
                                     <i class="bi bi-circle-fill"></i>
 
@@ -617,7 +605,7 @@
 </div>
 
 
-{{-- Delete User JS --}}
+{{-- User Actions JS --}}
 @push('js')
 
 <script>
@@ -625,18 +613,293 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
+    | HELPERS
+    |--------------------------------------------------------------------------
+    */
+
+    function showError(message, title = 'Error') {
+        Swal.fire({
+            icon: 'error',
+            title: title,
+            text: message,
+            confirmButtonColor: '#2563eb'
+        });
+    }
+
+
+    function showSuccess(message, title = 'Updated') {
+        Swal.fire({
+            icon: 'success',
+            title: title,
+            text: message,
+            timer: 1200,
+            showConfirmButton: false
+        });
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE STATUS FORM
+    |--------------------------------------------------------------------------
+    */
+
+    function createStatusForm(
+        userId,
+        targetStatus,
+        icon,
+        title,
+        extraClass = ''
+    ) {
+
+        const form = document.createElement('form');
+
+        form.action =
+            '{{ url('admin/users') }}/' +
+            userId +
+            '/status';
+
+        form.method = 'POST';
+
+        form.className = 'user-status-form';
+
+        form.dataset.userId = userId;
+
+        form.innerHTML = `
+            <input
+                type="hidden"
+                name="_token"
+                value="{{ csrf_token() }}"
+            >
+
+            <input
+                type="hidden"
+                name="_method"
+                value="PATCH"
+            >
+
+            <input
+                type="hidden"
+                name="status"
+                value="${targetStatus}"
+            >
+
+            <button
+                type="submit"
+                class="btn btn-light btn-sm border user-action-btn ${extraClass}"
+                title="${title}"
+            >
+                <i class="bi ${icon}"></i>
+            </button>
+        `;
+
+        return form;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE STATUS ACTIONS
+    |--------------------------------------------------------------------------
+    |
+    | This is the important part.
+    |
+    | After changing status we rebuild the status buttons:
+    |
+    | active   -> Deactivate + Ban
+    | inactive -> Activate + Ban
+    | banned   -> Activate
+    |
+    */
+
+    function updateUserStatusUI(userRow, userId, newStatus) {
+
+        if (!userRow) {
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | STATUS BADGE
+        |--------------------------------------------------------------------------
+        */
+
+        const statusBadge =
+            userRow.querySelector('.status-pill');
+
+        if (statusBadge) {
+
+            statusBadge.className =
+                'status-pill status-' + newStatus;
+
+            statusBadge.innerHTML = `
+                <i class="bi bi-circle-fill"></i>
+                ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}
+            `;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACTION AREA
+        |--------------------------------------------------------------------------
+        */
+
+        const actions =
+            userRow.querySelector('.user-actions');
+
+        if (!actions) {
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | REMOVE OLD STATUS FORMS ONLY
+        |--------------------------------------------------------------------------
+        */
+
+        actions
+            .querySelectorAll('.user-status-form')
+            .forEach(function (oldForm) {
+                oldForm.remove();
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE NEW ACTIVATE / DEACTIVATE BUTTON
+        |--------------------------------------------------------------------------
+        */
+
+        let nextStatus;
+        let statusIcon;
+        let statusTitle;
+
+
+        if (newStatus === 'active') {
+
+            nextStatus = 'inactive';
+            statusIcon = 'bi-pause-circle';
+            statusTitle = 'Deactivate';
+
+        } else {
+
+            /*
+             * This also handles:
+             * inactive -> active
+             * banned   -> active
+             */
+
+            nextStatus = 'active';
+            statusIcon = 'bi-play-circle';
+            statusTitle = 'Activate';
+        }
+
+
+        const statusForm =
+            createStatusForm(
+                userId,
+                nextStatus,
+                statusIcon,
+                statusTitle
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE BAN BUTTON
+        |--------------------------------------------------------------------------
+        |
+        | Ban is available for active/inactive users.
+        | When already banned, only Activate remains.
+        |
+        */
+
+        let banForm = null;
+
+        if (newStatus !== 'banned') {
+
+            banForm =
+                createStatusForm(
+                    userId,
+                    'banned',
+                    'bi-slash-circle',
+                    'Ban',
+                    'text-danger'
+                );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | KEEP DELETE BUTTON AT THE END
+        |--------------------------------------------------------------------------
+        */
+
+        const deleteForm =
+            actions.querySelector('.delete-user-form');
+
+
+        if (deleteForm) {
+
+            actions.insertBefore(
+                statusForm,
+                deleteForm
+            );
+
+            if (banForm) {
+
+                actions.insertBefore(
+                    banForm,
+                    deleteForm
+                );
+            }
+
+        } else {
+
+            actions.appendChild(statusForm);
+
+            if (banForm) {
+                actions.appendChild(banForm);
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | BIND NEW BUTTONS
+        |--------------------------------------------------------------------------
+        */
+
+        bindStatusForm(statusForm);
+
+        if (banForm) {
+            bindStatusForm(banForm);
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | DELETE USER
     |--------------------------------------------------------------------------
     */
 
-    const deleteForms =
-        document.querySelectorAll('.delete-user-form');
+    function bindDeleteForm(form) {
 
-    deleteForms.forEach(function (form) {
+        if (!form || form.dataset.bound === 'true') {
+            return;
+        }
+
+        form.dataset.bound = 'true';
+
 
         form.addEventListener('submit', function (event) {
 
             event.preventDefault();
+
 
             const userId =
                 form.dataset.userId;
@@ -644,18 +907,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const userName =
                 form.dataset.userName || 'this user';
 
+
             const csrfToken =
                 form.querySelector(
                     'input[name="_token"]'
                 )?.value;
 
+
             if (!csrfToken) {
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'CSRF token not found.'
-                });
+                showError(
+                    'CSRF token not found.'
+                );
 
                 return;
             }
@@ -679,8 +942,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 buttonsStyling: false,
 
                 customClass: {
+
                     popup: 'user-delete-popup',
+
                     confirmButton: 'user-delete-confirm',
+
                     cancelButton: 'user-delete-cancel'
                 }
 
@@ -715,14 +981,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     method: 'POST',
 
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
+
+                        'X-CSRF-TOKEN':
+                            csrfToken,
+
+                        'X-Requested-With':
+                            'XMLHttpRequest',
+
+                        'Accept':
+                            'application/json'
                     },
 
                     body: new URLSearchParams({
-                        _token: csrfToken,
-                        _method: 'DELETE'
+
+                        _token:
+                            csrfToken,
+
+                        _method:
+                            'DELETE'
                     })
 
                 })
@@ -742,7 +1018,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         throw new Error(
                             'Server returned an invalid response.'
                         );
-
                     }
 
 
@@ -750,13 +1025,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         await response.json();
 
 
-                    if (!response.ok) {
+                    if (!response.ok || data.success === false) {
 
                         throw new Error(
                             data.message ||
                             'Something went wrong while deleting the user.'
                         );
-
                     }
 
 
@@ -773,76 +1047,81 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                     if (row) {
-                        row.remove();
+
+                        row.style.transition =
+                            'opacity .25s ease, transform .25s ease';
+
+                        row.style.opacity = '0';
+
+                        row.style.transform =
+                            'translateX(15px)';
+
+
+                        setTimeout(function () {
+
+                            row.remove();
+
+
+                            const remainingRows =
+                                document.querySelectorAll(
+                                    '.users-table tbody tr[id^="user-row-"]'
+                                );
+
+
+                            if (remainingRows.length === 0) {
+
+                                const tbody =
+                                    document.querySelector(
+                                        '.users-table tbody'
+                                    );
+
+
+                                if (tbody) {
+
+                                    const emptyRow =
+                                        document.createElement('tr');
+
+
+                                    emptyRow.id =
+                                        'users-empty-row';
+
+
+                                    emptyRow.innerHTML = `
+
+                                        <td
+                                            colspan="7"
+                                            class="empty-state"
+                                        >
+
+                                            <i class="bi bi-person-x"></i>
+
+                                            <strong>
+                                                No users found
+                                            </strong>
+
+                                            <span>
+                                                There are no users to display.
+                                            </span>
+
+                                        </td>
+                                    `;
+
+
+                                    tbody.appendChild(
+                                        emptyRow
+                                    );
+                                }
+                            }
+
+                        }, 250);
                     }
 
 
-                    const remainingRows =
-                        document.querySelectorAll(
-                            '.users-table tbody tr[id^="user-row-"]'
-                        );
-
-
-                    if (remainingRows.length === 0) {
-
-                        const tbody =
-                            document.querySelector(
-                                '.users-table tbody'
-                            );
-
-
-                        if (tbody) {
-
-                            const emptyRow =
-                                document.createElement('tr');
-
-
-                            emptyRow.id =
-                                'users-empty-row';
-
-
-                            emptyRow.innerHTML = `
-                                <td
-                                    colspan="7"
-                                    class="empty-state"
-                                >
-
-                                    <i class="bi bi-person-x"></i>
-
-                                    <strong>
-                                        No users found
-                                    </strong>
-
-                                    <span>
-                                        There are no users to display.
-                                    </span>
-
-                                </td>
-                            `;
-
-
-                            tbody.appendChild(emptyRow);
-
-                        }
-
-                    }
-
-
-                    Swal.fire({
-
-                        icon: 'success',
-
-                        title: 'Deleted',
-
-                        text:
-                            data.message ||
-                            'User deleted successfully.',
-
-                        timer: 1200,
-
-                        showConfirmButton: false
-
-                    });
+                    showSuccess(
+                        data.message ||
+                        'User deleted successfully.',
+                        'Deleted'
+                    );
 
                 })
 
@@ -854,26 +1133,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
 
 
-                    Swal.fire({
+                    Swal.close();
 
-                        icon: 'error',
 
-                        title: 'Delete Failed',
-
-                        text:
-                            error.message ||
-                            'Something went wrong while deleting the user.'
-
-                    });
-
+                    showError(
+                        error.message ||
+                        'Something went wrong while deleting the user.',
+                        'Delete Failed'
+                    );
                 });
 
             });
 
         });
-
-    });
-
+    }
 
 
     /*
@@ -882,11 +1155,14 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    const statusForms =
-        document.querySelectorAll('.user-status-form');
+    function bindStatusForm(form) {
 
+        if (!form || form.dataset.bound === 'true') {
+            return;
+        }
 
-    statusForms.forEach(function (form) {
+        form.dataset.bound = 'true';
+
 
         form.addEventListener('submit', function (event) {
 
@@ -905,11 +1181,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!newStatus) {
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'User status could not be determined.'
-                });
+                showError(
+                    'User status could not be determined.'
+                );
 
                 return;
             }
@@ -923,11 +1197,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!csrfToken) {
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'CSRF token not found.'
-                });
+                showError(
+                    'CSRF token not found.'
+                );
 
                 return;
             }
@@ -935,6 +1207,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const userRow =
                 form.closest('tr');
+
+
+            const userId =
+                userRow?.id.replace(
+                    'user-row-',
+                    ''
+                );
 
 
             const userName =
@@ -947,6 +1226,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 || 'this user';
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | CONFIRMATION TEXT
+            |--------------------------------------------------------------------------
+            */
+
             let title =
                 'Change user status?';
 
@@ -955,6 +1240,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let confirmText =
                 'Continue';
+
+            let confirmColor =
+                '#2563eb';
 
 
             if (newStatus === 'active') {
@@ -967,7 +1255,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 confirmText =
                     'Activate';
-
             }
 
 
@@ -981,7 +1268,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 confirmText =
                     'Deactivate';
-
             }
 
 
@@ -996,8 +1282,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 confirmText =
                     'Ban user';
 
+                confirmColor =
+                    '#dc3545';
             }
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | CONFIRMATION MODAL
+            |--------------------------------------------------------------------------
+            */
 
             Swal.fire({
 
@@ -1021,9 +1315,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 buttonsStyling: false,
 
                 customClass: {
-                    popup: 'user-delete-popup',
-                    confirmButton: 'user-delete-confirm',
-                    cancelButton: 'user-delete-cancel'
+
+                    popup:
+                        'user-delete-popup',
+
+                    confirmButton:
+                        'user-delete-confirm',
+
+                    cancelButton:
+                        'user-delete-cancel'
                 }
 
             }).then(function (result) {
@@ -1032,6 +1332,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
+
+                /*
+                |--------------------------------------------------------------------------
+                | LOADING
+                |--------------------------------------------------------------------------
+                */
 
                 Swal.fire({
 
@@ -1052,6 +1358,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
 
+                /*
+                |--------------------------------------------------------------------------
+                | REQUEST
+                |--------------------------------------------------------------------------
+                */
+
                 fetch(form.action, {
 
                     method: 'POST',
@@ -1066,7 +1378,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         'Accept':
                             'application/json'
-
                     },
 
                     body: new URLSearchParams({
@@ -1079,7 +1390,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         status:
                             newStatus
-
                     })
 
                 })
@@ -1099,7 +1409,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         throw new Error(
                             'Server returned an invalid response.'
                         );
-
                     }
 
 
@@ -1107,13 +1416,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         await response.json();
 
 
-                    if (!response.ok) {
+                    if (!response.ok || data.success === false) {
 
                         throw new Error(
                             data.message ||
                             'Something went wrong while updating the user.'
                         );
-
                     }
 
 
@@ -1125,140 +1433,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     /*
                     |--------------------------------------------------------------------------
-                    | UPDATE STATUS BADGE
+                    | IMPORTANT
                     |--------------------------------------------------------------------------
+                    |
+                    | Use server status if available.
+                    | Otherwise use submitted status.
+                    |
                     */
 
-                    const statusBadge =
-                        userRow?.querySelector(
-                            '.status-pill'
-                        );
-
-
-                    if (statusBadge) {
-
-                        statusBadge.className =
-                            'status-pill status-' +
-                            newStatus;
-
-
-                        statusBadge.innerHTML =
-                            `
-                            <i class="bi bi-circle-fill"></i>
-                            ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}
-                            `;
-
-                    }
+                    const finalStatus =
+                        data.status || newStatus;
 
 
                     /*
                     |--------------------------------------------------------------------------
-                    | ACTIVATE / DEACTIVATE BUTTON
+                    | REBUILD STATUS UI
                     |--------------------------------------------------------------------------
                     */
 
-                    if (
-                        newStatus === 'active' ||
-                        newStatus === 'inactive'
-                    ) {
-
-                        statusInput.value =
-                            newStatus === 'active'
-                                ? 'inactive'
-                                : 'active';
-
-
-                        const button =
-                            form.querySelector(
-                                'button'
-                            );
-
-
-                        if (button) {
-
-                            if (newStatus === 'active') {
-
-                                button.title =
-                                    'Deactivate';
-
-                                button.innerHTML =
-                                    `
-                                    <i class="bi bi-pause-circle"></i>
-                                    `;
-
-                            } else {
-
-                                button.title =
-                                    'Activate';
-
-                                button.innerHTML =
-                                    `
-                                    <i class="bi bi-play-circle"></i>
-                                    `;
-
-                            }
-
-                        }
-
-                    }
+                    updateUserStatusUI(
+                        userRow,
+                        userId,
+                        finalStatus
+                    );
 
 
                     /*
                     |--------------------------------------------------------------------------
-                    | BAN USER
+                    | SUCCESS
                     |--------------------------------------------------------------------------
                     */
 
-                    if (newStatus === 'banned') {
-
-                        /*
-                        | Remove current status form
-                        */
-
-                        form.remove();
-
-
-                        /*
-                        | Remove the other status form
-                        */
-
-                        if (userRow) {
-
-                            const otherStatusForm =
-                                userRow.querySelector(
-                                    '.user-status-form'
-                                );
-
-                            if (otherStatusForm) {
-                                otherStatusForm.remove();
-                            }
-
-                        }
-
-                    }
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | SUCCESS MESSAGE
-                    |--------------------------------------------------------------------------
-                    */
-
-                    Swal.fire({
-
-                        icon: 'success',
-
-                        title: 'Updated',
-
-                        text:
-                            data.message ||
-                            'User status updated successfully.',
-
-                        timer: 1200,
-
-                        showConfirmButton: false
-
-                    });
+                    showSuccess(
+                        data.message ||
+                        'User status updated successfully.'
+                    );
 
                 })
 
@@ -1270,25 +1479,44 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
 
 
-                    Swal.fire({
+                    Swal.close();
 
-                        icon: 'error',
 
-                        title: 'Update Failed',
-
-                        text:
-                            error.message ||
-                            'Something went wrong while updating the user.'
-
-                    });
-
+                    showError(
+                        error.message ||
+                        'Something went wrong while updating the user.',
+                        'Update Failed'
+                    );
                 });
 
             });
 
         });
+    }
 
-    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | INITIAL BINDINGS
+    |--------------------------------------------------------------------------
+    */
+
+    document
+        .querySelectorAll('.user-status-form')
+        .forEach(function (form) {
+
+            bindStatusForm(form);
+
+        });
+
+
+    document
+        .querySelectorAll('.delete-user-form')
+        .forEach(function (form) {
+
+            bindDeleteForm(form);
+
+        });
 
 });
 </script>

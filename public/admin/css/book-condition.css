@@ -1,6 +1,1220 @@
-/* Book conditions */
-.book-condition-page .input-group-text { border-radius: 14px 0 0 14px; }
-.book-condition-page .input-group .form-control { border-radius: 0; padding: 12px 14px; }
-.book-condition-page .input-group .btn { border-radius: 0 14px 14px 0; }
-.book-condition-page .form-select { border-radius: 14px; padding: 12px 14px; }
-.book-condition-page .dashboard-panel .btn-sm { width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; }
+/* =========================================================
+   BOOK CONDITIONS MANAGEMENT
+   Premium Admin UI
+   Same visual system as Publishers Management
+   Button colors identical to Publishers
+   Light + Dark Mode | Responsive
+   ========================================================= */
+
+.book-condition-page {
+    --condition-primary: #2563eb;
+    --condition-primary-hover: #1d4ed8;
+    --condition-primary-soft: rgba(37, 99, 235, 0.08);
+    --condition-success: #16a34a;
+    --condition-success-soft: rgba(22, 163, 74, 0.10);
+    --condition-warning: #d97706;
+    --condition-warning-soft: rgba(217, 119, 6, 0.10);
+    --condition-danger: #dc2626;
+    --condition-danger-soft: rgba(220, 38, 38, 0.10);
+    --condition-purple: #7c3aed;
+    --condition-purple-soft: rgba(124, 58, 237, 0.10);
+    --condition-text: #111827;
+    --condition-text-secondary: #64748b;
+    --condition-muted: #94a3b8;
+    --condition-border: #e5e7eb;
+    --condition-border-soft: #eef1f5;
+    --condition-bg: #ffffff;
+    --condition-bg-soft: #f8fafc;
+    --condition-input-bg: #ffffff;
+    --condition-radius: 16px;
+    --condition-radius-sm: 11px;
+    width: 100%;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.book-condition-page .book-condition-hero {
+    position: relative;
+    margin-bottom: 22px;
+    overflow: hidden;
+    border: 1px solid rgba(37, 99, 235, 0.10);
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 85% 15%, rgba(37, 99, 235, 0.12), transparent 32%),
+        linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.book-condition-page .book-condition-hero-content {
+    min-height: 190px;
+    padding: 32px 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.book-condition-page .book-condition-hero-text {
+    min-width: 0;
+}
+
+.book-condition-page .book-condition-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 13px;
+    padding: 6px 10px;
+    border: 1px solid rgba(37, 99, 235, 0.13);
+    border-radius: 8px;
+    background: rgba(37, 99, 235, 0.07);
+    color: var(--condition-primary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.book-condition-page .book-condition-hero-badge i {
+    font-size: 12px;
+}
+
+.book-condition-page .book-condition-hero h1 {
+    margin: 0 0 9px;
+    color: var(--condition-text);
+    font-size: clamp(24px, 3vw, 31px);
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+.book-condition-page .book-condition-hero p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--condition-text-secondary);
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.book-condition-page .book-condition-hero-mark {
+    width: 82px;
+    height: 82px;
+    flex: 0 0 82px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(37, 99, 235, 0.12);
+    border-radius: 22px;
+    background: rgba(37, 99, 235, 0.07);
+    color: var(--condition-primary);
+}
+
+.book-condition-page .book-condition-hero-mark i {
+    font-size: 34px;
+}
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.book-condition-page .book-condition-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.book-condition-page .book-condition-stat-card {
+    min-width: 0;
+    min-height: 104px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid var(--condition-border);
+    border-radius: 15px;
+    background: var(--condition-bg);
+    box-shadow: 0 3px 14px rgba(15, 23, 42, 0.035);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book-condition-page .book-condition-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(37, 99, 235, 0.18);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.book-condition-page .book-condition-stat-icon {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 19px;
+}
+
+.book-condition-page .book-condition-stat-icon.stat-blue {
+    background: var(--condition-primary-soft);
+    color: var(--condition-primary);
+}
+
+.book-condition-page .book-condition-stat-icon.stat-green {
+    background: var(--condition-success-soft);
+    color: var(--condition-success);
+}
+
+.book-condition-page .book-condition-stat-icon.stat-orange {
+    background: var(--condition-warning-soft);
+    color: var(--condition-warning);
+}
+
+.book-condition-page .book-condition-stat-icon.stat-purple {
+    background: var(--condition-purple-soft);
+    color: var(--condition-purple);
+}
+
+.book-condition-page .book-condition-stat-content {
+    min-width: 0;
+}
+
+.book-condition-page .book-condition-stat-label {
+    margin-bottom: 5px;
+    color: var(--condition-text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.book-condition-page .book-condition-stat-value {
+    color: var(--condition-text);
+    font-size: 23px;
+    font-weight: 750;
+    line-height: 1;
+}
+
+/* =========================================================
+   MAIN PANEL
+   ========================================================= */
+
+.book-condition-page .book-condition-panel {
+    overflow: hidden;
+    padding: 0 !important;
+    border: 1px solid var(--condition-border) !important;
+    border-radius: var(--condition-radius) !important;
+    background: var(--condition-bg) !important;
+    box-shadow: 0 3px 15px rgba(15, 23, 42, 0.035) !important;
+}
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+
+.book-condition-page .book-condition-panel-header {
+    min-height: 82px;
+    padding: 21px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid var(--condition-border-soft);
+}
+
+.book-condition-page .book-condition-heading-content {
+    min-width: 0;
+}
+
+.book-condition-page .book-condition-panel-title {
+    margin: 0 0 5px;
+    color: var(--condition-text);
+    font-size: 16px;
+    font-weight: 750;
+    line-height: 1.4;
+}
+
+.book-condition-page .book-condition-panel-description {
+    margin: 0;
+    color: var(--condition-text-secondary);
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+.book-condition-page .book-condition-header-action {
+    flex: 0 0 auto;
+}
+
+/* =========================================================
+   ADD BUTTON  (same as Publishers: #2563eb -> #1d4ed8)
+   ========================================================= */
+
+.book-condition-page .book-condition-add-btn {
+    min-height: 40px;
+    padding: 0 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #2563eb;
+    border-radius: 9px;
+    background: #2563eb;
+    color: #ffffff !important;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none !important;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.book-condition-page .book-condition-add-btn:hover {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
+}
+
+.book-condition-page .book-condition-add-btn:active {
+    transform: translateY(0);
+}
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
+.book-condition-page .book-condition-filters {
+    padding: 21px 24px;
+    border-bottom: 1px solid var(--condition-border-soft);
+}
+
+.book-condition-page .book-condition-filter-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px auto;
+    align-items: end;
+    gap: 16px;
+}
+
+.book-condition-page .book-condition-filter-group {
+    min-width: 0;
+}
+
+.book-condition-page .book-condition-filter-label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--condition-text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.book-condition-page .book-condition-search-field {
+    position: relative;
+    height: 43px;
+}
+
+.book-condition-page .book-condition-search-field > i {
+    position: absolute;
+    top: 50%;
+    left: 13px;
+    z-index: 2;
+    transform: translateY(-50%);
+    color: var(--condition-muted);
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.book-condition-page .book-condition-input,
+.book-condition-page .book-condition-select {
+    width: 100%;
+    height: 43px;
+    border: 1px solid var(--condition-border);
+    border-radius: 10px;
+    outline: none;
+    background: var(--condition-input-bg);
+    color: var(--condition-text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.book-condition-page .book-condition-input {
+    padding: 10px 13px 10px 38px;
+}
+
+.book-condition-page .book-condition-input::placeholder {
+    color: var(--condition-muted);
+    opacity: 1;
+}
+
+.book-condition-page .book-condition-input:focus,
+.book-condition-page .book-condition-select:focus {
+    border-color: var(--condition-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.book-condition-page .book-condition-select {
+    padding: 10px 36px 10px 13px;
+    cursor: pointer;
+}
+
+.book-condition-page .book-condition-select option {
+    background: var(--condition-bg);
+    color: var(--condition-text);
+}
+
+/* =========================================================
+   FILTER ACTIONS  (same as Publishers)
+   ========================================================= */
+
+.book-condition-page .book-condition-filter-actions {
+    min-height: 43px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.book-condition-page .book-condition-filter-btn,
+.book-condition-page .book-condition-clear-filter {
+    height: 43px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.book-condition-page .book-condition-filter-btn {
+    border: 1px solid #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.book-condition-page .book-condition-filter-btn:hover {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+    color: #ffffff;
+}
+
+.book-condition-page .book-condition-clear-filter {
+    border: 1px solid var(--condition-border);
+    background: var(--condition-bg);
+    color: var(--condition-text);
+}
+
+.book-condition-page .book-condition-clear-filter:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.book-condition-page .alert {
+    margin: 0 !important;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.book-condition-page .alert-success {
+    border: 1px solid rgba(22, 163, 74, 0.16);
+    background: var(--condition-success-soft);
+    color: var(--condition-success);
+}
+
+.book-condition-page .alert-danger {
+    border: 1px solid rgba(220, 38, 38, 0.16);
+    background: var(--condition-danger-soft);
+    color: var(--condition-danger);
+}
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.book-condition-page .book-condition-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.book-condition-page .book-condition-table-wrap::-webkit-scrollbar {
+    height: 7px;
+}
+
+.book-condition-page .book-condition-table-wrap::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.book-condition-page .book-condition-table-wrap::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #cbd5e1;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.book-condition-page .book-condition-table {
+    width: 100%;
+    min-width: 980px;
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.book-condition-page .book-condition-table th {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--condition-border);
+    background: var(--condition-bg-soft);
+    color: var(--condition-text-secondary);
+    font-size: 10.5px;
+    font-weight: 750;
+    letter-spacing: 0.055em;
+    line-height: 1.3;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.book-condition-page .book-condition-table td {
+    padding: 15px 16px;
+    border-bottom: 1px solid var(--condition-border-soft);
+    background: var(--condition-bg);
+    color: var(--condition-text);
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.book-condition-page .book-condition-table tbody tr {
+    transition: background-color 0.18s ease;
+}
+
+.book-condition-page .book-condition-table tbody tr:hover td {
+    background: var(--condition-primary-soft);
+}
+
+.book-condition-page .book-condition-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* =========================================================
+   TABLE COLUMNS
+   ========================================================= */
+
+.book-condition-page .book-condition-col-id {
+    width: 95px;
+}
+
+.book-condition-page .book-condition-col-condition {
+    width: 190px;
+}
+
+.book-condition-page .book-condition-col-description {
+    min-width: 280px;
+}
+
+.book-condition-page .book-condition-col-books {
+    width: 110px;
+}
+
+.book-condition-page .book-condition-col-status {
+    width: 120px;
+}
+
+.book-condition-page .book-condition-col-date {
+    width: 130px;
+}
+
+.book-condition-page .book-condition-col-actions {
+    width: 145px;
+    text-align: right;
+}
+
+/* =========================================================
+   ID
+   ========================================================= */
+
+.book-condition-page .book-condition-id {
+    color: var(--condition-muted);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   CONDITION CELL
+   ========================================================= */
+
+.book-condition-page .book-condition-item-cell {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 170px;
+}
+
+.book-condition-page .book-condition-item-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(37, 99, 235, 0.12);
+    border-radius: 10px;
+    background: var(--condition-primary-soft);
+    color: var(--condition-primary);
+}
+
+.book-condition-page .book-condition-item-icon i {
+    font-size: 15px;
+}
+
+.book-condition-page .book-condition-item-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.book-condition-page .book-condition-item-name {
+    overflow: hidden;
+    color: var(--condition-text);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.book-condition-page .book-condition-item-meta {
+    color: var(--condition-muted);
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.book-condition-page .book-condition-description {
+    display: block;
+    max-width: 340px;
+    overflow: hidden;
+    color: var(--condition-text-secondary);
+    font-size: 12.5px;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.book-condition-page .book-condition-muted {
+    color: var(--condition-muted);
+}
+
+/* =========================================================
+   BOOKS COUNT
+   ========================================================= */
+
+.book-condition-page .book-condition-books-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--condition-text);
+    font-size: 12.5px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.book-condition-page .book-condition-books-count i {
+    color: var(--condition-primary);
+    font-size: 13px;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.book-condition-page .book-condition-status-pill {
+    min-width: 72px;
+    padding: 6px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    font-size: 10.5px;
+    font-weight: 750;
+    line-height: 1;
+}
+
+.book-condition-page .book-condition-status-active {
+    border: 1px solid rgba(22, 163, 74, 0.15);
+    background: var(--condition-success-soft);
+    color: var(--condition-success);
+}
+
+.book-condition-page .book-condition-status-inactive {
+    border: 1px solid rgba(107, 114, 128, 0.15);
+    background: rgba(107, 114, 128, 0.08);
+    color: #6b7280;
+}
+
+/* =========================================================
+   ACTIONS (same colors as Publishers)
+   ========================================================= */
+
+.book-condition-page .book-condition-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.book-condition-page .book-condition-actions form {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.book-condition-page .book-condition-action-btn,
+.book-condition-page .book-condition-status-btn {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--condition-border);
+    border-radius: 8px;
+    background: var(--condition-bg);
+    color: var(--condition-text-secondary);
+    font-size: 13px;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.book-condition-page .book-condition-action-btn:hover,
+.book-condition-page .book-condition-status-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* VIEW */
+
+.book-condition-page .book-condition-view-btn {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+}
+
+.book-condition-page .book-condition-view-btn:hover {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+/* EDIT */
+
+.book-condition-page .book-condition-edit-btn {
+    border-color: #fde68a;
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.book-condition-page .book-condition-edit-btn:hover {
+    border-color: #fcd34d;
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* DELETE */
+
+.book-condition-page .book-condition-delete-btn {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.book-condition-page .book-condition-delete-btn:hover {
+    border-color: #fca5a5;
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* STATUS TOGGLE (neutral by default, colored on hover) */
+
+.book-condition-page .book-condition-status-btn.activate:hover {
+    border-color: rgba(22, 163, 74, 0.35);
+    background: rgba(22, 163, 74, 0.10);
+    color: #16a34a;
+}
+
+.book-condition-page .book-condition-status-btn.deactivate:hover {
+    border-color: rgba(217, 119, 6, 0.35);
+    background: #fffbeb;
+    color: #b45309;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.book-condition-page .book-condition-empty-state {
+    min-height: 300px;
+    padding: 55px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.book-condition-page .book-condition-empty-icon {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(37, 99, 235, 0.12);
+    border-radius: 15px;
+    background: var(--condition-primary-soft);
+    color: var(--condition-primary);
+}
+
+.book-condition-page .book-condition-empty-icon i {
+    font-size: 23px;
+}
+
+.book-condition-page .book-condition-empty-state h5 {
+    margin: 0 0 7px;
+    color: var(--condition-text);
+    font-size: 15px;
+    font-weight: 750;
+}
+
+.book-condition-page .book-condition-empty-state p {
+    max-width: 430px;
+    margin: 0;
+    color: var(--condition-text-secondary);
+    font-size: 12.5px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   PAGINATION (same colors as Publishers)
+   ========================================================= */
+
+.book-condition-page .book-condition-pagination {
+    min-height: 70px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    border-top: 1px solid var(--condition-border-soft);
+}
+
+.book-condition-page .book-condition-pagination-info {
+    color: var(--condition-text-secondary);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.book-condition-page .book-condition-pagination-info strong {
+    color: var(--condition-text);
+    font-weight: 700;
+}
+
+.book-condition-page .book-condition-pagination-pages {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.book-condition-page .book-condition-pager-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--condition-border);
+    border-radius: 8px;
+    background: var(--condition-bg);
+    color: var(--condition-text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.book-condition-page .book-condition-pager-btn:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.book-condition-page .book-condition-pager-btn.active {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.book-condition-page .book-condition-pager-btn.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.book-condition-page .book-condition-pager-dots {
+    width: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--condition-muted);
+    font-size: 12px;
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+:root[data-theme="dark"] .book-condition-page {
+    --condition-text: #f1f5f9;
+    --condition-text-secondary: #94a3b8;
+    --condition-muted: #64748b;
+    --condition-border: #273244;
+    --condition-border-soft: #202a38;
+    --condition-bg: #111827;
+    --condition-bg-soft: #151e2d;
+    --condition-input-bg: #111827;
+    --condition-primary: #3b82f6;
+    --condition-primary-hover: #2563eb;
+    --condition-primary-soft: rgba(59, 130, 246, 0.12);
+    --condition-success: #4ade80;
+    --condition-success-soft: rgba(74, 222, 128, 0.10);
+    --condition-warning: #fbbf24;
+    --condition-warning-soft: rgba(251, 191, 36, 0.10);
+    --condition-danger: #f87171;
+    --condition-danger-soft: rgba(248, 113, 113, 0.10);
+    --condition-purple: #a78bfa;
+    --condition-purple-soft: rgba(167, 139, 250, 0.10);
+}
+
+/* DARK - HERO */
+
+:root[data-theme="dark"] .book-condition-page .book-condition-hero {
+    border-color: #273244;
+    background:
+        radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.11), transparent 32%),
+        linear-gradient(135deg, #111827 0%, #131d2d 100%);
+}
+
+/* DARK - CARDS */
+
+:root[data-theme="dark"] .book-condition-page .book-condition-stat-card,
+:root[data-theme="dark"] .book-condition-page .book-condition-panel {
+    border-color: var(--condition-border) !important;
+    background: var(--condition-bg) !important;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.16) !important;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-stat-card:hover {
+    border-color: rgba(59, 130, 246, 0.22);
+}
+
+/* DARK - FILTERS */
+
+:root[data-theme="dark"] .book-condition-page .book-condition-input,
+:root[data-theme="dark"] .book-condition-page .book-condition-select {
+    border-color: var(--condition-border);
+    background: var(--condition-input-bg);
+    color: var(--condition-text);
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-input::placeholder {
+    color: #64748b;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-select option {
+    background: #111827;
+    color: #f1f5f9;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-clear-filter {
+    border-color: #334155;
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-clear-filter:hover {
+    border-color: rgba(96, 165, 250, 0.45);
+    background: #1d2940;
+    color: #60a5fa;
+}
+
+/* DARK - TABLE */
+
+:root[data-theme="dark"] .book-condition-page .book-condition-table th {
+    border-bottom-color: var(--condition-border);
+    background: var(--condition-bg-soft);
+    color: #94a3b8;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-table td {
+    border-bottom-color: var(--condition-border-soft);
+    background: var(--condition-bg);
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-table tbody tr:hover td {
+    background: rgba(59, 130, 246, 0.055);
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-item-icon {
+    border-color: rgba(59, 130, 246, 0.18);
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-status-inactive {
+    border-color: rgba(148, 163, 184, 0.14);
+    background: rgba(148, 163, 184, 0.08);
+    color: #94a3b8;
+}
+
+/* DARK - ACTIONS (same as Publishers) */
+
+:root[data-theme="dark"] .book-condition-page .book-condition-action-btn,
+:root[data-theme="dark"] .book-condition-page .book-condition-status-btn {
+    border-color: #334155;
+    background: #151d2a;
+    color: #94a3b8;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-view-btn {
+    border-color: #334155;
+    background: #1e293b;
+    color: #94a3b8;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-view-btn:hover {
+    border-color: rgba(96, 165, 250, 0.40);
+    background: rgba(59, 130, 246, 0.14);
+    color: #60a5fa;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-edit-btn {
+    border-color: rgba(251, 191, 36, 0.25);
+    background: rgba(251, 191, 36, 0.10);
+    color: #fbbf24;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-edit-btn:hover {
+    border-color: rgba(251, 191, 36, 0.40);
+    background: rgba(251, 191, 36, 0.16);
+    color: #fcd34d;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-delete-btn {
+    border-color: rgba(248, 113, 113, 0.25);
+    background: rgba(248, 113, 113, 0.10);
+    color: #f87171;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-delete-btn:hover {
+    border-color: rgba(248, 113, 113, 0.40);
+    background: rgba(248, 113, 113, 0.16);
+    color: #fca5a5;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-status-btn.activate:hover {
+    border-color: rgba(74, 222, 128, 0.35);
+    background: rgba(74, 222, 128, 0.12);
+    color: #4ade80;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-status-btn.deactivate:hover {
+    border-color: rgba(251, 191, 36, 0.35);
+    background: rgba(251, 191, 36, 0.12);
+    color: #fbbf24;
+}
+
+/* DARK - PAGINATION */
+
+:root[data-theme="dark"] .book-condition-page .book-condition-pagination {
+    border-top-color: var(--condition-border-soft);
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-pager-btn {
+    border-color: var(--condition-border);
+    background: #151d2a;
+    color: #94a3b8;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-pager-btn:hover {
+    border-color: rgba(96, 165, 250, 0.40);
+    background: rgba(59, 130, 246, 0.14);
+    color: #60a5fa;
+}
+
+:root[data-theme="dark"] .book-condition-page .book-condition-pager-btn.active {
+    border-color: #3b82f6;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+/* DARK - SCROLLBAR */
+
+:root[data-theme="dark"] .book-condition-page .book-condition-table-wrap::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1199.98px) {
+    .book-condition-page .book-condition-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .book-condition-page .book-condition-filter-grid {
+        grid-template-columns: minmax(0, 1fr) 180px;
+    }
+
+    .book-condition-page .book-condition-filter-actions {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .book-condition-page .book-condition-hero-content {
+        padding: 28px;
+    }
+
+    .book-condition-page .book-condition-panel-header {
+        padding: 20px;
+    }
+
+    .book-condition-page .book-condition-filters {
+        padding: 20px;
+    }
+
+    .book-condition-page .book-condition-table th,
+    .book-condition-page .book-condition-table td {
+        padding: 14px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .book-condition-page .book-condition-hero-content {
+        min-height: auto;
+        padding: 24px;
+    }
+
+    .book-condition-page .book-condition-hero-mark {
+        width: 68px;
+        height: 68px;
+        flex-basis: 68px;
+        border-radius: 18px;
+    }
+
+    .book-condition-page .book-condition-hero-mark i {
+        font-size: 28px;
+    }
+
+    .book-condition-page .book-condition-panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .book-condition-page .book-condition-header-action {
+        width: 100%;
+    }
+
+    .book-condition-page .book-condition-add-btn {
+        width: 100%;
+    }
+
+    .book-condition-page .book-condition-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .book-condition-page .book-condition-filter-actions {
+        grid-column: auto;
+        width: 100%;
+    }
+
+    .book-condition-page .book-condition-filter-btn,
+    .book-condition-page .book-condition-clear-filter {
+        flex: 1;
+    }
+
+    .book-condition-page .book-condition-pagination {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .book-condition-page .book-condition-pagination-pages {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .book-condition-page .book-condition-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .book-condition-page .book-condition-hero-content {
+        padding: 20px;
+    }
+
+    .book-condition-page .book-condition-hero-mark {
+        display: none;
+    }
+
+    .book-condition-page .book-condition-hero h1 {
+        font-size: 23px;
+    }
+
+    .book-condition-page .book-condition-hero p {
+        font-size: 13px;
+    }
+
+    .book-condition-page .book-condition-panel-header,
+    .book-condition-page .book-condition-filters {
+        padding: 17px;
+    }
+
+    .book-condition-page .book-condition-filter-actions {
+        flex-direction: column;
+    }
+
+    .book-condition-page .book-condition-filter-btn,
+    .book-condition-page .book-condition-clear-filter {
+        width: 100%;
+    }
+
+    .book-condition-page .book-condition-pagination {
+        padding: 14px 16px;
+    }
+
+    .book-condition-page .book-condition-pagination-pages {
+        flex-wrap: wrap;
+    }
+}

@@ -623,27 +623,23 @@ class RolePermissionSeeder extends Seeder
         |
         */
 
-        $yourAccount = User::where('username', 'elmir1')->first();
+        $yourAccount = User::where('email', 'admin@gmail.com')->first();
 
         if ($yourAccount) {
             $yourAccount->update([
                 'role' => 'admin',
             ]);
 
-            /*
-            | Only Super Admin role remains attached to this account.
-            */
-
             $yourAccount->roles()->sync([
                 $superAdmin->id,
             ]);
 
             $this->command->info(
-                'Super Admin assigned to: ' . $yourAccount->username
+                'Super Admin assigned to: ' . $yourAccount->email
             );
         } else {
             $this->command->warn(
-                'User "elmir1" was not found. Super Admin was not assigned.'
+                'User "admin@gmail.com" was not found. Super Admin was not assigned.'
             );
         }
 

@@ -31,12 +31,7 @@
        UI BUILDERS
     ========================================================= */
 
-    /*
-    |--------------------------------------------------------------------------
-    | Section heading
-    |--------------------------------------------------------------------------
-    */
-
+    /* Section heading */
     $head = fn (
         string $icon,
         string $tone,
@@ -58,12 +53,7 @@
     );
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Text / number / URL / email field
-    |--------------------------------------------------------------------------
-    */
-
+    /* Text / number / URL / email field */
     $field = function (array $f) use ($setting, $html) {
         $name = $f['name'];
 
@@ -100,12 +90,7 @@
     };
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Textarea
-    |--------------------------------------------------------------------------
-    */
-
+    /* Textarea */
     $area = function (array $f) use ($setting, $html) {
         $name = $f['name'];
 
@@ -130,12 +115,7 @@
     };
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | File upload
-    |--------------------------------------------------------------------------
-    */
-
+    /* File upload */
     $file = fn (array $f) => $html(
         '<div class="settings-field ' . ($f['class'] ?? '') . '">
 
@@ -187,12 +167,7 @@
     );
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Toggle card
-    |--------------------------------------------------------------------------
-    */
-
+    /* Toggle card */
     $toggle = function (
         string $key,
         array $t
@@ -238,73 +213,18 @@
     };
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Side navigation rail
-    |--------------------------------------------------------------------------
-    */
-
+    /* Side navigation rail */
     $rail = [
-        [
-            'sec-appearance',
-            'bi-palette',
-            'violet',
-            'Appearance'
-        ],
-        [
-            'sec-general',
-            'bi-globe',
-            'blue',
-            'General'
-        ],
-        [
-            'sec-store',
-            'bi-shop',
-            'green',
-            'Store'
-        ],
-        [
-            'sec-orders',
-            'bi-bag-check',
-            'amber',
-            'Orders'
-        ],
-        [
-            'sec-payments',
-            'bi-credit-card-2-front',
-            'blue',
-            'Payments'
-        ],
-        [
-            'sec-shipping',
-            'bi-truck',
-            'cyan',
-            'Shipping'
-        ],
-        [
-            'sec-seo',
-            'bi-search',
-            'violet',
-            'SEO'
-        ],
-        [
-            'sec-social',
-            'bi-share',
-            'rose',
-            'Social'
-        ],
-        [
-            'sec-security',
-            'bi-shield-lock',
-            'red',
-            'Security'
-        ],
-        [
-            'sec-legal',
-            'bi-file-earmark-text',
-            'slate',
-            'Legal'
-        ],
+        ['sec-appearance', 'bi-palette',             'violet', 'Appearance'],
+        ['sec-general',    'bi-globe',               'blue',   'General'],
+        ['sec-store',      'bi-shop',                'green',  'Store'],
+        ['sec-orders',     'bi-bag-check',           'amber',  'Orders'],
+        ['sec-payments',   'bi-credit-card-2-front', 'blue',   'Payments'],
+        ['sec-shipping',   'bi-truck',               'cyan',   'Shipping'],
+        ['sec-seo',        'bi-search',              'violet', 'SEO'],
+        ['sec-social',     'bi-share',               'rose',   'Social'],
+        ['sec-security',   'bi-shield-lock',         'red',    'Security'],
+        ['sec-legal',      'bi-file-earmark-text',   'slate',  'Legal'],
     ];
 @endphp
 
@@ -530,9 +450,7 @@
                 @method('PUT')
 
 
-                {{-- =================================================
-                     FORM SAVE HEADER
-                ================================================== --}}
+                {{-- FORM SAVE HEADER --}}
 
                 <div class="settings-save-header">
 
@@ -1508,24 +1426,18 @@ document.addEventListener('DOMContentLoaded', function () {
        THEME BUTTONS
     ========================================================= */
 
-    const themeButtons = document.querySelectorAll(
-        '.theme-select-btn'
-    );
-
+    const themeButtons = document.querySelectorAll('.theme-select-btn');
     const root = document.documentElement;
 
     const markTheme = function () {
 
-        const current =
-            root.getAttribute('data-theme') || 'light';
+        const current = root.getAttribute('data-theme') || 'light';
 
         themeButtons.forEach(function (button) {
-
             button.classList.toggle(
                 'active',
                 button.dataset.themeTarget === current
             );
-
         });
     };
 
@@ -1537,13 +1449,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     themeButtons.forEach(function (button) {
-
         button.addEventListener('click', function () {
-
             setTimeout(markTheme, 60);
-
         });
-
     });
 
 
@@ -1554,251 +1462,351 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('[data-file]').forEach(function (box) {
 
-        const input = box.querySelector(
-            'input[type="file"]'
-        );
-
-        const nameEl = box.querySelector(
-            '[data-file-name]'
-        );
-
-        const img = box.querySelector(
-            '.sx-file-thumb img'
-        );
-
-        const icon = box.querySelector(
-            '.sx-file-thumb i'
-        );
+        const input = box.querySelector('input[type="file"]');
+        const nameEl = box.querySelector('[data-file-name]');
+        const img = box.querySelector('.sx-file-thumb img');
+        const icon = box.querySelector('.sx-file-thumb i');
 
         const idle = nameEl.textContent;
 
 
         const render = function () {
 
-            const file =
-                input.files && input.files[0];
+            const file = input.files && input.files[0];
 
-            box.classList.toggle(
-                'has-file',
-                !!file
-            );
-
+            box.classList.toggle('has-file', !!file);
 
             if (!file) {
-
                 nameEl.textContent = idle;
-
                 img.hidden = true;
                 icon.hidden = false;
-
                 return;
             }
-
 
             nameEl.textContent =
                 file.name +
                 ' — ' +
-                Math.max(
-                    1,
-                    Math.round(file.size / 1024)
-                ) +
+                Math.max(1, Math.round(file.size / 1024)) +
                 ' KB';
-
 
             if (file.type.startsWith('image/')) {
 
                 const reader = new FileReader();
 
                 reader.onload = function (e) {
-
                     img.src = e.target.result;
-
                     img.hidden = false;
                     icon.hidden = true;
-
                 };
 
                 reader.readAsDataURL(file);
             }
         };
 
-
-        input.addEventListener(
-            'change',
-            render
-        );
-
+        input.addEventListener('change', render);
 
         ['dragenter', 'dragover'].forEach(function (type) {
-
             box.addEventListener(type, function (e) {
-
                 e.preventDefault();
-
-                box.classList.add(
-                    'is-dragover'
-                );
-
+                box.classList.add('is-dragover');
             });
-
         });
-
 
         ['dragleave', 'drop'].forEach(function (type) {
-
             box.addEventListener(type, function () {
-
-                box.classList.remove(
-                    'is-dragover'
-                );
-
+                box.classList.remove('is-dragover');
             });
-
         });
-
 
         box.addEventListener('drop', function (e) {
 
             e.preventDefault();
 
-            if (
-                e.dataTransfer &&
-                e.dataTransfer.files.length
-            ) {
+            if (e.dataTransfer && e.dataTransfer.files.length) {
 
-                input.files =
-                    e.dataTransfer.files;
+                input.files = e.dataTransfer.files;
 
                 input.dispatchEvent(
-                    new Event(
-                        'change',
-                        {
-                            bubbles: true
-                        }
-                    )
+                    new Event('change', { bubbles: true })
                 );
-
             }
-
         });
 
     });
 
 
     /* =========================================================
-       SECTION RAIL — SCROLL SPY
+       SECTION RAIL — STICKY + SCROLL SPY
+       - rail səhifə ilə birlikdə gəlir
+       - bölmənin üstündən keçəndə aktiv düymə dəyişir
+       - düyməyə klik hamar scroll edir
     ========================================================= */
 
-    const links =
-        document.querySelectorAll('[data-rail]');
+    (function () {
 
-    if (
-        'IntersectionObserver' in window &&
-        links.length
-    ) {
+        const layout = document.querySelector('.sx-layout');
+        const rail = document.querySelector('.sx-rail');
+        const links = Array.from(document.querySelectorAll('[data-rail]'));
 
-        const spy =
-            new IntersectionObserver(
-                function (entries) {
+        if (!layout || !rail || !links.length) {
+            return;
+        }
 
-                    entries.forEach(function (entry) {
+        const sections = links
+            .map(function (link) {
+                return document.getElementById(link.dataset.rail);
+            })
+            .filter(Boolean);
 
-                        if (!entry.isIntersecting) {
-                            return;
-                        }
+        if (!sections.length) {
+            return;
+        }
 
-                        links.forEach(function (link) {
+        layout.classList.add('has-js-rail');
 
-                            link.classList.toggle(
-                                'is-active',
-                                link.dataset.rail ===
-                                    entry.target.id
-                            );
 
-                        });
+        /* ---------- scroll container (window və ya daxili scroll) ---------- */
 
-                    });
+        let scroller = null;
 
-                },
-                {
-                    rootMargin:
-                        '-15% 0px -70% 0px'
+        for (
+            let el = layout.parentElement;
+            el && el !== document.body && el !== document.documentElement;
+            el = el.parentElement
+        ) {
+            const overflowY = getComputedStyle(el).overflowY;
+
+            if (
+                /(auto|scroll|overlay)/.test(overflowY) &&
+                el.scrollHeight > el.clientHeight
+            ) {
+                scroller = el;
+                break;
+            }
+        }
+
+        const isMobile = function () {
+            return window.innerWidth <= 991;
+        };
+
+        /* Fixed header varsa, rail-in dayanacağı yer (px) */
+        const gap = function () {
+            if (scroller) {
+                return 16;
+            }
+
+            return isMobile() ? 88 : 100;
+        };
+
+        const stickyLine = function () {
+            const base = scroller
+                ? scroller.getBoundingClientRect().top
+                : 0;
+
+            return base + gap();
+        };
+
+        /* Mobildə rail üfüqi zolaqdır, bölmə onun altında dayanmalıdır */
+        const belowRail = function () {
+            return isMobile() ? rail.offsetHeight + 12 : 0;
+        };
+
+
+        /* ---------- active link ---------- */
+
+        let current = null;
+        let lockUntil = 0;
+        let ticking = false;
+
+        const setActive = function (id) {
+
+            if (id === current) {
+                return;
+            }
+
+            current = id;
+
+            links.forEach(function (link) {
+
+                const on = link.dataset.rail === id;
+
+                link.classList.toggle('is-active', on);
+
+                if (on) {
+                    link.setAttribute('aria-current', 'true');
+                } else {
+                    link.removeAttribute('aria-current');
                 }
+            });
+
+            /* Mobil üfüqi zolaqda aktiv düyməni görünən et */
+            const activeLink = links.find(function (link) {
+                return link.dataset.rail === id;
+            });
+
+            if (activeLink && rail.scrollWidth > rail.clientWidth) {
+                rail.scrollTo({
+                    left:
+                        activeLink.offsetLeft -
+                        (rail.clientWidth - activeLink.offsetWidth) / 2,
+                    behavior: 'smooth'
+                });
+            }
+        };
+
+
+        /* ---------- sticky + spy ---------- */
+
+        const update = function () {
+
+            ticking = false;
+
+            /* 1) Rail səhifə ilə birlikdə gəlsin */
+            const layoutRect = layout.getBoundingClientRect();
+
+            const maxShift = Math.max(
+                0,
+                layoutRect.height - rail.offsetHeight
             );
 
+            const shift = Math.min(
+                maxShift,
+                Math.max(0, stickyLine() - layoutRect.top)
+            );
+
+            rail.style.transform = shift
+                ? 'translate3d(0,' + shift + 'px,0)'
+                : '';
+
+            /* 2) Hansı bölmənin üstündəyik */
+            if (Date.now() < lockUntil) {
+                return;
+            }
+
+            const line = stickyLine() + belowRail() + 24;
+
+            let active = sections[0];
+
+            sections.forEach(function (section) {
+                if (section.getBoundingClientRect().top <= line) {
+                    active = section;
+                }
+            });
+
+            const atBottom = scroller
+                ? scroller.scrollTop + scroller.clientHeight >=
+                  scroller.scrollHeight - 4
+                : window.innerHeight + window.scrollY >=
+                  document.documentElement.scrollHeight - 4;
+
+            if (atBottom) {
+                active = sections[sections.length - 1];
+            }
+
+            setActive(active.id);
+        };
+
+        const request = function () {
+
+            if (ticking) {
+                return;
+            }
+
+            ticking = true;
+
+            window.requestAnimationFrame(update);
+        };
+
+        /* capture = true: window və istənilən daxili scroll-u tutur */
+        document.addEventListener('scroll', request, {
+            passive: true,
+            capture: true
+        });
+
+        window.addEventListener('resize', request);
+        window.addEventListener('load', request);
+
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(request).observe(layout);
+        }
+
+
+        /* ---------- link-ə klik: hamar scroll ---------- */
 
         links.forEach(function (link) {
 
-            const target =
-                document.getElementById(
+            link.addEventListener('click', function (event) {
+
+                const target = document.getElementById(
                     link.dataset.rail
                 );
 
-            if (target) {
-                spy.observe(target);
-            }
+                if (!target) {
+                    return;
+                }
 
+                event.preventDefault();
+
+                const delta =
+                    target.getBoundingClientRect().top -
+                    (stickyLine() + belowRail());
+
+                if (scroller) {
+                    scroller.scrollBy({ top: delta, behavior: 'smooth' });
+                } else {
+                    window.scrollBy({ top: delta, behavior: 'smooth' });
+                }
+
+                setActive(link.dataset.rail);
+
+                /* smooth scroll bitənə qədər spy qarışmasın */
+                lockUntil = Date.now() + 900;
+
+                window.setTimeout(request, 950);
+
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(
+                        null,
+                        '',
+                        '#' + link.dataset.rail
+                    );
+                }
+            });
         });
 
+        update();
 
-        links[0].classList.add(
-            'is-active'
-        );
-    }
+    })();
 
 
     /* =========================================================
        UNSAVED CHANGES INDICATOR
     ========================================================= */
 
-    const saveBar =
-        document.getElementById(
-            'settingsSaveBar'
-        );
-
-    const saveTitle =
-        document.getElementById(
-            'saveStatusTitle'
-        );
-
-    const saveText =
-        document.getElementById(
-            'saveStatusText'
-        );
-
+    const saveBar = document.getElementById('settingsSaveBar');
+    const saveTitle = document.getElementById('saveStatusTitle');
+    const saveText = document.getElementById('saveStatusText');
 
     const setDirty = function (dirty) {
 
-        saveBar.classList.toggle(
-            'is-dirty',
-            dirty
-        );
+        saveBar.classList.toggle('is-dirty', dirty);
 
-        saveTitle.textContent =
-            dirty
-                ? 'Unsaved changes'
-                : 'All changes saved';
+        saveTitle.textContent = dirty
+            ? 'Unsaved changes'
+            : 'All changes saved';
 
-        saveText.textContent =
-            dirty
-                ? 'Save to apply your edits.'
-                : 'Changes apply after saving.';
+        saveText.textContent = dirty
+            ? 'Save to apply your edits.'
+            : 'Changes apply after saving.';
     };
 
+    form.addEventListener('input', function () {
+        setDirty(true);
+    });
 
-    form.addEventListener(
-        'input',
-        function () {
-            setDirty(true);
-        }
-    );
-
-    form.addEventListener(
-        'change',
-        function () {
-            setDirty(true);
-        }
-    );
+    form.addEventListener('change', function () {
+        setDirty(true);
+    });
 
 
     /* =========================================================
@@ -1806,203 +1814,108 @@ document.addEventListener('DOMContentLoaded', function () {
        Existing behavior preserved
     ========================================================= */
 
-    form.addEventListener(
-        'submit',
-        async function (event) {
+    form.addEventListener('submit', async function (event) {
 
-            event.preventDefault();
+        event.preventDefault();
 
+        const submitButtons = form.querySelectorAll('button[type="submit"]');
+        const formData = new FormData(form);
 
-            const submitButtons =
-                form.querySelectorAll(
-                    'button[type="submit"]'
-                );
+        submitButtons.forEach(function (button) {
 
+            button.disabled = true;
+            button.dataset.originalHtml = button.innerHTML;
 
-            const formData =
-                new FormData(form);
+            button.innerHTML = `
+                <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                ></span>
 
+                <span>Saving...</span>
+            `;
+        });
+
+        try {
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+
+            const contentType = response.headers.get('content-type') || '';
+
+            let data = {};
+
+            if (contentType.includes('application/json')) {
+                data = await response.json();
+            }
+
+            if (!response.ok) {
+
+                let errorMessage = 'Please review the settings form.';
+
+                if (data.errors) {
+
+                    const messages = [];
+
+                    Object.values(data.errors).forEach(function (errors) {
+                        errors.forEach(function (message) {
+                            messages.push(message);
+                        });
+                    });
+
+                    if (messages.length) {
+                        errorMessage = messages.join('<br>');
+                    }
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            setDirty(false);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Settings saved',
+                text: data.message || 'Settings updated successfully.',
+                confirmButtonColor: '#3451d1',
+                confirmButtonText: 'Done',
+                customClass: {
+                    popup: 'settings-swal-popup'
+                }
+            });
+
+        } catch (error) {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Save failed',
+                html: error.message || 'Something went wrong while saving settings.',
+                confirmButtonColor: '#3451d1',
+                confirmButtonText: 'Try again',
+                customClass: {
+                    popup: 'settings-swal-popup'
+                }
+            });
+
+        } finally {
 
             submitButtons.forEach(function (button) {
 
-                button.disabled = true;
+                button.disabled = false;
 
-                button.dataset.originalHtml =
-                    button.innerHTML;
-
-                button.innerHTML = `
-                    <span
-                        class="spinner-border spinner-border-sm"
-                        role="status"
-                        aria-hidden="true"
-                    ></span>
-
-                    <span>Saving...</span>
-                `;
-
+                if (button.dataset.originalHtml) {
+                    button.innerHTML = button.dataset.originalHtml;
+                }
             });
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        form.action,
-                        {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-Requested-With':
-                                    'XMLHttpRequest',
-                                'Accept':
-                                    'application/json'
-                            }
-                        }
-                    );
-
-
-                const contentType =
-                    response.headers.get(
-                        'content-type'
-                    ) || '';
-
-
-                let data = {};
-
-
-                if (
-                    contentType.includes(
-                        'application/json'
-                    )
-                ) {
-                    data =
-                        await response.json();
-                }
-
-
-                if (!response.ok) {
-
-                    let errorMessage =
-                        'Please review the settings form.';
-
-
-                    if (data.errors) {
-
-                        const messages = [];
-
-
-                        Object.values(
-                            data.errors
-                        ).forEach(function (errors) {
-
-                            errors.forEach(
-                                function (message) {
-
-                                    messages.push(
-                                        message
-                                    );
-
-                                }
-                            );
-
-                        });
-
-
-                        if (messages.length) {
-
-                            errorMessage =
-                                messages.join(
-                                    '<br>'
-                                );
-
-                        }
-
-                    }
-
-
-                    throw new Error(
-                        errorMessage
-                    );
-                }
-
-
-                setDirty(false);
-
-
-                Swal.fire({
-
-                    icon: 'success',
-
-                    title: 'Settings saved',
-
-                    text:
-                        data.message ||
-                        'Settings updated successfully.',
-
-                    confirmButtonColor:
-                        '#3451d1',
-
-                    confirmButtonText:
-                        'Done',
-
-                    customClass: {
-                        popup:
-                            'settings-swal-popup'
-                    }
-
-                });
-
-
-            } catch (error) {
-
-                Swal.fire({
-
-                    icon: 'error',
-
-                    title: 'Save failed',
-
-                    html:
-                        error.message ||
-                        'Something went wrong while saving settings.',
-
-                    confirmButtonColor:
-                        '#3451d1',
-
-                    confirmButtonText:
-                        'Try again',
-
-                    customClass: {
-                        popup:
-                            'settings-swal-popup'
-                    }
-
-                });
-
-
-            } finally {
-
-                submitButtons.forEach(
-                    function (button) {
-
-                        button.disabled = false;
-
-                        if (
-                            button.dataset
-                                .originalHtml
-                        ) {
-
-                            button.innerHTML =
-                                button.dataset
-                                    .originalHtml;
-                        }
-
-                    }
-                );
-
-            }
-
         }
-    );
+    });
 
 });
 </script>

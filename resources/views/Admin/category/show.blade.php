@@ -2,116 +2,620 @@
 
 @section('title', 'Category Details')
 
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/categories.css') }}">
+@endpush
+
 @section('content')
 
-<div class="dashboard-section category-page">
+@php
+$status = (int) ($category->status ?? 0);
 
-    <div class="dashboard-panel mb-4">
 
-        <div class="panel-header mb-0">
+$statusClass = $status
+    ? 'category-status-active'
+    : 'category-status-inactive';
 
-            <div>
-                <h5 class="mb-1">Category Details</h5>
-                <p class="text-muted mb-0 small">
-                    Review category information
-                </p>
-            </div>
+$statusLabel = $status ? 'Active' : 'Inactive';
 
-            <div class="d-flex gap-2">
-                <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">
-                    <i class="bi bi-pencil me-2"></i>
-                    Edit
+$categoryName = $category->name ?: 'Untitled category';
+
+$categoryInitial = strtoupper(
+    mb_substr($categoryName, 0, 1)
+);
+
+$imageUrl = null;
+
+if (!empty($category->image)) {
+    $imageUrl = filter_var($category->image, FILTER_VALIDATE_URL)
+        ? $category->image
+        : asset('storage/' . $category->image);
+}
+
+$bookCount = $category->books_count ?? 0;
+
+
+@endphp
+
+<div class="categories-page">
+
+
+{{-- =========================================================
+    HERO
+========================================================== --}}
+
+<section class="categories-hero">
+
+    <div class="categories-hero-content">
+
+        <span class="categories-hero-badge">
+            <i class="bi bi-tags"></i>
+            Category details
+        </span>
+
+        <h1>
+            {{ $categoryName }}
+        </h1>
+
+        <p>
+            Full information about this category, including its
+            description, book count, status and category image.
+        </p>
+
+    </div>
+
+    <div class="categories-hero-mark" aria-hidden="true">
+        <i class="bi bi-tags"></i>
+    </div>
+
+</section>
+
+
+{{-- =========================================================
+    STATISTICS
+========================================================== --}}
+
+<section class="categories-stats">
+
+    <div class="category-stat-card stat-blue">
+
+        <div class="category-stat-content">
+            <span>Category ID</span>
+            <strong>#{{ $category->id }}</strong>
+        </div>
+
+        <div class="category-stat-icon">
+            <i class="bi bi-hash"></i>
+        </div>
+
+    </div>
+
+
+    <div class="category-stat-card stat-green">
+
+        <div class="category-stat-content">
+            <span>Books</span>
+            <strong>{{ $bookCount }}</strong>
+        </div>
+
+        <div class="category-stat-icon">
+            <i class="bi bi-book"></i>
+        </div>
+
+    </div>
+
+
+    <div class="category-stat-card stat-orange">
+
+        <div class="category-stat-content">
+            <span>Status</span>
+            <strong>{{ $statusLabel }}</strong>
+        </div>
+
+        <div class="category-stat-icon">
+            <i class="bi bi-toggle-on"></i>
+        </div>
+
+    </div>
+
+
+    <div class="category-stat-card stat-purple">
+
+        <div class="category-stat-content">
+            <span>Created</span>
+            <strong>
+                {{ $category->created_at?->format('d M Y') ?? '—' }}
+            </strong>
+        </div>
+
+        <div class="category-stat-icon">
+            <i class="bi bi-calendar3"></i>
+        </div>
+
+    </div>
+
+</section>
+
+
+{{-- =========================================================
+    MAIN PANEL
+========================================================== --}}
+
+<section class="categories-panel">
+
+    {{-- =====================================================
+        PANEL HEADER
+    ====================================================== --}}
+
+    <div class="categories-panel-header">
+
+        <div class="categories-heading-content">
+
+            <span class="eyebrow">
+                Category information
+            </span>
+
+            <h5>
+                {{ $categoryName }}
+            </h5>
+
+            <p>
+                Everything SecondBook knows about this category.
+            </p>
+
+        </div>
+
+
+        <div class="categories-header-action">
+
+            <div class="category-actions">
+
+                <a
+                    href="{{ route('admin.categories.index') }}"
+                    class="category-clear-filter"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Back to categories</span>
                 </a>
-                <a href="{{ route('admin.categories.index') }}" class="btn btn-light border">
-                    <i class="bi bi-arrow-left me-2"></i>
-                    Back to Categories
+
+                <a
+                    href="{{ route('admin.categories.edit', $category->id) }}"
+                    class="categories-add-btn"
+                >
+                    <i class="bi bi-pencil"></i>
+                    <span>Edit Category</span>
                 </a>
+
             </div>
 
         </div>
 
     </div>
 
-    <div class="row g-4">
 
-        <div class="col-12 col-lg-4">
-            <div class="dashboard-panel h-100">
-                <h6 class="mb-3">Image</h6>
+    {{-- =====================================================
+        OVERVIEW TABLE
+    ====================================================== --}}
 
-                @if(!empty($category->image))
-                    @php
-                        $categoryImageUrl = filter_var(
-                            $category->image,
-                            FILTER_VALIDATE_URL
-                        )
-                            ? $category->image
-                            : asset('storage/' . $category->image);
-                    @endphp
+    <div class="categories-table-wrap">
 
-                    <img
-                        src="{{ $categoryImageUrl }}"
-                        alt="{{ $category->name }}"
-                        class="img-fluid rounded border w-100 category-detail-image-large"
-                        loading="lazy">
-                @else
-                    <div class="chart-placeholder category-detail-placeholder">
-                        <i class="bi bi-image"></i>
-                        <h6>No image uploaded</h6>
-                    </div>
-                @endif
-            </div>
+        <table class="categories-table">
+
+            <thead>
+                <tr>
+                    <th class="categories-col-image">Image</th>
+                    <th class="categories-col-category">Category</th>
+                    <th class="categories-col-slug">Slug</th>
+                    <th class="categories-col-books">Books</th>
+                    <th class="categories-col-status">Status</th>
+                    <th class="categories-col-date">Created</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    {{-- Image --}}
+
+                    <td>
+
+                        <div class="category-item-cell">
+
+                            @if($imageUrl)
+
+                                <img
+                                    src="{{ $imageUrl }}"
+                                    alt="{{ $categoryName }}"
+                                    class="category-image"
+                                    loading="lazy"
+                                >
+
+                            @else
+
+                                <div class="category-image-placeholder">
+                                    <i class="bi bi-tags"></i>
+                                </div>
+
+                            @endif
+
+                        </div>
+
+                    </td>
+
+
+                    {{-- Category --}}
+
+                    <td>
+
+                        <div class="category-item-info">
+
+                            <strong title="{{ $categoryName }}">
+                                {{ $categoryName }}
+                            </strong>
+
+                            <small>
+                                Category #{{ $category->id }}
+                            </small>
+
+                        </div>
+
+                    </td>
+
+
+                    {{-- Slug --}}
+
+                    <td>
+
+                        @if($category->slug)
+
+                            <span
+                                class="category-slug"
+                                title="{{ $category->slug }}"
+                            >
+                                {{ $category->slug }}
+                            </span>
+
+                        @else
+
+                            <span class="category-slug">
+                                —
+                            </span>
+
+                        @endif
+
+                    </td>
+
+
+                    {{-- Books --}}
+
+                    <td>
+
+                        <span class="category-book-count">
+
+                            <i class="bi bi-book"></i>
+
+                            {{ $bookCount }}
+
+                        </span>
+
+                    </td>
+
+
+                    {{-- Status --}}
+
+                    <td>
+
+                        <span class="category-status-pill {{ $statusClass }}">
+
+                            <i class="bi bi-circle-fill"></i>
+
+                            {{ $statusLabel }}
+
+                        </span>
+
+                    </td>
+
+
+                    {{-- Created --}}
+
+                    <td>
+
+                        <span class="category-date">
+                            {{ $category->created_at?->format('d M Y') ?? '—' }}
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {{-- =====================================================
+        CATEGORY DETAILS
+    ====================================================== --}}
+
+    <div class="categories-panel-header">
+
+        <div class="categories-heading-content">
+
+            <span class="eyebrow">
+                Category details
+            </span>
+
+            <h5>
+                Basic information
+            </h5>
+
+            <p>
+                Core information and metadata for this category.
+            </p>
+
         </div>
 
-        <div class="col-12 col-lg-8">
-            <div class="dashboard-panel h-100">
+    </div>
 
-                <h6 class="mb-3">Information</h6>
 
-                <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        <small class="text-muted d-block">ID</small>
-                        <strong>{{ $category->id }}</strong>
-                    </div>
+    <div class="categories-form-body">
 
-                    <div class="col-12 col-md-6">
-                        <small class="text-muted d-block">Name</small>
-                        <strong>{{ $category->name }}</strong>
-                    </div>
+        <div class="category-form-grid">
 
-                    <div class="col-12 col-md-6">
-                        <small class="text-muted d-block">Slug</small>
-                        <strong>{{ $category->slug }}</strong>
-                    </div>
+            {{-- ID --}}
 
-                    <div class="col-12 col-md-6">
-                        <small class="text-muted d-block">Book Count</small>
-                        <strong>{{ $category->books_count }}</strong>
-                    </div>
+            <div class="category-field">
 
-                    <div class="col-12 col-md-6">
-                        <small class="text-muted d-block">Status</small>
-                        @if($category->status)
-                            <span class="badge bg-success">Active</span>
-                        @else
-                            <span class="badge bg-secondary">Inactive</span>
-                        @endif
-                    </div>
+                <label>
+                    Category ID
+                </label>
 
-                    <div class="col-12 col-md-6">
-                        <small class="text-muted d-block">Created Date</small>
-                        <strong>{{ $category->created_at?->format('d M Y H:i') }}</strong>
-                    </div>
-
-                    <div class="col-12">
-                        <small class="text-muted d-block">Description</small>
-                        <p class="mb-0">{{ $category->description ?: '-' }}</p>
-                    </div>
+                <div class="category-input">
+                    #{{ $category->id }}
                 </div>
 
             </div>
+
+
+            {{-- Name --}}
+
+            <div class="category-field">
+
+                <label>
+                    Category Name
+                </label>
+
+                <div class="category-input">
+                    {{ $category->name ?: '—' }}
+                </div>
+
+            </div>
+
+
+            {{-- Slug --}}
+
+            <div class="category-field">
+
+                <label>
+                    Slug
+                </label>
+
+                <div class="category-input">
+                    {{ $category->slug ?: '—' }}
+                </div>
+
+            </div>
+
+
+            {{-- Book Count --}}
+
+            <div class="category-field">
+
+                <label>
+                    Book Count
+                </label>
+
+                <div class="category-input">
+                    {{ $bookCount }}
+                </div>
+
+            </div>
+
+
+            {{-- Status --}}
+
+            <div class="category-field">
+
+                <label>
+                    Status
+                </label>
+
+                <div>
+                    <span class="category-status-pill {{ $statusClass }}">
+                        <i class="bi bi-circle-fill"></i>
+                        {{ $statusLabel }}
+                    </span>
+                </div>
+
+            </div>
+
+
+            {{-- Created --}}
+
+            <div class="category-field">
+
+                <label>
+                    Created Date
+                </label>
+
+                <div class="category-input">
+                    {{ $category->created_at?->format('d M Y H:i') ?? '—' }}
+                </div>
+
+            </div>
+
+
+            {{-- Updated --}}
+
+            <div class="category-field">
+
+                <label>
+                    Updated Date
+                </label>
+
+                <div class="category-input">
+                    {{ $category->updated_at?->format('d M Y H:i') ?? '—' }}
+                </div>
+
+            </div>
+
+
+            {{-- Image --}}
+
+            <div class="category-field">
+
+                <label>
+                    Image
+                </label>
+
+                <div class="category-input">
+
+                    @if($imageUrl)
+                        Available
+                    @else
+                        —
+                    @endif
+
+                </div>
+
+            </div>
+
+
+            {{-- Description --}}
+
+            <div class="category-field category-field-full">
+
+                <label>
+                    Description
+                </label>
+
+                <div class="category-input category-textarea">
+
+                    {{ $category->description ?: '—' }}
+
+                </div>
+
+            </div>
+
         </div>
 
     </div>
+
+
+    {{-- =====================================================
+        CATEGORY IMAGE
+    ====================================================== --}}
+
+    <div class="categories-panel-header">
+
+        <div class="categories-heading-content">
+
+            <span class="eyebrow">
+                Category image
+            </span>
+
+            <h5>
+                Image preview
+            </h5>
+
+            <p>
+                The image currently associated with this category.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="categories-form-body">
+
+        @if($imageUrl)
+
+            <div class="category-image-preview category-detail-image-preview">
+
+                <img
+                    src="{{ $imageUrl }}"
+                    alt="{{ $categoryName }}"
+                    class="category-preview-image"
+                    loading="lazy"
+                >
+
+            </div>
+
+        @else
+
+            <div class="category-no-image category-detail-no-image">
+
+                <i class="bi bi-image"></i>
+
+                <span>
+                    No image uploaded
+                </span>
+
+            </div>
+
+        @endif
+
+    </div>
+
+
+    {{-- =====================================================
+        FOOTER
+    ====================================================== --}}
+
+    <div class="categories-pagination">
+
+        <div class="categories-pagination-info">
+
+            Category
+            <strong>#{{ $category->id }}</strong>
+
+        </div>
+
+
+        <nav
+            class="categories-pagination-pages"
+            aria-label="Category actions"
+        >
+
+            <a
+                href="{{ route('admin.categories.index') }}"
+                class="categories-pager-btn"
+                title="Back to categories"
+                aria-label="Back to categories"
+            >
+                <i class="bi bi-arrow-left"></i>
+            </a>
+
+
+            <a
+                href="{{ route('admin.categories.edit', $category->id) }}"
+                class="categories-pager-btn active"
+                title="Edit category"
+                aria-label="Edit category"
+            >
+                <i class="bi bi-pencil"></i>
+            </a>
+
+        </nav>
+
+    </div>
+
+</section>
+
 
 </div>
 

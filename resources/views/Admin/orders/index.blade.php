@@ -431,10 +431,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* =========================================================
-       DELETE ORDER — AJAX
-    ========================================================= */
-
     document.querySelectorAll('.order-delete-form').forEach(function (form) {
 
         form.addEventListener('submit', async function (event) {
@@ -470,9 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     .getAttribute('content');
 
                 const response = await fetch(form.action, {
-
                     method: 'POST',
-
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
@@ -480,7 +474,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         'Content-Type':
                             'application/x-www-form-urlencoded; charset=UTF-8'
                     },
-
                     body: new URLSearchParams({
                         _token: csrfToken,
                         _method: 'DELETE'
@@ -496,16 +489,34 @@ document.addEventListener('DOMContentLoaded', function () {
                     data = await response.json();
                 }
 
-                if (!response.ok) {
-                    throw new Error(
-                        data.message ||
-                        'Unable to delete the order.'
-                    );
+                /*
+                |--------------------------------------------------------------------------
+                | DELETE FAILED
+                |--------------------------------------------------------------------------
+                */
+
+                if (!response.ok || data.success !== true) {
+
+                    if (button) {
+                        button.disabled = false;
+                    }
+
+                    await Swal.fire({
+                        icon: 'info',
+                        title: 'Order not deleted',
+                        text: data.message ||
+                            'This order cannot be deleted.',
+                        confirmButtonColor: '#2563eb'
+                    });
+
+                    return;
                 }
 
-                /* =================================================
-                   REMOVE ROW WITHOUT PAGE REFRESH
-                ================================================= */
+                /*
+                |--------------------------------------------------------------------------
+                | DELETE SUCCESSFUL
+                |--------------------------------------------------------------------------
+                */
 
                 if (row) {
 
@@ -522,11 +533,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }, 300);
                 }
 
-                /* =================================================
-                   SUCCESS ALERT
-                ================================================= */
-
-                Swal.fire({
+                await Swal.fire({
                     icon: 'success',
                     title: 'Order deleted',
                     text: data.message ||
@@ -541,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     button.disabled = false;
                 }
 
-                Swal.fire({
+                await Swal.fire({
                     icon: 'error',
                     title: 'Delete failed',
                     text: error.message ||

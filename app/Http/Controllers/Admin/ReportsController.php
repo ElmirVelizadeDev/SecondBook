@@ -12,24 +12,51 @@ class ReportsController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Reports Dashboard
+    | Get Report Date Range
     |--------------------------------------------------------------------------
+    |
+    | If the user does not select dates, start from the first order in the
+    | database instead of only showing the current month.
+    |
     */
 
-    public function index(Request $request)
+    private function getDateRange(Request $request): array
     {
         $validated = $request->validate([
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
         ]);
 
+        $firstOrderDate = Order::min('created_at');
+
         $startDate = !empty($validated['start_date'])
             ? Carbon::parse($validated['start_date'])->startOfDay()
-            : now()->startOfMonth();
+            : (
+                $firstOrderDate
+                    ? Carbon::parse($firstOrderDate)->startOfDay()
+                    : now()->startOfMonth()
+            );
 
         $endDate = !empty($validated['end_date'])
             ? Carbon::parse($validated['end_date'])->endOfDay()
             : now()->endOfDay();
+
+        return [
+            $startDate,
+            $endDate,
+        ];
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reports Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    public function index(Request $request)
+    {
+        [$startDate, $endDate] = $this->getDateRange($request);
 
 
         /*
@@ -41,7 +68,7 @@ class ReportsController extends Controller
         $ordersQuery = Order::query()
             ->whereBetween('created_at', [
                 $startDate,
-                $endDate
+                $endDate,
             ]);
 
 
@@ -112,8 +139,7 @@ class ReportsController extends Controller
         | Customers
         |--------------------------------------------------------------------------
         |
-        | Burada seçilən tarix aralığında sifariş etmiş
-        | unikal istifadəçilər hesablanır.
+        | Unique customers who placed orders during the selected period.
         |
         */
 
@@ -139,7 +165,7 @@ class ReportsController extends Controller
             ->where('order_status', 'delivered')
             ->whereBetween('created_at', [
                 $startDate,
-                $endDate
+                $endDate,
             ])
             ->whereNotNull('book_id')
             ->groupBy('book_id')
@@ -160,7 +186,7 @@ class ReportsController extends Controller
             ])
             ->whereBetween('created_at', [
                 $startDate,
-                $endDate
+                $endDate,
             ])
             ->latest('created_at')
             ->limit(8)
@@ -194,12 +220,18 @@ class ReportsController extends Controller
             ->where('order_status', 'delivered')
             ->whereBetween('created_at', [
                 $startDate,
-                $endDate
+                $endDate,
             ])
             ->groupByRaw('DATE(created_at)')
             ->orderBy('date')
             ->get();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | View
+        |--------------------------------------------------------------------------
+        */
 
         return view('admin.reports.index', compact(
             'startDate',
@@ -228,18 +260,7 @@ class ReportsController extends Controller
 
     public function sales(Request $request)
     {
-        $validated = $request->validate([
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-        ]);
-
-        $startDate = !empty($validated['start_date'])
-            ? Carbon::parse($validated['start_date'])->startOfDay()
-            : now()->startOfMonth();
-
-        $endDate = !empty($validated['end_date'])
-            ? Carbon::parse($validated['end_date'])->endOfDay()
-            : now()->endOfDay();
+        [$startDate, $endDate] = $this->getDateRange($request);
 
 
         /*
@@ -252,7 +273,7 @@ class ReportsController extends Controller
             ->where('order_status', 'delivered')
             ->whereBetween('created_at', [
                 $startDate,
-                $endDate
+                $endDate,
             ]);
 
 
@@ -269,7 +290,7 @@ class ReportsController extends Controller
             ->where('order_status', 'delivered')
             ->whereBetween('created_at', [
                 $startDate,
-                $endDate
+                $endDate,
             ])
             ->latest('created_at')
             ->paginate(15)
@@ -296,6 +317,12 @@ class ReportsController extends Controller
             : 0;
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | View
+        |--------------------------------------------------------------------------
+        */
+
         return view('admin.reports.sales', compact(
             'startDate',
             'endDate',
@@ -316,18 +343,7 @@ class ReportsController extends Controller
 
     public function books(Request $request)
     {
-        $validated = $request->validate([
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-        ]);
-
-        $startDate = !empty($validated['start_date'])
-            ? Carbon::parse($validated['start_date'])->startOfDay()
-            : now()->startOfMonth();
-
-        $endDate = !empty($validated['end_date'])
-            ? Carbon::parse($validated['end_date'])->endOfDay()
-            : now()->endOfDay();
+        [$startDate, $endDate] = $this->getDateRange($request);
 
 
         /*
@@ -342,6 +358,7 @@ class ReportsController extends Controller
                 'publisher',
                 'seller',
             ])
+
             ->withSum([
                 'orders as sold_count' => function ($query) use (
                     $startDate,
@@ -351,10 +368,11 @@ class ReportsController extends Controller
                         ->where('order_status', 'delivered')
                         ->whereBetween('created_at', [
                             $startDate,
-                            $endDate
+                            $endDate,
                         ]);
                 },
             ], 'quantity')
+
             ->withSum([
                 'orders as revenue' => function ($query) use (
                     $startDate,
@@ -364,10 +382,11 @@ class ReportsController extends Controller
                         ->where('order_status', 'delivered')
                         ->whereBetween('created_at', [
                             $startDate,
-                            $endDate
+                            $endDate,
                         ]);
                 },
             ], 'total_price')
+
             ->latest('created_at')
             ->paginate(15)
             ->withQueryString();
@@ -408,7 +427,7 @@ class ReportsController extends Controller
             ->where('order_status', 'delivered')
             ->whereBetween('created_at', [
                 $startDate,
-                $endDate
+                $endDate,
             ]);
 
         $totalSold = (clone $deliveredOrdersQuery)
@@ -417,6 +436,12 @@ class ReportsController extends Controller
         $totalRevenue = (clone $deliveredOrdersQuery)
             ->sum('total_price');
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | View
+        |--------------------------------------------------------------------------
+        */
 
         return view('admin.reports.books', compact(
             'books',

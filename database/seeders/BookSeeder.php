@@ -6,12 +6,35 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class BookSeeder extends Seeder
 {
     public function run(): void
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Get active sellers dynamically
+        |--------------------------------------------------------------------------
+        |
+        | No hardcoded seller IDs.
+        | Seller IDs are taken directly from the users table.
+        |
+        */
+        $sellers = User::where('role', 'seller')
+            ->where('status', 'active')
+            ->orderBy('id')
+            ->get();
+
+        if ($sellers->isEmpty()) {
+            $this->command->error(
+                'No active sellers found. Books cannot be assigned to sellers.'
+            );
+
+            return;
+        }
+
         $books = [
             ['Pride and Prejudice', '9780141439518', 'Jane Austen', 'Classic Literature', 'Penguin Random House'],
             ['Emma', '9780141439587', 'Jane Austen', 'Romance', 'Penguin Random House'],
@@ -66,7 +89,13 @@ class BookSeeder extends Seeder
         ];
 
         foreach ($books as $index => $data) {
-            [$title, $isbn, $authorName, $categoryName, $publisherName] = $data;
+            [
+                $title,
+                $isbn,
+                $authorName,
+                $categoryName,
+                $publisherName
+            ] = $data;
 
             $author = Author::where('name', $authorName)->first();
             $category = Category::where('name', $categoryName)->first();
@@ -76,8 +105,20 @@ class BookSeeder extends Seeder
                 $this->command->warn(
                     "Skipping {$title}: related data not found."
                 );
+
                 continue;
             }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Dynamically assign seller
+            |--------------------------------------------------------------------------
+            |
+            | Seller is selected from the actual active seller collection.
+            | No seller ID is hardcoded.
+            |
+            */
+            $seller = $sellers[$index % $sellers->count()];
 
             Book::updateOrCreate(
                 ['isbn' => $isbn],
@@ -86,25 +127,34 @@ class BookSeeder extends Seeder
                     'category_id' => $category->id,
                     'author_id' => $author->id,
                     'publisher_id' => $publisher->id,
-                    'seller_id' => null,
+
+                    // Dynamic seller ID
+                    'seller_id' => $seller->id,
+
                     'description' => "{$title} is a seeded book available in the SecondBook marketplace.",
+
                     'cover' => "https://covers.openlibrary.org/b/isbn/{$isbn}-L.jpg",
+
                     'publication_year' => rand(1990, 2024),
                     'pages' => rand(180, 650),
                     'language' => 'English',
                     'price' => rand(8, 45) + 0.99,
                     'stock' => rand(5, 30),
+
                     'condition' => collect([
                         'new',
                         'like_new',
                         'good',
                         'fair',
                     ])->random(),
+
                     'status' => 'approved',
                 ]
             );
         }
 
-        $this->command->info('50 books seeded successfully.');
+        $this->command->info(
+            count($books) . ' books seeded and assigned dynamically to active sellers.'
+        );
     }
 }

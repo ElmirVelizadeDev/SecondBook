@@ -2,344 +2,486 @@
 
 @section('title', 'Book Details')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/books.css') }}">
+@endpush
+
 @section('content')
 
-<div class="dashboard-section">
+@php
+    $status = strtolower($book->status ?? '');
 
-    {{-- Header --}}
-    <div class="dashboard-panel mb-4">
+    $statusClass = match ($status) {
+        'approved' => 'book-status-approved',
+        'pending'  => 'book-status-pending',
+        'rejected' => 'book-status-rejected',
+        default    => 'book-status-default',
+    };
 
-        <div class="panel-header mb-0">
+    $condition = strtolower($book->condition ?? '');
 
-            <div>
-                <h5 class="mb-1">Book Details</h5>
+    $conditionClass = match ($condition) {
+        'new'      => 'condition-new',
+        'like_new' => 'condition-like-new',
+        'good'     => 'condition-good',
+        'fair'     => 'condition-fair',
+        default    => 'condition-default',
+    };
 
-                <p class="text-muted mb-0 small">
-                    Review detailed information for this book
-                </p>
+    $sellerName = $book->seller?->name
+        ?? $book->seller?->username
+        ?? 'Unknown seller';
+
+    $sellerInitial = strtoupper(mb_substr($sellerName, 0, 1));
+
+    $coverUrl = null;
+
+    if (!empty($book->cover)) {
+        $coverUrl = filter_var($book->cover, FILTER_VALIDATE_URL)
+            ? $book->cover
+            : asset('storage/' . $book->cover);
+    }
+@endphp
+
+<div class="dashboard-section books-page">
+
+    {{-- =========================================================
+        HERO
+    ========================================================== --}}
+    <section class="books-hero">
+
+        <div class="books-hero-content">
+
+            <span class="books-hero-badge">
+                <i class="bi bi-book-half"></i>
+                Book details
+            </span>
+
+            <h1>{{ $book->title ?: 'Untitled book' }}</h1>
+
+            <p>
+                Full information about this listing: inventory, pricing,
+                publishing details and the seller behind it.
+            </p>
+
+        </div>
+
+        <div class="books-hero-mark" aria-hidden="true">
+            <i class="bi bi-book"></i>
+        </div>
+
+    </section>
+
+
+    {{-- =========================================================
+        STATISTICS
+    ========================================================== --}}
+    <section class="books-stats">
+
+        <div class="book-stat-card stat-blue">
+
+            <div class="book-stat-content">
+                <span>Price</span>
+                <strong>${{ number_format((float) ($book->price ?? 0), 2) }}</strong>
             </div>
 
-            <div class="d-flex gap-2">
+            <div class="book-stat-icon">
+                <i class="bi bi-tag"></i>
+            </div>
 
-                <a
-                    href="{{ route('admin.books.edit', $book->id) }}"
-                    class="btn btn-warning"
-                >
-                    <i class="bi bi-pencil me-2"></i>
-                    Edit
-                </a>
+        </div>
+
+
+        <div class="book-stat-card stat-green">
+
+            <div class="book-stat-content">
+                <span>In stock</span>
+                <strong>{{ $book->stock ?? 0 }}</strong>
+            </div>
+
+            <div class="book-stat-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+
+        </div>
+
+
+        <div class="book-stat-card stat-orange">
+
+            <div class="book-stat-content">
+                <span>Pages</span>
+                <strong>{{ $book->pages ?: '—' }}</strong>
+            </div>
+
+            <div class="book-stat-icon">
+                <i class="bi bi-file-earmark-text"></i>
+            </div>
+
+        </div>
+
+
+        <div class="book-stat-card stat-purple">
+
+            <div class="book-stat-content">
+                <span>Published</span>
+                <strong>{{ $book->publication_year ?: '—' }}</strong>
+            </div>
+
+            <div class="book-stat-icon">
+                <i class="bi bi-calendar3"></i>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {{-- =========================================================
+        MAIN PANEL
+    ========================================================== --}}
+    <section class="dashboard-panel books-panel">
+
+        {{-- =====================================================
+            PANEL HEADER
+        ====================================================== --}}
+        <div class="books-panel-header">
+
+            <div class="books-heading-content">
+
+                <span class="eyebrow">
+                    Book information
+                </span>
+
+                <h5>
+                    {{ $book->title ?: 'Untitled book' }}
+                </h5>
+
+                <p>
+                    Everything SecondBook knows about this listing.
+                </p>
+
+            </div>
+
+
+            <div class="books-header-action book-actions">
 
                 <a
                     href="{{ route('admin.books.index') }}"
-                    class="btn btn-light border"
+                    class="book-clear-filter"
                 >
-                    <i class="bi bi-arrow-left me-2"></i>
-                    Back to Books
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Back to books</span>
+                </a>
+
+                <a
+                    href="{{ route('admin.books.edit', $book->id) }}"
+                    class="books-add-btn"
+                >
+                    <i class="bi bi-pencil"></i>
+                    <span>Edit Book</span>
                 </a>
 
             </div>
 
         </div>
 
-    </div>
+
+        {{-- =====================================================
+            OVERVIEW TABLE
+        ====================================================== --}}
+        <div class="books-table-wrap">
+
+            <table class="books-table">
+
+                <thead>
+
+                    <tr>
+                        <th class="books-col-book">Book</th>
+                        <th class="books-col-category">Category</th>
+                        <th class="books-col-author">Author</th>
+                        <th class="books-col-seller">Seller</th>
+                        <th class="books-col-price">Price</th>
+                        <th class="books-col-condition">Condition</th>
+                        <th class="books-col-status">Status</th>
+                    </tr>
+
+                </thead>
 
 
-    {{-- Book Content --}}
-    <div class="row g-4">
+                <tbody>
 
-        {{-- Cover --}}
-        <div class="col-12 col-lg-4">
+                    <tr>
 
-            <div class="dashboard-panel h-100">
+                        {{-- Book --}}
+                        <td>
 
-                <h6 class="mb-3">
-                    Cover
-                </h6>
+                            <div class="book-item-cell">
 
-                @if(!empty($book->cover))
+                                @if($coverUrl)
 
-                    @php
-                        $coverUrl = filter_var(
-                            $book->cover,
-                            FILTER_VALIDATE_URL
-                        )
-                            ? $book->cover
-                            : asset('storage/' . $book->cover);
-                    @endphp
+                                    <img
+                                        src="{{ $coverUrl }}"
+                                        alt="{{ $book->title }}"
+                                        class="book-cover-image"
+                                        loading="lazy"
+                                    >
 
-                    <img
-                        src="{{ $coverUrl }}"
-                        alt="{{ $book->title }}"
-                        class="img-fluid rounded border w-100"
-                        style="max-height: 420px; object-fit: cover;"
-                        loading="lazy"
-                    >
+                                @else
 
-                @else
+                                    <div class="book-cover-placeholder">
+                                        <i class="bi bi-book"></i>
+                                    </div>
 
-                    <div
-                        class="chart-placeholder"
-                        style="height: 260px;"
-                    >
-                        <i class="bi bi-book"></i>
+                                @endif
 
-                        <h6>
-                            No cover uploaded
-                        </h6>
-                    </div>
+                                <div class="book-item-info">
 
-                @endif
+                                    <strong title="{{ $book->title }}">
+                                        {{ $book->title ?: 'Untitled book' }}
+                                    </strong>
+
+                                    <small>
+                                        {{ $book->isbn ? 'ISBN: ' . $book->isbn : 'No ISBN' }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        {{-- Category --}}
+                        <td>
+
+                            <div class="book-simple-info">
+                                <strong>{{ $book->category?->name ?? '—' }}</strong>
+                            </div>
+
+                        </td>
+
+
+                        {{-- Author --}}
+                        <td>
+
+                            <div class="book-simple-info">
+                                <strong title="{{ $book->author?->name ?? '' }}">
+                                    {{ $book->author?->name ?? '—' }}
+                                </strong>
+                            </div>
+
+                        </td>
+
+
+                        {{-- Seller --}}
+                        <td>
+
+                            <div class="book-seller-cell">
+
+                                <div class="book-seller-avatar">
+                                    {{ $sellerInitial }}
+                                </div>
+
+                                <div class="book-seller-info">
+
+                                    <strong title="{{ $sellerName }}">
+                                        {{ $sellerName }}
+                                    </strong>
+
+                                    <small>Seller</small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        {{-- Price --}}
+                        <td>
+
+                            <span class="book-price">
+                                ${{ number_format((float) ($book->price ?? 0), 2) }}
+                            </span>
+
+                        </td>
+
+
+                        {{-- Condition --}}
+                        <td>
+
+                            <span class="book-condition-pill {{ $conditionClass }}">
+
+                                <i class="bi bi-circle-fill"></i>
+
+                                {{ $book->condition
+                                    ? str_replace('_', ' ', ucfirst($book->condition))
+                                    : 'Unknown'
+                                }}
+
+                            </span>
+
+                        </td>
+
+
+                        {{-- Status --}}
+                        <td>
+
+                            <span class="book-status-pill {{ $statusClass }}">
+
+                                <i class="bi bi-circle-fill"></i>
+
+                                {{ $book->status ? ucfirst($book->status) : 'Unknown' }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {{-- =====================================================
+            PUBLISHING DETAILS
+        ====================================================== --}}
+        <div class="books-panel-header">
+
+            <div class="books-heading-content">
+
+                <span class="eyebrow">
+                    Publishing
+                </span>
+
+                <h5>
+                    Publishing details
+                </h5>
 
             </div>
 
         </div>
 
 
-        {{-- Information --}}
-        <div class="col-12 col-lg-8">
+        <div class="books-table-wrap">
 
-            <div class="dashboard-panel h-100">
+            <table class="books-table">
 
-                <h6 class="mb-3">
-                    Information
-                </h6>
+                <thead>
 
-                <div class="row g-3">
+                    <tr>
+                        <th>Book ID</th>
+                        <th>Publisher</th>
+                        <th>Language</th>
+                        <th>ISBN</th>
+                        <th>Added</th>
+                    </tr>
 
-                    {{-- Title --}}
-                    <div class="col-12 col-md-6">
+                </thead>
 
-                        <small class="text-muted d-block">
-                            Title
-                        </small>
 
-                        <strong>
-                            {{ $book->title }}
-                        </strong>
+                <tbody>
 
-                    </div>
+                    <tr>
 
+                        <td>
+                            <span class="book-id">#{{ $book->id }}</span>
+                        </td>
 
-                    {{-- ISBN --}}
-                    <div class="col-12 col-md-6">
+                        <td>
+                            <div class="book-simple-info">
+                                <strong>{{ $book->publisher?->name ?? '—' }}</strong>
+                            </div>
+                        </td>
 
-                        <small class="text-muted d-block">
-                            ISBN
-                        </small>
+                        <td>
+                            <div class="book-simple-info">
+                                <strong>{{ $book->language ?: '—' }}</strong>
+                            </div>
+                        </td>
 
-                        <strong>
-                            {{ $book->isbn ?: '-' }}
-                        </strong>
+                        <td>
+                            <div class="book-simple-info">
+                                <strong>{{ $book->isbn ?: '—' }}</strong>
+                            </div>
+                        </td>
 
-                    </div>
+                        <td>
+                            <div class="book-simple-info">
+                                <strong>{{ $book->created_at?->format('d M Y') ?? '—' }}</strong>
+                            </div>
+                        </td>
 
+                    </tr>
 
-                    {{-- Category --}}
-                    <div class="col-12 col-md-6">
+                </tbody>
 
-                        <small class="text-muted d-block">
-                            Category
-                        </small>
+            </table>
 
-                        <strong>
-                            {{ $book->category?->name ?? '-' }}
-                        </strong>
+        </div>
 
-                    </div>
 
+        {{-- =====================================================
+            DESCRIPTION
+        ====================================================== --}}
+        <div class="books-panel-header">
 
-                    {{-- Author --}}
-                    <div class="col-12 col-md-6">
+            <div class="books-heading-content">
 
-                        <small class="text-muted d-block">
-                            Author
-                        </small>
+                <span class="eyebrow">
+                    Description
+                </span>
 
-                        <strong>
-                            {{ $book->author?->name ?? '-' }}
-                        </strong>
+                <h5>
+                    About this book
+                </h5>
 
-                    </div>
-
-
-                    {{-- Publisher --}}
-                    <div class="col-12 col-md-6">
-
-                        <small class="text-muted d-block">
-                            Publisher
-                        </small>
-
-                        <strong>
-                            {{ $book->publisher?->name ?? '-' }}
-                        </strong>
-
-                    </div>
-
-
-                    {{-- Seller --}}
-                    <div class="col-12 col-md-6">
-
-                        <small class="text-muted d-block">
-                            Seller
-                        </small>
-
-                        <strong>
-                            {{ $book->seller?->name ?? '-' }}
-                        </strong>
-
-                    </div>
-
-
-                    {{-- Price --}}
-                    <div class="col-12 col-md-4">
-
-                        <small class="text-muted d-block">
-                            Price
-                        </small>
-
-                        <strong>
-                            ${{ number_format((float) ($book->price ?? 0), 2) }}
-                        </strong>
-
-                    </div>
-
-
-                    {{-- Stock --}}
-                    <div class="col-12 col-md-4">
-
-                        <small class="text-muted d-block">
-                            Stock
-                        </small>
-
-                        <strong>
-                            {{ $book->stock }}
-                        </strong>
-
-                    </div>
-
-
-                    {{-- Condition --}}
-                    <div class="col-12 col-md-4">
-
-                        <small class="text-muted d-block">
-                            Condition
-                        </small>
-
-                        <span class="badge bg-primary">
-
-                            {{
-                                $book->condition
-                                    ? str_replace(
-                                        '_',
-                                        ' ',
-                                        ucfirst($book->condition)
-                                    )
-                                    : '-'
-                            }}
-
-                        </span>
-
-                    </div>
-
-
-                    {{-- Status --}}
-                    <div class="col-12 col-md-4">
-
-                        <small class="text-muted d-block">
-                            Status
-                        </small>
-
-                        @if($book->status === 'approved')
-
-                            <span class="badge bg-success">
-                                Approved
-                            </span>
-
-                        @elseif($book->status === 'pending')
-
-                            <span class="badge bg-warning">
-                                Pending
-                            </span>
-
-                        @elseif($book->status === 'rejected')
-
-                            <span class="badge bg-danger">
-                                Rejected
-                            </span>
-
-                        @else
-
-                            <span class="badge bg-secondary">
-                                Unknown
-                            </span>
-
-                        @endif
-
-                    </div>
-
-
-                    {{-- Language --}}
-                    <div class="col-12 col-md-4">
-
-                        <small class="text-muted d-block">
-                            Language
-                        </small>
-
-                        <strong>
-                            {{ $book->language ?: '-' }}
-                        </strong>
-
-                    </div>
-
-
-                    {{-- Publication Year --}}
-                    <div class="col-12 col-md-4">
-
-                        <small class="text-muted d-block">
-                            Publication Year
-                        </small>
-
-                        <strong>
-                            {{ $book->publication_year ?: '-' }}
-                        </strong>
-
-                    </div>
-
-
-                    {{-- Pages --}}
-                    <div class="col-12 col-md-4">
-
-                        <small class="text-muted d-block">
-                            Pages
-                        </small>
-
-                        <strong>
-                            {{ $book->pages ?: '-' }}
-                        </strong>
-
-                    </div>
-
-
-                    {{-- Description --}}
-                    <div class="col-12">
-
-                        <small class="text-muted d-block">
-                            Description
-                        </small>
-
-                        <p class="mb-0">
-                            {{ $book->description ?: '-' }}
-                        </p>
-
-                    </div>
-
-                </div>
+                <p>
+                    {{ $book->description ?: 'No description has been added for this book.' }}
+                </p>
 
             </div>
 
         </div>
 
-    </div>
+
+        {{-- =====================================================
+            FOOTER
+        ====================================================== --}}
+        <div class="books-pagination">
+
+            <div class="books-pagination-info">
+                Book <strong>#{{ $book->id }}</strong>
+            </div>
+
+            <nav class="books-pagination-pages" aria-label="Book actions">
+
+                <a
+                    href="{{ route('admin.books.index') }}"
+                    class="books-pager-btn"
+                    title="Back to books"
+                    aria-label="Back to books"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+
+                <a
+                    href="{{ route('admin.books.edit', $book->id) }}"
+                    class="books-pager-btn active"
+                    title="Edit book"
+                    aria-label="Edit book"
+                >
+                    <i class="bi bi-pencil"></i>
+                </a>
+
+            </nav>
+
+        </div>
+
+    </section>
 
 </div>
 

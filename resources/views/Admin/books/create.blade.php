@@ -2,877 +2,786 @@
 
 @section('title', 'Add Book')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/books.css') }}">
+@endpush
+
 @section('content')
 
-<div class="dashboard-section">
+<div class="dashboard-section books-page">
 
-    {{-- Header --}}
-    <div class="dashboard-panel mb-4">
+    {{-- =========================================================
+        HERO
+    ========================================================== --}}
+    <section class="books-hero books-hero-compact">
 
-        <div class="panel-header mb-0">
+        <div class="books-hero-content">
 
-            <div>
-                <h5 class="mb-1">Add Book</h5>
+            <span class="books-hero-badge">
+                <i class="bi bi-plus-circle"></i>
+                New listing
+            </span>
 
-                <p class="text-muted mb-0 small">
-                    Create a new book listing
-                </p>
-            </div>
+            <h1>Add a new book</h1>
 
-            <a
-                href="{{ route('admin.books.index') }}"
-                class="btn btn-light border"
-            >
-                <i class="bi bi-arrow-left me-2"></i>
-                Back to Books
-            </a>
+            <p>
+                Fill in the book details, set the price and stock,
+                and upload a cover. New books are saved as pending by default.
+            </p>
 
         </div>
 
-    </div>
+        <div class="books-hero-mark" aria-hidden="true">
+            <i class="bi bi-book"></i>
+        </div>
+
+    </section>
 
 
-    {{-- Form --}}
-    <div class="dashboard-panel">
+    <form
+        action="{{ route('admin.books.store') }}"
+        method="POST"
+        enctype="multipart/form-data"
+        novalidate
+    >
+
+        @csrf
 
         @if ($errors->any())
 
-            <div class="alert alert-danger mb-4">
+            <div class="book-form-alert" role="alert">
 
-                <ul class="mb-0">
+                <i class="bi bi-exclamation-triangle"></i>
 
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
+                <div>
+                    <strong>Please fix the following:</strong>
 
-                </ul>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
 
             </div>
 
         @endif
 
 
-        <form
-            action="{{ route('admin.books.store') }}"
-            method="POST"
-            enctype="multipart/form-data"
-        >
+        <div class="book-form-layout">
 
-            @csrf
+            {{-- =====================================================
+                LEFT COLUMN
+            ====================================================== --}}
+            <div class="book-form-main">
 
+                {{-- ---------- Basic information ---------- --}}
+                <section class="dashboard-panel books-panel book-form-panel">
 
-            <div class="row g-4">
+                    <div class="books-panel-header">
 
-                {{-- LEFT SIDE --}}
-                <div class="col-12 col-lg-8">
-
-                    {{-- Title --}}
-                    <div class="mb-3">
-
-                        <label class="form-label fw-semibold">
-                            Book Title <span class="text-danger">*</span>
-                        </label>
-
-                        <input
-                            type="text"
-                            name="title"
-                            class="form-control @error('title') is-invalid @enderror"
-                            value="{{ old('title') }}"
-                            placeholder="Enter book title"
-                            required
-                        >
-
-                        @error('title')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                    </div>
-
-
-                    {{-- ISBN --}}
-                    <div class="mb-3">
-
-                        <label class="form-label fw-semibold">
-                            ISBN
-                        </label>
-
-                        <input
-                            type="text"
-                            name="isbn"
-                            class="form-control @error('isbn') is-invalid @enderror"
-                            value="{{ old('isbn') }}"
-                            placeholder="e.g. 978-3-16-148410-0"
-                        >
-
-                        @error('isbn')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                    </div>
-
-
-                    <div class="row g-3">
-
-                        {{-- Author --}}
-                        <div class="col-md-6">
-
-                            <label class="form-label fw-semibold">
-                                Author
-                            </label>
-
-                            <select
-                                name="author_id"
-                                class="form-select @error('author_id') is-invalid @enderror"
-                            >
-
-                                <option value="">
-                                    Select author
-                                </option>
-
-                                @foreach($authors as $author)
-
-                                    <option
-                                        value="{{ $author->id }}"
-                                        {{ old('author_id') == $author->id ? 'selected' : '' }}
-                                    >
-                                        {{ $author->name }}
-                                    </option>
-
-                                @endforeach
-
-                            </select>
-
-                            @error('author_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
+                        <div class="books-heading-content">
+                            <span class="eyebrow">Step 1</span>
+                            <h5>Basic information</h5>
+                            <p>Title, ISBN and who wrote and published it.</p>
                         </div>
-
-
-                        {{-- Category --}}
-                        <div class="col-md-6">
-
-                            <label class="form-label fw-semibold">
-                                Category
-                            </label>
-
-                            <select
-                                name="category_id"
-                                class="form-select @error('category_id') is-invalid @enderror"
-                            >
-
-                                <option value="">
-                                    Select category
-                                </option>
-
-                                @foreach($categories as $category)
-
-                                    <option
-                                        value="{{ $category->id }}"
-                                        {{ old('category_id') == $category->id ? 'selected' : '' }}
-                                    >
-                                        {{ $category->name }}
-                                    </option>
-
-                                @endforeach
-
-                            </select>
-
-                            @error('category_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                        </div>
-
-
-                        {{-- Publisher --}}
-                        <div class="col-md-6">
-
-                            <label class="form-label fw-semibold">
-                                Publisher
-                            </label>
-
-                            <select
-                                name="publisher_id"
-                                class="form-select @error('publisher_id') is-invalid @enderror"
-                            >
-
-                                <option value="">
-                                    Select publisher
-                                </option>
-
-                                @foreach($publishers as $publisher)
-
-                                    <option
-                                        value="{{ $publisher->id }}"
-                                        {{ old('publisher_id') == $publisher->id ? 'selected' : '' }}
-                                    >
-                                        {{ $publisher->name }}
-                                    </option>
-
-                                @endforeach
-
-                            </select>
-
-                            @error('publisher_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                        </div>
-
-
-                        {{-- Condition --}}
-                        <div class="col-md-6">
-
-                            <label class="form-label fw-semibold">
-                                Condition
-                            </label>
-
-                            <select
-                                name="condition"
-                                class="form-select"
-                            >
-
-                                <option
-                                    value="new"
-                                    {{ old('condition') == 'new' ? 'selected' : '' }}
-                                >
-                                    New
-                                </option>
-
-                                <option
-                                    value="like_new"
-                                    {{ old('condition', 'like_new') == 'like_new' ? 'selected' : '' }}
-                                >
-                                    Like New
-                                </option>
-
-                                <option
-                                    value="good"
-                                    {{ old('condition') == 'good' ? 'selected' : '' }}
-                                >
-                                    Good
-                                </option>
-
-                                <option
-                                    value="fair"
-                                    {{ old('condition') == 'fair' ? 'selected' : '' }}
-                                >
-                                    Fair
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        {{-- Price --}}
-                        <div class="col-md-4">
-
-                            <label class="form-label fw-semibold">
-                                Price ($)
-                            </label>
-
-                            <input
-                                type="number"
-                                name="price"
-                                class="form-control @error('price') is-invalid @enderror"
-                                step="0.01"
-                                min="0"
-                                value="{{ old('price', '0.00') }}"
-                                placeholder="0.00"
-                            >
-
-                            @error('price')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                        </div>
-
-
-                        {{-- Stock --}}
-                        <div class="col-md-4">
-
-                            <label class="form-label fw-semibold">
-                                Stock
-                            </label>
-
-                            <input
-                                type="number"
-                                name="stock"
-                                class="form-control @error('stock') is-invalid @enderror"
-                                min="0"
-                                value="{{ old('stock', 1) }}"
-                                placeholder="1"
-                            >
-
-                            @error('stock')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                        </div>
-
-
-                        {{-- Language --}}
-                        <div class="col-md-4">
-
-                            <label class="form-label fw-semibold">
-                                Language
-                            </label>
-
-                            <input
-                                type="text"
-                                name="language"
-                                class="form-control"
-                                value="{{ old('language', 'English') }}"
-                                placeholder="English"
-                            >
-
-                        </div>
-
-
-                        {{-- =====================================================
-                             DISCOUNT
-                        ====================================================== --}}
-                        <div class="col-12">
-
-                            <div class="border rounded-4 p-3">
-
-                                <div class="mb-3">
-
-                                    <label class="form-label fw-semibold mb-1">
-                                        Discount
-                                    </label>
-
-                                    <p class="text-muted small mb-0">
-                                        Add a real discount to make this book appear in Special Offers.
-                                    </p>
-
-                                </div>
-
-
-                                <div class="row g-3">
-
-                                    {{-- Discount Type --}}
-                                    <div class="col-md-4">
-
-                                        <label class="form-label fw-semibold">
-                                            Discount Type
-                                        </label>
-
-                                        <select
-                                            name="discount_type"
-                                            id="discountType"
-                                            class="form-select @error('discount_type') is-invalid @enderror"
-                                        >
-
-                                            <option
-                                                value="none"
-                                                {{ old('discount_type', 'none') === 'none' ? 'selected' : '' }}
-                                            >
-                                                No Discount
-                                            </option>
-
-                                            <option
-                                                value="percentage"
-                                                {{ old('discount_type') === 'percentage' ? 'selected' : '' }}
-                                            >
-                                                Percentage (%)
-                                            </option>
-
-                                            <option
-                                                value="fixed"
-                                                {{ old('discount_type') === 'fixed' ? 'selected' : '' }}
-                                            >
-                                                Fixed Amount ($)
-                                            </option>
-
-                                        </select>
-
-                                        @error('discount_type')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                    </div>
-
-
-                                    {{-- Discount Value --}}
-                                    <div class="col-md-4">
-
-                                        <label class="form-label fw-semibold">
-                                            Discount Value
-                                        </label>
-
-                                        <input
-                                            type="number"
-                                            name="discount_value"
-                                            id="discountValue"
-                                            class="form-control @error('discount_value') is-invalid @enderror"
-                                            step="0.01"
-                                            min="0"
-                                            value="{{ old('discount_value', 0) }}"
-                                            placeholder="0"
-                                        >
-
-                                        @error('discount_value')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                    </div>
-
-
-                                    {{-- Start Date --}}
-                                    <div class="col-md-4">
-
-                                        <label class="form-label fw-semibold">
-                                            Start Date
-                                        </label>
-
-                                        <input
-                                            type="datetime-local"
-                                            name="discount_start_at"
-                                            class="form-control @error('discount_start_at') is-invalid @enderror"
-                                            value="{{ old('discount_start_at') }}"
-                                        >
-
-                                        @error('discount_start_at')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                    </div>
-
-
-                                    {{-- End Date --}}
-                                    <div class="col-md-4">
-
-                                        <label class="form-label fw-semibold">
-                                            End Date
-                                        </label>
-
-                                        <input
-                                            type="datetime-local"
-                                            name="discount_end_at"
-                                            class="form-control @error('discount_end_at') is-invalid @enderror"
-                                            value="{{ old('discount_end_at') }}"
-                                        >
-
-                                        @error('discount_end_at')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                    </div>
-
-                                </div>
-
-
-                                <small class="text-muted d-block mt-3">
-                                    Leave Discount Type as "No Discount" if this book should not appear in Special Offers.
-                                </small>
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- Publication Year --}}
-                        <div class="col-md-6">
-
-                            <label class="form-label fw-semibold">
-                                Publication Year
-                            </label>
-
-                            <input
-                                type="number"
-                                name="publication_year"
-                                class="form-control @error('publication_year') is-invalid @enderror"
-                                min="1000"
-                                max="{{ date('Y') }}"
-                                value="{{ old('publication_year') }}"
-                                placeholder="{{ date('Y') }}"
-                            >
-
-                            @error('publication_year')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                        </div>
-
-
-                        {{-- Pages --}}
-                        <div class="col-md-6">
-
-                            <label class="form-label fw-semibold">
-                                Pages
-                            </label>
-
-                            <input
-                                type="number"
-                                name="pages"
-                                class="form-control @error('pages') is-invalid @enderror"
-                                min="1"
-                                value="{{ old('pages') }}"
-                                placeholder="Number of pages"
-                            >
-
-                            @error('pages')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                        </div>
-
-
-                        {{-- Seller --}}
-                        <div class="col-12">
-
-                            <label class="form-label fw-semibold">
-                                Seller
-                            </label>
-
-                            <select
-                                name="seller_id"
-                                class="form-select @error('seller_id') is-invalid @enderror"
-                            >
-
-                                <option value="">
-                                    Select seller
-                                </option>
-
-                                @foreach($sellers as $seller)
-
-                                    <option
-                                        value="{{ $seller->id }}"
-                                        {{ old('seller_id') == $seller->id ? 'selected' : '' }}
-                                    >
-                                        {{ $seller->name }}
-                                    </option>
-
-                                @endforeach
-
-                            </select>
-
-                            @error('seller_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- Description --}}
-                    <div class="mt-3">
-
-                        <label class="form-label fw-semibold">
-                            Description
-                        </label>
-
-                        <textarea
-                            name="description"
-                            class="form-control"
-                            rows="5"
-                            placeholder="Write a short description about the book..."
-                        >{{ old('description') }}</textarea>
-
-                    </div>
-
-                </div>
-
-
-                {{-- RIGHT SIDE --}}
-                <div class="col-12 col-lg-4">
-
-                    {{-- Cover --}}
-                    <div class="mb-3">
-
-                        <label class="form-label fw-semibold">
-                            Cover Image
-                        </label>
-
-
-                        {{-- Preview --}}
-                        <div
-                            class="cover-preview mb-3"
-                            id="coverPreview"
-                        >
-
-                            <div class="cover-preview-placeholder">
-
-                                <i class="bi bi-book"></i>
-
-                                <span>
-                                    No cover selected
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <input
-                            type="file"
-                            name="cover"
-                            id="coverInput"
-                            class="form-control @error('cover') is-invalid @enderror"
-                            accept="image/*"
-                        >
-
-                        <small class="text-muted d-block mt-2">
-                            Upload a book cover image.
-                        </small>
-
-                        @error('cover')
-                            <div class="invalid-feedback d-block">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                    </div>
-
-
-                    {{-- Status --}}
-                    <div class="mb-3">
-
-                        <label class="form-label fw-semibold">
-                            Status
-                        </label>
-
-                        <select
-                            name="status"
-                            class="form-select"
-                        >
-
-                            <option
-                                value="pending"
-                                {{ old('status', 'pending') == 'pending' ? 'selected' : '' }}
-                            >
-                                Pending
-                            </option>
-
-                            <option
-                                value="approved"
-                                {{ old('status') == 'approved' ? 'selected' : '' }}
-                            >
-                                Approved
-                            </option>
-
-                            <option
-                                value="rejected"
-                                {{ old('status') == 'rejected' ? 'selected' : '' }}
-                            >
-                                Rejected
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    {{-- Actions --}}
-                    <div class="d-grid gap-2 mt-4">
-
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                        >
-                            <i class="bi bi-check-circle me-2"></i>
-                            Save Book
-                        </button>
 
                         <a
                             href="{{ route('admin.books.index') }}"
-                            class="btn btn-light border"
+                            class="book-clear-filter"
                         >
-                            Cancel
+                            <i class="bi bi-arrow-left"></i>
+                            <span>Back to books</span>
                         </a>
 
                     </div>
 
-                </div>
+                    <div class="book-form-body">
+
+                        <div class="book-form-grid">
+
+                            {{-- Title --}}
+                            <div class="book-field book-field-full">
+
+                                <label for="book-title">
+                                    Book title <span class="book-required">*</span>
+                                </label>
+
+                                <input
+                                    id="book-title"
+                                    type="text"
+                                    name="title"
+                                    class="book-input @error('title') is-invalid @enderror"
+                                    value="{{ old('title') }}"
+                                    placeholder="Enter book title"
+                                    required
+                                >
+
+                                @error('title')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- ISBN --}}
+                            <div class="book-field">
+
+                                <label for="book-isbn">ISBN</label>
+
+                                <input
+                                    id="book-isbn"
+                                    type="text"
+                                    name="isbn"
+                                    class="book-input @error('isbn') is-invalid @enderror"
+                                    value="{{ old('isbn') }}"
+                                    placeholder="978-3-16-148410-0"
+                                >
+
+                                @error('isbn')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Language --}}
+                            <div class="book-field">
+
+                                <label for="book-language">Language</label>
+
+                                <input
+                                    id="book-language"
+                                    type="text"
+                                    name="language"
+                                    class="book-input"
+                                    value="{{ old('language', 'English') }}"
+                                    placeholder="English"
+                                >
+
+                            </div>
+
+
+                            {{-- Author --}}
+                            <div class="book-field">
+
+                                <label for="book-author">Author</label>
+
+                                <select
+                                    id="book-author"
+                                    name="author_id"
+                                    class="book-input book-select @error('author_id') is-invalid @enderror"
+                                >
+                                    <option value="">Select author</option>
+
+                                    @foreach($authors as $author)
+                                        <option
+                                            value="{{ $author->id }}"
+                                            @selected(old('author_id') == $author->id)
+                                        >
+                                            {{ $author->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('author_id')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Category --}}
+                            <div class="book-field">
+
+                                <label for="book-category">Category</label>
+
+                                <select
+                                    id="book-category"
+                                    name="category_id"
+                                    class="book-input book-select @error('category_id') is-invalid @enderror"
+                                >
+                                    <option value="">Select category</option>
+
+                                    @foreach($categories as $category)
+                                        <option
+                                            value="{{ $category->id }}"
+                                            @selected(old('category_id') == $category->id)
+                                        >
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('category_id')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Publisher --}}
+                            <div class="book-field">
+
+                                <label for="book-publisher">Publisher</label>
+
+                                <select
+                                    id="book-publisher"
+                                    name="publisher_id"
+                                    class="book-input book-select @error('publisher_id') is-invalid @enderror"
+                                >
+                                    <option value="">Select publisher</option>
+
+                                    @foreach($publishers as $publisher)
+                                        <option
+                                            value="{{ $publisher->id }}"
+                                            @selected(old('publisher_id') == $publisher->id)
+                                        >
+                                            {{ $publisher->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('publisher_id')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Seller --}}
+                            <div class="book-field">
+
+                                <label for="book-seller">Seller</label>
+
+                                <select
+                                    id="book-seller"
+                                    name="seller_id"
+                                    class="book-input book-select @error('seller_id') is-invalid @enderror"
+                                >
+                                    <option value="">Select seller</option>
+
+                                    @foreach($sellers as $seller)
+                                        <option
+                                            value="{{ $seller->id }}"
+                                            @selected(old('seller_id') == $seller->id)
+                                        >
+                                            {{ $seller->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('seller_id')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                {{-- ---------- Details, price, stock ---------- --}}
+                <section class="dashboard-panel books-panel book-form-panel">
+
+                    <div class="books-panel-header">
+
+                        <div class="books-heading-content">
+                            <span class="eyebrow">Step 2</span>
+                            <h5>Condition, price and stock</h5>
+                            <p>How the book looks, what it costs and how many you have.</p>
+                        </div>
+
+                    </div>
+
+                    <div class="book-form-body">
+
+                        <div class="book-form-grid book-form-grid-3">
+
+                            {{-- Condition --}}
+                            <div class="book-field">
+
+                                <label for="book-condition-field">Condition</label>
+
+                                <select
+                                    id="book-condition-field"
+                                    name="condition"
+                                    class="book-input book-select"
+                                >
+                                    @foreach([
+                                        'new' => 'New',
+                                        'like_new' => 'Like New',
+                                        'good' => 'Good',
+                                        'fair' => 'Fair',
+                                    ] as $value => $label)
+                                        <option
+                                            value="{{ $value }}"
+                                            @selected(old('condition', 'like_new') === $value)
+                                        >
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+
+
+                            {{-- Price --}}
+                            <div class="book-field">
+
+                                <label for="book-price-field">Price ($)</label>
+
+                                <input
+                                    id="book-price-field"
+                                    type="number"
+                                    name="price"
+                                    class="book-input @error('price') is-invalid @enderror"
+                                    step="0.01"
+                                    min="0"
+                                    value="{{ old('price', '0.00') }}"
+                                    placeholder="0.00"
+                                >
+
+                                @error('price')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Stock --}}
+                            <div class="book-field">
+
+                                <label for="book-stock">Stock</label>
+
+                                <input
+                                    id="book-stock"
+                                    type="number"
+                                    name="stock"
+                                    class="book-input @error('stock') is-invalid @enderror"
+                                    min="0"
+                                    value="{{ old('stock', 1) }}"
+                                    placeholder="1"
+                                >
+
+                                @error('stock')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Publication year --}}
+                            <div class="book-field">
+
+                                <label for="book-year">Publication year</label>
+
+                                <input
+                                    id="book-year"
+                                    type="number"
+                                    name="publication_year"
+                                    class="book-input @error('publication_year') is-invalid @enderror"
+                                    min="1000"
+                                    max="{{ date('Y') }}"
+                                    value="{{ old('publication_year') }}"
+                                    placeholder="{{ date('Y') }}"
+                                >
+
+                                @error('publication_year')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Pages --}}
+                            <div class="book-field">
+
+                                <label for="book-pages">Pages</label>
+
+                                <input
+                                    id="book-pages"
+                                    type="number"
+                                    name="pages"
+                                    class="book-input @error('pages') is-invalid @enderror"
+                                    min="1"
+                                    value="{{ old('pages') }}"
+                                    placeholder="Number of pages"
+                                >
+
+                                @error('pages')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                {{-- ---------- Discount ---------- --}}
+                <section class="dashboard-panel books-panel book-form-panel">
+
+                    <div class="books-panel-header">
+
+                        <div class="books-heading-content">
+                            <span class="eyebrow">Step 3</span>
+                            <h5>Discount</h5>
+                            <p>
+                                Add a real discount to show this book in Special Offers.
+                                Leave it as “No discount” otherwise.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="book-form-body">
+
+                        <div class="book-form-grid">
+
+                            {{-- Type --}}
+                            <div class="book-field">
+
+                                <label for="discountType">Discount type</label>
+
+                                <select
+                                    id="discountType"
+                                    name="discount_type"
+                                    class="book-input book-select @error('discount_type') is-invalid @enderror"
+                                >
+                                    @foreach([
+                                        'none' => 'No discount',
+                                        'percentage' => 'Percentage (%)',
+                                        'fixed' => 'Fixed amount ($)',
+                                    ] as $value => $label)
+                                        <option
+                                            value="{{ $value }}"
+                                            @selected(old('discount_type', 'none') === $value)
+                                        >
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('discount_type')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Value --}}
+                            <div class="book-field">
+
+                                <label for="discountValue">Discount value</label>
+
+                                <input
+                                    id="discountValue"
+                                    type="number"
+                                    name="discount_value"
+                                    class="book-input @error('discount_value') is-invalid @enderror"
+                                    step="0.01"
+                                    min="0"
+                                    value="{{ old('discount_value', 0) }}"
+                                    placeholder="0"
+                                >
+
+                                @error('discount_value')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Start --}}
+                            <div class="book-field">
+
+                                <label for="discountStart">Start date</label>
+
+                                <input
+                                    id="discountStart"
+                                    type="datetime-local"
+                                    name="discount_start_at"
+                                    class="book-input @error('discount_start_at') is-invalid @enderror"
+                                    value="{{ old('discount_start_at') }}"
+                                >
+
+                                @error('discount_start_at')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- End --}}
+                            <div class="book-field">
+
+                                <label for="discountEnd">End date</label>
+
+                                <input
+                                    id="discountEnd"
+                                    type="datetime-local"
+                                    name="discount_end_at"
+                                    class="book-input @error('discount_end_at') is-invalid @enderror"
+                                    value="{{ old('discount_end_at') }}"
+                                >
+
+                                @error('discount_end_at')
+                                    <span class="book-field-error">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                {{-- ---------- Description ---------- --}}
+                <section class="dashboard-panel books-panel book-form-panel">
+
+                    <div class="books-panel-header">
+
+                        <div class="books-heading-content">
+                            <span class="eyebrow">Step 4</span>
+                            <h5>Description</h5>
+                            <p>A short summary buyers will read on the book page.</p>
+                        </div>
+
+                    </div>
+
+                    <div class="book-form-body">
+
+                        <div class="book-field">
+
+                            <label for="book-description" class="sr-only-label">
+                                Description
+                            </label>
+
+                            <textarea
+                                id="book-description"
+                                name="description"
+                                class="book-input book-textarea"
+                                rows="6"
+                                placeholder="Write a short description about the book..."
+                            >{{ old('description') }}</textarea>
+
+                        </div>
+
+                    </div>
+
+                </section>
 
             </div>
 
-        </form>
 
-    </div>
+            {{-- =====================================================
+                RIGHT COLUMN
+            ====================================================== --}}
+            <aside class="book-form-side">
+
+                {{-- ---------- Cover ---------- --}}
+                <section class="dashboard-panel books-panel book-form-panel">
+
+                    <div class="books-panel-header">
+
+                        <div class="books-heading-content">
+                            <span class="eyebrow">Media</span>
+                            <h5>Cover image</h5>
+                        </div>
+
+                    </div>
+
+                    <div class="book-form-body">
+
+                        <div class="book-cover-preview" id="coverPreview">
+
+                            <div class="book-cover-preview-empty">
+                                <i class="bi bi-book"></i>
+                                <span>No cover selected</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="book-file-upload">
+
+                            <input
+                                type="file"
+                                name="cover"
+                                id="coverInput"
+                                class="book-file-native"
+                                accept="image/*"
+                            >
+
+                            <label for="coverInput" class="book-file-label">
+
+                                <span class="book-file-icon">
+                                    <i class="bi bi-cloud-arrow-up"></i>
+                                </span>
+
+                                <span class="book-file-content">
+                                    <span class="book-file-title">Upload cover</span>
+                                    <span class="book-file-name" id="coverFileName">
+                                        JPG, PNG or WEBP
+                                    </span>
+                                </span>
+
+                                <span class="book-file-button">Browse</span>
+
+                            </label>
+
+                        </div>
+
+                        @error('cover')
+                            <span class="book-field-error">{{ $message }}</span>
+                        @enderror
+
+                    </div>
+
+                </section>
+
+
+                {{-- ---------- Status + actions ---------- --}}
+                <section class="dashboard-panel books-panel book-form-panel">
+
+                    <div class="books-panel-header">
+
+                        <div class="books-heading-content">
+                            <span class="eyebrow">Publishing</span>
+                            <h5>Status</h5>
+                        </div>
+
+                    </div>
+
+                    <div class="book-form-body">
+
+                        <div class="book-field">
+
+                            <label for="book-status-field">Listing status</label>
+
+                            <select
+                                id="book-status-field"
+                                name="status"
+                                class="book-input book-select"
+                            >
+                                @foreach([
+                                    'pending' => 'Pending',
+                                    'approved' => 'Approved',
+                                    'rejected' => 'Rejected',
+                                ] as $value => $label)
+                                    <option
+                                        value="{{ $value }}"
+                                        @selected(old('status', 'pending') === $value)
+                                    >
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                        </div>
+
+
+                        <div class="book-form-actions">
+
+                            <button type="submit" class="books-add-btn book-submit-btn">
+                                <i class="bi bi-check-lg"></i>
+                                <span>Save book</span>
+                            </button>
+
+                            <a
+                                href="{{ route('admin.books.index') }}"
+                                class="book-clear-filter book-cancel-btn"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </aside>
+
+        </div>
+
+    </form>
 
 </div>
 
 @endsection
 
 
-@push('css')
+@push('js')
 
-<style>
+<script>
 
-    /* =========================================================
-       FORM
-    ========================================================= */
-
-    .form-control,
-    .form-select {
-
-        border-radius: 14px;
-
-        padding: 12px 16px;
-
-        color: #111827 !important;
-
-        background-color: #fff !important;
-
-        border-color: #cbd5e1;
-    }
-
-
-    .form-control::placeholder {
-
-        color: #64748b;
-
-        opacity: 1;
-    }
-
-
-    .form-label {
-
-        color: var(--bs-body-color);
-
-        margin-bottom: 8px;
-
-        font-weight: 600;
-    }
-
+document.addEventListener('DOMContentLoaded', function () {
 
     /* =========================================================
        COVER PREVIEW
     ========================================================= */
 
-    .cover-preview {
+    const coverInput = document.getElementById('coverInput');
+    const coverPreview = document.getElementById('coverPreview');
+    const coverFileName = document.getElementById('coverFileName');
 
-        width: 100%;
+    const emptyState = `
+        <div class="book-cover-preview-empty">
+            <i class="bi bi-book"></i>
+            <span>No cover selected</span>
+        </div>
+    `;
 
-        height: 300px;
+    if (coverInput && coverPreview) {
 
-        border: 1px solid #cbd5e1;
+        coverInput.addEventListener('change', function () {
 
-        border-radius: 14px;
+            const file = this.files[0];
 
-        overflow: hidden;
+            if (!file) {
+                coverPreview.innerHTML = emptyState;
+                coverFileName.textContent = 'JPG, PNG or WEBP';
+                coverFileName.classList.remove('has-file');
+                return;
+            }
 
-        background: #f8fafc;
+            if (!file.type.startsWith('image/')) {
+                this.value = '';
+                coverPreview.innerHTML = `
+                    <div class="book-cover-preview-empty">
+                        <i class="bi bi-exclamation-circle"></i>
+                        <span>Please select an image file</span>
+                    </div>
+                `;
+                coverFileName.textContent = 'JPG, PNG or WEBP';
+                coverFileName.classList.remove('has-file');
+                return;
+            }
 
-        display: flex;
+            coverFileName.textContent = file.name;
+            coverFileName.classList.add('has-file');
 
-        align-items: center;
+            const reader = new FileReader();
 
-        justify-content: center;
-    }
+            reader.onload = function (event) {
+                coverPreview.innerHTML =
+                    '<img src="' + event.target.result + '" alt="Book cover preview">';
+            };
 
+            reader.readAsDataURL(file);
 
-    .cover-preview img {
+        });
 
-        width: 100%;
-
-        height: 100%;
-
-        object-fit: contain;
-
-        display: block;
-    }
-
-
-    .cover-preview-placeholder {
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-
-        justify-content: center;
-
-        gap: 10px;
-
-        color: #64748b;
-
-        text-align: center;
-    }
-
-
-    .cover-preview-placeholder i {
-
-        font-size: 48px;
-    }
-
-
-    .cover-preview-placeholder span {
-
-        font-size: 14px;
-
-        font-weight: 500;
-    }
-
-
-    /* =========================================================
-       FILE INPUT
-    ========================================================= */
-
-    input[type="file"].form-control {
-
-        padding: 6px;
-
-        background: #f8fafc;
-
-        color: #0f172a;
-
-        border-color: #cbd5e1;
-    }
-
-
-    input[type="file"].form-control::file-selector-button,
-    input[type="file"].form-control::-webkit-file-upload-button {
-
-        margin: 0 10px 0 0;
-
-        padding: 10px 14px;
-
-        border: 0;
-
-        border-right: 1px solid #cbd5e1;
-
-        border-radius: 10px;
-
-        background: #e2e8f0;
-
-        color: #0f172a;
-
-        font-weight: 600;
     }
 
 
@@ -880,211 +789,30 @@
        DISCOUNT
     ========================================================= */
 
-    .border.rounded-4 {
+    const discountType = document.getElementById('discountType');
+    const discountValue = document.getElementById('discountValue');
 
-        border-color: #e2e8f0 !important;
-    }
+    if (discountType && discountValue) {
 
+        const updateDiscountFields = function () {
 
-    /* =========================================================
-       DARK MODE
-    ========================================================= */
+            const none = discountType.value === 'none';
 
-    :root[data-theme="dark"] .form-control,
-    :root[data-theme="dark"] .form-select {
-
-        color: #f8fafc !important;
-
-        background-color: #0f172a !important;
-
-        border-color: #334155;
-    }
-
-
-    :root[data-theme="dark"] .form-control::placeholder {
-
-        color: #94a3b8;
-    }
-
-
-    :root[data-theme="dark"] input[type="file"].form-control {
-
-        background: #0b1220 !important;
-
-        color: #e5e7eb !important;
-
-        border-color: #334155 !important;
-    }
-
-
-    :root[data-theme="dark"] input[type="file"].form-control::file-selector-button,
-    :root[data-theme="dark"] input[type="file"].form-control::-webkit-file-upload-button {
-
-        background: #1e293b;
-
-        color: #e5e7eb;
-
-        border-right: 1px solid #334155;
-    }
-
-
-    :root[data-theme="dark"] .cover-preview {
-
-        background: #0b1220;
-
-        border-color: #334155;
-    }
-
-
-    :root[data-theme="dark"] .cover-preview-placeholder {
-
-        color: #94a3b8;
-    }
-
-
-    :root[data-theme="dark"] .border.rounded-4 {
-
-        border-color: #334155 !important;
-
-        background: #0b1220;
-    }
-
-</style>
-
-@endpush
-
-
-@push('scripts')
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', function () {
-
-        /* =====================================================
-           COVER PREVIEW
-        ===================================================== */
-
-        const input =
-            document.getElementById('coverInput');
-
-        const preview =
-            document.getElementById('coverPreview');
-
-
-        if (input && preview) {
-
-            input.addEventListener('change', function () {
-
-                const file = this.files[0];
-
-
-                if (!file) {
-
-                    preview.innerHTML = `
-
-                        <div class="cover-preview-placeholder">
-
-                            <i class="bi bi-book"></i>
-
-                            <span>
-                                No cover selected
-                            </span>
-
-                        </div>
-
-                    `;
-
-                    return;
-                }
-
-
-                if (!file.type.startsWith('image/')) {
-
-                    this.value = '';
-
-                    preview.innerHTML = `
-
-                        <div class="cover-preview-placeholder">
-
-                            <i class="bi bi-exclamation-circle"></i>
-
-                            <span>
-                                Please select an image
-                            </span>
-
-                        </div>
-
-                    `;
-
-                    return;
-                }
-
-
-                const reader =
-                    new FileReader();
-
-
-                reader.onload = function (event) {
-
-                    preview.innerHTML = `
-
-                        <img
-                            src="${event.target.result}"
-                            alt="Book Cover Preview"
-                        >
-
-                    `;
-                };
-
-
-                reader.readAsDataURL(file);
-
-            });
-
-        }
-
-
-        /* =====================================================
-           DISCOUNT
-        ===================================================== */
-
-        const discountType =
-            document.getElementById('discountType');
-
-        const discountValue =
-            document.getElementById('discountValue');
-
-
-        if (discountType && discountValue) {
-
-            function updateDiscountValue() {
-
-                if (discountType.value === 'none') {
-
-                    discountValue.value = '0';
-
-                    discountValue.disabled = true;
-
-                } else {
-
-                    discountValue.disabled = false;
-
-                }
-
+            if (none) {
+                discountValue.value = '0';
             }
 
+            discountValue.disabled = none;
 
-            discountType.addEventListener(
-                'change',
-                updateDiscountValue
-            );
+        };
 
+        discountType.addEventListener('change', updateDiscountFields);
 
-            updateDiscountValue();
+        updateDiscountFields();
 
-        }
+    }
 
-    });
+});
 
 </script>
 

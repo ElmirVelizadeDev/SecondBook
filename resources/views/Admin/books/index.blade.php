@@ -2,66 +2,185 @@
 
 @section('title', 'Books')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/books.css') }}">
+@endpush
+
 @section('content')
 
 <div class="dashboard-section books-page">
 
-    {{-- Header --}}
-    <div class="dashboard-panel mb-4">
+    {{-- =========================================================
+        HERO
+    ========================================================== --}}
+    <section class="books-hero">
 
-        <div class="panel-header mb-0">
+        <div class="books-hero-content">
 
-            <div>
-                <h5 class="mb-1">Books</h5>
+            <span class="books-hero-badge">
+                <i class="bi bi-book-half"></i>
+                Marketplace Library
+            </span>
 
-                <p class="text-muted mb-0 small">
-                    Manage all books listed on SecondBook
-                </p>
-            </div>
+            <h1>Every book, beautifully organised.</h1>
 
-            <a href="{{ route('admin.books.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-2"></i>
-                Add Book
-            </a>
+            <p>
+                Manage your marketplace inventory, book details,
+                sellers and publication status from one organised workspace.
+            </p>
 
         </div>
 
-    </div>
+        <div class="books-hero-mark" aria-hidden="true">
+            <i class="bi bi-book"></i>
+        </div>
+
+    </section>
 
 
-    {{-- Filters --}}
-    <div class="dashboard-panel mb-4">
+    {{-- =========================================================
+        STATISTICS
+    ========================================================== --}}
+    <section class="books-stats">
 
+        {{-- Total --}}
+        <div class="book-stat-card stat-blue">
+
+            <div class="book-stat-content">
+                <span>Total Books</span>
+                <strong>{{ $books->total() }}</strong>
+            </div>
+
+            <div class="book-stat-icon">
+                <i class="bi bi-collection"></i>
+            </div>
+
+        </div>
+
+
+        {{-- Approved --}}
+        <div class="book-stat-card stat-green">
+
+            <div class="book-stat-content">
+                <span>Approved</span>
+                <strong>
+                    {{ \App\Models\Book::where('status', 'approved')->count() }}
+                </strong>
+            </div>
+
+            <div class="book-stat-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+        </div>
+
+
+        {{-- Pending --}}
+        <div class="book-stat-card stat-orange">
+
+            <div class="book-stat-content">
+                <span>Pending</span>
+                <strong>
+                    {{ \App\Models\Book::where('status', 'pending')->count() }}
+                </strong>
+            </div>
+
+            <div class="book-stat-icon">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+
+        </div>
+
+
+        {{-- Out of stock --}}
+        <div class="book-stat-card stat-purple">
+
+            <div class="book-stat-content">
+                <span>Out of Stock</span>
+                <strong>
+                    {{ \App\Models\Book::where('stock', '<=', 0)->count() }}
+                </strong>
+            </div>
+
+            <div class="book-stat-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {{-- =========================================================
+        MAIN PANEL
+    ========================================================== --}}
+    <section class="dashboard-panel books-panel">
+
+        {{-- =====================================================
+            PANEL HEADER
+        ====================================================== --}}
+        <div class="books-panel-header">
+
+            <div class="books-heading-content">
+
+                <span class="eyebrow">
+                    Book directory
+                </span>
+
+                <h5>
+                    All Books
+                </h5>
+
+                <p>
+                    Search, filter and manage every book listed on SecondBook.
+                </p>
+
+            </div>
+
+
+            <div class="books-header-action">
+
+                <a
+                    href="{{ route('admin.books.create') }}"
+                    class="books-add-btn"
+                >
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Add Book</span>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {{-- =====================================================
+            FILTERS
+        ====================================================== --}}
         <form
             method="GET"
             action="{{ route('admin.books.index') }}"
-            class="row g-3 align-items-end"
+            class="book-filters"
         >
 
             {{-- Search --}}
-            <div class="col-12 col-md-4 col-lg-4">
+            <div class="book-filter-group book-filter-search">
 
-                <label class="form-label small text-muted fw-semibold">
+                <label for="book-search">
                     Search
                 </label>
 
-                <div class="input-group">
+                <div class="book-search-field">
 
-                    <span class="input-group-text bg-white border-end-0">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
+                    <i class="bi bi-search"></i>
 
                     <input
+                        id="book-search"
                         type="text"
                         name="search"
                         value="{{ request('search') }}"
-                        class="form-control border-start-0"
-                        placeholder="Title, author, seller..."
+                        placeholder="Title, author, seller, ISBN..."
+                        autocomplete="off"
                     >
-
-                    <button type="submit" class="btn btn-primary">
-                        Search
-                    </button>
 
                 </div>
 
@@ -69,38 +188,32 @@
 
 
             {{-- Status --}}
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="book-filter-group">
 
-                <label class="form-label small text-muted fw-semibold">
+                <label for="book-status">
                     Status
                 </label>
 
-                <select name="status" class="form-select">
+                <select
+                    id="book-status"
+                    name="status"
+                    class="book-filter-select"
+                >
 
                     <option value="">
                         All Status
                     </option>
 
-                    <option
-                        value="approved"
-                        @selected(request('status') === 'approved')
-                    >
-                        Approved
-                    </option>
+                    @foreach(['approved', 'pending', 'rejected'] as $status)
 
-                    <option
-                        value="pending"
-                        @selected(request('status') === 'pending')
-                    >
-                        Pending
-                    </option>
+                        <option
+                            value="{{ $status }}"
+                            @selected(request('status') === $status)
+                        >
+                            {{ ucfirst($status) }}
+                        </option>
 
-                    <option
-                        value="rejected"
-                        @selected(request('status') === 'rejected')
-                    >
-                        Rejected
-                    </option>
+                    @endforeach
 
                 </select>
 
@@ -108,132 +221,159 @@
 
 
             {{-- Condition --}}
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="book-filter-group">
 
-                <label class="form-label small text-muted fw-semibold">
+                <label for="book-condition">
                     Condition
                 </label>
 
-                <select name="condition" class="form-select">
+                <select
+                    id="book-condition"
+                    name="condition"
+                    class="book-filter-select"
+                >
 
                     <option value="">
                         All Conditions
                     </option>
 
-                    <option
-                        value="new"
-                        @selected(request('condition') === 'new')
-                    >
-                        New
-                    </option>
+                    @foreach([
+                        'new' => 'New',
+                        'like_new' => 'Like New',
+                        'good' => 'Good',
+                        'fair' => 'Fair'
+                    ] as $value => $label)
 
-                    <option
-                        value="like_new"
-                        @selected(request('condition') === 'like_new')
-                    >
-                        Like New
-                    </option>
+                        <option
+                            value="{{ $value }}"
+                            @selected(request('condition') === $value)
+                        >
+                            {{ $label }}
+                        </option>
 
-                    <option
-                        value="good"
-                        @selected(request('condition') === 'good')
-                    >
-                        Good
-                    </option>
-
-                    <option
-                        value="fair"
-                        @selected(request('condition') === 'fair')
-                    >
-                        Fair
-                    </option>
+                    @endforeach
 
                 </select>
 
             </div>
 
 
-            {{-- Filter Actions --}}
-            <div class="col-12 col-lg-4 d-flex gap-2">
+            {{-- Category --}}
+            <div class="book-filter-group">
+
+                <label for="book-category">
+                    Category
+                </label>
+
+                <select
+                    id="book-category"
+                    name="category"
+                    class="book-filter-select"
+                >
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    @isset($categories)
+
+                        @foreach($categories as $category)
+
+                            <option
+                                value="{{ $category->id }}"
+                                @selected((string) request('category') === (string) $category->id)
+                            >
+                                {{ $category->name }}
+                            </option>
+
+                        @endforeach
+
+                    @endisset
+
+                </select>
+
+            </div>
+
+
+            {{-- Actions --}}
+            <div class="book-filter-actions">
 
                 <button
                     type="submit"
-                    class="btn btn-primary flex-grow-1 flex-lg-grow-0 px-4"
+                    class="book-filter-btn"
                 >
-                    <i class="bi bi-funnel me-1"></i>
-                    Filter
+                    <i class="bi bi-funnel"></i>
+                    <span>Filter</span>
                 </button>
 
-                <a
-                    href="{{ route('admin.books.index') }}"
-                    class="btn btn-light border"
-                >
-                    Reset
-                </a>
+
+                @if(request()->hasAny([
+                    'search',
+                    'status',
+                    'condition',
+                    'category'
+                ]))
+
+                    <a
+                        href="{{ route('admin.books.index') }}"
+                        class="book-clear-filter"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        <span>Clear</span>
+                    </a>
+
+                @endif
 
             </div>
 
         </form>
 
-    </div>
 
+        {{-- =====================================================
+            TABLE
+        ====================================================== --}}
+        <div class="books-table-wrap">
 
-    {{-- Table --}}
-    <div class="dashboard-panel">
-
-        <div class="panel-header">
-
-            <h5>
-                Book List
-            </h5>
-
-            <span class="badge bg-primary">
-                {{ $books->total() }} books
-            </span>
-
-        </div>
-
-
-        <div class="table-responsive">
-
-            <table class="table table-hover align-middle">
+            <table class="books-table">
 
                 <thead>
 
                     <tr>
 
-                        <th>#</th>
+                        <th class="books-col-id">
+                            #
+                        </th>
 
-                        <th>
+                        <th class="books-col-book">
                             Book
                         </th>
 
-                        <th class="d-none d-md-table-cell">
+                        <th class="books-col-category">
                             Category
                         </th>
 
-                        <th class="d-none d-lg-table-cell">
+                        <th class="books-col-author">
                             Author
                         </th>
 
-                        <th class="d-none d-xl-table-cell">
+                        <th class="books-col-seller">
                             Seller
                         </th>
 
-                        <th>
+                        <th class="books-col-price">
                             Price
                         </th>
 
-                        <th class="d-none d-md-table-cell">
+                        <th class="books-col-condition">
                             Condition
                         </th>
 
-                        <th>
+                        <th class="books-col-status">
                             Status
                         </th>
 
-                        <th class="text-end">
-                            Action
+                        <th class="books-col-actions">
+                            Actions
                         </th>
 
                     </tr>
@@ -245,54 +385,183 @@
 
                     @forelse($books as $key => $book)
 
-                        <tr>
+                        @php
 
-                            {{-- Number --}}
+                            $condition = strtolower(
+                                $book->condition ?? ''
+                            );
+
+                            $conditionClass = match($condition) {
+                                'new' => 'condition-new',
+                                'like_new' => 'condition-like-new',
+                                'good' => 'condition-good',
+                                'fair' => 'condition-fair',
+                                default => 'condition-default',
+                            };
+
+
+                            $status = strtolower(
+                                $book->status ?? ''
+                            );
+
+                            $statusClass = match($status) {
+                                'approved' => 'book-status-approved',
+                                'pending' => 'book-status-pending',
+                                'rejected' => 'book-status-rejected',
+                                default => 'book-status-default',
+                            };
+
+
+                            $sellerName = $book->seller?->name
+                                ?? $book->seller?->username
+                                ?? 'Unknown seller';
+
+
+                            $sellerInitial = strtoupper(
+                                mb_substr($sellerName, 0, 1)
+                            );
+
+
+                            $coverUrl = null;
+
+                            if (!empty($book->cover)) {
+
+                                $coverUrl = filter_var(
+                                    $book->cover,
+                                    FILTER_VALIDATE_URL
+                                )
+                                    ? $book->cover
+                                    : asset('storage/' . $book->cover);
+
+                            }
+
+                        @endphp
+
+
+                        <tr id="book-row-{{ $book->id }}">
+
+                            {{-- =================================================
+                                ID
+                            ================================================== --}}
                             <td>
-                                {{ $books->firstItem() + $key }}
+
+                                <span class="book-id">
+                                    #{{ $books->firstItem() + $key }}
+                                </span>
+
                             </td>
 
 
-                            {{-- Book --}}
+                            {{-- =================================================
+                                BOOK
+                            ================================================== --}}
                             <td>
 
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="book-item-cell">
 
-                                    @if(!empty($book->cover))
-
-                                        @php
-                                            $coverUrl = filter_var(
-                                                $book->cover,
-                                                FILTER_VALIDATE_URL
-                                            )
-                                                ? $book->cover
-                                                : asset('storage/' . $book->cover);
-                                        @endphp
+                                    @if($coverUrl)
 
                                         <img
                                             src="{{ $coverUrl }}"
                                             alt="{{ $book->title }}"
-                                            class="book-cover-image rounded"
+                                            class="book-cover-image"
                                             loading="lazy"
                                         >
 
                                     @else
 
-                                        <div class="book-cover-thumb">
+                                        <div class="book-cover-placeholder">
                                             <i class="bi bi-book"></i>
                                         </div>
 
                                     @endif
 
 
-                                    <div>
+                                    <div class="book-item-info">
 
-                                        <strong class="d-block">
+                                        <strong
+                                            title="{{ $book->title }}"
+                                        >
                                             {{ $book->title }}
                                         </strong>
 
-                                        <small class="text-muted d-lg-none">
-                                            {{ $book->author?->name ?? '-' }}
+                                        @if(!empty($book->isbn))
+
+                                            <small>
+                                                ISBN:
+                                                {{ $book->isbn }}
+                                            </small>
+
+                                        @else
+
+                                            <small>
+                                                No ISBN
+                                            </small>
+
+                                        @endif
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            {{-- =================================================
+                                CATEGORY
+                            ================================================== --}}
+                            <td>
+
+                                <div class="book-simple-info">
+
+                                    <strong>
+                                        {{ $book->category?->name ?? '—' }}
+                                    </strong>
+
+                                </div>
+
+                            </td>
+
+
+                            {{-- =================================================
+                                AUTHOR
+                            ================================================== --}}
+                            <td>
+
+                                <div class="book-simple-info">
+
+                                    <strong
+                                        title="{{ $book->author?->name ?? '' }}"
+                                    >
+                                        {{ $book->author?->name ?? '—' }}
+                                    </strong>
+
+                                </div>
+
+                            </td>
+
+
+                            {{-- =================================================
+                                SELLER
+                            ================================================== --}}
+                            <td>
+
+                                <div class="book-seller-cell">
+
+                                    <div class="book-seller-avatar">
+                                        {{ $sellerInitial }}
+                                    </div>
+
+                                    <div class="book-seller-info">
+
+                                        <strong
+                                            title="{{ $sellerName }}"
+                                        >
+                                            {{ $sellerName }}
+                                        </strong>
+
+                                        <small>
+                                            Seller
                                         </small>
 
                                     </div>
@@ -302,94 +571,73 @@
                             </td>
 
 
-                            {{-- Category --}}
-                            <td class="d-none d-md-table-cell">
-                                {{ $book->category?->name ?? '-' }}
-                            </td>
-
-
-                            {{-- Author --}}
-                            <td class="d-none d-lg-table-cell">
-                                {{ $book->author?->name ?? '-' }}
-                            </td>
-
-
-                            {{-- Seller --}}
-                            <td class="d-none d-xl-table-cell">
-                                {{ $book->seller?->name ?? '-' }}
-                            </td>
-
-
-                            {{-- Price --}}
+                            {{-- =================================================
+                                PRICE
+                            ================================================== --}}
                             <td>
 
-                                <strong>
+                                <span class="book-price">
                                     ${{ number_format((float) ($book->price ?? 0), 2) }}
-                                </strong>
-
-                            </td>
-
-
-                            {{-- Condition --}}
-                            <td class="d-none d-md-table-cell">
-
-                                <span class="badge bg-primary">
-                                    {{
-                                        $book->condition
-                                            ? str_replace(
-                                                '_',
-                                                ' ',
-                                                ucfirst($book->condition)
-                                            )
-                                            : '-'
-                                    }}
                                 </span>
 
                             </td>
 
 
-                            {{-- Status --}}
+                            {{-- =================================================
+                                CONDITION
+                            ================================================== --}}
                             <td>
 
-                                @if($book->status === 'approved')
+                                <span class="book-condition-pill {{ $conditionClass }}">
 
-                                    <span class="badge bg-success">
-                                        Approved
-                                    </span>
+                                    <i class="bi bi-circle-fill"></i>
 
-                                @elseif($book->status === 'pending')
+                                    {{ $book->condition
+                                        ? str_replace(
+                                            '_',
+                                            ' ',
+                                            ucfirst($book->condition)
+                                        )
+                                        : 'Unknown'
+                                    }}
 
-                                    <span class="badge bg-warning">
-                                        Pending
-                                    </span>
-
-                                @elseif($book->status === 'rejected')
-
-                                    <span class="badge bg-danger">
-                                        Rejected
-                                    </span>
-
-                                @else
-
-                                    <span class="badge bg-secondary">
-                                        Unknown
-                                    </span>
-
-                                @endif
+                                </span>
 
                             </td>
 
 
-                            {{-- Actions --}}
+                            {{-- =================================================
+                                STATUS
+                            ================================================== --}}
                             <td>
 
-                                <div class="d-flex justify-content-end gap-2">
+                                <span class="book-status-pill {{ $statusClass }}">
+
+                                    <i class="bi bi-circle-fill"></i>
+
+                                    {{ $book->status
+                                        ? ucfirst($book->status)
+                                        : 'Unknown'
+                                    }}
+
+                                </span>
+
+                            </td>
+
+
+                            {{-- =================================================
+                                ACTIONS
+                            ================================================== --}}
+                            <td>
+
+                                <div class="book-actions">
 
                                     {{-- View --}}
                                     <a
                                         href="{{ route('admin.books.show', $book->id) }}"
-                                        class="btn btn-light btn-sm border"
-                                        title="View"
+                                        class="book-action-btn book-view-btn"
+                                        title="View book"
+                                        aria-label="View book"
                                     >
                                         <i class="bi bi-eye"></i>
                                     </a>
@@ -398,8 +646,9 @@
                                     {{-- Edit --}}
                                     <a
                                         href="{{ route('admin.books.edit', $book->id) }}"
-                                        class="btn btn-warning btn-sm"
-                                        title="Edit"
+                                        class="book-action-btn book-edit-btn"
+                                        title="Edit book"
+                                        aria-label="Edit book"
                                     >
                                         <i class="bi bi-pencil"></i>
                                     </a>
@@ -409,17 +658,17 @@
                                     <form
                                         action="{{ route('admin.books.destroy', $book->id) }}"
                                         method="POST"
-                                        onsubmit="return confirm('Delete this book?')"
+                                        class="book-delete-form"
                                     >
 
                                         @csrf
-
                                         @method('DELETE')
 
                                         <button
                                             type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            title="Delete"
+                                            class="book-action-btn book-delete-btn"
+                                            title="Delete book"
+                                            aria-label="Delete book"
                                         >
                                             <i class="bi bi-trash"></i>
                                         </button>
@@ -432,29 +681,32 @@
 
                         </tr>
 
+
                     @empty
 
                         <tr>
 
-                            <td colspan="9" class="text-center py-5">
+                            <td colspan="9">
 
-                                <div class="chart-placeholder books-empty-state">
+                                <div class="books-empty-state">
 
-                                    <i class="bi bi-book"></i>
+                                    <div class="books-empty-icon">
+                                        <i class="bi bi-book"></i>
+                                    </div>
 
-                                    <h6>
+                                    <strong>
                                         No books found
-                                    </h6>
+                                    </strong>
 
-                                    <p>
-                                        Add your first book to get started.
-                                    </p>
+                                    <span>
+                                        Try changing your filters or add a new book.
+                                    </span>
 
                                     <a
                                         href="{{ route('admin.books.create') }}"
-                                        class="btn btn-primary mt-3"
+                                        class="books-empty-btn"
                                     >
-                                        <i class="bi bi-plus-circle me-2"></i>
+                                        <i class="bi bi-plus-lg"></i>
                                         Add Book
                                     </a>
 
@@ -473,29 +725,370 @@
         </div>
 
 
-        {{-- Pagination --}}
+        {{-- =====================================================
+            PAGINATION
+        ====================================================== --}}
         @if($books->hasPages())
+
+            @php
+
+                $books->appends(request()->query());
+
+                $current = $books->currentPage();
+                $last    = $books->lastPage();
+
+                $start = max(1, $current - 2);
+                $end   = min($last, $current + 2);
+
+            @endphp
+
+
             <div class="books-pagination">
+
                 <div class="books-pagination-info">
-                    <span class="pagination-label">Showing</span>
-                    <strong>{{ $books->firstItem() }}</strong>
 
-                    <span class="pagination-label">to</span>
-                    <strong>{{ $books->lastItem() }}</strong>
+                    Showing
 
-                    <span class="pagination-label">of</span>
-                    <strong>{{ $books->total() }}</strong>
+                    <strong>
+                        {{ $books->firstItem() }}
+                    </strong>
 
-                    <span class="pagination-label">results</span>
+                    to
+
+                    <strong>
+                        {{ $books->lastItem() }}
+                    </strong>
+
+                    of
+
+                    <strong>
+                        {{ $books->total() }}
+                    </strong>
+
+                    books
+
                 </div>
 
-                <div class="books-pagination-links">
-                    {{ $books->onEachSide(1)->links() }}
-                </div>
+
+                <nav
+                    class="books-pagination-pages"
+                    aria-label="Books pagination"
+                >
+
+                    {{-- Previous --}}
+                    @if($books->onFirstPage())
+
+                        <span
+                            class="books-pager-btn disabled"
+                            aria-disabled="true"
+                        >
+                            <i class="bi bi-chevron-left"></i>
+                        </span>
+
+                    @else
+
+                        <a
+                            href="{{ $books->previousPageUrl() }}"
+                            class="books-pager-btn"
+                            aria-label="Previous page"
+                        >
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+
+                    @endif
+
+
+                    {{-- First --}}
+                    @if($start > 1)
+
+                        <a
+                            href="{{ $books->url(1) }}"
+                            class="books-pager-btn"
+                        >
+                            1
+                        </a>
+
+                        @if($start > 2)
+
+                            <span class="books-pager-dots">
+                                …
+                            </span>
+
+                        @endif
+
+                    @endif
+
+
+                    {{-- Page window --}}
+                    @for($page = $start; $page <= $end; $page++)
+
+                        @if($page === $current)
+
+                            <span
+                                class="books-pager-btn active"
+                                aria-current="page"
+                            >
+                                {{ $page }}
+                            </span>
+
+                        @else
+
+                            <a
+                                href="{{ $books->url($page) }}"
+                                class="books-pager-btn"
+                            >
+                                {{ $page }}
+                            </a>
+
+                        @endif
+
+                    @endfor
+
+
+                    {{-- Last --}}
+                    @if($end < $last)
+
+                        @if($end < $last - 1)
+
+                            <span class="books-pager-dots">
+                                …
+                            </span>
+
+                        @endif
+
+                        <a
+                            href="{{ $books->url($last) }}"
+                            class="books-pager-btn"
+                        >
+                            {{ $last }}
+                        </a>
+
+                    @endif
+
+
+                    {{-- Next --}}
+                    @if($books->hasMorePages())
+
+                        <a
+                            href="{{ $books->nextPageUrl() }}"
+                            class="books-pager-btn"
+                            aria-label="Next page"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                    @else
+
+                        <span
+                            class="books-pager-btn disabled"
+                            aria-disabled="true"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+
+                    @endif
+
+                </nav>
+
             </div>
+
         @endif
-    </div>
+
+    </section>
 
 </div>
 
 @endsection
+
+
+@push('js')
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* =========================================================
+       DELETE BOOK — AJAX
+    ========================================================= */
+
+    document.querySelectorAll('.book-delete-form').forEach(function (form) {
+
+        form.addEventListener('submit', async function (event) {
+
+            event.preventDefault();
+
+            const row = form.closest('tr');
+            const button = form.querySelector('button');
+
+            const result = await Swal.fire({
+
+                title: 'Are you sure?',
+
+                text: 'This book will be permanently deleted.',
+
+                icon: 'warning',
+
+                showCancelButton: true,
+
+                confirmButtonColor: '#dc3545',
+
+                cancelButtonColor: '#6c757d',
+
+                confirmButtonText: 'Yes, delete it!',
+
+                cancelButtonText: 'Cancel'
+
+            });
+
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+
+            if (button) {
+                button.disabled = true;
+            }
+
+
+            try {
+
+                const csrfElement =
+                    document.querySelector('meta[name="csrf-token"]');
+
+                if (!csrfElement) {
+                    throw new Error('CSRF token not found.');
+                }
+
+                const csrfToken =
+                    csrfElement.getAttribute('content');
+
+
+                const response = await fetch(form.action, {
+
+                    method: 'POST',
+
+                    headers: {
+
+                        'X-CSRF-TOKEN': csrfToken,
+
+                        'Accept': 'application/json',
+
+                        'X-Requested-With': 'XMLHttpRequest',
+
+                        'Content-Type':
+                            'application/x-www-form-urlencoded; charset=UTF-8'
+
+                    },
+
+                    body: new URLSearchParams({
+
+                        _token: csrfToken,
+
+                        _method: 'DELETE'
+
+                    })
+
+                });
+
+
+                const contentType =
+                    response.headers.get('content-type') || '';
+
+
+                let data = {};
+
+                if (contentType.includes('application/json')) {
+                    data = await response.json();
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        'Unable to delete the book.'
+                    );
+
+                }
+
+
+                /* =================================================
+                   REMOVE ROW
+                ================================================= */
+
+                if (row) {
+
+                    row.style.transition =
+                        'opacity 0.3s ease, transform 0.3s ease';
+
+                    row.style.opacity = '0';
+
+                    row.style.transform =
+                        'translateX(20px)';
+
+
+                    setTimeout(function () {
+
+                        row.remove();
+
+                    }, 300);
+
+                }
+
+
+                /* =================================================
+                   SUCCESS
+                ================================================= */
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'Book deleted',
+
+                    text:
+                        data.message ||
+                        'The book has been deleted successfully.',
+
+                    timer: 1600,
+
+                    showConfirmButton: false
+
+                });
+
+
+            } catch (error) {
+
+                if (button) {
+                    button.disabled = false;
+                }
+
+
+                Swal.fire({
+
+                    icon: 'error',
+
+                    title: 'Delete failed',
+
+                    text:
+                        error.message ||
+                        'Unable to delete the book.',
+
+                    confirmButtonColor: '#2563eb'
+
+                });
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+
+@endpush

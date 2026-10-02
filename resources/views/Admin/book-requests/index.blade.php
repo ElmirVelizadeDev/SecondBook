@@ -2,186 +2,295 @@
 
 @section('title', 'Book Requests')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/book-requests.css') }}">
+@endpush
+
 @section('content')
 
-<div class="dashboard-section book-requests-page">
+<div class="dashboard-section book-request-page">
 
-    {{-- PAGE HEADER --}}
-    <div class="dashboard-panel mb-4">
 
-        <div class="panel-header mb-0">
+    {{-- =====================================================
+        HERO
+        ===================================================== --}}
+    <section class="book-request-hero">
+        <div class="book-request-hero-content">
 
-            <div>
-                <h5 class="mb-1">Book Requests</h5>
+            <div class="book-request-hero-text">
 
-                <p class="text-muted mb-0 small">
-                    Manage books submitted by sellers for approval
+                <span class="book-request-hero-badge">
+                    <i class="bi bi-inbox"></i>
+                    Seller Submissions
+                </span>
+
+                <h1>Book Requests, reviewed with care.</h1>
+
+                <p>
+                    Manage books submitted by sellers and decide
+                    which ones are ready for the SecondBook marketplace.
                 </p>
+
+            </div>
+
+            <div class="book-request-hero-mark">
+                <i class="bi bi-inbox"></i>
+            </div>
+
+        </div>
+    </section>
+
+
+    {{-- =====================================================
+        STATS
+        ===================================================== --}}
+    @php
+        $requestCollection = collect($bookRequests);
+
+        $totalRequests = $requestCollection->count();
+
+        $approvedRequests = $requestCollection
+            ->filter(fn ($item) => $item->status === 'approved')
+            ->count();
+
+        $rejectedRequests = $requestCollection
+            ->filter(fn ($item) => $item->status === 'rejected')
+            ->count();
+
+        $pendingRequests = $totalRequests - $approvedRequests - $rejectedRequests;
+    @endphp
+
+
+    <section class="book-request-stats">
+
+        {{-- Total --}}
+        <div class="book-request-stat-card">
+
+            <div class="book-request-stat-icon stat-blue">
+                <i class="bi bi-inbox"></i>
+            </div>
+
+            <div class="book-request-stat-content">
+                <div class="book-request-stat-label">Total Requests</div>
+                <div class="book-request-stat-value">{{ $totalRequests }}</div>
             </div>
 
         </div>
 
-    </div>
+
+        {{-- Pending --}}
+        <div class="book-request-stat-card">
+
+            <div class="book-request-stat-icon stat-orange">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+
+            <div class="book-request-stat-content">
+                <div class="book-request-stat-label">Pending</div>
+                <div class="book-request-stat-value">{{ $pendingRequests }}</div>
+            </div>
+
+        </div>
 
 
-    {{-- FILTERS --}}
-    <div class="dashboard-panel mb-4">
+        {{-- Approved --}}
+        <div class="book-request-stat-card">
 
+            <div class="book-request-stat-icon stat-green">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+            <div class="book-request-stat-content">
+                <div class="book-request-stat-label">Approved</div>
+                <div class="book-request-stat-value">{{ $approvedRequests }}</div>
+            </div>
+
+        </div>
+
+
+        {{-- Rejected --}}
+        <div class="book-request-stat-card">
+
+            <div class="book-request-stat-icon stat-red">
+                <i class="bi bi-x-circle"></i>
+            </div>
+
+            <div class="book-request-stat-content">
+                <div class="book-request-stat-label">Rejected</div>
+                <div class="book-request-stat-value">{{ $rejectedRequests }}</div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {{-- =====================================================
+        MAIN PANEL
+        ===================================================== --}}
+    <section class="dashboard-panel book-request-panel">
+
+
+        {{-- =================================================
+            HEADER
+            ================================================= --}}
+        <div class="book-request-panel-header">
+
+            <div class="book-request-heading-content">
+
+                <h2 class="book-request-panel-title">
+                    Seller Book Requests
+                </h2>
+
+                <p class="book-request-panel-description">
+                    Books waiting for admin review.
+                </p>
+
+            </div>
+
+            <div class="book-request-header-action">
+
+                <span class="book-request-count-badge">
+                    <i class="bi bi-inbox"></i>
+
+                    {{ $bookRequests->count() }}
+
+                    {{ $bookRequests->count() === 1 ? 'request' : 'requests' }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        {{-- =================================================
+            FILTERS
+            ================================================= --}}
         <form
             method="GET"
             action="{{ route('admin.book.requests.index') }}"
-            class="row g-3 align-items-end"
+            class="book-request-filters"
             autocomplete="off"
         >
 
-            {{-- SEARCH --}}
-            <div class="col-12 col-md-6 col-lg-5">
+            <div class="book-request-filter-grid">
 
-                <label class="form-label small text-muted fw-semibold">
-                    Search
-                </label>
+                {{-- Search --}}
+                <div class="book-request-filter-group">
 
-                <div class="input-group">
+                    <label class="book-request-filter-label">
+                        Search requests
+                    </label>
 
-                    <span class="input-group-text bg-white border-end-0">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
+                    <div class="book-request-search-field">
 
-                    <input
-                        type="text"
-                        name="search"
-                        value="{{ request('search') }}"
-                        class="form-control border-start-0"
-                        placeholder="Search book or seller..."
+                        <i class="bi bi-search"></i>
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            class="book-request-input"
+                            placeholder="Search book or seller..."
+                        >
+
+                    </div>
+
+                </div>
+
+
+                {{-- Category --}}
+                <div class="book-request-filter-group">
+
+                    <label class="book-request-filter-label">
+                        Category
+                    </label>
+
+                    <select
+                        name="category"
+                        class="book-request-select"
                     >
+
+                        <option value="">
+                            All Categories
+                        </option>
+
+                        @foreach(\App\Models\Category::orderBy('name')->get() as $category)
+
+                            <option
+                                value="{{ $category->id }}"
+                                @selected((string) request('category') === (string) $category->id)
+                            >
+                                {{ $category->name }}
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+
+                {{-- Actions --}}
+                <div class="book-request-filter-actions">
 
                     <button
                         type="submit"
-                        class="btn btn-primary"
+                        class="book-request-filter-btn"
                     >
-                        Search
+                        <i class="bi bi-funnel"></i>
+                        Filter
                     </button>
+
+                    @if(request()->filled('search') || request()->filled('category'))
+
+                        <a
+                            href="{{ route('admin.book.requests.index') }}"
+                            class="book-request-clear-filter"
+                        >
+                            <i class="bi bi-x-lg"></i>
+                            Reset
+                        </a>
+
+                    @endif
 
                 </div>
 
             </div>
 
-
-            {{-- CATEGORY --}}
-            <div class="col-12 col-md-6 col-lg-3">
-
-                <label class="form-label fw-semibold text-muted small">
-                    Category
-                </label>
-
-                <select
-                    name="category"
-                    class="form-select"
-                >
-
-                    <option value="">
-                        All Categories
-                    </option>
-
-                    @foreach(\App\Models\Category::orderBy('name')->get() as $category)
-
-                        <option
-                            value="{{ $category->id }}"
-                            @selected((string) request('category') === (string) $category->id)
-                        >
-                            {{ $category->name }}
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-            </div>
-
-
-            {{-- FILTER BUTTONS --}}
-            <div class="col-12 col-lg-4 d-flex gap-2">
-
-                <button
-                    type="submit"
-                    class="btn btn-primary flex-grow-1 flex-lg-grow-0 px-4"
-                >
-                    <i class="bi bi-funnel me-1"></i>
-                    Filter
-                </button>
-
-                <a
-                    href="{{ route('admin.book.requests.index') }}"
-                    class="btn btn-light border"
-                >
-                    Reset
-                </a>
-
-            </div>
-
         </form>
 
-    </div>
 
+        {{-- =================================================
+            TABLE
+            ================================================= --}}
+        <div class="book-request-table-wrap">
 
-    {{-- BOOK REQUEST LIST --}}
-    <div class="dashboard-panel">
-
-        <div class="panel-header">
-
-            <div>
-
-                <h5 class="mb-1">
-                    Seller Book Requests
-                </h5>
-
-                <p class="text-muted mb-0 small">
-                    Books waiting for admin review
-                </p>
-
-            </div>
-
-            <span class="badge bg-primary">
-
-                {{ $bookRequests->count() }}
-
-                {{ $bookRequests->count() === 1 ? 'request' : 'requests' }}
-
-            </span>
-
-        </div>
-
-
-        {{-- TABLE --}}
-        <div class="table-responsive">
-
-            <table class="table table-hover align-middle">
+            <table class="book-request-table">
 
                 <thead>
 
                     <tr>
 
-                        <th>ID</th>
+                        <th class="book-request-col-id">ID</th>
 
-                        <th>Book</th>
+                        <th class="book-request-col-book">Book</th>
 
-                        <th>Seller</th>
+                        <th class="book-request-col-seller">Seller</th>
 
-                        <th>Category</th>
+                        <th class="book-request-col-category">Category</th>
 
-                        <th>Price</th>
+                        <th class="book-request-col-price">Price</th>
 
-                        <th>Stock</th>
+                        <th class="book-request-col-stock">Stock</th>
 
-                        <th>Condition</th>
+                        <th class="book-request-col-condition">Condition</th>
 
-                        <th>Status</th>
+                        <th class="book-request-col-status">Status</th>
 
-                        <th>Date</th>
+                        <th class="book-request-col-date">Date</th>
 
-                        <th class="text-end">
-                            Actions
-                        </th>
+                        <th class="book-request-col-actions">Actions</th>
 
                     </tr>
 
@@ -196,58 +305,45 @@
 
                             {{-- ID --}}
                             <td>
-                                #{{ $book->id }}
+                                <span class="book-request-id">
+                                    #{{ $book->id }}
+                                </span>
                             </td>
 
 
                             {{-- BOOK --}}
                             <td>
 
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="book-request-item-cell">
 
-                                    @if($book->cover)
+                                    <div class="book-request-cover">
 
-                                        <img
-                                            src="{{ asset('storage/' . $book->cover) }}"
-                                            alt="{{ $book->title }}"
-                                            width="48"
-                                            height="64"
-                                            style="
-                                                object-fit: cover;
-                                                border-radius: 8px;
-                                            "
-                                        >
+                                        @if($book->cover)
 
-                                    @else
+                                            <img
+                                                src="{{ asset('storage/' . $book->cover) }}"
+                                                alt="{{ $book->title }}"
+                                            >
 
-                                        <div
-                                            class="d-flex align-items-center justify-content-center"
-                                            style="
-                                                width: 48px;
-                                                height: 64px;
-                                                border-radius: 8px;
-                                                background: #f3f4f6;
-                                            "
-                                        >
+                                        @else
 
-                                            <i class="bi bi-book fs-5 text-muted"></i>
+                                            <i class="bi bi-book"></i>
 
-                                        </div>
+                                        @endif
 
-                                    @endif
+                                    </div>
 
+                                    <div class="book-request-item-info">
 
-                                    <div>
-
-                                        <strong class="d-block">
+                                        <span class="book-request-item-name" title="{{ $book->title }}">
                                             {{ $book->title }}
-                                        </strong>
+                                        </span>
 
                                         @if($book->isbn)
 
-                                            <small class="text-muted">
+                                            <span class="book-request-item-meta">
                                                 ISBN: {{ $book->isbn }}
-                                            </small>
+                                            </span>
 
                                         @endif
 
@@ -263,17 +359,17 @@
 
                                 @if($book->seller)
 
-                                    <div>
+                                    <div class="book-request-item-info">
 
-                                        <strong>
+                                        <span class="book-request-item-name">
                                             {{ $book->seller->name }}
-                                        </strong>
+                                        </span>
 
                                         @if($book->seller->email)
 
-                                            <small class="d-block text-muted">
+                                            <span class="book-request-item-meta">
                                                 {{ $book->seller->email }}
-                                            </small>
+                                            </span>
 
                                         @endif
 
@@ -281,7 +377,7 @@
 
                                 @else
 
-                                    <span class="text-muted">
+                                    <span class="book-request-muted">
                                         Unknown seller
                                     </span>
 
@@ -293,7 +389,17 @@
                             {{-- CATEGORY --}}
                             <td>
 
-                                {{ $book->category?->name ?? '—' }}
+                                @if($book->category?->name)
+
+                                    <span class="book-request-category">
+                                        {{ $book->category->name }}
+                                    </span>
+
+                                @else
+
+                                    <span class="book-request-muted">—</span>
+
+                                @endif
 
                             </td>
 
@@ -301,9 +407,9 @@
                             {{-- PRICE --}}
                             <td>
 
-                                <strong>
+                                <span class="book-request-price">
                                     ₼{{ number_format((float) $book->price, 2) }}
-                                </strong>
+                                </span>
 
                             </td>
 
@@ -311,7 +417,10 @@
                             {{-- STOCK --}}
                             <td>
 
-                                {{ $book->stock }}
+                                <span class="book-request-stock">
+                                    <i class="bi bi-stack"></i>
+                                    {{ $book->stock }}
+                                </span>
 
                             </td>
 
@@ -339,7 +448,9 @@
 
                                 @endphp
 
-                                {{ $condition }}
+                                <span class="book-request-condition">
+                                    {{ $condition }}
+                                </span>
 
                             </td>
 
@@ -351,18 +462,18 @@
 
                                     $statusClass = match($book->status) {
 
-                                        'approved' => 'bg-success',
+                                        'approved' => 'book-request-status-approved',
 
-                                        'rejected' => 'bg-danger',
+                                        'rejected' => 'book-request-status-rejected',
 
-                                        default => 'bg-warning text-dark',
+                                        default => 'book-request-status-pending',
 
                                     };
 
                                 @endphp
 
 
-                                <span class="badge {{ $statusClass }}">
+                                <span class="book-request-status-pill {{ $statusClass }}">
 
                                     {{ ucfirst($book->status) }}
 
@@ -374,7 +485,9 @@
                             {{-- DATE --}}
                             <td>
 
-                                {{ $book->created_at?->format('d.m.Y') }}
+                                <span class="book-request-item-meta">
+                                    {{ $book->created_at?->format('d.m.Y') }}
+                                </span>
 
                             </td>
 
@@ -382,12 +495,12 @@
                             {{-- ACTIONS --}}
                             <td>
 
-                                <div class="d-flex justify-content-end gap-2">
+                                <div class="book-request-actions">
 
                                     {{-- REVIEW --}}
                                     <a
                                         href="{{ route('admin.book.requests.edit', $book->id) }}"
-                                        class="btn btn-warning btn-sm"
+                                        class="book-request-action-btn book-request-review-btn"
                                         title="Review Request"
                                     >
 
@@ -400,7 +513,6 @@
                                     <form
                                         action="{{ route('admin.book.requests.destroy', $book->id) }}"
                                         method="POST"
-                                        class="d-inline"
                                         onsubmit="return confirm('Are you sure you want to delete this book request?');"
                                     >
 
@@ -410,7 +522,7 @@
 
                                         <button
                                             type="submit"
-                                            class="btn btn-danger btn-sm"
+                                            class="book-request-action-btn book-request-delete-btn"
                                             title="Delete Request"
                                         >
 
@@ -430,20 +542,19 @@
 
                         <tr>
 
-                            <td
-                                colspan="10"
-                                class="text-center py-5"
-                            >
+                            <td colspan="10">
 
-                                <div class="text-muted">
+                                <div class="book-request-empty-state">
 
-                                    <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                                    <div class="book-request-empty-icon">
+                                        <i class="bi bi-inbox"></i>
+                                    </div>
 
-                                    <h6 class="mb-1">
+                                    <h5>
                                         No Book Requests
-                                    </h6>
+                                    </h5>
 
-                                    <p class="mb-0 small">
+                                    <p>
                                         There are currently no books waiting for approval.
                                     </p>
 
@@ -461,7 +572,7 @@
 
         </div>
 
-    </div>
+    </section>
 
 </div>
 

@@ -89,15 +89,6 @@ class BookRequestController extends Controller
     }
 
     /**
-     * Create page.
-     */
-    public function create()
-    {
-        return redirect()
-            ->route('admin.book.requests.index');
-    }
-
-    /**
      * Store is not used for admin book requests.
      */
     public function store(Request $request)
