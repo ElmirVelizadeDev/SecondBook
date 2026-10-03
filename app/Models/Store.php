@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Store extends Model
 {
     use HasFactory;
@@ -37,8 +38,20 @@ class Store extends Model
         return $this->belongsTo(User::class, 'seller_id');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Store Books
+    |--------------------------------------------------------------------------
+    */
+
+    public function books()
+    {
+        return $this->hasMany(Book::class, 'seller_id', 'seller_id');
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active';
     }
+
 }

@@ -28,12 +28,22 @@
     >
 
     {{-- Seller CSS --}}
+    <link rel="stylesheet" href="{{ asset('seller/css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('seller/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('seller/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('seller/css/dashboard.css') }}">
+
 
     @stack('css')
 </head>
 
 <body>
+
+    @php
+        $sellerUnreadMessagesCount = \App\Models\Message::where('seller_id', auth()->id())
+            ->where('status', 'unread')
+            ->count();
+    @endphp
 
     <div class="seller-wrapper">
 
@@ -53,24 +63,27 @@
 
     </div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
     @stack('js')
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
 
-        const toggle = document.getElementById('sellerMobileToggle');
-        const sidebar = document.querySelector('.seller-sidebar');
+            const toggle = document.getElementById('sellerMobileToggle');
+            const sidebar = document.querySelector('.seller-sidebar');
 
-        if (toggle && sidebar) {
-            toggle.addEventListener('click', function () {
-                sidebar.classList.toggle('show');
-            });
-        }
+            if (toggle && sidebar) {
 
-    });
-</script>
+                toggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('show');
+                });
+
+            }
+
+        });
+    </script>
 
 </body>
 

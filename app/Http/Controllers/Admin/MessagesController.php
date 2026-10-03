@@ -20,44 +20,37 @@ class MessagesController extends Controller
         $this->activityLogService = $activityLogService;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Messages List
+    |--------------------------------------------------------------------------
+    */
+
     public function index(Request $request)
     {
-        $query = Message::query();
+        $query = Message::query()
+            ->with(['user'])
+            ->withCount('replies');
+            
 
         // Search
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = trim($request->search);
 
             $query->where(function ($q) use ($search) {
-                $q->where(
-                    'name',
-                    'like',
-                    "%{$search}%"
-                )
-                    ->orWhere(
-                        'email',
-                        'like',
-                        "%{$search}%"
-                    )
-                    ->orWhere(
-                        'subject',
-                        'like',
-                        "%{$search}%"
-                    )
-                    ->orWhere(
-                        'message',
-                        'like',
-                        "%{$search}%"
-                    );
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('subject', 'like', "%{$search}%")
+                    ->orWhere('message', 'like', "%{$search}%");
             });
         }
 
         // Status filter
-        if ($request->filled('status')) {
-            $query->where(
-                'status',
-                $request->status
-            );
+        if (
+            $request->filled('status') &&
+            in_array($request->status, ['unread', 'read'], true)
+        ) {
+            $query->where('status', $request->status);
         }
 
         $messages = $query
@@ -65,7 +58,12 @@ class MessagesController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        // Statistics
+        /*
+        |--------------------------------------------------------------------------
+        | Statistics
+        |--------------------------------------------------------------------------
+        */
+
         $totalMessages = Message::count();
 
         $unreadMessages = Message::where(
@@ -95,6 +93,12 @@ class MessagesController extends Controller
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Show
+    |--------------------------------------------------------------------------
+    */
+
     public function show(Message $message)
     {
         /*
@@ -120,8 +124,8 @@ class MessagesController extends Controller
         |--------------------------------------------------------------------------
         |
         | New messages should already have user_id.
-        | For older messages where user_id is NULL,
-        | try to find the user by email.
+        | Older messages may have user_id = NULL,
+        | so try to find the user by email.
         |
         */
 
@@ -142,6 +146,12 @@ class MessagesController extends Controller
             )
         );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mark As Unread
+    |--------------------------------------------------------------------------
+    */
 
     public function markAsUnread(Message $message)
     {
@@ -242,7 +252,7 @@ class MessagesController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | Reply in Site
+    | Site Reply
     |--------------------------------------------------------------------------
     */
 
@@ -265,8 +275,7 @@ class MessagesController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | If the sender does not have a registered account,
-        | an in-site notification cannot be sent.
+        | User must have a SecondBook account
         |--------------------------------------------------------------------------
         */
 
@@ -371,4 +380,3 @@ class MessagesController extends Controller
             );
     }
 }
-

@@ -10,24 +10,23 @@ use Illuminate\Http\Request;
 
 class BooksController extends Controller
 {
+    /**
+     * Display books listing.
+     */
     public function index(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | MARKETPLACE STATUS
-        |--------------------------------------------------------------------------
-        */
-
         if (!Setting::get('marketplace_enabled', true)) {
             abort(503);
         }
 
-        $query = Book::with(['author', 'category'])
-            ->where('status', 'approved');
+        $query = Book::with([
+            'author',
+            'category',
+        ])->where('status', 'approved');
 
         /*
         |--------------------------------------------------------------------------
-        | SEARCH
+        | Search
         |--------------------------------------------------------------------------
         */
 
@@ -58,7 +57,7 @@ class BooksController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | CATEGORY
+        | Category Filter
         |--------------------------------------------------------------------------
         */
 
@@ -71,7 +70,7 @@ class BooksController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | CONDITION
+        | Condition Filter
         |--------------------------------------------------------------------------
         */
 
@@ -84,7 +83,7 @@ class BooksController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | SORT
+        | Sorting
         |--------------------------------------------------------------------------
         */
 
@@ -112,19 +111,13 @@ class BooksController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | PAGINATION
+        | Pagination
         |--------------------------------------------------------------------------
         */
 
         $books = $query
             ->paginate(12)
             ->withQueryString();
-
-        /*
-        |--------------------------------------------------------------------------
-        | CATEGORIES
-        |--------------------------------------------------------------------------
-        */
 
         $categories = Category::orderBy('name', 'asc')->get();
 
@@ -137,29 +130,14 @@ class BooksController extends Controller
         );
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | BOOK DETAILS
-    |--------------------------------------------------------------------------
-    */
-
+    /**
+     * Display a single book.
+     */
     public function show(Book $book)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | MARKETPLACE STATUS
-        |--------------------------------------------------------------------------
-        */
-
         if (!Setting::get('marketplace_enabled', true)) {
             abort(503);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Only approved books can be viewed.
-        |--------------------------------------------------------------------------
-        */
 
         if ($book->status !== 'approved') {
             abort(404);
@@ -167,7 +145,7 @@ class BooksController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Load relationships needed for the details page.
+        | Book Relations
         |--------------------------------------------------------------------------
         */
 
@@ -175,7 +153,7 @@ class BooksController extends Controller
             'author',
             'category',
             'publisher',
-            'seller',
+            'seller.store',
         ]);
 
         return view(
@@ -184,3 +162,4 @@ class BooksController extends Controller
         );
     }
 }
+

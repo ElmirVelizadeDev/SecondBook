@@ -1,0 +1,965 @@
+/* =========================================================
+   SELLER MESSAGES INDEX (PREMIUM)
+   Same visual system as Sidebar / Header / Message Details
+========================================================= */
+
+.seller-messages-page {
+    --mi-accent: #8b5e3c;
+    --mi-accent-light: #b9825d;
+    --mi-glow: rgba(139, 94, 60, .35);
+    --mi-soft: #faf7f4;
+    --mi-soft-border: #efe6de;
+}
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.seller-messages-page .seller-page-heading {
+    margin-bottom: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    animation: miFadeUp .5s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.seller-messages-page .seller-page-heading h1 {
+    margin: 0 0 6px;
+    color: var(--seller-text);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+}
+
+.seller-messages-page .seller-page-heading p {
+    margin: 0;
+    color: var(--seller-muted);
+    font-size: 13px;
+}
+
+.seller-messages-heading-pill {
+    padding: 9px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid rgba(139, 94, 60, .22);
+    border-radius: 999px;
+    background: var(--seller-primary-light);
+    color: var(--seller-primary);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.seller-messages-heading-pill i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--mi-accent-light);
+    animation: miDot 1.8s ease-in-out infinite;
+}
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.seller-message-stat-card {
+    position: relative;
+    min-height: 118px;
+    padding: 22px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--seller-card);
+    border: 1px solid var(--seller-border);
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(17, 24, 39, .035);
+    animation: miFadeUp .55s cubic-bezier(.22, 1, .36, 1) both;
+    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s ease, border-color .3s ease;
+}
+
+.row > div:nth-child(1) > .seller-message-stat-card { animation-delay: .05s; }
+.row > div:nth-child(2) > .seller-message-stat-card { animation-delay: .12s; }
+.row > div:nth-child(3) > .seller-message-stat-card { animation-delay: .19s; }
+.row > div:nth-child(4) > .seller-message-stat-card { animation-delay: .26s; }
+
+/* Corner glow */
+.seller-message-stat-card::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 94, 60, .14), transparent 70%);
+    transition: transform .5s ease;
+    pointer-events: none;
+}
+
+.seller-message-stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 94, 60, .3);
+    box-shadow: 0 18px 36px rgba(139, 94, 60, .14);
+}
+
+.seller-message-stat-card:hover::before {
+    transform: scale(1.5);
+}
+
+.seller-message-stat-icon {
+    position: relative;
+    width: 54px;
+    height: 54px;
+    flex: 0 0 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #b9825d 0%, #8b5e3c 60%, #75492b 100%);
+    color: #fff;
+    font-size: 22px;
+    box-shadow: 0 10px 20px var(--mi-glow), inset 0 1px 0 rgba(255, 255, 255, .25);
+    transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.seller-message-stat-card:hover .seller-message-stat-icon {
+    transform: rotate(-8deg) scale(1.08);
+}
+
+.seller-message-stat-icon.unread {
+    background: linear-gradient(135deg, #d39a72, #b9825d);
+}
+
+.seller-message-stat-icon.read {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    box-shadow: 0 10px 20px rgba(21, 128, 61, .3), inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+
+.seller-message-stat-icon.today {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, .3), inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+
+.seller-message-stat-content {
+    min-width: 0;
+}
+
+.seller-message-stat-card span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--seller-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.seller-message-stat-card h3 {
+    margin: 0;
+    color: var(--seller-text);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1;
+}
+
+/* =========================================================
+   MAIN PANEL
+========================================================= */
+
+.seller-messages-panel {
+    overflow: hidden;
+    background: var(--seller-card);
+    border: 1px solid var(--seller-border);
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(17, 24, 39, .04);
+    animation: miFadeUp .55s .3s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+/* =========================================================
+   FILTER BAR
+========================================================= */
+
+.seller-messages-filter {
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    border-bottom: 1px solid var(--seller-border);
+    background: linear-gradient(180deg, var(--mi-soft), var(--seller-card));
+}
+
+/* Tabs */
+.seller-message-tabs {
+    padding: 4px;
+    display: inline-flex;
+    gap: 4px;
+    border: 1px solid var(--seller-border);
+    border-radius: 14px;
+    background: var(--seller-card);
+}
+
+.seller-message-tab {
+    height: 38px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    color: var(--seller-muted);
+    font-size: 12px;
+    font-weight: 700;
+    transition: color .25s ease, background .25s ease, box-shadow .25s ease;
+}
+
+.seller-message-tab em {
+    min-width: 22px;
+    height: 20px;
+    padding: 0 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(139, 94, 60, .1);
+    color: var(--seller-primary);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 800;
+    transition: background .25s ease, color .25s ease;
+}
+
+.seller-message-tab:hover {
+    color: var(--mi-accent);
+    background: var(--seller-primary-light);
+}
+
+.seller-message-tab.active {
+    background: linear-gradient(135deg, #9a6a45 0%, #8b5e3c 60%, #75492b 100%);
+    color: #fff;
+    box-shadow: 0 8px 18px var(--mi-glow), inset 0 1px 0 rgba(255, 255, 255, .2);
+}
+
+.seller-message-tab.active em {
+    background: rgba(255, 255, 255, .22);
+    color: #fff;
+}
+
+/* Search form */
+.seller-messages-search-form {
+    flex: 1;
+    min-width: 280px;
+    max-width: 520px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.seller-message-search {
+    height: 46px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: 1.5px solid var(--seller-border);
+    border-radius: 13px;
+    background: var(--seller-card);
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+.seller-message-search i {
+    margin-left: 15px;
+    color: var(--seller-muted);
+    font-size: 14px;
+    transition: color .25s ease;
+}
+
+.seller-message-search input {
+    width: 100%;
+    height: 100%;
+    padding: 0 14px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--seller-text);
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.seller-message-search input::placeholder {
+    color: var(--seller-muted);
+}
+
+.seller-message-search:focus-within {
+    border-color: var(--mi-accent);
+    box-shadow: 0 0 0 4px rgba(139, 94, 60, .13);
+}
+
+.seller-message-search:focus-within i {
+    color: var(--mi-accent);
+}
+
+/* Buttons */
+.seller-message-filter-button,
+.seller-message-reset-button {
+    height: 46px;
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 13px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.seller-message-filter-button {
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    background: linear-gradient(135deg, #9a6a45 0%, #8b5e3c 60%, #75492b 100%);
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(139, 94, 60, .32), inset 0 1px 0 rgba(255, 255, 255, .2);
+    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s ease;
+}
+
+.seller-message-filter-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .4), transparent);
+    transform: skewX(-20deg);
+    animation: miShine 4.5s ease-in-out infinite;
+}
+
+.seller-message-filter-button:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px rgba(139, 94, 60, .42), inset 0 1px 0 rgba(255, 255, 255, .2);
+}
+
+.seller-message-filter-button:active {
+    transform: scale(.97);
+}
+
+.seller-message-reset-button {
+    border: 1px solid var(--seller-border);
+    background: var(--seller-card);
+    color: var(--seller-muted);
+    transition: color .25s ease, border-color .25s ease, transform .25s ease;
+}
+
+.seller-message-reset-button:hover {
+    color: var(--mi-accent);
+    border-color: rgba(139, 94, 60, .4);
+    transform: translateY(-1px);
+}
+
+.seller-message-tab:focus-visible,
+.seller-message-filter-button:focus-visible,
+.seller-message-reset-button:focus-visible,
+.seller-message-item:focus-visible {
+    outline: 2px solid var(--mi-accent-light);
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   MESSAGE LIST
+========================================================= */
+
+.seller-message-list {
+    width: 100%;
+}
+
+.seller-message-item {
+    position: relative;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--seller-border);
+    background: var(--seller-card);
+    color: inherit;
+    isolation: isolate;
+    animation: miItemIn .5s cubic-bezier(.22, 1, .36, 1) both;
+    transition: background .25s ease, padding-left .3s cubic-bezier(.22, 1, .36, 1);
+}
+
+.seller-message-item:nth-child(1)  { animation-delay: .38s; }
+.seller-message-item:nth-child(2)  { animation-delay: .43s; }
+.seller-message-item:nth-child(3)  { animation-delay: .48s; }
+.seller-message-item:nth-child(4)  { animation-delay: .53s; }
+.seller-message-item:nth-child(5)  { animation-delay: .58s; }
+.seller-message-item:nth-child(6)  { animation-delay: .63s; }
+.seller-message-item:nth-child(7)  { animation-delay: .68s; }
+.seller-message-item:nth-child(n+8) { animation-delay: .72s; }
+
+.seller-message-item:last-child {
+    border-bottom: 0;
+}
+
+/* Slide-in hover fill */
+.seller-message-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(139, 94, 60, .09), rgba(139, 94, 60, 0) 70%);
+    transform: translateX(-101%);
+    transition: transform .4s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Left indicator */
+.seller-message-item::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 0;
+    border-radius: 0 6px 6px 0;
+    background: linear-gradient(180deg, #b9825d, #8b5e3c);
+    transform: translateY(-50%);
+    transition: height .35s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.seller-message-item:hover {
+    padding-left: 28px;
+    color: inherit;
+}
+
+.seller-message-item:hover::before {
+    transform: translateX(0);
+}
+
+.seller-message-item:hover::after {
+    height: 46%;
+}
+
+.seller-message-item.is-unread {
+    background: linear-gradient(90deg, rgba(139, 94, 60, .06), rgba(139, 94, 60, .015) 60%);
+}
+
+.seller-message-item.is-unread::after {
+    height: 62%;
+}
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+.seller-message-avatar {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f3ece7, #e9d5c3);
+    color: var(--mi-accent);
+    font-size: 17px;
+    font-weight: 800;
+    box-shadow: 0 8px 18px rgba(139, 94, 60, .16);
+    transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.seller-message-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    object-fit: cover;
+}
+
+.seller-message-item:hover .seller-message-avatar {
+    transform: scale(1.07) rotate(-4deg);
+}
+
+.seller-message-item.is-unread .seller-message-avatar {
+    box-shadow: 0 0 0 2px var(--seller-card), 0 0 0 4px rgba(139, 94, 60, .4), 0 8px 18px rgba(139, 94, 60, .2);
+}
+
+.seller-message-avatar-dot {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 13px;
+    height: 13px;
+    border: 2.5px solid var(--seller-card);
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d39a72, #8b5e3c);
+    animation: miDot 1.8s ease-in-out infinite;
+}
+
+/* =========================================================
+   MESSAGE CONTENT
+========================================================= */
+
+.seller-message-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.seller-message-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.seller-message-sender {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.seller-message-sender strong {
+    overflow: hidden;
+    color: var(--seller-text);
+    font-size: 13px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.seller-message-item.is-unread .seller-message-sender strong {
+    font-weight: 800;
+}
+
+.seller-message-new-badge {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #d39a72, #b9825d);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(185, 130, 93, .45);
+}
+
+.seller-message-top time {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--seller-muted);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.seller-message-subject {
+    margin-top: 7px;
+    overflow: hidden;
+    color: var(--seller-text);
+    font-size: 13px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.seller-message-content p {
+    margin: 5px 0 0;
+    overflow: hidden;
+    color: var(--seller-muted);
+    font-size: 12px;
+    line-height: 1.65;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Meta chips */
+.seller-message-meta {
+    margin-top: 11px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.seller-message-meta span {
+    max-width: 280px;
+    padding: 4px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    border: 1px solid var(--mi-soft-border);
+    border-radius: 999px;
+    background: var(--mi-soft);
+    color: var(--seller-muted);
+    font-size: 10px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.seller-message-meta i {
+    color: var(--seller-primary);
+    font-size: 11px;
+}
+
+.seller-message-meta span.has-replies {
+    border-color: transparent;
+    background: var(--seller-primary-light);
+    color: var(--seller-primary);
+    font-weight: 800;
+}
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.seller-message-arrow {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--seller-border);
+    border-radius: 12px;
+    background: var(--seller-card);
+    color: var(--seller-muted);
+    font-size: 15px;
+    transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), color .25s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.seller-message-item:hover .seller-message-arrow {
+    border-color: transparent;
+    background: linear-gradient(135deg, #b9825d, #8b5e3c);
+    color: #fff;
+    box-shadow: 0 8px 18px var(--mi-glow);
+    transform: translateX(4px);
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.seller-messages-pagination {
+    padding: 16px 22px;
+    border-top: 1px solid var(--seller-border);
+    background: var(--mi-soft);
+}
+
+.seller-messages-pagination nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.seller-messages-pagination p {
+    margin: 0;
+    color: var(--seller-muted);
+    font-size: 11px;
+}
+
+.seller-messages-pagination .pagination {
+    margin: 0;
+    gap: 5px;
+    justify-content: flex-end;
+}
+
+.seller-messages-pagination .page-link {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--seller-border);
+    border-radius: 10px !important;
+    background: var(--seller-card);
+    color: var(--seller-muted);
+    font-size: 11px;
+    font-weight: 700;
+    box-shadow: none;
+    transition: transform .25s ease, color .25s ease, border-color .25s ease;
+}
+
+.seller-messages-pagination .page-link:hover {
+    border-color: rgba(139, 94, 60, .45);
+    background: var(--seller-card);
+    color: var(--mi-accent);
+    transform: translateY(-2px);
+}
+
+.seller-messages-pagination .page-item.active .page-link {
+    border-color: transparent;
+    background: linear-gradient(135deg, #9a6a45, #8b5e3c 60%, #75492b);
+    color: #fff;
+    box-shadow: 0 8px 16px var(--mi-glow);
+}
+
+.seller-messages-pagination .page-item.disabled .page-link {
+    opacity: .5;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.seller-messages-empty {
+    margin: 26px;
+    padding: 64px 25px;
+    text-align: center;
+    border: 1.5px dashed rgba(139, 94, 60, .3);
+    border-radius: 20px;
+    background: radial-gradient(400px 200px at 50% 0%, rgba(139, 94, 60, .06), transparent 70%);
+}
+
+.seller-messages-empty-icon {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #b9825d, #8b5e3c);
+    color: #fff;
+    font-size: 27px;
+    box-shadow: 0 14px 28px var(--mi-glow), inset 0 1px 0 rgba(255, 255, 255, .25);
+    animation: miFloatY 3s ease-in-out infinite;
+}
+
+.seller-messages-empty h5 {
+    margin: 0 0 7px;
+    color: var(--seller-text);
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.seller-messages-empty p {
+    margin: 0 0 22px;
+    color: var(--seller-muted);
+    font-size: 12px;
+}
+
+/* =========================================================
+   KEYFRAMES
+========================================================= */
+
+@keyframes miFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes miItemIn {
+    from { opacity: 0; transform: translateX(-14px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes miShine {
+    0%, 60% { left: -120%; }
+    100%    { left: 160%; }
+}
+
+@keyframes miFloatY {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-7px); }
+}
+
+@keyframes miDot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(185, 130, 93, .55); }
+    50%      { box-shadow: 0 0 0 6px rgba(185, 130, 93, 0); }
+}
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+:root[data-theme="dark"] .seller-messages-page {
+    --mi-soft: #1b2639;
+    --mi-soft-border: #263247;
+}
+
+:root[data-theme="dark"] .seller-message-stat-card,
+:root[data-theme="dark"] .seller-messages-panel {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
+}
+
+:root[data-theme="dark"] .seller-messages-filter {
+    background: linear-gradient(180deg, #1b2639, var(--seller-card));
+}
+
+:root[data-theme="dark"] .seller-message-tabs,
+:root[data-theme="dark"] .seller-message-search,
+:root[data-theme="dark"] .seller-message-reset-button,
+:root[data-theme="dark"] .seller-message-arrow {
+    background: #131b2c;
+}
+
+:root[data-theme="dark"] .seller-message-item.is-unread {
+    background: linear-gradient(90deg, rgba(185, 130, 93, .1), rgba(185, 130, 93, .02) 60%);
+}
+
+:root[data-theme="dark"] .seller-message-avatar {
+    background: linear-gradient(135deg, #2a3550, #1f2a42);
+    color: #e9c9ae;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .3);
+}
+
+:root[data-theme="dark"] .seller-message-item.is-unread .seller-message-avatar {
+    box-shadow: 0 0 0 2px var(--seller-card), 0 0 0 4px rgba(185, 130, 93, .5);
+}
+
+:root[data-theme="dark"] .seller-message-meta span.has-replies {
+    color: #e0b697;
+}
+
+:root[data-theme="dark"] .seller-messages-pagination {
+    background: #1b2639;
+}
+
+:root[data-theme="dark"] .seller-messages-pagination .page-link {
+    background: #131b2c;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 992px) {
+
+    .seller-messages-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .seller-message-tabs {
+        width: 100%;
+    }
+
+    .seller-message-tab {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .seller-messages-search-form {
+        min-width: 0;
+        max-width: none;
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .seller-messages-page .seller-page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .seller-messages-page .seller-page-heading h1 {
+        font-size: 21px;
+    }
+
+    .seller-message-item {
+        padding: 16px;
+        align-items: flex-start;
+    }
+
+    .seller-message-item:hover {
+        padding-left: 16px;
+    }
+
+    .seller-message-avatar {
+        width: 44px;
+        height: 44px;
+        flex-basis: 44px;
+        border-radius: 13px;
+    }
+
+    .seller-message-avatar img {
+        border-radius: 13px;
+    }
+
+    .seller-message-top {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .seller-message-arrow {
+        display: none;
+    }
+
+    .seller-messages-pagination nav {
+        justify-content: center;
+    }
+
+    .seller-messages-pagination .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .seller-messages-page .seller-page-heading h1 {
+        font-size: 20px;
+    }
+
+    .seller-messages-filter {
+        padding: 15px;
+    }
+
+    .seller-messages-search-form {
+        flex-wrap: wrap;
+    }
+
+    .seller-message-search {
+        flex: 1 1 100%;
+    }
+
+    .seller-message-filter-button,
+    .seller-message-reset-button {
+        flex: 1;
+    }
+
+    .seller-message-stat-card {
+        min-height: 104px;
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .seller-message-stat-card h3 {
+        font-size: 24px;
+    }
+
+    .seller-messages-panel {
+        border-radius: 16px;
+    }
+
+    .seller-messages-empty {
+        margin: 16px;
+        padding: 44px 18px;
+    }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .seller-messages-page *,
+    .seller-messages-page *::before,
+    .seller-messages-page *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

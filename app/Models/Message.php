@@ -11,6 +11,7 @@ class Message extends Model
 
     protected $fillable = [
         'user_id',
+        'seller_id',
         'name',
         'email',
         'subject',
@@ -23,8 +24,18 @@ class Message extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
+
     public function replies()
     {
         return $this->hasMany(MessageReply::class);
+    }
+
+    public function isSellerMessage(): bool
+    {
+        return !is_null($this->seller_id);
     }
 }

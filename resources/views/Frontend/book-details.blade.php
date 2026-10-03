@@ -737,45 +737,121 @@
 
 
             {{-- =====================================================
-                 SELLER CARD
+                STORE CARD
             ====================================================== --}}
+            @php
+                $store = $book->seller?->store;
+            @endphp
 
-            <div class="seller-card">
+            @if($store && $store->isActive())
 
-                <div class="seller-left">
+                @php
+                    $storeLogo = $store->logo;
 
-                    <div class="seller-avatar">
+                    if ($storeLogo) {
+                        if (
+                            str_starts_with($storeLogo, 'http://') ||
+                            str_starts_with($storeLogo, 'https://')
+                        ) {
+                            $storeLogoUrl = $storeLogo;
+                        } elseif (
+                            str_starts_with($storeLogo, 'storage/') ||
+                            str_starts_with($storeLogo, 'uploads/')
+                        ) {
+                            $storeLogoUrl = asset($storeLogo);
+                        } else {
+                            $storeLogoUrl = asset(
+                                'storage/' . ltrim($storeLogo, '/')
+                            );
+                        }
+                    } else {
+                        $storeLogoUrl = null;
+                    }
+                @endphp
 
-                        <i class="bi bi-shop"></i>
+                <div class="seller-card">
+
+                    <div class="seller-left">
+
+                        <div class="seller-avatar">
+                            @if($storeLogoUrl)
+                                <img
+                                    src="{{ $storeLogoUrl }}"
+                                    alt="{{ $store->name }}"
+                                >
+                            @else
+                                <i class="bi bi-shop"></i>
+                            @endif
+                        </div>
+
+                        <div class="seller-info">
+                            <span>Sold by</span>
+
+                            <strong>
+                                {{ $store->name }}
+                            </strong>
+
+                            <div class="seller-meta">
+                                <span>
+                                    <i class="bi bi-patch-check-fill"></i>
+                                    Verified Store
+                                </span>
+
+                                @if(!empty($store->address))
+                                    <span class="seller-meta-separator">·</span>
+
+                                    <span>
+                                        <i class="bi bi-geo-alt"></i>
+                                        {{ $store->address }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
 
                     </div>
 
-                    <div class="seller-info">
+                    <div class="seller-right">
 
-                        <span>
-                            Sold by
-                        </span>
-
-                        <strong>
-                            {{ $book->seller->name ?? 'SecondBook Seller' }}
-                        </strong>
+                        <a
+                            href="{{ route('store.show', $store->slug) }}"
+                            class="seller-store-button"
+                        >
+                            <span>View Store</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
 
                     </div>
 
                 </div>
 
+            @elseif($book->seller)
 
-                <div class="seller-verified">
+                <div class="seller-card">
 
-                    <i class="bi bi-patch-check-fill"></i>
+                    <div class="seller-left">
 
-                    <span>
-                        Verified Seller
-                    </span>
+                        <div class="seller-avatar">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <div class="seller-info">
+                            <span>Sold by</span>
+
+                            <strong>
+                                {{ $book->seller->name }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <div class="seller-verified">
+                        <i class="bi bi-patch-check-fill"></i>
+                        <span>Verified Seller</span>
+                    </div>
 
                 </div>
 
-            </div>
+            @endif
 
         </div>
 

@@ -46,6 +46,7 @@ use App\Http\Controllers\Frontend\FaqController as FrontendFaqController;
 use App\Http\Controllers\Frontend\OrdersController as FrontendOrdersController;
 use App\Http\Controllers\Frontend\PaymentController as FrontendPaymentController;
 use App\Http\Controllers\Frontend\NotificationController as FrontendNotificationController;
+use App\Http\Controllers\Frontend\StoreController as FrontendStoreController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ShippingInformationController;
 use App\Http\Controllers\Frontend\HelpCenterController;
@@ -71,6 +72,7 @@ use App\Http\Controllers\Seller\BookController;
 use App\Http\Controllers\Seller\SalesController;
 use App\Http\Controllers\Seller\ReviewController as SellerReviewController;
 use App\Http\Controllers\Seller\StoreSettingsController;
+use App\Http\Controllers\Seller\MessagesController as SellerMessagesController;
 
 // =========================================================
 // AUTH CONTROLLER
@@ -100,10 +102,8 @@ Route::prefix('admin')
         // ---------------------------------------------------------
 
         Route::controller(AdminController::class)->group(function () {
-
             Route::get('/dashboard', 'dashboard')
                 ->name('dashboard');
-
         });
 
 
@@ -112,7 +112,6 @@ Route::prefix('admin')
         // ---------------------------------------------------------
 
         // Books
-
         Route::controller(BooksController::class)
             ->prefix('books')
             ->name('books.')
@@ -138,12 +137,10 @@ Route::prefix('admin')
 
                 Route::delete('/{book}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Book Conditions
-
         Route::controller(BookConditionController::class)
             ->prefix('book-conditions')
             ->name('book.conditions.')
@@ -169,12 +166,10 @@ Route::prefix('admin')
 
                 Route::delete('/{condition}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Book Requests
-
         Route::controller(BookRequestController::class)
             ->prefix('book-requests')
             ->name('book.requests.')
@@ -194,12 +189,10 @@ Route::prefix('admin')
 
                 Route::delete('/{book}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Categories
-
         Route::controller(CategoryController::class)
             ->prefix('categories')
             ->name('categories.')
@@ -228,12 +221,10 @@ Route::prefix('admin')
 
                 Route::delete('/{category}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Authors
-
         Route::controller(AuthorsController::class)
             ->prefix('authors')
             ->name('authors.')
@@ -262,12 +253,10 @@ Route::prefix('admin')
 
                 Route::delete('/{author}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Publishers
-
         Route::controller(PublishersController::class)
             ->prefix('publishers')
             ->name('publishers.')
@@ -296,7 +285,6 @@ Route::prefix('admin')
 
                 Route::delete('/{publisher}', 'destroy')
                     ->name('destroy');
-
             });
 
 
@@ -305,7 +293,6 @@ Route::prefix('admin')
         // ---------------------------------------------------------
 
         // Refunds
-
         Route::controller(RefundsController::class)
             ->prefix('refunds')
             ->name('refunds.')
@@ -334,12 +321,10 @@ Route::prefix('admin')
 
                 Route::delete('/{refund}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Shipping
-
         Route::controller(ShippingController::class)
             ->prefix('shipping')
             ->name('shipping.')
@@ -362,12 +347,10 @@ Route::prefix('admin')
 
                 Route::delete('/{shipping}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Coupons
-
         Route::controller(CouponsController::class)
             ->prefix('coupons')
             ->name('coupons.')
@@ -396,12 +379,10 @@ Route::prefix('admin')
 
                 Route::delete('/{coupon}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Orders
-
         Route::controller(OrdersController::class)
             ->prefix('orders')
             ->name('orders.')
@@ -427,12 +408,10 @@ Route::prefix('admin')
 
                 Route::delete('/{order}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Payments
-
         Route::controller(PaymentsController::class)
             ->prefix('payments')
             ->name('payments.')
@@ -458,7 +437,6 @@ Route::prefix('admin')
 
                 Route::delete('/{payment}', 'destroy')
                     ->name('destroy');
-
             });
 
 
@@ -482,7 +460,6 @@ Route::prefix('admin')
 
                 Route::patch('/{application}/reject', 'reject')
                     ->name('reject');
-
             });
 
 
@@ -491,7 +468,6 @@ Route::prefix('admin')
         // ---------------------------------------------------------
 
         // Users
-
         Route::controller(UsersController::class)
             ->prefix('users')
             ->name('users.')
@@ -520,12 +496,10 @@ Route::prefix('admin')
 
                 Route::delete('/{user}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Sellers
-
         Route::controller(SellersController::class)
             ->prefix('sellers')
             ->name('sellers.')
@@ -554,12 +528,10 @@ Route::prefix('admin')
 
                 Route::delete('/{seller}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Roles
-
         Route::controller(RoleController::class)
             ->prefix('roles')
             ->name('roles.')
@@ -585,7 +557,6 @@ Route::prefix('admin')
 
                 Route::delete('/{role}', 'destroy')
                     ->name('destroy');
-
             });
 
 
@@ -594,7 +565,6 @@ Route::prefix('admin')
         // ---------------------------------------------------------
 
         // Reviews
-
         Route::controller(ReviewsController::class)
             ->prefix('reviews')
             ->name('reviews.')
@@ -614,12 +584,10 @@ Route::prefix('admin')
 
                 Route::delete('/{review}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Messages
-
         Route::controller(MessagesController::class)
             ->prefix('messages')
             ->name('messages.')
@@ -648,12 +616,10 @@ Route::prefix('admin')
 
                 Route::delete('/{message}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Banners
-
         Route::controller(BannerController::class)
             ->prefix('banners')
             ->name('banners.')
@@ -676,12 +642,10 @@ Route::prefix('admin')
 
                 Route::delete('/{banner}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Blogs
-
         Route::controller(BlogController::class)
             ->prefix('blogs')
             ->name('blogs.')
@@ -704,12 +668,10 @@ Route::prefix('admin')
 
                 Route::delete('/{blog}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // FAQ
-
         Route::controller(FaqController::class)
             ->prefix('faq')
             ->name('faq.')
@@ -732,7 +694,6 @@ Route::prefix('admin')
 
                 Route::delete('/{faq}', 'destroy')
                     ->name('destroy');
-
             });
 
 
@@ -741,7 +702,6 @@ Route::prefix('admin')
         // ---------------------------------------------------------
 
         // Reports
-
         Route::controller(ReportsController::class)
             ->prefix('reports')
             ->name('reports.')
@@ -755,12 +715,10 @@ Route::prefix('admin')
 
                 Route::get('/books', 'books')
                     ->name('books');
-
             });
 
 
         // Analytics
-
         Route::controller(AnalyticsController::class)
             ->prefix('analytics')
             ->name('analytics.')
@@ -768,7 +726,6 @@ Route::prefix('admin')
 
                 Route::get('/', 'index')
                     ->name('index');
-
             });
 
 
@@ -777,7 +734,6 @@ Route::prefix('admin')
         // ---------------------------------------------------------
 
         // Settings
-
         Route::controller(SettingsController::class)
             ->prefix('settings')
             ->name('settings.')
@@ -788,12 +744,10 @@ Route::prefix('admin')
 
                 Route::put('/', 'update')
                     ->name('update');
-
             });
 
 
         // Email Settings
-
         Route::controller(EmailSettingsController::class)
             ->prefix('email-settings')
             ->name('email-settings.')
@@ -807,12 +761,10 @@ Route::prefix('admin')
 
                 Route::post('/test', 'test')
                     ->name('test');
-
             });
 
 
         // Notifications
-
         Route::controller(NotificationController::class)
             ->prefix('notifications')
             ->name('notifications.')
@@ -835,12 +787,10 @@ Route::prefix('admin')
 
                 Route::delete('/{notification}', 'destroy')
                     ->name('destroy');
-
             });
 
 
         // Activity Logs
-
         Route::controller(ActivityLogController::class)
             ->prefix('activity-logs')
             ->name('activity.logs.')
@@ -848,12 +798,10 @@ Route::prefix('admin')
 
                 Route::get('/', 'index')
                     ->name('index');
-
             });
 
 
         // Backup
-
         Route::controller(BackupController::class)
             ->prefix('backup')
             ->name('backup.')
@@ -873,11 +821,28 @@ Route::prefix('admin')
 
                 Route::post('/restore/{file}', 'restore')
                     ->name('restore');
-
             });
-
     });
 
+
+// =========================================================
+// PUBLIC STORE
+// =========================================================
+//
+// Public store profile.
+//
+// Example:
+// /store/book-world
+//
+// Uses Store.slug for route model binding.
+//
+// =========================================================
+
+Route::get('/store/{store:slug}', [FrontendStoreController::class, 'show'])
+    ->name('store.show');
+
+Route::post('/store/{store:slug}/contact', [ContactController::class, 'sendStoreMessage'])
+    ->name('store.contact.send');
 
 // =========================================================
 // SELLER PANEL
@@ -997,6 +962,30 @@ Route::prefix('seller')
             [SellerReviewController::class, 'index']
         )->name('reviews.index');
 
+        // ---------------------------------------------------------
+        // MESSAGES
+        // ---------------------------------------------------------
+        Route::controller(SellerMessagesController::class)
+            ->prefix('messages')
+            ->name('messages.')
+            ->group(function () {
+
+                Route::get(
+                    '/',
+                    'index'
+                )->name('index');
+
+                Route::get(
+                    '/{message}',
+                    'show'
+                )->name('show');
+
+                Route::post(
+                    '/{message}/reply',
+                    'reply'
+                )->name('reply');
+
+            });
 
         // ---------------------------------------------------------
         // SETTINGS
@@ -1011,7 +1000,6 @@ Route::prefix('seller')
             '/settings',
             [StoreSettingsController::class, 'update']
         )->name('settings.update');
-
     });
 
 
@@ -1032,12 +1020,10 @@ Route::prefix('frontend')
             Route::get('/', 'index')
                 ->name('home');
 
-                Route::get(
-                    '/featured-books',
-                    [HomeController::class, 'featuredBooks']
-                )->name('featured-books');
-
-
+            Route::get(
+                '/featured-books',
+                'featuredBooks'
+            )->name('featured-books');
         });
 
 
@@ -1052,7 +1038,6 @@ Route::prefix('frontend')
 
             Route::get('/books/{book}', 'show')
                 ->name('books.show');
-
         });
 
 
@@ -1064,7 +1049,6 @@ Route::prefix('frontend')
 
             Route::get('/categories', 'index')
                 ->name('categories');
-
         });
 
 
@@ -1076,7 +1060,6 @@ Route::prefix('frontend')
 
             Route::get('/authors', 'index')
                 ->name('authors');
-
         });
 
 
@@ -1085,9 +1068,7 @@ Route::prefix('frontend')
         // ---------------------------------------------------------
 
         Route::get('/about', function () {
-
             return view('Frontend.about');
-
         })->name('about');
 
 
@@ -1102,7 +1083,6 @@ Route::prefix('frontend')
 
             Route::post('/contact', 'store')
                 ->name('contact.store');
-
         });
 
 
@@ -1117,7 +1097,6 @@ Route::prefix('frontend')
 
             Route::post('/become-a-seller', 'store')
                 ->name('seller-application.store');
-
         });
 
 
@@ -1126,7 +1105,6 @@ Route::prefix('frontend')
         // ---------------------------------------------------------
 
         // FAQ
-
         Route::get(
             '/faq',
             [FrontendFaqController::class, 'index']
@@ -1134,7 +1112,6 @@ Route::prefix('frontend')
 
 
         // Help Center
-
         Route::get(
             '/help-center',
             [HelpCenterController::class, 'index']
@@ -1142,7 +1119,6 @@ Route::prefix('frontend')
 
 
         // Shipping Information
-
         Route::get(
             '/shipping-information',
             [ShippingInformationController::class, 'index']
@@ -1150,7 +1126,6 @@ Route::prefix('frontend')
 
 
         // Return Policy
-
         Route::get(
             '/return-policy',
             [ReturnPolicyController::class, 'index']
@@ -1158,7 +1133,6 @@ Route::prefix('frontend')
 
 
         // Privacy Policy
-
         Route::get(
             '/privacy-policy',
             [PrivacyPolicyController::class, 'index']
@@ -1166,7 +1140,6 @@ Route::prefix('frontend')
 
 
         // Cookies Policy
-
         Route::get(
             '/cookies',
             [CookiePolicyController::class, 'index']
@@ -1184,7 +1157,6 @@ Route::prefix('frontend')
             ->group(function () {
 
                 // Login
-
                 Route::get('/login', 'login')
                     ->name('login');
 
@@ -1193,7 +1165,6 @@ Route::prefix('frontend')
 
 
                 // Register
-
                 Route::get('/register', 'register')
                     ->name('register');
 
@@ -1202,12 +1173,12 @@ Route::prefix('frontend')
 
 
                 // Google Login
-
                 Route::get('/google', 'redirectToGoogle')
                     ->name('google.redirect');
 
                 Route::get('/google/callback', 'handleGoogleCallback')
                     ->name('google.callback');
+
 
                 // ---------------------------------------------------------
                 // ADMIN TWO-FACTOR AUTHENTICATION
@@ -1221,7 +1192,6 @@ Route::prefix('frontend')
 
 
                 // Forgot Password
-
                 Route::get('/password/request', function () {
 
                     session()->forget('reset_email');
@@ -1232,13 +1202,12 @@ Route::prefix('frontend')
 
 
                 // Send OTP
-
                 Route::post(
                     '/forgot-password/send-otp',
                     'sendOtp'
                 )->name('password.send.otp');
-
             });
+
 
         // =========================================================
         // EMAIL VERIFICATION
@@ -1307,7 +1276,7 @@ Route::prefix('frontend')
             '/auth/password/resend',
             [
                 AuthController::class,
-                'resendVerificationCode'
+                'resendVerificationCode',
             ]
         )->name('auth.password.resend');
 
@@ -1320,25 +1289,13 @@ Route::prefix('frontend')
             '/auth/password/verify',
             [
                 AuthController::class,
-                'verifyOtp'
+                'verifyOtp',
             ]
         )->name('auth.password.verify.otp');
 
 
         // ---------------------------------------------------------
         // ACCOUNT DELETE VERIFICATION
-        // ---------------------------------------------------------
-        //
-        // Account deletion uses a completely separate
-        // verification flow.
-        //
-        // 1. User confirms deletion
-        // 2. OTP is sent
-        // 3. User enters current password
-        // 4. User enters OTP
-        // 5. Account is permanently deleted
-        //
-        // These routes require authentication.
         // ---------------------------------------------------------
 
         Route::middleware('auth')->group(function () {
@@ -1351,7 +1308,7 @@ Route::prefix('frontend')
                 '/auth/account/delete/verify',
                 [
                     AuthController::class,
-                    'accountDeleteVerify'
+                    'accountDeleteVerify',
                 ]
             )->name(
                 'auth.account.delete.verify'
@@ -1366,7 +1323,7 @@ Route::prefix('frontend')
                 '/auth/account/delete/verify-password',
                 [
                     AuthController::class,
-                    'verifyAccountDeletePassword'
+                    'verifyAccountDeletePassword',
                 ]
             )->name(
                 'auth.account.delete.verify.password'
@@ -1381,7 +1338,7 @@ Route::prefix('frontend')
                 '/auth/account/delete/verify-otp',
                 [
                     AuthController::class,
-                    'verifyAccountDeleteOtp'
+                    'verifyAccountDeleteOtp',
                 ]
             )->name(
                 'auth.account.delete.verify.otp'
@@ -1396,12 +1353,11 @@ Route::prefix('frontend')
                 '/auth/account/delete/resend',
                 [
                     AuthController::class,
-                    'resendVerificationCode'
+                    'resendVerificationCode',
                 ]
             )->name(
                 'auth.account.delete.resend'
             );
-
         });
 
 
@@ -1410,9 +1366,7 @@ Route::prefix('frontend')
         // ---------------------------------------------------------
 
         Route::get('/auth/terms', function () {
-
             return view('auth.terms');
-
         })->name('auth.terms');
 
 
@@ -1428,9 +1382,7 @@ Route::prefix('frontend')
 
                 Route::post('/logout', 'logout')
                     ->name('logout');
-
             });
-
     });
 
 
@@ -1499,7 +1451,6 @@ Route::middleware('auth')
             '/profile',
             [AuthController::class, 'destroyProfile']
         )->name('profile.destroy');
-
     });
 
 
@@ -1592,7 +1543,6 @@ Route::middleware('auth')
 
                 Route::delete('/{notification}', 'destroy')
                     ->name('destroy');
-
             });
 
 
@@ -1659,7 +1609,6 @@ Route::middleware('auth')
             '/order-tracking/{order}',
             [FrontendOrdersController::class, 'tracking']
         )->name('order-tracking');
-
     });
 
 
@@ -1700,5 +1649,5 @@ Route::middleware('auth')
             '/settings/password',
             [AccountSettingsController::class, 'updatePassword']
         )->name('settings.password');
-
     });
+

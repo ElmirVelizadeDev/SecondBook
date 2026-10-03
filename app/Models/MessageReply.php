@@ -12,6 +12,11 @@ class MessageReply extends Model
         'user_id',
         'sender_type',
         'reply',
+        'read_at',
+    ];
+
+    protected $casts = [
+        'read_at' => 'datetime',
     ];
 
     public function message(): BelongsTo
