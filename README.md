@@ -1,200 +1,310 @@
-# 📚 SecondBook
+# SecondBook
 
-> **A modern Laravel-based online marketplace for buying and selling books.**
+**SecondBook** is a full-stack Laravel-based online book marketplace designed for buying, selling, managing, and discovering books through a modern multi-role platform.
 
-SecondBook is a full-featured online book marketplace designed to connect **book buyers and approved sellers** in one platform.
+The platform supports three main user roles — **Admin, Seller, and User/Buyer** — with separate interfaces and responsibilities.
 
-The project combines a customer-facing bookstore, seller marketplace, and comprehensive administration panel into a single Laravel application.
-
-Users can discover books, search and filter the catalog, manage wishlists and shopping carts, place orders, track their purchases, and leave reviews. Approved sellers can manage their own stores, books, orders, and sales, while administrators can control the entire platform through a dedicated admin panel.
+SecondBook combines a customer-facing marketplace, seller management panel, and comprehensive administration panel into one Laravel application.
 
 ---
 
-## ✨ Features
+## 📑 Table of Contents
 
-### 🛍️ Customer Marketplace
+* [Project Overview](#project-overview)
+* [Main Features](#main-features)
+* [User System](#user-system)
+* [Authentication & Security](#authentication--security)
+* [Seller Marketplace](#seller-marketplace)
+* [Seller Stores](#seller-stores)
+* [Books](#books)
+* [Book Discounts](#book-discounts)
+* [Categories](#categories)
+* [Authors](#authors)
+* [Publishers](#publishers)
+* [Wishlist](#wishlist)
+* [Orders](#orders)
+* [Shipping](#shipping)
+* [Payments](#payments)
+* [Refunds](#refunds)
+* [Reviews](#reviews)
+* [Messaging System](#messaging-system)
+* [Message Replies](#message-replies)
+* [Notifications](#notifications)
+* [Promotional Banners](#promotional-banners)
+* [Blog](#blog)
+* [FAQ](#faq)
+* [Coupons](#coupons)
+* [Settings System](#settings-system)
+* [Roles & Permissions](#roles--permissions)
+* [Activity Logs](#activity-logs)
+* [Archive System](#archive-system)
+* [Admin Panel](#admin-panel)
+* [Seller Panel](#seller-panel)
+* [User Interface](#user-interface)
+* [Admin Dark Mode](#admin-dark-mode)
+* [Responsive Design](#responsive-design)
+* [Database Architecture](#database-architecture)
+* [Important Database Relationships](#important-database-relationships)
+* [Project Architecture](#project-architecture)
+* [Technologies](#technologies)
+* [Installation](#installation)
+* [Useful Laravel Commands](#useful-laravel-commands)
+* [Development Workflow](#development-workflow)
+* [Security Considerations](#security-considerations)
+* [Database Constraints](#database-constraints)
+* [Project Status](#project-status)
+* [Future Improvements](#future-improvements)
+* [Developer](#developer)
+* [License](#license)
 
-* Browse available books
-* Search books by title and other available information
-* Filter books by condition
-* Sort book listings
-* Browse books by categories
-* Browse books by authors
+---
+
+## 📚 Project Overview
+
+SecondBook provides a complete marketplace experience where users can:
+
+* Browse books and categories
+* Search and discover books
 * View detailed book information
-* View book condition and availability
-* Add books to wishlist
-* Remove books from wishlist
-* Add books to shopping cart
-* Update cart quantities
-* Remove items from cart
-* AJAX-based cart interactions
-* Dynamic cart item count
-* Checkout system
+* Add books to their wishlist
+* Purchase books
+* Manage orders
+* Make payments
+* Submit book reviews
+* Contact sellers
+* Receive notifications
+* Manage their account and preferences
+
+Approved sellers can:
+
+* Create and manage their own store
+* Add and manage books
+* Manage stock and pricing
+* Configure discounts
+* Manage orders
+* Track sales
+* Manage customer reviews
+* Communicate with customers
+* View analytics
+* Manage notifications
+* Configure store settings
+
+Administrators can manage the complete platform, including users, sellers, books, orders, payments, refunds, coupons, shipping, content, permissions, settings, and activity logs.
+
+---
+
+# ✨ Main Features
+
+## 🛍️ Customer Marketplace
+
+The customer-facing marketplace provides:
+
+* Book catalog
+* Category browsing
+* Book details
+* Author information
+* Publisher information
+* Seller/store information
+* Book conditions
+* Stock information
+* Pricing
+* Discount pricing
+* Wishlist
+* Shopping cart
+* Checkout
 * Shipping information
-* Estimated delivery information
-* Order creation
-* Order history
-* Order details
-* Order status information
-* Buyer reviews
-* Review management
-* Contact system
-* User profile
-* Account settings
-* Password reset with OTP verification
-* User notifications
-* Responsive frontend interface
+* Payment selection
+* Order tracking
+* Reviews
+* Seller messaging
+* Notifications
+* FAQ
+* Blog content
+* Promotional banners
+
+---
+
+# 👤 User System
+
+Users are stored in the `users` table.
+
+### Account Roles
+
+The database supports:
+
+* `admin`
+* `user`
+* `seller`
+
+### Account Status
+
+Users can have:
+
+* `active`
+* `inactive`
+* `banned`
+
+### User Information
+
+The user profile supports:
+
+* First name
+* Last name
+* Username
+* Email
+* Password
+* Profile photo
+* Phone
+* Date of birth
+* Gender
+* Country
+* City
+* State
+* Postal code
+* Address
+* Biography
+
+### User Preferences
+
+Users can configure:
+
+* Email notifications
+* Order updates
+* Promotional emails
+* Profile visibility
+
+The project also has a dedicated `user_settings` table for user-specific preferences.
+
+---
+
+# 🔐 Authentication & Security
+
+SecondBook includes an authentication system with:
+
+* Registration
+* Email verification
+* OTP verification
+* Login
+* Logout
+* Password reset
+* Password reset OTP
+* Account status restrictions
+* Login information tracking
+
+The `otps` table supports different OTP purposes through the `purpose` field.
+
+Supported OTP purposes can be extended by the application logic.
+
+The project also uses:
+
+* Role-based access
+* Permission-based authorization
+* Middleware protection
+* Activity logging
+* Login security controls
+* User status restrictions
 
 ---
 
 # 🏪 Seller Marketplace
 
-SecondBook uses a dedicated seller architecture instead of allowing every registered user to sell books.
+SecondBook supports a dedicated seller marketplace architecture.
 
-Normal users can apply to become sellers. After administrative approval, the user's account can become a seller account and receive an associated store.
+A normal user can apply to become a seller.
 
-### Seller Application
+## Seller Application
 
-* Become a Seller page
-* Seller application form
-* Application submission
-* Application status
-* Admin application management
-* Admin approval
-* Admin rejection
-* Automatic seller role transition after approval
-* Store creation for approved sellers
+Seller applications are stored in `seller_applications`.
 
-### Seller Panel
+Each application contains:
 
-Approved sellers have access to a dedicated seller panel.
+* User
+* Store name
+* Description
+* Phone
+* Address
+* Status
+* Rejection reason
+* Review timestamp
 
-Seller features include:
+Application statuses:
 
-* Seller dashboard
-* Store management
-* Store information
-* Store settings
-* Seller profile information
-* Book management
-* Create books
-* Edit books
-* Delete books
-* Manage book stock
-* Manage book prices
-* Manage book conditions
-* Seller-specific book listings
-* Seller order management
-* Order details
-* Order processing
-* Order notes
-* Processing deadlines
-* Sales overview
-* Seller reviews
+* `pending`
+* `approved`
+* `rejected`
 
-The seller panel is separated from the administrator panel to keep seller functionality and platform administration independent.
+After approval, the application can be used by the application logic to establish the seller account/store relationship.
 
 ---
 
-# 👤 User Roles
+# 🏬 Seller Stores
 
-SecondBook currently uses three main user roles:
+Approved sellers can have their own store.
 
-| Role     | Description                   |
-| -------- | ----------------------------- |
-| `admin`  | Full platform administration  |
-| `user`   | Customer/buyer account        |
-| `seller` | Approved seller/store account |
+Stores are stored in the `stores` table.
 
-### User
+Each store supports:
 
-A regular user can:
+* Store name
+* Unique slug
+* Description
+* Logo
+* Phone
+* Address
+* Status
 
-* Browse books
-* Search and filter books
-* Manage wishlist
-* Manage cart
-* Checkout
-* Place orders
-* View order history
-* Review purchased books
-* Manage account settings
-* Apply to become a seller
+Store statuses:
 
-### Seller
+* `active`
+* `inactive`
 
-A seller is an approved store account that can:
+### Store Settings
 
-* Manage their store
-* Add books
-* Edit books
-* Manage inventory
-* Manage seller orders
-* Process orders
-* View sales
-* Receive buyer reviews
+Stores can also configure:
 
-### Admin
+* Accept orders
+* Auto approve orders
+* Processing time
+* Minimum order amount
+* Order note
 
-Administrators have access to the platform management system and can manage users, sellers, books, orders, reviews, content, settings, reports and other platform functionality.
+Each seller can have one store because `seller_id` is unique in the `stores` table.
 
 ---
 
-# ⭐ Buyer Review System
+# 📖 Books
 
-SecondBook includes a buyer review system that connects reviews with the platform's users, books and orders.
+Books are stored in the `books` table.
 
-The review architecture allows the platform to associate:
+Each book supports:
 
-```text
-User
-  │
-  └── Review
-        │
-        ├── Book
-        └── Order
-```
-
-This makes it possible to maintain a relationship between the buyer, purchased book and corresponding order.
-
-Review functionality includes:
-
-* Buyer reviews
-* Review creation
-* Review management
-* Book-review relationships
-* User-review relationships
-* Order-review relationships
-* Admin review management
-* Review detail page
-
----
-
-# 📚 Book Marketplace
-
-Books are the core marketplace entity.
-
-A book can contain information such as:
+### Basic Information
 
 * Title
 * ISBN
 * Description
-* Cover
+* Cover image
+
+### Bibliographic Information
+
+* Category
+* Author
+* Publisher
 * Publication year
 * Number of pages
 * Language
+
+### Marketplace Information
+
+* Seller
 * Price
 * Stock
 * Condition
 * Status
-* Category
-* Author
-* Publisher
-* Seller
 
 ### Book Conditions
 
-SecondBook supports multiple book conditions:
+Supported conditions:
 
 * `new`
 * `like_new`
@@ -203,188 +313,524 @@ SecondBook supports multiple book conditions:
 
 ### Book Status
 
-Books can have administrative statuses such as:
+Supported statuses:
 
 * `pending`
 * `approved`
 * `rejected`
 
-### Seller Relationship
+---
 
-Books can be associated with their seller through:
+# 💰 Book Discounts
 
-```text
-Book
- └── seller_id
-       └── User
-```
+Books support an independent discount system.
 
-This allows the marketplace to identify which seller owns and manages a particular book.
+### Discount Types
+
+* `none`
+* `percentage`
+* `fixed`
+
+Discount information includes:
+
+* Discount type
+* Discount value
+* Discount start date
+* Discount end date
+
+This allows the marketplace to support temporary promotional pricing.
 
 ---
 
-# 🛒 Cart & Checkout
+# 📚 Categories
 
-SecondBook includes a complete shopping flow:
+Categories support:
 
-```text
-Book
- ↓
-Add to Cart
- ↓
-Cart
- ↓
-Checkout
- ↓
-Shipping Information
- ↓
-Order
- ↓
-Payment
- ↓
-Order Processing
- ↓
-Delivery
-```
+* Name
+* Unique slug
+* Description
+* Image
+* Status
 
-The frontend cart uses AJAX interactions to provide a smoother shopping experience without requiring a full page reload for every cart operation.
-
-The header cart count can also be updated dynamically after successful cart actions.
+Categories can be activated or deactivated.
 
 ---
 
-# 🚚 Shipping
+# ✍️ Authors
 
-The project includes configurable shipping functionality.
+Authors support:
 
-Shipping-related functionality includes:
+* Name
+* Biography
+* Photo
+* Status
 
-* Shipping settings
-* Delivery information
-* Order shipping fields
-* Estimated delivery message
-* Shipping configuration
-* Checkout shipping information
-
-The estimated delivery message can be configured through the application's shipping settings.
+Author information is connected to books through `author_id`.
 
 ---
 
-# 💳 Payments
+# 🏢 Publishers
 
-SecondBook supports multiple payment method options:
+Publishers support:
 
-* Cash on Delivery
-* Credit Card
-* Debit Card
-* PayPal
+* Name
+* Status
+* Logo
+* Country
+* Website
+* Description
 
-Payment records can contain information such as:
-
-* Transaction ID
-* Order ID
-* Amount
-* Payment method
-* Payment status
-* Paid date
-* Notes
-
----
-
-# 📦 Orders
-
-The order system connects customers, books, sellers, payments and shipping information.
-
-Order functionality includes:
-
-* Order creation
-* Order listing
-* Order details
-* Customer order history
-* Seller order management
-* Order status
-* Payment information
-* Shipping information
-* Processing deadline
-* Order notes
-* Refund-related functionality
-
-The seller order flow is designed around seller-owned books and seller-specific order management.
+Publisher information is connected to books through `publisher_id`.
 
 ---
 
 # ❤️ Wishlist
 
-Users can maintain a personal wishlist.
+Users can save books to their wishlist.
 
-Wishlist functionality includes:
+The `wishlists` table connects:
 
-* Add book to wishlist
-* Remove book from wishlist
-* Wishlist state handling
-* AJAX wishlist interactions
-* Wishlist database relationships
+```text
+User → Book
+```
 
----
+A user cannot add the same book to their wishlist more than once because of the unique:
 
-# 🔐 Authentication & Account Management
+```text
+user_id + book_id
+```
 
-SecondBook includes an authentication system with account management functionality.
-
-Features include:
-
-* User registration
-* User login
-* Logout
-* Remember me
-* Email verification handling
-* Password reset
-* OTP-based password reset
-* Six-digit OTP
-* OTP resend cooldown
-* Account settings
-* User settings
-* Account status handling
-
-The application also supports configurable registration settings through the platform settings system.
+constraint.
 
 ---
 
-# 🛡️ Authorization & Permissions
+# 🛒 Orders
 
-The application separates access between different types of users.
+Orders are stored in the `orders` table.
 
-The platform uses:
+Each order contains:
 
-* Authentication middleware
-* Admin middleware
-* Seller middleware
-* Permission-based admin access
-* Role-based access control
+* Unique order number
+* User
+* Book
+* Book price
+* Quantity
+* Total price
+* Shipping fee
+* Shipping method
+* Payment method
+* Payment status
+* Order status
+* Processing deadline
+* Order note
+* Customer information
+* Delivery information
+* Delivery estimate
+* Archive timestamp
 
-The seller middleware helps prevent normal users from accessing seller-specific functionality.
+### Order Statuses
 
-The admin area also uses permission-based authorization for protected administrative modules.
+* `pending`
+* `processing`
+* `shipped`
+* `delivered`
+* `cancelled`
+
+### Payment Statuses
+
+* `pending`
+* `paid`
+* `failed`
+* `refunded`
+
+### Payment Methods
+
+* Cash on delivery
+* Credit card
+* Debit card
+* PayPal
+
+Orders store customer delivery information directly, including:
+
+* Full name
+* Phone
+* Country
+* City
+* Postal code
+* Address
+
+---
+
+# 🚚 Shipping
+
+Shipping methods are stored in the `shippings` table.
+
+Each shipping method supports:
+
+* Name
+* Description
+* Price
+* Delivery time
+* Status
+
+Orders can optionally reference a shipping method through:
+
+```text
+orders.shipping_id → shippings.id
+```
+
+The order also stores its actual shipping fee and delivery estimate.
+
+---
+
+# 💳 Payments
+
+Payments are stored separately from orders in the `payments` table.
+
+Each payment contains:
+
+* Unique transaction ID
+* Order
+* Amount
+* Payment method
+* Payment status
+* Paid timestamp
+* Note
+
+Payment records are connected to orders through:
+
+```text
+payments.order_id → orders.id
+```
+
+---
+
+# 💸 Refunds
+
+The platform supports refund management through the `refunds` table.
+
+A refund contains:
+
+* Order
+* Payment
+* User
+* Processor
+* Unique refund number
+* Amount
+* Reason
+* Note
+* Status
+* Requested timestamp
+* Processed timestamp
+
+### Refund Statuses
+
+* `pending`
+* `approved`
+* `rejected`
+* `processed`
+* `cancelled`
+
+The database intentionally restricts deleting an order when a refund references it.
+
+---
+
+# ⭐ Reviews
+
+Users can review books through the `reviews` table.
+
+A review contains:
+
+* User
+* Book
+* Rating
+* Comment
+* Status
+* Archive timestamp
+
+### Review Statuses
+
+* `pending`
+* `approved`
+* `rejected`
+
+Each user can have only one review for the same book because of:
+
+```text
+user_id + book_id
+```
+
+unique constraint.
+
+> Reviews are directly related to users and books in the database. There is no `order_id` foreign key in the reviews table.
+
+---
+
+# 💬 Messaging System
+
+SecondBook includes a customer-to-seller messaging system.
+
+Messages contain:
+
+* User
+* Seller
+* Name
+* Email
+* Subject
+* Message
+* Status
+* Archive timestamp
+
+Message statuses include:
+
+* `unread`
+* `read`
+
+The system supports seller-specific message filtering through indexed:
+
+```text
+seller_id + status
+```
+
+and user-specific filtering through:
+
+```text
+user_id + status
+```
+
+---
+
+# ↩️ Message Replies
+
+Messages can have multiple replies.
+
+The `message_replies` table contains:
+
+* Message
+* User
+* Sender type
+* Reply
+* Read timestamp
+
+Replies are connected to their parent message through:
+
+```text
+message_replies.message_id → messages.id
+```
+
+The `sender_type` field identifies the sender type used by the application.
+
+Read/unread reply handling is supported through `read_at`.
+
+---
+
+# 🔔 Notifications
+
+SecondBook includes an application-level notification system.
+
+Notifications contain:
+
+* User
+* Type
+* Title
+* Message
+* Read timestamp
+* Archive timestamp
+
+Notifications support:
+
+* Read/unread state
+* User-specific notifications
+* Notification indexing
+* Archived notifications
+
+---
+
+# 📣 Promotional Banners
+
+Administrators can manage marketplace banners.
+
+Banners support:
+
+* Title
+* Subtitle
+* Image
+* Button text
+* Button URL
+* Position
+* Status
+* Start date
+* End date
+
+Banner statuses:
+
+* `active`
+* `inactive`
+
+---
+
+# 📝 Blog
+
+The platform includes a blog/content management system.
+
+Blog posts support:
+
+* Title
+* Unique slug
+* Excerpt
+* Content
+* Image
+* Author
+* Status
+* Published timestamp
+
+Blog statuses:
+
+* `draft`
+* `published`
+
+---
+
+# ❓ FAQ
+
+Frequently asked questions are stored in the `faqs` table.
+
+Each FAQ supports:
+
+* Category
+* Question
+* Answer
+* Active/inactive state
+* Sort order
+
+---
+
+# 🎟️ Coupons
+
+The marketplace supports discount coupons.
+
+Coupons include:
+
+* Unique coupon code
+* Discount type
+* Discount value
+* Minimum order amount
+* Maximum discount amount
+* Usage limit
+* Used count
+* Start date
+* Expiration date
+* Status
+
+### Coupon Types
+
+* `percentage`
+* `fixed`
+
+---
+
+# ⚙️ Settings System
+
+The platform has a centralized `settings` table.
+
+Each setting contains:
+
+* Unique key
+* Group name
+* Value
+* Type
+
+Settings can therefore be grouped and represented using different data types.
+
+---
+
+# 🛡️ Roles & Permissions
+
+SecondBook contains a dedicated role and permission system.
+
+### Roles
+
+Roles contain:
+
+* Name
+* Display name
+* Description
+* System role flag
+
+### Permissions
+
+Permissions contain:
+
+* Name
+* Display name
+* Group name
+* Description
+
+### Pivot Tables
+
+The authorization structure uses:
+
+```text
+role_user
+permission_role
+```
+
+This allows users to have roles and roles to have permissions.
+
+---
+
+# 📊 Activity Logs
+
+Administrative and application actions can be recorded through `activity_logs`.
+
+Each activity log contains:
+
+* User
+* Action
+* Module
+* Description
+* IP address
+* User agent
+* Timestamp
+
+Indexes are provided for:
+
+* Action
+* Module
+* Creation time
+
+This provides an audit trail for important platform operations.
+
+---
+
+# 🗂️ Archive System
+
+SecondBook uses an application-level archive mechanism for historical records.
+
+The following tables support `archived_at`:
+
+* `messages`
+* `orders`
+* `notifications`
+* `reviews`
+
+An archive timestamp allows records to be hidden from normal active lists without necessarily deleting their database records.
 
 ---
 
 # 🖥️ Admin Panel
 
-SecondBook includes a dedicated administration interface for managing the platform.
+The administration panel provides centralized management of the platform.
 
-The admin panel is built separately from the customer and seller interfaces.
-
-### Admin Modules
-
-The current admin architecture includes modules for:
+Major administrative areas include:
 
 * Dashboard
 * Books
 * Categories
 * Authors
 * Publishers
-* Book Conditions
-* Book Requests
+* Book conditions
+* Book requests
 * Orders
 * Payments
 * Coupons
@@ -392,335 +838,430 @@ The current admin architecture includes modules for:
 * Refunds
 * Users
 * Sellers
-* Seller Applications
 * Roles
+* Permissions
 * Reviews
 * Messages
 * Banners
-* Blogs
+* Blog
 * FAQ
 * Reports
 * Analytics
 * Settings
-* Email Settings
+* Email settings
 * Notifications
-* Activity Logs
+* Activity logs
 * Backup
 
----
-
-# 📊 Admin Dashboard & Analytics
-
-The administration dashboard provides platform-level information and management tools.
-
-Dashboard information includes statistics and recent platform activity.
-
-Analytics functionality includes date-based filtering and platform data analysis involving areas such as:
-
-* Books
-* Orders
-* Users
-
-The project also includes reporting interfaces for:
-
-* Book reports
-* Sales reports
-* User reports
+The admin panel is designed as a separate management interface from the customer marketplace and seller panel.
 
 ---
 
-# 🎨 Admin UI
+# 🏪 Seller Panel
 
-The admin panel uses a modern dashboard-oriented interface.
+Approved sellers have access to a dedicated Seller Panel.
 
-Technologies and UI components include:
+Main sections include:
 
-* Bootstrap 5
-* Bootstrap Icons
-* Plus Jakarta Sans
-* Chart.js
-* SweetAlert2
-* Custom CSS architecture
-* Responsive layouts
-* Dark mode
+### Dashboard
 
-The admin theme supports light and dark modes while preserving the selected theme using browser storage.
+Seller overview and marketplace activity.
 
----
+### Store
 
-# 🌙 Dark Mode
+Manage:
 
-The admin panel supports a dedicated dark theme.
+* Store information
+* Store settings
+* Order preferences
+* Processing time
+* Minimum order amount
 
-The theme state is stored using:
+### Books
 
-```text
-admin_theme
-```
+Manage seller-owned books:
 
-The interface uses:
+* Create
+* View
+* Edit
+* Delete
+* Stock
+* Pricing
+* Discounts
+* Conditions
+* Status
 
-```html
-data-theme="dark"
-```
+### Orders
 
-for dark theme activation.
+Manage seller-related orders and order processing.
 
-Dark-mode styling is also applied to interactive components such as alerts and form controls.
+### Sales
 
----
+Review seller sales information.
 
-# 📝 Content Management
+### Reviews
 
-SecondBook includes several content-management areas inside the admin panel.
+View and manage customer reviews associated with seller books.
 
-### Banners
+### Analytics
 
-Administrators can manage promotional or informational banners.
-
-### Blogs
-
-Administrators can manage blog content and related information.
-
-### FAQ
-
-Frequently asked questions can be managed through the administration system.
+View seller marketplace analytics.
 
 ### Messages
 
-The messaging system includes:
+Communicate with customers who contact the seller's store.
 
-* User messages
-* Message management
-* Message replies
-* Administrative responses
+### Notifications
 
----
+View and manage seller notifications.
 
-# 🔔 Notifications
+### Settings
 
-The project includes notification-related functionality for platform users.
-
-Notification data can be managed through the application and seeded during development.
+Manage seller-specific preferences and store configuration.
 
 ---
 
-# 🗄️ Database & Seeders
+# 🎨 User Interface
 
-SecondBook uses Laravel migrations and seeders to build and populate the application database.
+SecondBook uses separate UI systems for its main application areas.
 
-The project includes seeders for areas such as:
+## Customer Frontend
 
-* Roles and permissions
-* Users
-* Categories
-* Publishers
-* Authors
-* Books
-* Stores
-* Seller books
-* Seller orders
-* Seller applications
-* Reviews
-* Wishlists
-* Coupons
-* FAQ
-* Messages
-* Message replies
-* Notifications
-* Settings
-* User settings
-* Shipping
-* Banners
-* Blogs
+The customer interface focuses on:
 
-The main database seeding process is coordinated through:
+* Marketplace browsing
+* Book discovery
+* Product details
+* Shopping
+* Checkout
+* Account management
+
+## Seller Panel
+
+The Seller Panel uses a clean, modern and responsive interface focused on marketplace management.
+
+## Admin Panel
+
+The Admin Panel uses a dedicated dashboard interface with:
+
+* Sidebar navigation
+* Header
+* Dashboard cards
+* Tables
+* Filters
+* Forms
+* Modal dialogs
+* Status badges
+* Responsive layouts
+* Dark theme support
+
+---
+
+# 🌙 Admin Dark Mode
+
+The Admin Panel supports a dedicated dark interface.
+
+Dark-mode styling covers major administrative components such as:
+
+* Sidebar
+* Header
+* Tables
+* Forms
+* Pagination
+* Badges
+* Select elements
+* Cards
+* Modals
+* Dashboard components
+
+The Seller and customer-facing interfaces use their own visual systems rather than sharing the Admin Panel's dark-mode implementation.
+
+---
+
+# 📱 Responsive Design
+
+The project is designed for different screen sizes.
+
+Responsive layouts are implemented across:
+
+* Customer pages
+* Seller Panel
+* Admin Panel
+* Tables
+* Forms
+* Dashboards
+* Navigation
+* Book pages
+* Order pages
+
+---
+
+# 🗄️ Database Architecture
+
+The application uses **MySQL** with Laravel migrations.
+
+Main database entities include:
 
 ```text
-DatabaseSeeder
+users
+├── stores
+├── seller_applications
+├── orders
+├── reviews
+├── wishlists
+├── notifications
+├── messages
+├── message_replies
+├── user_settings
+├── activity_logs
+└── roles
+
+books
+├── categories
+├── authors
+├── publishers
+├── users (seller)
+├── reviews
+└── wishlists
+
+orders
+├── users
+├── books
+├── payments
+├── refunds
+└── shippings
 ```
 
-The seeders are ordered so that required relationships can be created correctly.
+Additional platform entities include:
+
+```text
+roles
+permissions
+role_user
+permission_role
+
+categories
+authors
+publishers
+coupons
+shippings
+settings
+faqs
+banners
+blogs
+otps
+```
 
 ---
 
-# 🏗️ Application Architecture
+# 🔗 Important Database Relationships
+
+### User → Books
+
+```text
+users.id
+    ↓
+books.seller_id
+```
+
+A book can optionally belong to a seller.
+
+If the seller is deleted, the seller reference on the book is set to `NULL`.
+
+### User → Store
+
+```text
+users.id
+    ↓
+stores.seller_id
+```
+
+`stores.seller_id` is unique, meaning a seller can have one store.
+
+### User → Orders
+
+```text
+users.id
+    ↓
+orders.user_id
+```
+
+Deleting a user cascades to their orders.
+
+### Book → Orders
+
+```text
+books.id
+    ↓
+orders.book_id
+```
+
+Deleting a book cascades to related orders according to the migration.
+
+### Order → Payment
+
+```text
+orders.id
+    ↓
+payments.order_id
+```
+
+### Order → Refund
+
+```text
+orders.id
+    ↓
+refunds.order_id
+```
+
+Refunds intentionally restrict deletion of referenced orders.
+
+### User → Review → Book
+
+```text
+users.id
+    ↓
+reviews.user_id
+
+books.id
+    ↓
+reviews.book_id
+```
+
+One user can have one review per book.
+
+### Message → Replies
+
+```text
+messages.id
+    ↓
+message_replies.message_id
+```
+
+A message can have multiple replies.
+
+---
+
+# 🧱 Project Architecture
 
 The application follows Laravel's MVC architecture.
 
 ```text
-SecondBook
+SecondBook/
 │
-├── app
-│   ├── Http
-│   │   ├── Controllers
-│   │   │   ├── Admin
-│   │   │   ├── Frontend
-│   │   │   └── Seller
-│   │   └── Middleware
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Admin/
+│   │   │   ├── Frontend/
+│   │   │   └── Seller/
+│   │   │
+│   │   └── Middleware/
 │   │
-│   ├── Models
-│   │
+│   ├── Models/
+│   └── Services/
+│
+├── database/
+│   ├── migrations/
+│   ├── seeders/
+│   └── factories/
+│
+├── public/
+│   ├── admin/
+│   ├── frontend/
+│   └── seller/
+│
+├── resources/
+│   └── views/
+│       ├── admin/
+│       ├── Frontend/
+│       ├── Layout/
+│       └── Seller/
+│
+├── routes/
+│   ├── web.php
 │   └── ...
 │
-├── database
-│   ├── migrations
-│   └── seeders
+├── storage/
 │
-├── public
-│   ├── admin
-│   │   ├── css
-│   │   ├── images
-│   │   └── js
-│   │
-│   └── ...
-│
-├── resources
-│   └── views
-│       ├── Admin
-│       ├── Frontend
-│       ├── Seller
-│       └── errors
-│
-├── routes
-│   └── web.php
-│
-└── ...
+└── README.md
 ```
 
 ---
 
-# 🔗 Main Relationships
+# 🛠️ Technologies
 
-The project contains several important Eloquent relationships.
-
-### User
-
-A user can be related to:
-
-* Orders
-* Books as seller
-* Reviews
-* Wishlist items
-* Seller application
-* Store
-* User settings
-* Notifications
-
-### Book
-
-A book can belong to:
-
-* Category
-* Author
-* Publisher
-* Seller
-
-A book can also have:
-
-* Reviews
-* Orders
-* Wishlist relationships
-
-### Store
-
-A store belongs to an approved seller.
-
-```text
-User
- │
- └── Store
-```
-
-### Seller Application
-
-The seller application connects a customer with the seller approval process.
-
-```text
-User
- │
- └── SellerApplication
-```
-
----
-
-# ⚙️ Technologies
-
-SecondBook is built with:
-
-### Backend
+## Backend
 
 * PHP
 * Laravel
 * Laravel Eloquent ORM
-* Laravel Middleware
 * Laravel Blade
+* MySQL
 
-### Frontend
+## Frontend
 
 * HTML5
 * CSS3
 * JavaScript
-* Bootstrap 5
+* Bootstrap
 * Bootstrap Icons
-* AJAX / Fetch API
-
-### UI & Visualization
-
-* Chart.js
+* AJAX
 * SweetAlert2
-* Custom responsive CSS
 
-### Database
+## Development Environment
 
-* MySQL
-
-### Development Environment
-
+* Windows
 * Laragon
+* MySQL
 * Git
 * GitHub
-* Visual Studio Code
 
 ---
 
 # 🚀 Installation
 
-## 1. Clone the repository
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/ElmirVelizadeDev/SecondBook.git
 ```
 
-## 2. Enter the project
+## 2. Enter the Project
 
 ```bash
 cd SecondBook
 ```
 
-## 3. Install PHP dependencies
+## 3. Install PHP Dependencies
 
 ```bash
 composer install
 ```
 
-## 4. Create environment file
+## 4. Install Frontend Dependencies
+
+```bash
+npm install
+```
+
+## 5. Create Environment File
 
 ```bash
 cp .env.example .env
 ```
 
-On Windows PowerShell, you can also create the environment file manually from `.env.example`.
+On Windows, you can also create `.env` manually from `.env.example`.
 
-## 5. Generate application key
+## 6. Generate Application Key
 
 ```bash
 php artisan key:generate
 ```
 
-## 6. Configure the database
+## 7. Configure Database
 
-Update the `.env` file:
+Update `.env`:
 
 ```env
 DB_CONNECTION=mysql
@@ -731,108 +1272,188 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-Adjust the database credentials according to your local environment.
+Adjust the credentials according to your local MySQL configuration.
 
-## 7. Run migrations
+## 8. Run Migrations
 
 ```bash
 php artisan migrate
 ```
 
-## 8. Seed the database
+## 9. Seed the Database
+
+If seeders are available for the current environment:
 
 ```bash
 php artisan db:seed
 ```
 
-Or, if you are working with a fresh development database:
+Or:
 
 ```bash
-php artisan migrate:fresh --seed
+php artisan migrate --seed
 ```
 
-## 9. Create storage link
-
-```bash
-php artisan storage:link
-```
-
-## 10. Start the Laravel development server
+## 10. Start the Development Server
 
 ```bash
 php artisan serve
 ```
 
-The application will then be available through the local Laravel server.
+The application can then be accessed through the configured local URL.
 
 ---
 
-# 🧪 Development
+# 🧹 Useful Laravel Commands
 
-During development, useful Laravel commands include:
-
-```bash
-php artisan route:list
-```
-
-```bash
-php artisan migrate:status
-```
-
-```bash
-php artisan db:seed
-```
+### Clear Application Cache
 
 ```bash
 php artisan optimize:clear
 ```
 
+### List Routes
+
 ```bash
-php artisan storage:link
+php artisan route:list
+```
+
+### Run Migrations
+
+```bash
+php artisan migrate
+```
+
+### Roll Back Last Migration Batch
+
+```bash
+php artisan migrate:rollback
+```
+
+### Create a Migration
+
+```bash
+php artisan make:migration create_example_table
+```
+
+### Create a Model
+
+```bash
+php artisan make:model Example
+```
+
+### Create a Controller
+
+```bash
+php artisan make:controller ExampleController
 ```
 
 ---
 
-# 🔄 Database Reset
+# 🔄 Development Workflow
 
-For a clean development environment:
+Typical development workflow:
 
-```bash
-php artisan migrate:fresh --seed
+```text
+Feature
+   ↓
+Migration
+   ↓
+Model
+   ↓
+Controller / Service
+   ↓
+Route
+   ↓
+Blade View
+   ↓
+CSS / JavaScript
+   ↓
+Testing
+   ↓
+Git Commit
+   ↓
+GitHub
 ```
 
-> **Warning:** This command deletes existing database tables and recreates them.
+---
+
+# 🔒 Security Considerations
+
+The project includes several security-oriented mechanisms:
+
+* Authentication
+* Email verification
+* OTP verification
+* Password reset
+* Role-based authorization
+* Permission-based authorization
+* Middleware protection
+* User account status control
+* Seller ownership checks
+* Foreign key constraints
+* Unique database constraints
+* Activity logging
+* Input validation
+* CSRF protection through Laravel
+* Password hashing through Laravel
 
 ---
 
-# 📱 Responsive Design
+# 📊 Database Constraints
 
-The application is designed to work across different screen sizes.
+The database makes extensive use of:
 
-Responsive interfaces are provided for:
+* Foreign keys
+* Unique indexes
+* Composite unique constraints
+* Regular indexes
+* Nullable foreign keys
+* Enum values
+* Default values
+* Cascade deletes
+* Restrict deletes
+* Null-on-delete behavior
 
-* Desktop
-* Laptop
-* Tablet
-* Mobile
-
-Both the customer-facing application and administration interface contain responsive styling.
+These constraints help maintain database integrity at the persistence layer.
 
 ---
 
-# 🎯 Project Goals
+# 🧪 Project Status
 
-SecondBook was developed with several goals in mind:
+SecondBook is an actively developed Laravel marketplace project.
 
-* Create a complete online book marketplace
-* Support both buyers and approved sellers
-* Provide independent seller stores
-* Provide centralized platform administration
-* Build a practical Laravel marketplace architecture
-* Implement real-world order and shipping flows
-* Connect buyers, sellers and books through meaningful relationships
-* Provide a maintainable MVC-based codebase
-* Create a responsive and modern user interface
+Current platform areas include:
+
+* Customer marketplace
+* Authentication
+* Books
+* Categories
+* Authors
+* Publishers
+* Wishlist
+* Orders
+* Payments
+* Shipping
+* Coupons
+* Refunds
+* Reviews
+* Seller applications
+* Seller stores
+* Seller Panel
+* Messaging
+* Notifications
+* Admin Panel
+* Roles & permissions
+* Settings
+* FAQ
+* Blog
+* Promotional banners
+* Activity logs
+* Analytics
+* Archive support
+
+The project continues to receive improvements to functionality, security, UI consistency, and marketplace workflows.
 
 ---
 
@@ -840,104 +1461,21 @@ SecondBook was developed with several goals in mind:
 
 Potential future improvements include:
 
-* More advanced seller analytics
 * Advanced search
-* Improved recommendation system
-* More payment integrations
+* Advanced filtering
+* More detailed seller analytics
+* Advanced reporting
+* Recommendation system
+* Improved marketplace discovery
+* Additional payment providers
+* Additional shipping integrations
 * Automated email notifications
-* More detailed sales reports
-* Advanced inventory management
-* Product image optimization
-* API layer for mobile applications
-* Automated testing
-* CI/CD with GitHub Actions
-* Improved application monitoring
-* Additional marketplace features
-
----
-
-# 📸 Screenshots
-
-Screenshots of the following interfaces can be added here:
-
-* Home page
-* Books page
-* Book details
-* Cart
-* Checkout
-* Orders
-* Seller dashboard
-* Seller books
-* Seller orders
-* Store settings
-* Admin dashboard
-* Admin analytics
-* Admin reports
-* Admin reviews
-
-Example:
-
-```text
-screenshots/
-├── home.png
-├── books.png
-├── book-details.png
-├── checkout.png
-├── seller-dashboard.png
-├── seller-books.png
-├── admin-dashboard.png
-└── admin-analytics.png
-```
-
----
-
-# 🔒 Security
-
-The project uses Laravel's built-in security mechanisms together with application-level authorization.
-
-Important areas include:
-
-* Authentication
-* CSRF protection
-* Middleware
-* Role-based authorization
-* Permission-based authorization
-* Seller authorization
-* Form validation
-* Protected administrative routes
-
-Sensitive environment configuration should remain inside `.env` and should never be committed to the repository.
-
----
-
-# 🌱 Project Status
-
-SecondBook is an actively developed Laravel marketplace project.
-
-The core marketplace architecture includes:
-
-```text
-Buyer
-  │
-  ├── Browse Books
-  ├── Wishlist
-  ├── Cart
-  ├── Checkout
-  ├── Orders
-  └── Reviews
-          │
-          ▼
-       Books
-          │
-          ▼
-       Sellers
-          │
-          ▼
-        Stores
-          │
-          ▼
-        Admin
-```
+* Improved seller performance metrics
+* API expansion
+* Mobile application
+* Automated testing coverage
+* Performance optimization
+* Production deployment improvements
 
 ---
 
@@ -945,22 +1483,71 @@ Buyer
 
 **Elmir Velizade**
 
-Laravel / PHP / Web Development
+Full Stack Developer in progress, focused on:
 
-SecondBook is developed as a full-stack Laravel marketplace project with a focus on practical application architecture, database relationships, authentication, authorization, marketplace workflows and responsive UI development.
+* PHP
+* Laravel
+* JavaScript
+* Vue.js
+* REST APIs
+* MySQL
+* Backend Development
+* Full Stack Web Development
 
 ---
 
-## 📄 License
+# 📄 License
 
-This project is currently intended as a personal/portfolio development project.
+This project is currently developed as a personal software project.
+
+License and distribution terms may be defined separately as the project moves toward public or commercial release.
 
 ---
 
-⭐ **If you find the project interesting, feel free to explore the repository and follow the development progress.**
+# ⭐ SecondBook
 
+SecondBook aims to provide a modern and scalable marketplace architecture for buying and selling books while maintaining clear separation between:
 
-Clone the repository:
+```text
+Customer
+   │
+   ├── Marketplace
+   ├── Cart
+   ├── Checkout
+   ├── Orders
+   ├── Reviews
+   ├── Wishlist
+   └── Messaging
+       
+Seller
+   │
+   ├── Store
+   ├── Books
+   ├── Orders
+   ├── Sales
+   ├── Reviews
+   ├── Analytics
+   ├── Messages
+   ├── Notifications
+   └── Settings
 
+Admin
+   │
+   ├── Users
+   ├── Sellers
+   ├── Books
+   ├── Orders
+   ├── Payments
+   ├── Refunds
+   ├── Coupons
+   ├── Shipping
+   ├── Roles
+   ├── Permissions
+   ├── Content
+   ├── Reports
+   ├── Analytics
+   ├── Settings
+   └── Activity Logs
+```
 
-git clone https://github.com/ElmirVelizadeDev/SecondBook.git
+**SecondBook — A Laravel-powered marketplace for books.**
