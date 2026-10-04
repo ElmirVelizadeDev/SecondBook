@@ -8,9 +8,20 @@
 
 @section('content')
 
+@php
+    $hasFilters = request()->hasAny([
+        'search',
+        'order_status',
+        'payment_status',
+    ]);
+@endphp
+
 <div class="seller-orders-page">
 
-    {{-- Page Header --}}
+    {{-- =====================================================
+        PAGE HEADER
+        ===================================================== --}}
+
     <div class="seller-page-heading">
         <div>
             <h2>Orders</h2>
@@ -18,8 +29,10 @@
         </div>
     </div>
 
+    {{-- =====================================================
+        STATISTICS
+        ===================================================== --}}
 
-    {{-- Statistics --}}
     <div class="seller-orders-stats">
 
         <div class="seller-order-stat-card">
@@ -29,10 +42,11 @@
 
             <div>
                 <span>Total Orders</span>
-                <strong id="totalOrdersCount">{{ $totalOrders }}</strong>
+                <strong id="totalOrdersCount">
+                    {{ $totalOrders }}
+                </strong>
             </div>
         </div>
-
 
         <div class="seller-order-stat-card">
             <div class="seller-order-stat-icon pending">
@@ -45,7 +59,6 @@
             </div>
         </div>
 
-
         <div class="seller-order-stat-card">
             <div class="seller-order-stat-icon processing">
                 <i class="bi bi-arrow-repeat"></i>
@@ -56,7 +69,6 @@
                 <strong>{{ $processingOrders }}</strong>
             </div>
         </div>
-
 
         <div class="seller-order-stat-card">
             <div class="seller-order-stat-icon delivered">
@@ -71,8 +83,10 @@
 
     </div>
 
+    {{-- =====================================================
+        FILTERS
+        ===================================================== --}}
 
-    {{-- Filters --}}
     <div class="seller-orders-filter-card">
 
         <form
@@ -82,10 +96,10 @@
         >
 
             {{-- Search --}}
+
             <div class="seller-order-search">
 
                 <div class="seller-order-search-input">
-
                     <i class="bi bi-search"></i>
 
                     <input
@@ -94,7 +108,6 @@
                         value="{{ request('search') }}"
                         placeholder="Search order, customer or book..."
                     >
-
                 </div>
 
                 <button
@@ -102,13 +115,13 @@
                     class="seller-order-search-button"
                 >
                     <i class="bi bi-search"></i>
-                    Search
+                    <span>Search</span>
                 </button>
 
             </div>
 
-
             {{-- Order Status --}}
+
             <div class="seller-order-filter-select">
 
                 <label for="order_status">
@@ -119,7 +132,9 @@
                     name="order_status"
                     id="order_status"
                 >
-                    <option value="">All Statuses</option>
+                    <option value="">
+                        All Statuses
+                    </option>
 
                     <option
                         value="pending"
@@ -159,8 +174,8 @@
 
             </div>
 
-
             {{-- Payment Status --}}
+
             <div class="seller-order-filter-select">
 
                 <label for="payment_status">
@@ -171,7 +186,9 @@
                     name="payment_status"
                     id="payment_status"
                 >
-                    <option value="">All Payments</option>
+                    <option value="">
+                        All Payments
+                    </option>
 
                     <option
                         value="pending"
@@ -204,353 +221,488 @@
 
             </div>
 
-
             {{-- Filter --}}
+
             <button
                 type="submit"
                 class="seller-order-filter-button"
             >
                 <i class="bi bi-funnel"></i>
-                Filter
+                <span>Filter</span>
             </button>
 
-
             {{-- Reset --}}
-            @if(request()->hasAny(['search', 'order_status', 'payment_status']))
 
+            @if($hasFilters)
                 <a
                     href="{{ route('seller.orders.index') }}"
                     class="seller-order-reset-button"
                 >
                     <i class="bi bi-arrow-counterclockwise"></i>
-                    Reset
+                    <span>Reset</span>
                 </a>
-
             @endif
 
         </form>
 
     </div>
 
+    {{-- =====================================================
+        AJAX ORDERS CONTENT
+        ===================================================== --}}
 
-    {{-- Orders --}}
-    <div class="seller-orders-card">
+    <div id="sellerOrdersContent">
 
-        <div class="seller-orders-card-header">
+        <div class="seller-orders-card">
 
-            <div>
-                <h5>Recent Orders</h5>
+            {{-- =================================================
+                ORDERS HEADER
+                ================================================== --}}
 
-                <p id="ordersFoundText">
-                    {{ $orders->total() }}
-                    {{ Str::plural('order', $orders->total()) }} found
-                </p>
+            <div class="seller-orders-card-header">
+
+                <div class="seller-orders-card-title">
+
+                    <div class="seller-orders-card-icon">
+                        <i class="bi bi-bag-check"></i>
+                    </div>
+
+                    <div>
+                        <h5>Recent Orders</h5>
+
+                        <p id="ordersFoundText">
+                            {{ $orders->total() }}
+                            {{ Str::plural('order', $orders->total()) }}
+                            found
+                        </p>
+                    </div>
+
+                </div>
+
             </div>
 
-        </div>
-
-
-        @if($orders->count())
-
-            <div class="seller-orders-table-wrapper">
-
-                <table class="seller-orders-table">
-
-                    <thead>
-                        <tr>
-                            <th>Order</th>
-                            <th>Book</th>
-                            <th>Customer</th>
-                            <th>Qty</th>
-                            <th>Total</th>
-                            <th>Payment</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-
-
-                    <tbody>
-
-                        @foreach($orders as $order)
-
-                            <tr id="order-row-{{ $order->id }}">
-
-                                {{-- Order --}}
-                                <td>
-
-                                    <div class="seller-order-number">
-                                        <span>
-                                            #{{ $order->order_number }}
-                                        </span>
-                                    </div>
-
-                                </td>
-
-
-                                {{-- Book --}}
-                                <td>
-
-                                    <div class="seller-order-book">
-
-                                        <div class="seller-order-book-cover">
-
-                                            @if($order->book?->cover)
-
-                                                <img
-                                                    src="{{ asset('storage/' . $order->book->cover) }}"
-                                                    alt="{{ $order->book->title }}"
-                                                >
-
-                                            @else
-
-                                                <div class="seller-order-no-cover">
-                                                    <i class="bi bi-book"></i>
-                                                </div>
-
-                                            @endif
-
-                                        </div>
-
-
-                                        <div class="seller-order-book-info">
-
-                                            <strong>
-                                                {{ Str::limit($order->book->title ?? 'Deleted Book', 30) }}
-                                            </strong>
-
-                                            @if($order->book?->isbn)
-
-                                                <span>
-                                                    ISBN: {{ $order->book->isbn }}
-                                                </span>
-
-                                            @endif
-
-                                        </div>
-
-                                    </div>
-
-                                </td>
-
-
-                                {{-- Customer --}}
-                                <td>
-
-                                    <div class="seller-order-customer">
-
-                                        <div class="seller-order-customer-avatar">
-
-                                            @if($order->user?->profile_photo)
-
-                                                <img
-                                                    src="{{ asset('storage/' . $order->user->profile_photo) }}"
-                                                    alt="{{ $order->user->name }}"
-                                                >
-
-                                            @else
-
-                                                <span>
-                                                    {{ strtoupper(substr($order->user->name ?? 'U', 0, 1)) }}
-                                                </span>
-
-                                            @endif
-
-                                        </div>
-
-
-                                        <div class="seller-order-customer-info">
-
-                                            <strong>
-                                                {{ $order->user->name ?? 'Unknown Customer' }}
-                                            </strong>
-
-                                            @if($order->user?->email)
-
-                                                <span>
-                                                    {{ $order->user->email }}
-                                                </span>
-
-                                            @endif
-
-                                        </div>
-
-                                    </div>
-
-                                </td>
-
-
-                                {{-- Quantity --}}
-                                <td>
-                                    <span class="seller-order-quantity">
-                                        {{ $order->quantity }}
-                                    </span>
-                                </td>
-
-
-                                {{-- Total --}}
-                                <td>
-
-                                    <strong class="seller-order-total">
-                                        ${{ number_format($order->total_price, 2) }}
-                                    </strong>
-
-                                </td>
-
-
-                                {{-- Payment --}}
-                                <td>
-
-                                    @php
-                                        $paymentStatusClass = match($order->payment_status) {
-                                            'paid' => 'paid',
-                                            'failed' => 'failed',
-                                            'refunded' => 'refunded',
-                                            default => 'pending',
-                                        };
-                                    @endphp
-
-                                    <span class="seller-payment-badge {{ $paymentStatusClass }}">
-                                        {{ ucfirst($order->payment_status ?? 'pending') }}
-                                    </span>
-
-                                </td>
-
-
-                                {{-- Status --}}
-                                <td>
-
-                                    @php
-                                        $orderStatusClass = match($order->order_status) {
-                                            'processing' => 'processing',
-                                            'shipped' => 'shipped',
-                                            'delivered' => 'delivered',
-                                            'cancelled' => 'cancelled',
-                                            default => 'pending',
-                                        };
-                                    @endphp
-
-                                    <span class="seller-order-status-badge {{ $orderStatusClass }}">
-                                        {{ ucfirst($order->order_status ?? 'pending') }}
-                                    </span>
-
-                                </td>
-
-
-                                {{-- Date --}}
-                                <td>
-
-                                    <div class="seller-order-date">
-
-                                        <strong>
-                                            {{ $order->created_at->format('M d, Y') }}
-                                        </strong>
-
-                                        <span>
-                                            {{ $order->created_at->format('H:i') }}
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-
-                                {{-- Actions --}}
-                                <td>
-
-                                    <div class="seller-order-actions">
-
-                                        {{-- View --}}
-                                        <a
-                                            href="{{ route('seller.orders.show', $order) }}"
-                                            class="seller-order-view-button"
-                                            title="View Order"
-                                        >
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-
-
-                                        {{-- Delete --}}
-                                        @if(in_array($order->order_status, ['pending', 'cancelled']))
-
-                                            <button
-                                                type="button"
-                                                class="seller-order-delete-button"
-                                                title="Delete Order"
-                                                data-delete-order="{{ $order->id }}"
-                                                data-order-number="{{ $order->order_number }}"
-                                            >
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-
-                                        @endif
-
-                                    </div>
-
-                                </td>
-
+            {{-- =================================================
+                ORDERS
+                ================================================== --}}
+
+            @if($orders->count())
+
+                <div class="seller-orders-table-wrapper">
+
+                    <table class="seller-orders-table">
+
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Book</th>
+                                <th>Customer</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
                             </tr>
+                        </thead>
 
-                        @endforeach
+                        <tbody>
 
-                    </tbody>
+                            @foreach($orders as $order)
 
-                </table>
+                                @php
+                                    $paymentStatusClass = match($order->payment_status) {
+                                        'paid' => 'paid',
+                                        'failed' => 'failed',
+                                        'refunded' => 'refunded',
+                                        default => 'pending',
+                                    };
 
-            </div>
+                                    $orderStatusClass = match($order->order_status) {
+                                        'processing' => 'processing',
+                                        'shipped' => 'shipped',
+                                        'delivered' => 'delivered',
+                                        'cancelled' => 'cancelled',
+                                        default => 'pending',
+                                    };
+                                @endphp
 
+                                <tr id="order-row-{{ $order->id }}">
 
-            {{-- Pagination --}}
-            @if($orders->hasPages())
+                                    {{-- Order --}}
 
-                <div class="seller-orders-pagination">
-                    {{ $orders->links() }}
+                                    <td>
+                                        <div class="seller-order-number">
+                                            <span>
+                                                #{{ $order->order_number }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    {{-- Book --}}
+
+                                    <td>
+
+                                        <div class="seller-order-book">
+
+                                            <div class="seller-order-book-cover">
+
+                                                @if($order->book?->cover)
+
+                                                    <img
+                                                        src="{{ asset('storage/' . $order->book->cover) }}"
+                                                        alt="{{ $order->book->title }}"
+                                                    >
+
+                                                @else
+
+                                                    <div class="seller-order-no-cover">
+                                                        <i class="bi bi-book"></i>
+                                                    </div>
+
+                                                @endif
+
+                                            </div>
+
+                                            <div class="seller-order-book-info">
+
+                                                <strong>
+                                                    {{ Str::limit(
+                                                        $order->book->title ?? 'Deleted Book',
+                                                        30
+                                                    ) }}
+                                                </strong>
+
+                                                @if($order->book?->isbn)
+
+                                                    <span>
+                                                        ISBN: {{ $order->book->isbn }}
+                                                    </span>
+
+                                                @endif
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    {{-- Customer --}}
+
+                                    <td>
+
+                                        <div class="seller-order-customer">
+
+                                            <div class="seller-order-customer-avatar">
+
+                                                @if($order->user?->profile_photo)
+
+                                                    <img
+                                                        src="{{ asset('storage/' . $order->user->profile_photo) }}"
+                                                        alt="{{ $order->user->name }}"
+                                                    >
+
+                                                @else
+
+                                                    <span>
+                                                        {{ strtoupper(
+                                                            substr(
+                                                                $order->user->name ?? 'U',
+                                                                0,
+                                                                1
+                                                            )
+                                                        ) }}
+                                                    </span>
+
+                                                @endif
+
+                                            </div>
+
+                                            <div class="seller-order-customer-info">
+
+                                                <strong>
+                                                    {{ $order->user->name ?? 'Unknown Customer' }}
+                                                </strong>
+
+                                                @if($order->user?->email)
+
+                                                    <span>
+                                                        {{ $order->user->email }}
+                                                    </span>
+
+                                                @endif
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    {{-- Quantity --}}
+
+                                    <td>
+                                        <span class="seller-order-quantity">
+                                            {{ $order->quantity }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Total --}}
+
+                                    <td>
+                                        <strong class="seller-order-total">
+                                            ${{ number_format($order->total_price, 2) }}
+                                        </strong>
+                                    </td>
+
+                                    {{-- Payment --}}
+
+                                    <td>
+
+                                        <span class="seller-payment-badge {{ $paymentStatusClass }}">
+                                            <i></i>
+                                            {{ ucfirst($order->payment_status ?? 'pending') }}
+                                        </span>
+
+                                    </td>
+
+                                    {{-- Status --}}
+
+                                    <td>
+
+                                        <span class="seller-order-status-badge {{ $orderStatusClass }}">
+                                            <i></i>
+                                            {{ ucfirst($order->order_status ?? 'pending') }}
+                                        </span>
+
+                                    </td>
+
+                                    {{-- Date --}}
+
+                                    <td>
+
+                                        <div class="seller-order-date">
+
+                                            <strong>
+                                                {{ $order->created_at->format('M d, Y') }}
+                                            </strong>
+
+                                            <span>
+                                                {{ $order->created_at->format('H:i') }}
+                                            </span>
+
+                                        </div>
+
+                                    </td>
+
+                                    {{-- Actions --}}
+
+                                    <td>
+
+                                        <div class="seller-order-actions">
+
+                                            <a
+                                                href="{{ route('seller.orders.show', $order) }}"
+                                                class="seller-order-view-button"
+                                                title="View Order"
+                                            >
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+
+                                            @if(in_array($order->order_status, [
+                                                'pending',
+                                                'cancelled'
+                                            ]))
+
+                                                <button
+                                                    type="button"
+                                                    class="seller-order-delete-button"
+                                                    title="Delete Order"
+                                                    data-delete-order="{{ $order->id }}"
+                                                    data-order-number="{{ $order->order_number }}"
+                                                    data-delete-url="{{ url('seller/orders/' . $order->id) }}"
+                                                >
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+
+                                            @endif
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                {{-- Pagination --}}
+
+                @if($orders->hasPages())
+
+                    <div class="seller-orders-pagination">
+                        {{ $orders->links() }}
+                    </div>
+
+                @endif
+
+            @else
+
+                {{-- Empty State --}}
+
+                <div class="seller-orders-empty">
+
+                    <div class="seller-orders-empty-icon">
+                        <i class="bi bi-bag-x"></i>
+                    </div>
+
+                    <h4>No orders found</h4>
+
+                    <p>
+
+                        @if($hasFilters)
+
+                            No orders match your current filters.
+
+                        @else
+
+                            You don't have any orders for your books yet.
+
+                        @endif
+
+                    </p>
+
+                    @if($hasFilters)
+
+                        <a
+                            href="{{ route('seller.orders.index') }}"
+                            class="seller-order-empty-button"
+                        >
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                            <span>Clear Filters</span>
+                        </a>
+
+                    @endif
+
                 </div>
 
             @endif
 
-        @else
+        </div>
 
-            {{-- Empty State --}}
-            <div class="seller-orders-empty">
+    </div>
 
-                <div class="seller-orders-empty-icon">
-                    <i class="bi bi-bag-x"></i>
-                </div>
+    {{-- =====================================================
+        DELETE FORM
+        ===================================================== --}}
 
-                <h4>No orders found</h4>
+    <form
+        id="deleteOrderForm"
+        method="POST"
+        hidden
+    >
+        @csrf
+        @method('DELETE')
+    </form>
 
-                <p>
+    {{-- =====================================================
+        DELETE CONFIRMATION MODAL
+        ===================================================== --}}
 
-                    @if(request()->hasAny(['search', 'order_status', 'payment_status']))
+    <div
+        class="seller-modal-overlay"
+        id="deleteOrderModal"
+    >
 
-                        No orders match your current filters.
+        <div class="seller-delete-modal">
 
-                    @else
+            <button
+                type="button"
+                class="seller-modal-close"
+                id="closeDeleteModal"
+                aria-label="Close"
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
 
-                        You don't have any orders for your books yet.
+            <div class="seller-delete-icon">
+                <i class="bi bi-trash3"></i>
+            </div>
 
-                    @endif
+            <h4>Delete Order?</h4>
 
-                </p>
+            <p>
+                Are you sure you want to delete
+                <strong id="deleteOrderNumber"></strong>?
+                <br>
+                This action cannot be undone.
+            </p>
 
+            <div class="seller-delete-actions">
 
-                @if(request()->hasAny(['search', 'order_status', 'payment_status']))
+                <button
+                    type="button"
+                    class="seller-modal-cancel"
+                    id="cancelDelete"
+                >
+                    Cancel
+                </button>
 
-                    <a
-                        href="{{ route('seller.orders.index') }}"
-                        class="seller-order-empty-button"
-                    >
-                        <i class="bi bi-arrow-counterclockwise"></i>
-                        Clear Filters
-                    </a>
-
-                @endif
+                <button
+                    type="button"
+                    class="seller-modal-delete"
+                    id="confirmDelete"
+                >
+                    <i class="bi bi-trash3"></i>
+                    <span>Delete Order</span>
+                </button>
 
             </div>
 
-        @endif
+        </div>
+
+    </div>
+
+    {{-- =====================================================
+        TOAST
+        ===================================================== --}}
+
+    <div
+        class="seller-success-alert"
+        id="sellerSuccessAlert"
+        hidden
+    >
+
+        <div class="seller-success-icon">
+            <i
+                class="bi bi-check-lg"
+                id="sellerAlertIcon"
+            ></i>
+        </div>
+
+        <div class="seller-success-content">
+
+            <strong id="sellerAlertTitle">
+                Success
+            </strong>
+
+            <span id="sellerSuccessMessage">
+                Order deleted successfully.
+            </span>
+
+        </div>
+
+        <button
+            type="button"
+            class="seller-success-close"
+            id="closeSuccessAlert"
+            aria-label="Close"
+        >
+            <i class="bi bi-x-lg"></i>
+        </button>
 
     </div>
 
@@ -559,458 +711,339 @@
 @endsection
 
 
-{{-- Delete Form --}}
-
-<form
-    id="deleteOrderForm"
-    method="POST"
-    style="display: none;"
->
-    @csrf
-    @method('DELETE')
-</form>
-
-
-{{-- Delete Confirmation Modal --}}
-
-<div
-    class="seller-modal-overlay"
-    id="deleteOrderModal"
->
-
-    <div class="seller-delete-modal">
-
-        <button
-            type="button"
-            class="seller-modal-close"
-            id="closeDeleteModal"
-        >
-            <i class="bi bi-x"></i>
-        </button>
-
-
-        <div class="seller-delete-icon">
-            <i class="bi bi-trash3"></i>
-        </div>
-
-
-        <h4>Delete Order?</h4>
-
-
-        <p>
-            Are you sure you want to delete
-            <strong id="deleteOrderNumber"></strong>?
-            <br>
-            This action cannot be undone.
-        </p>
-
-
-        <div class="seller-delete-actions">
-
-            <button
-                type="button"
-                class="seller-modal-cancel"
-                id="cancelDelete"
-            >
-                Cancel
-            </button>
-
-
-            <button
-                type="button"
-                class="seller-modal-delete"
-                id="confirmDelete"
-            >
-                <i class="bi bi-trash3"></i>
-                Delete Order
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-{{-- Success Alert --}}
-
-<div
-    class="seller-success-alert"
-    id="sellerSuccessAlert"
-    style="display: none;"
->
-
-    <div class="seller-success-icon">
-        <i class="bi bi-check-lg"></i>
-    </div>
-
-
-    <div class="seller-success-content">
-
-        <strong>
-            Success
-        </strong>
-
-        <span id="sellerSuccessMessage">
-            Order deleted successfully.
-        </span>
-
-    </div>
-
-
-    <button
-        type="button"
-        class="seller-success-close"
-        id="closeSuccessAlert"
-    >
-        <i class="bi bi-x"></i>
-    </button>
-
-</div>
-
-
 @push('js')
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
 
-    const modal = document.getElementById('deleteOrderModal');
+    const $ = id => document.getElementById(id);
 
-    const deleteForm = document.getElementById('deleteOrderForm');
+    const modal = $('deleteOrderModal');
+    const deleteForm = $('deleteOrderForm');
+    const deleteLabel = $('deleteOrderNumber');
+    const confirmBtn = $('confirmDelete');
+    const toast = $('sellerSuccessAlert');
+    const ordersContent = $('sellerOrdersContent');
 
-    const deleteNumber = document.getElementById('deleteOrderNumber');
-
-    const closeModal = document.getElementById('closeDeleteModal');
-
-    const cancelDelete = document.getElementById('cancelDelete');
-
-    const confirmDelete = document.getElementById('confirmDelete');
-
-    const deleteButtons = document.querySelectorAll(
-        '[data-delete-order]'
-    );
+    let selected = null;
+    let paginationLoading = false;
 
 
-    let selectedOrderId = null;
+    /* =====================================================
+       TOAST
+       ===================================================== */
 
-    let selectedOrderRow = null;
+    function showToast(message, type = 'success') {
 
+        if (!toast) {
+            return;
+        }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Open Delete Modal
-    |--------------------------------------------------------------------------
-    */
+        const isError = type === 'error';
 
-    deleteButtons.forEach(function (button) {
+        toast.classList.toggle('is-error', isError);
 
-        button.addEventListener('click', function () {
+        $('sellerAlertTitle').textContent =
+            isError ? 'Error' : 'Success';
 
-            selectedOrderId = this.dataset.deleteOrder;
+        $('sellerAlertIcon').className =
+            isError
+                ? 'bi bi-exclamation-lg'
+                : 'bi bi-check-lg';
 
-            selectedOrderRow = document.getElementById(
-                'order-row-' + selectedOrderId
-            );
+        $('sellerSuccessMessage').textContent = message;
 
+        toast.hidden = false;
 
-            const orderNumber =
-                this.dataset.orderNumber;
+        clearTimeout(toast.hideTimer);
 
-
-            deleteNumber.textContent =
-                '#' + orderNumber;
-
-
-            deleteForm.action =
-                '/seller/orders/' + selectedOrderId;
-
-
-            modal.classList.add('show');
-
-        });
-
-    });
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Close Modal
-    |--------------------------------------------------------------------------
-    */
-
-    function hideDeleteModal() {
-
-        modal.classList.remove('show');
-
-        selectedOrderId = null;
-
-        selectedOrderRow = null;
-
+        toast.hideTimer = setTimeout(function () {
+            toast.hidden = true;
+        }, 4000);
     }
 
 
-    closeModal.addEventListener(
-        'click',
-        hideDeleteModal
-    );
+    /* =====================================================
+       SERVER SUCCESS MESSAGE
+       ===================================================== */
+
+    @if(session('success'))
+
+        showToast(
+            @json(session('success')),
+            'success'
+        );
+
+    @endif
 
 
-    cancelDelete.addEventListener(
-        'click',
-        hideDeleteModal
-    );
+    /* =====================================================
+       CLOSE TOAST
+       ===================================================== */
+
+    $('closeSuccessAlert').addEventListener('click', function () {
+        toast.hidden = true;
+    });
 
 
-    modal.addEventListener(
-        'click',
-        function (event) {
+    /* =====================================================
+       MODAL
+       ===================================================== */
 
-            if (event.target === modal) {
+    function hideModal() {
+        modal.classList.remove('show');
+        selected = null;
+    }
 
-                hideDeleteModal();
 
-            }
+    /* =====================================================
+       DELETE BUTTON (EVENT DELEGATION)
+       ===================================================== */
 
+    document.addEventListener('click', function (event) {
+
+        const button = event.target.closest('[data-delete-order]');
+
+        if (!button) {
+            return;
         }
-    );
+
+        const id = button.dataset.deleteOrder;
+
+        selected = {
+            id: id,
+            row: $('order-row-' + id),
+            url: button.dataset.deleteUrl
+        };
+
+        deleteLabel.textContent = '#' + button.dataset.orderNumber;
+
+        deleteForm.action = selected.url;
+
+        modal.classList.add('show');
+    });
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Confirm Delete
-    |--------------------------------------------------------------------------
-    */
+    $('closeDeleteModal').addEventListener('click', hideModal);
 
-    confirmDelete.addEventListener(
-        'click',
-        async function () {
+    $('cancelDelete').addEventListener('click', hideModal);
 
-            if (!selectedOrderId || !selectedOrderRow) {
-                return;
+    modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            hideModal();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            hideModal();
+        }
+    });
+
+
+    /* =====================================================
+       DELETE - AJAX
+       ===================================================== */
+
+    confirmBtn.addEventListener('click', async function () {
+
+        if (!selected || !selected.row) {
+            return;
+        }
+
+        const row = selected.row;
+        const url = selected.url;
+
+        const original = confirmBtn.innerHTML;
+
+        confirmBtn.disabled = true;
+
+        confirmBtn.innerHTML =
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+
+        try {
+
+            const response = await fetch(url, {
+                method: 'POST',
+
+                headers: {
+                    'X-CSRF-TOKEN':
+                        deleteForm.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+
+                body: new FormData(deleteForm)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(
+                    data.message || 'Unable to delete the order.'
+                );
             }
 
+            hideModal();
 
-            const row =
-                selectedOrderRow;
+            row.classList.add('is-removing');
 
+            setTimeout(function () {
 
-            confirmDelete.disabled = true;
+                row.remove();
 
+                const total = $('totalOrdersCount');
 
-            try {
-
-                const formData =
-                    new FormData(deleteForm);
-
-
-                const response =
-                    await fetch(
-                        deleteForm.action,
-                        {
-                            method: 'POST',
-
-                            headers: {
-                                'X-CSRF-TOKEN':
-                                    document.querySelector(
-                                        'input[name="_token"]'
-                                    ).value,
-
-                                'Accept':
-                                    'application/json',
-
-                                'X-Requested-With':
-                                    'XMLHttpRequest'
-                            },
-
-                            body: formData
-                        }
+                if (total) {
+                    total.textContent = Math.max(
+                        0,
+                        (parseInt(total.textContent) || 0) - 1
                     );
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message ||
-                        'Unable to delete the order.'
-                    );
-
                 }
 
+                const found = $('ordersFoundText');
 
-                /*
-                |--------------------------------------------------------------------------
-                | Close Modal
-                |--------------------------------------------------------------------------
-                */
+                if (found) {
 
-                hideDeleteModal();
+                    const match = found.textContent.match(/\d+/);
 
+                    if (match) {
 
-                /*
-                |--------------------------------------------------------------------------
-                | Remove Row
-                |--------------------------------------------------------------------------
-                */
+                        const count = Math.max(0, parseInt(match[0]) - 1);
 
-                row.style.transition =
-                    'opacity 0.25s ease, transform 0.25s ease';
-
-                row.style.opacity = '0';
-
-                row.style.transform =
-                    'translateX(10px)';
-
-
-                setTimeout(function () {
-
-                    row.remove();
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Total Orders
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const totalOrders =
-                        document.getElementById(
-                            'totalOrdersCount'
-                        );
-
-
-                    if (totalOrders) {
-
-                        totalOrders.textContent =
-                            Math.max(
-                                0,
-                                parseInt(
-                                    totalOrders.textContent
-                                ) - 1
-                            );
-
+                        found.textContent =
+                            count + ' ' +
+                            (count === 1 ? 'order' : 'orders') +
+                            ' found';
                     }
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Orders Found
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const ordersFoundText =
-                        document.getElementById(
-                            'ordersFoundText'
-                        );
-
-
-                    if (ordersFoundText) {
-
-                        const match =
-                            ordersFoundText.textContent.match(
-                                /\d+/
-                            );
-
-
-                        if (match) {
-
-                            const currentCount =
-                                parseInt(match[0]);
-
-
-                            const newCount =
-                                Math.max(
-                                    0,
-                                    currentCount - 1
-                                );
-
-
-                            ordersFoundText.textContent =
-                                newCount +
-                                ' ' +
-                                (
-                                    newCount === 1
-                                        ? 'order'
-                                        : 'orders'
-                                ) +
-                                ' found';
-
-                        }
-
-                    }
-
-                }, 250);
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Success Alert
-                |--------------------------------------------------------------------------
-                */
-
-                const successAlert =
-                    document.getElementById(
-                        'sellerSuccessAlert'
-                    );
-
-
-                const successMessage =
-                    document.getElementById(
-                        'sellerSuccessMessage'
-                    );
-
-
-                if (
-                    successAlert &&
-                    successMessage
-                ) {
-
-                    successMessage.textContent =
-                        data.message ||
-                        'Order deleted successfully.';
-
-
-                    successAlert.style.display =
-                        'flex';
-
-
-                    setTimeout(function () {
-
-                        successAlert.remove();
-
-                    }, 4000);
-
                 }
 
+            }, 280);
 
-            } catch (error) {
+            showToast(
+                data.message || 'Order deleted successfully.',
+                'success'
+            );
 
-                console.error(
-                    'Delete order error:',
-                    error
-                );
+        } catch (error) {
+
+            console.error('Delete order error:', error);
+
+            hideModal();
+
+            showToast(
+                error.message ||
+                'Something went wrong while deleting the order.',
+                'error'
+            );
+
+        } finally {
+
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = original;
+        }
+    });
 
 
-                alert(
-                    error.message ||
-                    'Something went wrong while deleting the order.'
-                );
+    /* =====================================================
+       AJAX PAGINATION
+       ===================================================== */
 
-            } finally {
+    async function loadOrdersPage(url, pushState = true) {
 
-                confirmDelete.disabled = false;
+        if (!ordersContent || paginationLoading) {
+            return;
+        }
 
+        paginationLoading = true;
+
+        try {
+
+            const response = await fetch(url, {
+                method: 'GET',
+
+                headers: {
+                    'Accept': 'text/html',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Unable to load the selected page.');
             }
 
+            const html = await response.text();
+
+            const documentPage = new DOMParser()
+                .parseFromString(html, 'text/html');
+
+            const newContent = documentPage
+                .querySelector('#sellerOrdersContent');
+
+            if (!newContent) {
+                throw new Error('Orders content could not be loaded.');
+            }
+
+            /* Pagination-dan sonra animasiya olmasın.
+               Səhifə yenilənəndə (F5) bu class olmur,
+               ona görə animasiya normal işləyir. */
+            ordersContent.classList.add('is-pagination-loaded');
+
+            ordersContent.innerHTML = newContent.innerHTML;
+
+            if (pushState) {
+                window.history.pushState({ url: url }, '', url);
+            }
+
+            window.scrollTo(
+                0,
+                ordersContent.getBoundingClientRect().top +
+                window.scrollY - 120
+            );
+
+        } catch (error) {
+
+            console.error('Orders pagination error:', error);
+
+            showToast(
+                error.message || 'Unable to load orders.',
+                'error'
+            );
+
+        } finally {
+
+            paginationLoading = false;
         }
-    );
+    }
+
+
+    /* =====================================================
+       PAGINATION CLICK
+       ===================================================== */
+
+    document.addEventListener('click', function (event) {
+
+        const link = event.target.closest('.seller-orders-pagination a');
+
+        if (!link || !link.href) {
+            return;
+        }
+
+        event.preventDefault();
+
+        loadOrdersPage(link.href);
+    });
+
+
+    /* =====================================================
+       BROWSER BACK / FORWARD
+       ===================================================== */
+
+    window.addEventListener('popstate', function () {
+        loadOrdersPage(window.location.href, false);
+    });
 
 });
-
 </script>
 
 @endpush

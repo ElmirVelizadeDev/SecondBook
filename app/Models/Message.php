@@ -17,6 +17,11 @@ class Message extends Model
         'subject',
         'message',
         'status',
+        'archived_at',
+    ];
+
+    protected $casts = [
+        'archived_at' => 'datetime',
     ];
 
     public function user()

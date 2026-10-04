@@ -20,7 +20,7 @@
             <p>Update your book information.</p>
         </div>
 
-        <a href="{{ route('seller.books.show', $book) }}" class="seller-outline-button">
+        <a href="{{ route('seller.books.index', $book) }}" class="seller-outline-button">
             <i class="bi bi-arrow-left"></i>
             <span>Back to Book</span>
         </a>

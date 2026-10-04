@@ -787,7 +787,7 @@
                 @if($paymentStatus !== 'paid')
 
                     <a
-                        href="{{ url('/frontend-assets/payment/' . $order->id) }}"
+                        href="{{ route('frontend.payment', $order->id) }}"
                         class="order-action payment"
                     >
                         <i class="bi bi-credit-card"></i>

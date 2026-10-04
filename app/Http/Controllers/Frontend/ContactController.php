@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Message;
+use App\Models\Notification;
 use App\Models\Store;
 use Illuminate\Http\Request;
 
@@ -86,8 +87,10 @@ class ContactController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function sendStoreMessage(Request $request, Store $store)
-    {
+    public function sendStoreMessage(
+        Request $request,
+        Store $store
+    ) {
         abort_unless($store->isActive(), 404);
 
         $validated = $request->validate([
@@ -106,7 +109,7 @@ class ContactController extends Controller
 
         $user = auth()->user();
 
-        Message::create([
+        $message = Message::create([
             'user_id' => $user->id,
             'seller_id' => $store->seller_id,
             'name' => $user->full_name ?: $user->name,
@@ -114,6 +117,17 @@ class ContactController extends Controller
             'subject' => $validated['subject'],
             'message' => $validated['message'],
             'status' => 'unread',
+        ]);
+
+        Notification::create([
+            'user_id' => $store->seller_id,
+            'type' => 'new_message',
+            'title' => 'New Customer Message',
+            'message' => ($user->full_name ?: $user->name)
+                . ' sent you a new message: "'
+                . $message->subject
+                . '"',
+            'read_at' => null,
         ]);
 
         return redirect()

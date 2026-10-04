@@ -215,8 +215,7 @@
                         <div class="seller-form-group @error('name') has-error @enderror">
 
                             <label for="name">
-                                Store Name
-                                <span>*</span>
+                                Store Name       
                             </label>
 
                             <div class="seller-input-wrap">

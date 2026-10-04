@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -14,14 +15,23 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $sellerId = auth()->id();
+        $sixMonthsAgo = now()->subMonths(6);
 
         $query = Order::with([
             'user',
             'book',
         ])
-        ->whereHas('book', function ($query) use ($sellerId) {
-            $query->where('seller_id', $sellerId);
-        });
+            ->whereHas('book', function ($query) use ($sellerId) {
+                $query->where('seller_id', $sellerId);
+            })
+            ->where(function ($query) use ($sixMonthsAgo) {
+                $query->where('order_status', '!=', 'delivered')
+                    ->orWhere(function ($query) use ($sixMonthsAgo) {
+                        $query->where('order_status', 'delivered')
+                            ->whereNull('archived_at')
+                            ->where('created_at', '>=', $sixMonthsAgo);
+                    });
+            });
 
         /*
         |--------------------------------------------------------------------------
@@ -30,24 +40,19 @@ class OrderController extends Controller
         */
 
         if ($request->filled('search')) {
-
             $search = $request->search;
 
             $query->where(function ($query) use ($search) {
-
                 $query->where('order_number', 'like', "%{$search}%")
-
                     ->orWhereHas('user', function ($query) use ($search) {
                         $query->where('name', 'like', "%{$search}%")
                             ->orWhere('first_name', 'like', "%{$search}%")
                             ->orWhere('last_name', 'like', "%{$search}%")
                             ->orWhere('email', 'like', "%{$search}%");
                     })
-
                     ->orWhereHas('book', function ($query) use ($search) {
                         $query->where('title', 'like', "%{$search}%");
                     });
-
             });
         }
 
@@ -58,7 +63,6 @@ class OrderController extends Controller
         */
 
         if ($request->filled('order_status')) {
-
             $query->where(
                 'order_status',
                 $request->order_status
@@ -72,7 +76,6 @@ class OrderController extends Controller
         */
 
         if ($request->filled('payment_status')) {
-
             $query->where(
                 'payment_status',
                 $request->payment_status
@@ -96,27 +99,31 @@ class OrderController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $totalOrders = Order::whereHas('book', function ($query) use ($sellerId) {
-            $query->where('seller_id', $sellerId);
-        })->count();
-
-        $pendingOrders = Order::whereHas('book', function ($query) use ($sellerId) {
+        $baseQuery = Order::whereHas('book', function ($query) use ($sellerId) {
             $query->where('seller_id', $sellerId);
         })
-        ->where('order_status', 'pending')
-        ->count();
+            ->where(function ($query) use ($sixMonthsAgo) {
+                $query->where('order_status', '!=', 'delivered')
+                    ->orWhere(function ($query) use ($sixMonthsAgo) {
+                        $query->where('order_status', 'delivered')
+                            ->whereNull('archived_at')
+                            ->where('created_at', '>=', $sixMonthsAgo);
+                    });
+            });
 
-        $processingOrders = Order::whereHas('book', function ($query) use ($sellerId) {
-            $query->where('seller_id', $sellerId);
-        })
-        ->where('order_status', 'processing')
-        ->count();
+        $totalOrders = (clone $baseQuery)->count();
 
-        $deliveredOrders = Order::whereHas('book', function ($query) use ($sellerId) {
-            $query->where('seller_id', $sellerId);
-        })
-        ->where('order_status', 'delivered')
-        ->count();
+        $pendingOrders = (clone $baseQuery)
+            ->where('order_status', 'pending')
+            ->count();
+
+        $processingOrders = (clone $baseQuery)
+            ->where('order_status', 'processing')
+            ->count();
+
+        $deliveredOrders = (clone $baseQuery)
+            ->where('order_status', 'delivered')
+            ->count();
 
         return view('seller.orders.index', compact(
             'orders',
@@ -185,25 +192,66 @@ class OrderController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Update
+        | Status Change
         |--------------------------------------------------------------------------
         */
 
-        $order->update([
-            'order_status' => $validated['order_status'],
-        ]);
+        $oldStatus = $order->order_status;
+        $newStatus = $validated['order_status'];
+
+        if ($oldStatus !== $newStatus) {
+            $order->update([
+                'order_status' => $newStatus,
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Seller Notification
+            |--------------------------------------------------------------------------
+            */
+
+            $orderNumber = $order->order_number
+                ?? '#' . $order->id;
+
+            $statusLabel = ucfirst(
+                str_replace('_', ' ', $newStatus)
+            );
+
+            Notification::create([
+                'user_id' => auth()->id(),
+                'type' => 'order_status_updated',
+                'title' => 'Order Status Updated',
+                'message' => "Order {$orderNumber} status has been changed to {$statusLabel}.",
+                'read_at' => null,
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Redirect To Orders Index With Success Message
+        |--------------------------------------------------------------------------
+        */
 
         return redirect()
-            ->route('seller.orders.index', $order)
+            ->route('seller.orders.index')
             ->with(
                 'success',
                 'Order status updated successfully.'
             );
     }
 
+    /**
+     * Delete order.
+     */
     public function destroy(Order $order)
     {
         $sellerId = auth()->id();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Security Check
+        |--------------------------------------------------------------------------
+        */
 
         if (!$order->book || $order->book->seller_id !== $sellerId) {
             return response()->json([
@@ -212,18 +260,51 @@ class OrderController extends Controller
             ], 403);
         }
 
-        if (!in_array($order->order_status, ['pending', 'cancelled'])) {
+        /*
+        |--------------------------------------------------------------------------
+        | Delete Restriction
+        |--------------------------------------------------------------------------
+        */
+
+        if (!in_array($order->order_status, [
+            'pending',
+            'cancelled',
+        ])) {
             return response()->json([
                 'success' => false,
                 'message' => 'Only pending or cancelled orders can be deleted.',
             ], 422);
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Save Order Number Before Deletion
+        |--------------------------------------------------------------------------
+        */
+
+        $orderNumber = $order->order_number
+            ?? '#' . $order->id;
+
         $order->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Seller Notification
+        |--------------------------------------------------------------------------
+        */
+
+        Notification::create([
+            'user_id' => auth()->id(),
+            'type' => 'order_deleted',
+            'title' => 'Order Deleted',
+            'message' => "Order {$orderNumber} has been deleted from your orders.",
+            'read_at' => null,
+        ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Order deleted successfully.',
         ]);
     }
-    }
+}
+

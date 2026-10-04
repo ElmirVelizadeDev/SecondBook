@@ -1,6 +1,18 @@
 <aside class="seller-sidebar">
 
-    {{-- Brand --}}
+    {{-- =====================================================
+        MOBILE CLOSE BUTTON
+    ====================================================== --}}
+    <button type="button"
+            class="seller-sidebar-close"
+            aria-label="Close sidebar">
+        <i class="bi bi-x-lg"></i>
+    </button>
+
+
+    {{-- =====================================================
+        BRAND
+    ====================================================== --}}
     <div class="seller-brand">
 
         <div class="seller-brand-icon">
@@ -15,10 +27,14 @@
     </div>
 
 
-    {{-- Navigation --}}
+    {{-- =====================================================
+        NAVIGATION
+    ====================================================== --}}
     <nav class="seller-nav">
 
-        {{-- Main --}}
+        {{-- =================================================
+            MAIN
+        ================================================== --}}
         <div class="seller-nav-label">
             MAIN
         </div>
@@ -33,7 +49,9 @@
         </a>
 
 
-        {{-- Store --}}
+        {{-- =================================================
+            STORE
+        ================================================== --}}
         <div class="seller-nav-label">
             STORE
         </div>
@@ -52,12 +70,14 @@
 
             <i class="bi bi-book"></i>
 
-            <span>My Books</span>
+            <span>Books</span>
 
         </a>
 
 
-        {{-- Sales --}}
+        {{-- =================================================
+            SALES
+        ================================================== --}}
         <div class="seller-nav-label">
             SALES
         </div>
@@ -90,7 +110,26 @@
         </a>
 
 
-        {{-- Communication --}}
+        {{-- =================================================
+            INSIGHTS
+        ================================================== --}}
+        <div class="seller-nav-label">
+            INSIGHTS
+        </div>
+
+        <a href="{{ route('seller.analytics.index') }}"
+           class="seller-nav-link {{ request()->routeIs('seller.analytics.*') ? 'active' : '' }}">
+
+            <i class="bi bi-bar-chart-line"></i>
+
+            <span>Analytics</span>
+
+        </a>
+
+
+        {{-- =================================================
+            COMMUNICATION
+        ================================================== --}}
         <div class="seller-nav-label">
             COMMUNICATION
         </div>
@@ -102,7 +141,7 @@
 
             <span>Messages</span>
 
-            @if($sellerUnreadMessagesCount > 0)
+            @if(($sellerUnreadMessagesCount ?? 0) > 0)
                 <span class="seller-message-badge">
                     {{ $sellerUnreadMessagesCount > 99 ? '99+' : $sellerUnreadMessagesCount }}
                 </span>
@@ -110,14 +149,25 @@
 
         </a>
 
+        <a href="{{ route('seller.notifications.index') }}"
+           class="seller-nav-link {{ request()->routeIs('seller.notifications.*') ? 'active' : '' }}">
 
-        {{-- Account --}}
+            <i class="bi bi-bell"></i>
+
+            <span>Notifications</span>
+
+        </a>
+
+
+        {{-- =================================================
+            ACCOUNT
+        ================================================== --}}
         <div class="seller-nav-label">
             ACCOUNT
         </div>
 
         <a href="{{ route('my.profile') }}"
-           class="seller-nav-link">
+           class="seller-nav-link {{ request()->routeIs('my.profile') ? 'active' : '' }}">
 
             <i class="bi bi-person"></i>
 
@@ -126,7 +176,7 @@
         </a>
 
         <a href="{{ route('frontend.account.settings') }}"
-           class="seller-nav-link">
+           class="seller-nav-link {{ request()->routeIs('frontend.account.settings') ? 'active' : '' }}">
 
             <i class="bi bi-person-gear"></i>
 
@@ -137,7 +187,7 @@
         <a href="{{ route('seller.settings') }}"
            class="seller-nav-link {{ request()->routeIs('seller.settings') ? 'active' : '' }}">
 
-            <i class="bi bi-shop"></i>
+            <i class="bi bi-sliders"></i>
 
             <span>Store Settings</span>
 
@@ -146,7 +196,9 @@
     </nav>
 
 
-    {{-- Bottom --}}
+    {{-- =====================================================
+        BOTTOM
+    ====================================================== --}}
     <div class="seller-sidebar-bottom">
 
         <a href="{{ route('frontend.home') }}"
@@ -161,3 +213,4 @@
     </div>
 
 </aside>
+

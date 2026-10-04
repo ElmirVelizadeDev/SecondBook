@@ -15,10 +15,12 @@ class Review extends Model
         'rating',
         'comment',
         'status',
+        'archived_at',
     ];
 
     protected $casts = [
         'rating' => 'integer',
+        'archived_at' => 'datetime',
     ];
 
     public function user()

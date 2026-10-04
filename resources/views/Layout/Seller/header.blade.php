@@ -1,16 +1,18 @@
 <header class="seller-header">
 
+    {{-- LEFT --}}
     <div class="seller-header-left">
 
         <button type="button"
                 class="seller-mobile-toggle"
-                id="sellerMobileToggle">
+                id="sellerMobileToggle"
+                aria-label="Open menu">
 
             <i class="bi bi-list"></i>
 
         </button>
 
-        <div>
+        <div class="seller-header-title">
             <h6>Seller Panel</h6>
             <span>Manage your store and sales</span>
         </div>
@@ -18,6 +20,7 @@
     </div>
 
 
+    {{-- RIGHT --}}
     <div class="seller-header-right">
 
         {{-- Messages --}}
@@ -28,7 +31,7 @@
 
             <i class="bi bi-chat-left-text"></i>
 
-            @if($sellerUnreadMessagesCount > 0)
+            @if(($sellerUnreadMessagesCount ?? 0) > 0)
                 <span class="seller-header-message-badge">
                     {{ $sellerUnreadMessagesCount > 99 ? '99+' : $sellerUnreadMessagesCount }}
                 </span>
@@ -36,24 +39,31 @@
 
         </a>
 
+        <span class="seller-header-divider" aria-hidden="true"></span>
 
         {{-- Seller User --}}
         <div class="seller-user">
 
-            <div class="seller-user-avatar">
+            <div class="seller-user-avatar-wrap">
 
-                @if(auth()->user()->profile_photo)
+                <div class="seller-user-avatar">
 
-                    <img
-                        src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
-                        alt="{{ auth()->user()->full_name ?: auth()->user()->name }}"
-                    >
+                    @if(auth()->user()->profile_photo)
 
-                @else
+                        <img
+                            src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
+                            alt="{{ auth()->user()->full_name ?: auth()->user()->name }}"
+                        >
 
-                    <i class="bi bi-person"></i>
+                    @else
 
-                @endif
+                        <i class="bi bi-person"></i>
+
+                    @endif
+
+                </div>
+
+                <span class="seller-user-online"></span>
 
             </div>
 

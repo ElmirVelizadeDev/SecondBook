@@ -49,6 +49,7 @@ class Order extends Model
 
         // Extra
         'note',
+        'archived_at',
     ];
 
     protected $casts = [
@@ -56,6 +57,7 @@ class Order extends Model
         'total_price' => 'decimal:2',
         'shipping_fee' => 'decimal:2',
         'processing_deadline' => 'datetime',
+        'archived_at' => 'datetime',
     ];
 
     /*

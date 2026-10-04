@@ -1,7 +1,8 @@
 /* =========================================================
-   MY STORE (PREMIUM)
-   Same visual system as Sidebar / Header / Messages
+   SECOND BOOK - SELLER STORE
 ========================================================= */
+
+/* PAGE HEADING */
 
 .seller-store-page {
     --st-accent: #8b5e3c;
@@ -10,10 +11,6 @@
     --st-soft: #faf7f4;
     --st-soft-border: #efe6de;
 }
-
-/* =========================================================
-   PAGE HEADING
-========================================================= */
 
 .seller-store-page .seller-page-heading {
     margin-bottom: 26px;
@@ -51,7 +48,11 @@
     font-size: 12px;
     font-weight: 700;
     white-space: nowrap;
-    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), color .25s ease, border-color .25s ease, box-shadow .25s ease;
+    transition:
+        transform .3s cubic-bezier(.34, 1.56, .64, 1),
+        color .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
 }
 
 .seller-store-page .seller-outline-button i {
@@ -69,9 +70,7 @@
     transform: scale(1.15) rotate(-8deg);
 }
 
-/* =========================================================
-   ALERTS
-========================================================= */
+/* ALERTS */
 
 .seller-store-page .seller-alert {
     margin-bottom: 22px;
@@ -165,9 +164,7 @@
     box-shadow: 0 8px 16px rgba(220, 38, 38, .3);
 }
 
-/* =========================================================
-   CARDS (shared)
-========================================================= */
+/* CARDS */
 
 .seller-store-card,
 .seller-store-form-card {
@@ -189,17 +186,24 @@
     animation-delay: .16s;
 }
 
-/* =========================================================
-   STORE PREVIEW CARD
-========================================================= */
+/* STORE PREVIEW CARD */
 
 .seller-store-cover {
     position: relative;
     height: 120px;
     overflow: hidden;
     background:
-        radial-gradient(200px 130px at 15% 0%, rgba(255, 255, 255, .22), transparent 70%),
-        linear-gradient(135deg, #b9825d 0%, #8b5e3c 55%, #6b4528 100%);
+        radial-gradient(
+            200px 130px at 15% 0%,
+            rgba(255, 255, 255, .22),
+            transparent 70%
+        ),
+        linear-gradient(
+            135deg,
+            #b9825d 0%,
+            #8b5e3c 55%,
+            #6b4528 100%
+        );
 }
 
 .seller-store-cover::before {
@@ -210,7 +214,11 @@
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, .24), transparent 70%);
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, .24),
+        transparent 70%
+    );
     animation: stFloat 7s ease-in-out infinite alternate;
 }
 
@@ -218,7 +226,11 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .05) 0 2px, transparent 2px 14px);
+    background: repeating-linear-gradient(
+        135deg,
+        rgba(255, 255, 255, .05) 0 2px,
+        transparent 2px 14px
+    );
 }
 
 .seller-store-profile {
@@ -237,7 +249,9 @@
     border-radius: 24px;
     background: linear-gradient(135deg, #f3ece7, #e9d5c3);
     color: var(--st-accent);
-    box-shadow: 0 0 0 5px var(--seller-card), 0 14px 28px rgba(139, 94, 60, .28);
+    box-shadow:
+        0 0 0 5px var(--seller-card),
+        0 14px 28px rgba(139, 94, 60, .28);
     transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
 }
 
@@ -287,7 +301,8 @@
     line-height: 1.75;
 }
 
-/* Meta */
+/* META */
+
 .seller-store-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -339,7 +354,8 @@
     color: var(--seller-muted);
 }
 
-/* Contact */
+/* CONTACT */
+
 .seller-store-contact {
     padding: 8px 14px 14px;
     border-top: 1px solid var(--seller-border);
@@ -370,7 +386,10 @@
     background: var(--seller-primary-light);
     color: var(--seller-primary);
     font-size: 16px;
-    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), background .25s ease, color .25s ease;
+    transition:
+        transform .3s cubic-bezier(.34, 1.56, .64, 1),
+        background .25s ease,
+        color .25s ease;
 }
 
 .seller-store-contact-item:hover .seller-store-contact-icon {
@@ -402,9 +421,7 @@
     word-break: break-word;
 }
 
-/* =========================================================
-   FORM CARD
-========================================================= */
+/* FORM CARD */
 
 .seller-form-header {
     padding: 20px 26px;
@@ -426,7 +443,9 @@
     background: linear-gradient(135deg, #b9825d, #8b5e3c);
     color: #fff;
     font-size: 19px;
-    box-shadow: 0 8px 18px var(--st-glow), inset 0 1px 0 rgba(255, 255, 255, .25);
+    box-shadow:
+        0 8px 18px var(--st-glow),
+        inset 0 1px 0 rgba(255, 255, 255, .25);
 }
 
 .seller-form-header h5 {
@@ -472,7 +491,8 @@
     font-weight: 600;
 }
 
-/* Inputs */
+/* INPUTS */
+
 .seller-input-wrap {
     position: relative;
 }
@@ -499,7 +519,9 @@
     color: var(--seller-text);
     font-family: inherit;
     font-size: 12px;
-    transition: border-color .25s ease, box-shadow .25s ease;
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease;
 }
 
 .seller-store-page .seller-form-group input[type="text"] {
@@ -531,7 +553,8 @@
     color: var(--st-accent);
 }
 
-/* Errors */
+/* ERRORS */
+
 .seller-form-group.has-error input[type="text"],
 .seller-form-group.has-error textarea,
 .seller-form-group.has-error .seller-logo-upload {
@@ -553,9 +576,7 @@
     display: none;
 }
 
-/* =========================================================
-   LOGO UPLOAD
-========================================================= */
+/* LOGO UPLOAD */
 
 .seller-logo-upload {
     padding: 18px;
@@ -564,8 +585,15 @@
     gap: 18px;
     border: 1.5px dashed rgba(139, 94, 60, .35);
     border-radius: 16px;
-    background: radial-gradient(300px 120px at 0% 0%, rgba(139, 94, 60, .06), transparent 70%);
-    transition: border-color .25s ease, background .25s ease, transform .25s ease;
+    background: radial-gradient(
+        300px 120px at 0% 0%,
+        rgba(139, 94, 60, .06),
+        transparent 70%
+    );
+    transition:
+        border-color .25s ease,
+        background .25s ease,
+        transform .25s ease;
 }
 
 .seller-logo-upload:hover,
@@ -614,18 +642,29 @@
     justify-content: flex-start !important;
     gap: 8px;
     border-radius: 11px;
-    background: linear-gradient(135deg, #9a6a45 0%, #8b5e3c 60%, #75492b 100%);
+    background: linear-gradient(
+        135deg,
+        #9a6a45 0%,
+        #8b5e3c 60%,
+        #75492b 100%
+    );
     color: #fff !important;
     font-size: 11px !important;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 8px 18px rgba(139, 94, 60, .3), inset 0 1px 0 rgba(255, 255, 255, .2);
-    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s ease;
+    box-shadow:
+        0 8px 18px rgba(139, 94, 60, .3),
+        inset 0 1px 0 rgba(255, 255, 255, .2);
+    transition:
+        transform .3s cubic-bezier(.34, 1.56, .64, 1),
+        box-shadow .3s ease;
 }
 
 .seller-store-page .seller-upload-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(139, 94, 60, .4), inset 0 1px 0 rgba(255, 255, 255, .2);
+    box-shadow:
+        0 12px 24px rgba(139, 94, 60, .4),
+        inset 0 1px 0 rgba(255, 255, 255, .2);
 }
 
 .seller-logo-content input[type="file"] {
@@ -641,9 +680,7 @@
     white-space: nowrap;
 }
 
-/* =========================================================
-   ACTIONS
-========================================================= */
+/* ACTIONS */
 
 .seller-form-actions {
     margin-top: 6px;
@@ -673,7 +710,10 @@
     border: 1px solid var(--seller-border);
     background: var(--seller-card);
     color: var(--seller-muted);
-    transition: color .25s ease, border-color .25s ease, transform .25s ease;
+    transition:
+        color .25s ease,
+        border-color .25s ease,
+        transform .25s ease;
 }
 
 .seller-cancel-button:hover {
@@ -686,10 +726,20 @@
     position: relative;
     overflow: hidden;
     border: 0;
-    background: linear-gradient(135deg, #9a6a45 0%, #8b5e3c 60%, #75492b 100%);
+    background: linear-gradient(
+        135deg,
+        #9a6a45 0%,
+        #8b5e3c 60%,
+        #75492b 100%
+    );
     color: #fff;
-    box-shadow: 0 10px 22px rgba(139, 94, 60, .38), inset 0 1px 0 rgba(255, 255, 255, .2);
-    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s ease, opacity .2s ease;
+    box-shadow:
+        0 10px 22px rgba(139, 94, 60, .38),
+        inset 0 1px 0 rgba(255, 255, 255, .2);
+    transition:
+        transform .3s cubic-bezier(.34, 1.56, .64, 1),
+        box-shadow .3s ease,
+        opacity .2s ease;
 }
 
 .seller-save-button::after {
@@ -699,7 +749,12 @@
     left: -120%;
     width: 60%;
     height: 100%;
-    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .4), transparent);
+    background: linear-gradient(
+        100deg,
+        transparent,
+        rgba(255, 255, 255, .4),
+        transparent
+    );
     transform: skewX(-20deg);
     animation: stShine 4.5s ease-in-out infinite;
 }
@@ -711,7 +766,9 @@
 
 .seller-save-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 16px 30px rgba(139, 94, 60, .5), inset 0 1px 0 rgba(255, 255, 255, .2);
+    box-shadow:
+        0 16px 30px rgba(139, 94, 60, .5),
+        inset 0 1px 0 rgba(255, 255, 255, .2);
 }
 
 .seller-save-button:hover i {
@@ -737,98 +794,61 @@
     outline-offset: 3px;
 }
 
-/* =========================================================
-   KEYFRAMES
-========================================================= */
+/* KEYFRAMES */
 
 @keyframes stFadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes stShine {
-    0%, 60% { left: -120%; }
-    100%    { left: 160%; }
+    0%,
+    60% {
+        left: -120%;
+    }
+
+    100% {
+        left: 160%;
+    }
 }
 
 @keyframes stFloat {
-    from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(-30px, 24px) scale(1.25); }
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(-30px, 24px) scale(1.25);
+    }
 }
 
 @keyframes stOnline {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(21, 128, 61, .55); }
-    50%      { box-shadow: 0 0 0 5px rgba(21, 128, 61, 0); }
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(21, 128, 61, .55);
+    }
+
+    50% {
+        box-shadow: 0 0 0 5px rgba(21, 128, 61, 0);
+    }
 }
 
-/* =========================================================
-   DARK MODE
-========================================================= */
-
-:root[data-theme="dark"] .seller-store-page {
-    --st-soft: #1b2639;
-    --st-soft-border: #263247;
-}
-
-:root[data-theme="dark"] .seller-store-card,
-:root[data-theme="dark"] .seller-store-form-card {
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
-}
-
-:root[data-theme="dark"] .seller-store-page .seller-alert-success {
-    background: rgba(21, 128, 61, .14);
-    border-color: rgba(74, 222, 128, .2);
-    color: #86efac;
-}
-
-:root[data-theme="dark"] .seller-store-page .seller-alert-danger {
-    background: rgba(220, 38, 38, .14);
-    border-color: rgba(248, 113, 113, .2);
-    color: #fca5a5;
-}
-
-:root[data-theme="dark"] .seller-alert-close:hover {
-    background: rgba(255, 255, 255, .08);
-}
-
-:root[data-theme="dark"] .seller-store-logo,
-:root[data-theme="dark"] .seller-logo-preview {
-    background: linear-gradient(135deg, #2a3550, #1f2a42);
-    color: #e9c9ae;
-}
-
-:root[data-theme="dark"] .seller-form-header {
-    background: linear-gradient(180deg, #1b2639, var(--seller-card));
-}
-
-:root[data-theme="dark"] .seller-store-page .seller-form-group input[type="text"],
-:root[data-theme="dark"] .seller-store-page .seller-form-group textarea,
-:root[data-theme="dark"] .seller-store-page .seller-outline-button,
-:root[data-theme="dark"] .seller-cancel-button {
-    background: #131b2c;
-}
-
-:root[data-theme="dark"] .seller-store-meta strong.active {
-    color: #86efac;
-}
-
-:root[data-theme="dark"] .seller-store-slug {
-    color: #e0b697;
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* RESPONSIVE */
 
 @media (max-width: 1199px) {
-
     .seller-store-card {
         position: static;
     }
 }
 
 @media (max-width: 768px) {
-
     .seller-store-page .seller-page-heading h1 {
         font-size: 21px;
     }
@@ -841,7 +861,6 @@
 }
 
 @media (max-width: 576px) {
-
     .seller-store-page .seller-page-heading {
         align-items: flex-start;
         flex-direction: column;
@@ -894,9 +913,9 @@
     }
 }
 
-/* Respect users who prefer less motion */
-@media (prefers-reduced-motion: reduce) {
+/* REDUCED MOTION */
 
+@media (prefers-reduced-motion: reduce) {
     .seller-store-page *,
     .seller-store-page *::before,
     .seller-store-page *::after {

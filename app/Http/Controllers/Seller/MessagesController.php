@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MessagesController extends Controller
 {
@@ -15,26 +16,19 @@ class MessagesController extends Controller
     public function index(Request $request)
     {
         $sellerId = auth()->id();
+        $sixMonthsAgo = now()->subMonths(6);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Messages
-        |--------------------------------------------------------------------------
-        */
-
+        /* Messages */
         $query = Message::query()
             ->where('seller_id', $sellerId)
+            ->whereNull('archived_at')
+            ->where('created_at', '>=', $sixMonthsAgo)
             ->with([
                 'user:id,name,email,profile_photo',
             ])
             ->withCount('replies');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Search
-        |--------------------------------------------------------------------------
-        */
-
+        /* Search */
         if ($request->filled('search')) {
             $search = trim($request->input('search'));
 
@@ -46,12 +40,7 @@ class MessagesController extends Controller
             });
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Status Filter
-        |--------------------------------------------------------------------------
-        */
-
+        /* Status Filter */
         if (
             $request->filled('status') &&
             in_array($request->input('status'), ['unread', 'read'], true)
@@ -62,55 +51,34 @@ class MessagesController extends Controller
             );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Paginated Messages
-        |--------------------------------------------------------------------------
-        */
-
+        /* Paginated Messages */
         $messages = $query
             ->orderByDesc('created_at')
             ->paginate(10)
             ->withQueryString();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Statistics
-        |--------------------------------------------------------------------------
-        */
-
-        $totalMessages = Message::query()
+        /* Statistics */
+        $baseQuery = Message::query()
             ->where('seller_id', $sellerId)
-            ->count();
+            ->whereNull('archived_at')
+            ->where('created_at', '>=', $sixMonthsAgo);
 
-        $unreadMessages = Message::query()
-            ->where('seller_id', $sellerId)
+        $totalMessages = (clone $baseQuery)->count();
+
+        $unreadMessages = (clone $baseQuery)
             ->where('status', 'unread')
             ->count();
 
-        $readMessages = Message::query()
-            ->where('seller_id', $sellerId)
+        $readMessages = (clone $baseQuery)
             ->where('status', 'read')
             ->count();
 
-        $todayMessages = Message::query()
-            ->where('seller_id', $sellerId)
+        $todayMessages = (clone $baseQuery)
             ->whereDate('created_at', today())
             ->count();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Header Unread Count
-        |--------------------------------------------------------------------------
-        */
-
+        /* Header Unread Count */
         $unreadMessagesCount = $unreadMessages;
-
-        /*
-        |--------------------------------------------------------------------------
-        | View
-        |--------------------------------------------------------------------------
-        */
 
         return view(
             'seller.messages.index',
@@ -125,44 +93,27 @@ class MessagesController extends Controller
         );
     }
 
-
     /**
      * Display a single seller conversation.
      */
     public function show(Message $message)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Security
-        |--------------------------------------------------------------------------
-        */
-
+        /* Security */
         abort_unless(
             (int) $message->seller_id === (int) auth()->id(),
             403
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Mark Message As Read
-        |--------------------------------------------------------------------------
-        */
-
+        /* Mark Message As Read */
         if ($message->status === 'unread') {
             $message->update([
                 'status' => 'read',
             ]);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Load Conversation
-        |--------------------------------------------------------------------------
-        */
-
+        /* Load Conversation */
         $message->load([
             'user:id,name,email,profile_photo',
-
             'replies' => function ($query) {
                 $query
                     ->with('user:id,name,email,profile_photo')
@@ -170,22 +121,13 @@ class MessagesController extends Controller
             },
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Unread Count
-        |--------------------------------------------------------------------------
-        */
-
+        /* Unread Count */
         $unreadMessagesCount = Message::query()
             ->where('seller_id', auth()->id())
+            ->whereNull('archived_at')
+            ->where('created_at', '>=', now()->subMonths(6))
             ->where('status', 'unread')
             ->count();
-
-        /*
-        |--------------------------------------------------------------------------
-        | View
-        |--------------------------------------------------------------------------
-        */
 
         return view(
             'seller.messages.show',
@@ -196,31 +138,64 @@ class MessagesController extends Controller
         );
     }
 
-
     /**
-     * Send a reply from seller to customer.
+     * Mark message as read via AJAX.
      */
-    public function reply(
-        Request $request,
-        Message $message
-    ) {
-        /*
-        |--------------------------------------------------------------------------
-        | Security
-        |--------------------------------------------------------------------------
-        */
-
+    public function markAsRead(Message $message)
+    {
+        /* Security */
         abort_unless(
             (int) $message->seller_id === (int) auth()->id(),
             403
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Validate Reply
-        |--------------------------------------------------------------------------
-        */
+        /* Update Status */
+        $message->update([
+            'status' => 'read',
+        ]);
 
+        return response()->json([
+            'success' => true,
+            'status' => 'read',
+            'message' => 'Message marked as read.',
+        ]);
+    }
+
+    /**
+     * Mark message as unread via AJAX.
+     */
+    public function markAsUnread(Message $message)
+    {
+        /* Security */
+        abort_unless(
+            (int) $message->seller_id === (int) auth()->id(),
+            403
+        );
+
+        /* Update Status */
+        $message->update([
+            'status' => 'unread',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'status' => 'unread',
+            'message' => 'Message marked as unread.',
+        ]);
+    }
+
+    /**
+     * Send a reply from seller to customer.
+     */
+    public function reply(Request $request, Message $message)
+    {
+        /* Security */
+        abort_unless(
+            (int) $message->seller_id === (int) auth()->id(),
+            403
+        );
+
+        /* Validate Reply */
         $validated = $request->validate(
             [
                 'reply' => [
@@ -237,12 +212,7 @@ class MessagesController extends Controller
             ]
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Create Seller Reply
-        |--------------------------------------------------------------------------
-        */
-
+        /* Create Seller Reply */
         $messageReply = $message->replies()->create([
             'user_id' => auth()->id(),
             'sender_type' => 'seller',
@@ -250,12 +220,12 @@ class MessagesController extends Controller
             'read_at' => null,
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Notify Customer
-        |--------------------------------------------------------------------------
-        */
+        /* Load Reply User */
+        $messageReply->load(
+            'user:id,name,email,profile_photo'
+        );
 
+        /* Notify Customer */
         if ($message->user_id) {
             Notification::create([
                 'user_id' => $message->user_id,
@@ -265,15 +235,45 @@ class MessagesController extends Controller
                     $message->subject .
                     '": ' .
                     $messageReply->reply,
+                'read_at' => null,
             ]);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Success
-        |--------------------------------------------------------------------------
-        */
+        /* AJAX Response */
+        if ($request->expectsJson()) {
+            $replyUserName =
+                $messageReply->user?->full_name
+                ?: $messageReply->user?->name
+                ?: 'Seller';
 
+            return response()->json([
+                'success' => true,
+                'message' => 'Reply sent successfully.',
+                'reply' => [
+                    'id' => $messageReply->id,
+                    'name' => 'You',
+                    'reply' => $messageReply->reply,
+                    'created_at' => $messageReply->created_at?->format(
+                        'M d, Y · H:i'
+                    ),
+                    'profile_photo' => $messageReply->user?->profile_photo
+                        ? asset(
+                            'storage/' .
+                            $messageReply->user->profile_photo
+                        )
+                        : null,
+                    'initial' => strtoupper(
+                        substr(
+                            $replyUserName,
+                            0,
+                            1
+                        )
+                    ),
+                ],
+            ]);
+        }
+
+        /* Normal Request Fallback */
         return redirect()
             ->route(
                 'seller.messages.show',
@@ -283,5 +283,48 @@ class MessagesController extends Controller
                 'success',
                 'Reply sent successfully.'
             );
+    }
+
+    /**
+     * Delete seller reply via AJAX.
+     */
+    public function deleteReply(string $message, string $reply)
+    {
+        $messageModel = Message::query()
+            ->whereKey($message)
+            ->where('seller_id', auth()->id())
+            ->firstOrFail();
+
+        $messageReply = $messageModel->replies()
+            ->whereKey($reply)
+            ->where('user_id', auth()->id())
+            ->where('sender_type', 'seller')
+            ->firstOrFail();
+
+        if ($messageModel->user_id) {
+            $notificationMessage =
+                'The seller replied to "' .
+                $messageModel->subject .
+                '": ' .
+                $messageReply->reply;
+
+            Notification::query()
+                ->where('user_id', $messageModel->user_id)
+                ->where('type', 'seller_message_reply')
+                ->where('title', 'New Seller Message')
+                ->where('message', $notificationMessage)
+                ->latest('created_at')
+                ->first()?->delete();
+        }
+
+        $replyId = $messageReply->id;
+
+        $messageReply->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Reply deleted successfully.',
+            'reply_id' => $replyId,
+        ]);
     }
 }

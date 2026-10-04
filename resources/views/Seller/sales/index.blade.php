@@ -10,15 +10,22 @@
 
 <div class="seller-sales-page">
 
-    {{-- Header --}}
+    {{-- =====================================================
+         HEADER
+         ===================================================== --}}
     <div class="seller-page-heading">
+
         <div>
             <h1>Sales</h1>
             <p>Track your completed sales and revenue.</p>
         </div>
+
     </div>
 
-    {{-- Statistics --}}
+
+    {{-- =====================================================
+         STATISTICS
+         ===================================================== --}}
     <div class="seller-sales-stats">
 
         {{-- Total Sales --}}
@@ -26,7 +33,6 @@
             <div class="seller-sales-stat-icon sales">
                 <i class="bi bi-receipt"></i>
             </div>
-
             <div class="seller-sales-stat-content">
                 <span>Total Sales</span>
                 <h3>{{ $totalSales }}</h3>
@@ -38,7 +44,6 @@
             <div class="seller-sales-stat-icon items">
                 <i class="bi bi-box-seam"></i>
             </div>
-
             <div class="seller-sales-stat-content">
                 <span>Items Sold</span>
                 <h3>{{ $totalItemsSold }}</h3>
@@ -50,7 +55,6 @@
             <div class="seller-sales-stat-icon revenue">
                 <i class="bi bi-currency-dollar"></i>
             </div>
-
             <div class="seller-sales-stat-content">
                 <span>Total Revenue</span>
                 <h3>${{ number_format($totalRevenue, 2) }}</h3>
@@ -62,7 +66,6 @@
             <div class="seller-sales-stat-icon average">
                 <i class="bi bi-graph-up-arrow"></i>
             </div>
-
             <div class="seller-sales-stat-content">
                 <span>Average Sale</span>
                 <h3>${{ number_format($averageSale, 2) }}</h3>
@@ -71,34 +74,45 @@
 
     </div>
 
-    {{-- Sales Panel --}}
+
+    {{-- =====================================================
+         SALES PANEL
+         ===================================================== --}}
     <div class="seller-sales-panel">
 
         {{-- Panel Header --}}
         <div class="seller-sales-panel-header">
-            <div>
-                <h5>Sales History</h5>
-                <p>View your completed orders and earnings.</p>
+
+            <div class="seller-sales-panel-title">
+
+                <div class="seller-sales-panel-icon">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+
+                <div>
+                    <h5>Sales History</h5>
+                    <p>View your completed orders and earnings.</p>
+                </div>
+
             </div>
 
             <div class="seller-sales-count">
-                {{ $sales->total() }} sales
+                <i class="bi bi-receipt"></i>
+                {{ $sales->total() }} {{ \Illuminate\Support\Str::plural('sale', $sales->total()) }}
             </div>
+
         </div>
+
 
         {{-- Search --}}
         <div class="seller-sales-filter">
 
-            <form
-                action="{{ route('seller.sales.index') }}"
-                method="GET"
-            >
+            <form action="{{ route('seller.sales.index') }}" method="GET">
 
                 <div class="seller-sales-search">
 
                     <div class="seller-sales-search-input">
                         <i class="bi bi-search"></i>
-
                         <input
                             type="text"
                             name="search"
@@ -107,21 +121,15 @@
                         >
                     </div>
 
-                    <button
-                        type="submit"
-                        class="seller-sales-search-button"
-                    >
+                    <button type="submit" class="seller-sales-search-button">
                         <i class="bi bi-search"></i>
-                        Search
+                        <span>Search</span>
                     </button>
 
                     @if(request()->filled('search'))
-                        <a
-                            href="{{ route('seller.sales.index') }}"
-                            class="seller-sales-reset-button"
-                        >
+                        <a href="{{ route('seller.sales.index') }}" class="seller-sales-reset-button">
                             <i class="bi bi-arrow-counterclockwise"></i>
-                            Reset
+                            <span>Reset</span>
                         </a>
                     @endif
 
@@ -130,6 +138,7 @@
             </form>
 
         </div>
+
 
         {{-- Sales Table --}}
         @if($sales->count())
@@ -154,18 +163,25 @@
 
                         @foreach($sales as $sale)
 
+                            @php
+                                $buyerName = $sale->user->name
+                                    ?? trim(($sale->user->first_name ?? '') . ' ' . ($sale->user->last_name ?? ''))
+                                    ?: 'Unknown Buyer';
+
+                                $buyerInitial = strtoupper(substr(
+                                    $sale->user->name ?? $sale->user->first_name ?? 'U',
+                                    0,
+                                    1
+                                ));
+                            @endphp
+
                             <tr>
 
                                 {{-- Order --}}
                                 <td>
                                     <div class="seller-sale-order">
-                                        <strong>
-                                            #{{ $sale->order_number }}
-                                        </strong>
-
-                                        <span>
-                                            Delivered
-                                        </span>
+                                        <strong>#{{ $sale->order_number }}</strong>
+                                        <span><i></i>Delivered</span>
                                     </div>
                                 </td>
 
@@ -174,34 +190,18 @@
                                     <div class="seller-sale-book">
 
                                         <div class="seller-sale-book-cover">
-
                                             @if($sale->book && $sale->book->cover)
-
-                                                <img
-                                                    src="{{ asset('storage/' . $sale->book->cover) }}"
-                                                    alt="{{ $sale->book->title }}"
-                                                >
-
+                                                <img src="{{ asset('storage/' . $sale->book->cover) }}" alt="{{ $sale->book->title }}">
                                             @else
-
                                                 <i class="bi bi-book"></i>
-
                                             @endif
-
                                         </div>
 
                                         <div class="seller-sale-book-info">
-
-                                            <strong>
-                                                {{ $sale->book->title ?? 'Deleted Book' }}
-                                            </strong>
-
+                                            <strong>{{ $sale->book->title ?? 'Deleted Book' }}</strong>
                                             @if($sale->book && $sale->book->author)
-                                                <span>
-                                                    {{ $sale->book->author->name }}
-                                                </span>
+                                                <span>{{ $sale->book->author->name }}</span>
                                             @endif
-
                                         </div>
 
                                     </div>
@@ -209,41 +209,23 @@
 
                                 {{-- Buyer --}}
                                 <td>
-
                                     <div class="seller-sale-buyer">
 
                                         <div class="seller-sale-buyer-avatar">
-                                            {{ strtoupper(substr(
-                                                $sale->user->name
-                                                    ?? $sale->user->first_name
-                                                    ?? 'U',
-                                                0,
-                                                1
-                                            )) }}
+                                            {{ $buyerInitial }}
                                         </div>
 
                                         <div>
-                                            <strong>
-                                                {{ $sale->user->name
-                                                    ?? trim(($sale->user->first_name ?? '') . ' ' . ($sale->user->last_name ?? ''))
-                                                    ?: 'Unknown Buyer'
-                                                }}
-                                            </strong>
-
-                                            <span>
-                                                {{ $sale->user->email ?? 'No email' }}
-                                            </span>
+                                            <strong>{{ $buyerName }}</strong>
+                                            <span>{{ $sale->user->email ?? 'No email' }}</span>
                                         </div>
 
                                     </div>
-
                                 </td>
 
                                 {{-- Quantity --}}
                                 <td>
-                                    <span class="seller-sale-quantity">
-                                        {{ $sale->quantity }}
-                                    </span>
+                                    <span class="seller-sale-quantity">{{ $sale->quantity }}</span>
                                 </td>
 
                                 {{-- Price --}}
@@ -263,15 +245,8 @@
                                 {{-- Date --}}
                                 <td>
                                     <div class="seller-sale-date">
-
-                                        <strong>
-                                            {{ $sale->created_at->format('M d, Y') }}
-                                        </strong>
-
-                                        <span>
-                                            {{ $sale->created_at->format('H:i') }}
-                                        </span>
-
+                                        <strong>{{ $sale->created_at->format('M d, Y') }}</strong>
+                                        <span>{{ $sale->created_at->format('H:i') }}</span>
                                     </div>
                                 </td>
 
@@ -285,13 +260,11 @@
 
             </div>
 
-            {{-- Pagination --}}
-            @if($sales->hasPages())
 
+            @if($sales->hasPages())
                 <div class="seller-sales-pagination">
                     {{ $sales->links() }}
                 </div>
-
             @endif
 
         @else
@@ -305,20 +278,13 @@
 
                 <h5>No Sales Found</h5>
 
-                <p>
-                    You don't have any completed sales matching your search.
-                </p>
+                <p>You don't have any completed sales matching your search.</p>
 
                 @if(request()->filled('search'))
-
-                    <a
-                        href="{{ route('seller.sales.index') }}"
-                        class="seller-sales-empty-button"
-                    >
+                    <a href="{{ route('seller.sales.index') }}" class="seller-sales-empty-button">
                         <i class="bi bi-arrow-counterclockwise"></i>
-                        Clear Search
+                        <span>Clear Search</span>
                     </a>
-
                 @endif
 
             </div>

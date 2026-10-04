@@ -15,10 +15,12 @@ class Notification extends Model
         'title',
         'message',
         'read_at',
+        'archived_at',
     ];
 
     protected $casts = [
         'read_at' => 'datetime',
+        'archived_at' => 'datetime',
     ];
 
     public function user()
