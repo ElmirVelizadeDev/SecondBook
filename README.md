@@ -8,57 +8,6 @@ SecondBook combines a customer-facing marketplace, seller management panel, and 
 
 ---
 
-## 📑 Table of Contents
-
-* [Project Overview](#project-overview)
-* [Main Features](#main-features)
-* [User System](#user-system)
-* [Authentication & Security](#authentication--security)
-* [Seller Marketplace](#seller-marketplace)
-* [Seller Stores](#seller-stores)
-* [Books](#books)
-* [Book Discounts](#book-discounts)
-* [Categories](#categories)
-* [Authors](#authors)
-* [Publishers](#publishers)
-* [Wishlist](#wishlist)
-* [Orders](#orders)
-* [Shipping](#shipping)
-* [Payments](#payments)
-* [Refunds](#refunds)
-* [Reviews](#reviews)
-* [Messaging System](#messaging-system)
-* [Message Replies](#message-replies)
-* [Notifications](#notifications)
-* [Promotional Banners](#promotional-banners)
-* [Blog](#blog)
-* [FAQ](#faq)
-* [Coupons](#coupons)
-* [Settings System](#settings-system)
-* [Roles & Permissions](#roles--permissions)
-* [Activity Logs](#activity-logs)
-* [Archive System](#archive-system)
-* [Admin Panel](#admin-panel)
-* [Seller Panel](#seller-panel)
-* [User Interface](#user-interface)
-* [Admin Dark Mode](#admin-dark-mode)
-* [Responsive Design](#responsive-design)
-* [Database Architecture](#database-architecture)
-* [Important Database Relationships](#important-database-relationships)
-* [Project Architecture](#project-architecture)
-* [Technologies](#technologies)
-* [Installation](#installation)
-* [Useful Laravel Commands](#useful-laravel-commands)
-* [Development Workflow](#development-workflow)
-* [Security Considerations](#security-considerations)
-* [Database Constraints](#database-constraints)
-* [Project Status](#project-status)
-* [Future Improvements](#future-improvements)
-* [Developer](#developer)
-* [License](#license)
-
----
-
 ## 📚 Project Overview
 
 SecondBook provides a complete marketplace experience where users can:
