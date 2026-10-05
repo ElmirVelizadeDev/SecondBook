@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Seller;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -200,6 +201,13 @@ class OrderController extends Controller
         $newStatus = $validated['order_status'];
 
         if ($oldStatus !== $newStatus) {
+            $orderNumber = $order->order_number
+                ?? '#' . $order->id;
+
+            $statusLabel = ucfirst(
+                str_replace('_', ' ', $newStatus)
+            );
+
             $order->update([
                 'order_status' => $newStatus,
             ]);
@@ -210,13 +218,6 @@ class OrderController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $orderNumber = $order->order_number
-                ?? '#' . $order->id;
-
-            $statusLabel = ucfirst(
-                str_replace('_', ' ', $newStatus)
-            );
-
             Notification::create([
                 'user_id' => auth()->id(),
                 'type' => 'order_status_updated',
@@ -224,6 +225,20 @@ class OrderController extends Controller
                 'message' => "Order {$orderNumber} status has been changed to {$statusLabel}.",
                 'read_at' => null,
             ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Admin Notification
+            |--------------------------------------------------------------------------
+            */
+
+            $this->notifyAdmins(
+                'seller_order_status_updated',
+                'Seller Order Status Updated',
+                'Seller "' . $this->sellerName() .
+                '" changed order ' . $orderNumber .
+                ' status to ' . $statusLabel . '.'
+            );
         }
 
         /*
@@ -301,10 +316,73 @@ class OrderController extends Controller
             'read_at' => null,
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Admin Notification
+        |--------------------------------------------------------------------------
+        */
+
+        $this->notifyAdmins(
+            'seller_order_deleted',
+            'Seller Order Deleted',
+            'Seller "' . $this->sellerName() .
+            '" deleted order ' . $orderNumber . '.'
+        );
+
         return response()->json([
             'success' => true,
             'message' => 'Order deleted successfully.',
         ]);
     }
-}
 
+    /**
+     * Get authenticated seller name.
+     */
+    private function sellerName(): string
+    {
+        $seller = auth()->user();
+
+        return $seller?->full_name
+            ?: $seller?->name
+            ?: 'Seller';
+    }
+
+    /**
+     * Notify all active admins.
+     */
+    private function notifyAdmins(
+        string $type,
+        string $title,
+        string $message
+    ): void {
+        $adminIds = User::query()
+            ->where('role', 'admin')
+            ->where('status', 'active')
+            ->pluck('id');
+
+        if ($adminIds->isEmpty()) {
+            return;
+        }
+
+        $now = now();
+
+        $notifications = $adminIds->map(function ($adminId) use (
+            $type,
+            $title,
+            $message,
+            $now
+        ) {
+            return [
+                'user_id' => $adminId,
+                'type' => $type,
+                'title' => $title,
+                'message' => $message,
+                'read_at' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        })->toArray();
+
+        Notification::insert($notifications);
+    }
+}

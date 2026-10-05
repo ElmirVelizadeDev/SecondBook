@@ -1,11 +1,10 @@
 /* =========================================================
    Backup
-========================================================= */
+   ========================================================= */
 
 .backup-page {
     width: 100%;
 }
-
 
 /* Header */
 
@@ -93,7 +92,6 @@
     font-size: 16px;
 }
 
-
 /* Alerts */
 
 .backup-alert {
@@ -110,7 +108,6 @@
 .backup-alert i {
     font-size: 16px;
 }
-
 
 /* Statistics */
 
@@ -164,7 +161,6 @@
     font-size: 12px;
     line-height: 1.5;
 }
-
 
 /* History */
 
@@ -221,7 +217,6 @@
     font-size: 14px;
 }
 
-
 /* Table */
 
 .backup-table-wrapper {
@@ -251,18 +246,17 @@
     vertical-align: middle;
 }
 
-.backup-table tbody tr:last-child td {
-    border-bottom: 0;
-}
-
 .backup-table tbody tr {
     transition: background-color 0.2s ease;
+}
+
+.backup-table tbody tr:last-child td {
+    border-bottom: 0;
 }
 
 .backup-table tbody tr:hover {
     background: rgba(37, 99, 235, 0.025);
 }
-
 
 /* File */
 
@@ -307,7 +301,6 @@
     font-size: 11px;
 }
 
-
 /* Type */
 
 .backup-type-badge {
@@ -326,7 +319,6 @@
     font-size: 12px;
 }
 
-
 /* Size */
 
 .backup-size {
@@ -334,7 +326,6 @@
     font-size: 12px;
     font-weight: 600;
 }
-
 
 /* Date */
 
@@ -354,7 +345,6 @@
     color: #999ea5;
     font-size: 11px;
 }
-
 
 /* Actions */
 
@@ -397,14 +387,12 @@
     font-size: 15px;
 }
 
-
 /* Download */
 
 .backup-action-btn.download:hover {
     background: #eff6ff;
     color: #2563eb;
 }
-
 
 /* Restore */
 
@@ -413,14 +401,12 @@
     color: #2563eb;
 }
 
-
 /* Delete */
 
 .backup-action-btn.delete:hover {
     background: #fef2f2;
     color: #dc2626;
 }
-
 
 /* Empty State */
 
@@ -484,7 +470,6 @@
     font-size: 15px;
 }
 
-
 /* Dark Mode */
 
 :root[data-theme="dark"] .backup-page-title,
@@ -507,8 +492,8 @@
 }
 
 :root[data-theme="dark"] .backup-table thead th {
-    background: #24272b;
     border-color: #34383d;
+    background: #24272b;
     color: #9da3ab;
 }
 
@@ -573,28 +558,21 @@
     color: #ff8b91;
 }
 
-
 /* Responsive */
 
 @media (max-width: 991.98px) {
-
     .backup-header-content {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    .backup-header-action {
-        width: 100%;
-    }
-
+    .backup-header-action,
     .backup-create-btn {
         width: 100%;
     }
-
 }
 
 @media (max-width: 767.98px) {
-
     .backup-header-panel {
         padding: 24px 20px;
     }
@@ -627,11 +605,9 @@
         min-height: 110px;
         padding: 19px 20px;
     }
-
 }
 
 @media (max-width: 575.98px) {
-
     .backup-page-description {
         font-size: 13px;
     }
@@ -649,7 +625,6 @@
     .backup-empty-state {
         padding: 55px 20px;
     }
-
 }
 
 /* SweetAlert Buttons */
@@ -712,7 +687,6 @@
     border-color: #5b626a;
 }
 
-
 /* =========================================================
    Backup Success Alert - Dark Mode
    ========================================================= */
@@ -735,4 +709,3 @@
 :root[data-theme="dark"] .backup-page .alert-success .btn-close:hover {
     opacity: 1;
 }
-

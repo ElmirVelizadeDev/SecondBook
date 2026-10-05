@@ -3,15 +3,12 @@
 @section('title', 'Dashboard')
 
 @push('css')
-
     <link rel="stylesheet" href="{{ asset('seller/css/dashboard.css') }}">
-
 @endpush
 
 @section('content')
 
 @php
-
     $sellerName = auth()->user()->full_name ?: auth()->user()->name;
 
     $hour = (int) now()->format('H');
@@ -29,25 +26,21 @@
     $avgOrder = $totalOrders > 0
         ? $totalSales / $totalOrders
         : 0;
-
 @endphp
 
 <div class="seller-dashboard-page">
 
     {{-- =========================================================
          HERO
-         ========================================================= --}}
+    ========================================================== --}}
 
     <section class="seller-dashboard-hero">
 
         <div class="seller-dashboard-hero-content">
 
             <span class="seller-dashboard-hero-badge">
-
                 <i class="bi bi-stars"></i>
-
                 Seller Dashboard
-
             </span>
 
             <h1>{{ $greeting }}, {{ $sellerName }}</h1>
@@ -60,20 +53,14 @@
 
                 <a href="{{ route('seller.books.create') }}"
                    class="seller-dashboard-primary-btn">
-
                     <i class="bi bi-plus-lg"></i>
-
                     <span>Add New Book</span>
-
                 </a>
 
                 <a href="{{ route('seller.orders.index') }}"
                    class="seller-dashboard-ghost-btn">
-
                     <i class="bi bi-bag"></i>
-
                     <span>View Orders</span>
-
                 </a>
 
             </div>
@@ -83,31 +70,21 @@
         <div class="seller-dashboard-hero-side">
 
             <div class="seller-dashboard-hero-chip">
-
                 <i class="bi bi-hourglass-split"></i>
 
                 <div>
-
                     <strong>{{ number_format($pendingBooks) }}</strong>
-
                     <span>Awaiting review</span>
-
                 </div>
-
             </div>
 
             <div class="seller-dashboard-hero-chip">
-
                 <i class="bi bi-cash-stack"></i>
 
                 <div>
-
                     <strong>${{ number_format($totalSales, 2) }}</strong>
-
                     <span>Total revenue</span>
-
                 </div>
-
             </div>
 
         </div>
@@ -117,7 +94,7 @@
 
     {{-- =========================================================
          OVERVIEW STATISTICS
-         ========================================================= --}}
+    ========================================================== --}}
 
     <div class="row g-4 seller-dashboard-stats">
 
@@ -130,9 +107,7 @@
                 <div class="seller-dashboard-stat-top">
 
                     <div class="seller-dashboard-stat-icon books">
-
                         <i class="bi bi-book"></i>
-
                     </div>
 
                     <span class="seller-dashboard-stat-label">
@@ -143,27 +118,19 @@
 
                 <div class="seller-dashboard-stat-value"
                      data-count="{{ $totalBooks }}">
-
                     {{ number_format($totalBooks) }}
-
                 </div>
 
                 <div class="seller-dashboard-stat-footer">
 
                     <span>
-
                         <i class="bi bi-collection"></i>
-
                         Your inventory
-
                     </span>
 
                     <a href="{{ route('seller.books.index') }}">
-
                         View
-
                         <i class="bi bi-arrow-right"></i>
-
                     </a>
 
                 </div>
@@ -189,9 +156,7 @@
                 <div class="seller-dashboard-stat-top">
 
                     <div class="seller-dashboard-stat-icon pending">
-
                         <i class="bi bi-hourglass-split"></i>
-
                     </div>
 
                     <span class="seller-dashboard-stat-label">
@@ -202,27 +167,19 @@
 
                 <div class="seller-dashboard-stat-value"
                      data-count="{{ $pendingBooks }}">
-
                     {{ number_format($pendingBooks) }}
-
                 </div>
 
                 <div class="seller-dashboard-stat-footer">
 
                     <span>
-
                         <i class="bi bi-clock"></i>
-
                         Awaiting review
-
                     </span>
 
                     <a href="{{ route('seller.books.index', ['status' => 'pending']) }}">
-
                         Manage
-
                         <i class="bi bi-arrow-right"></i>
-
                     </a>
 
                 </div>
@@ -241,9 +198,7 @@
                 <div class="seller-dashboard-stat-top">
 
                     <div class="seller-dashboard-stat-icon orders">
-
                         <i class="bi bi-bag"></i>
-
                     </div>
 
                     <span class="seller-dashboard-stat-label">
@@ -254,27 +209,19 @@
 
                 <div class="seller-dashboard-stat-value"
                      data-count="{{ $totalOrders }}">
-
                     {{ number_format($totalOrders) }}
-
                 </div>
 
                 <div class="seller-dashboard-stat-footer">
 
                     <span>
-
                         <i class="bi bi-receipt"></i>
-
                         All orders
-
                     </span>
 
                     <a href="{{ route('seller.orders.index') }}">
-
                         View
-
                         <i class="bi bi-arrow-right"></i>
-
                     </a>
 
                 </div>
@@ -300,9 +247,7 @@
                 <div class="seller-dashboard-stat-top">
 
                     <div class="seller-dashboard-stat-icon sales">
-
                         <i class="bi bi-currency-dollar"></i>
-
                     </div>
 
                     <span class="seller-dashboard-stat-label">
@@ -315,27 +260,19 @@
                      data-count="{{ $totalSales }}"
                      data-decimals="2"
                      data-prefix="$">
-
                     ${{ number_format($totalSales, 2) }}
-
                 </div>
 
                 <div class="seller-dashboard-stat-footer">
 
                     <span>
-
                         <i class="bi bi-graph-up-arrow"></i>
-
                         Revenue
-
                     </span>
 
                     <a href="{{ route('seller.sales.index') }}">
-
                         Details
-
                         <i class="bi bi-arrow-right"></i>
-
                     </a>
 
                 </div>
@@ -349,14 +286,11 @@
 
     {{-- =========================================================
          MAIN GRID
-         ========================================================= --}}
+    ========================================================== --}}
 
     <div class="row g-4 seller-dashboard-main-grid">
 
-
-        {{-- =====================================================
-             RECENT ORDERS
-             ===================================================== --}}
+        {{-- Recent Orders --}}
 
         <div class="col-xl-8">
 
@@ -367,28 +301,20 @@
                     <div class="seller-dashboard-panel-title">
 
                         <div class="seller-dashboard-panel-icon">
-
                             <i class="bi bi-bag-check"></i>
-
                         </div>
 
                         <div>
-
                             <h5>Recent Orders</h5>
-
                             <p>Latest orders for your books</p>
-
                         </div>
 
                     </div>
 
                     <a href="{{ route('seller.orders.index') }}"
                        class="seller-dashboard-view-all">
-
                         View All
-
                         <i class="bi bi-arrow-right"></i>
-
                     </a>
 
                 </div>
@@ -401,23 +327,14 @@
                         <table class="table seller-dashboard-orders-table align-middle mb-0">
 
                             <thead>
-
                                 <tr>
-
                                     <th class="order-col">Order</th>
-
                                     <th class="customer-col">Customer</th>
-
                                     <th class="book-col">Book</th>
-
                                     <th class="quantity-col">Qty</th>
-
                                     <th class="total-col">Total</th>
-
                                     <th class="status-col">Status</th>
-
                                 </tr>
-
                             </thead>
 
                             <tbody>
@@ -425,13 +342,11 @@
                                 @foreach($recentOrders as $order)
 
                                     @php
-
                                         $status = strtolower(
                                             $order->order_status ?? 'pending'
                                         );
 
                                         $statusClass = match ($status) {
-
                                             'delivered',
                                             'completed' => 'success',
 
@@ -443,9 +358,7 @@
                                             'refunded' => 'danger',
 
                                             default => 'warning',
-
                                         };
-
                                     @endphp
 
                                     <tr>
@@ -457,9 +370,7 @@
                                             <div class="seller-dashboard-order-number">
 
                                                 <span class="seller-dashboard-order-icon">
-
                                                     <i class="bi bi-receipt"></i>
-
                                                 </span>
 
                                                 <strong>
@@ -478,7 +389,6 @@
                                             <div class="seller-dashboard-customer">
 
                                                 <div class="seller-dashboard-customer-avatar">
-
                                                     {{ strtoupper(
                                                         substr(
                                                             $order->user?->name ?: 'U',
@@ -486,13 +396,10 @@
                                                             1
                                                         )
                                                     ) }}
-
                                                 </div>
 
                                                 <span title="{{ $order->user?->name ?? 'Unknown' }}">
-
                                                     {{ $order->user?->name ?? 'Unknown' }}
-
                                                 </span>
 
                                             </div>
@@ -507,9 +414,7 @@
                                             <div class="seller-dashboard-book">
 
                                                 <span title="{{ $order->book?->title ?? 'Deleted Book' }}">
-
                                                     {{ $order->book?->title ?? 'Deleted Book' }}
-
                                                 </span>
 
                                             </div>
@@ -522,9 +427,7 @@
                                         <td class="quantity-col">
 
                                             <span class="seller-dashboard-quantity">
-
                                                 {{ $order->quantity }}
-
                                             </span>
 
                                         </td>
@@ -535,9 +438,7 @@
                                         <td class="total-col">
 
                                             <strong class="seller-dashboard-order-total">
-
                                                 ${{ number_format($order->total_price, 2) }}
-
                                             </strong>
 
                                         </td>
@@ -574,9 +475,7 @@
                     <div class="seller-dashboard-empty">
 
                         <div class="seller-dashboard-empty-icon">
-
                             <i class="bi bi-bag-x"></i>
-
                         </div>
 
                         <h6>No Orders Yet</h6>
@@ -587,11 +486,8 @@
 
                         <a href="{{ route('seller.books.create') }}"
                            class="seller-dashboard-primary-btn">
-
                             <i class="bi bi-plus-lg"></i>
-
                             <span>Add Your First Book</span>
-
                         </a>
 
                     </div>
@@ -603,9 +499,7 @@
         </div>
 
 
-        {{-- =====================================================
-             QUICK ACTIONS
-             ===================================================== --}}
+        {{-- Quick Actions --}}
 
         <div class="col-xl-4">
 
@@ -616,17 +510,12 @@
                     <div class="seller-dashboard-panel-title">
 
                         <div class="seller-dashboard-panel-icon">
-
                             <i class="bi bi-lightning-charge"></i>
-
                         </div>
 
                         <div>
-
                             <h5>Quick Actions</h5>
-
                             <p>Frequently used actions</p>
-
                         </div>
 
                     </div>
@@ -640,17 +529,12 @@
                        class="seller-dashboard-action primary">
 
                         <span class="seller-dashboard-action-icon">
-
                             <i class="bi bi-plus-lg"></i>
-
                         </span>
 
                         <span class="seller-dashboard-action-content">
-
                             <strong>Add New Book</strong>
-
                             <small>List a new book in your store</small>
-
                         </span>
 
                         <i class="bi bi-arrow-right seller-dashboard-action-arrow"></i>
@@ -662,17 +546,12 @@
                        class="seller-dashboard-action">
 
                         <span class="seller-dashboard-action-icon">
-
                             <i class="bi bi-book"></i>
-
                         </span>
 
                         <span class="seller-dashboard-action-content">
-
                             <strong>Manage Books</strong>
-
                             <small>View and manage your inventory</small>
-
                         </span>
 
                         <i class="bi bi-arrow-right seller-dashboard-action-arrow"></i>
@@ -684,17 +563,12 @@
                        class="seller-dashboard-action">
 
                         <span class="seller-dashboard-action-icon">
-
                             <i class="bi bi-bag"></i>
-
                         </span>
 
                         <span class="seller-dashboard-action-content">
-
                             <strong>View Orders</strong>
-
                             <small>Manage your customer orders</small>
-
                         </span>
 
                         <i class="bi bi-arrow-right seller-dashboard-action-arrow"></i>
@@ -706,17 +580,12 @@
                        class="seller-dashboard-action">
 
                         <span class="seller-dashboard-action-icon">
-
                             <i class="bi bi-chat-left-text"></i>
-
                         </span>
 
                         <span class="seller-dashboard-action-content">
-
                             <strong>Messages</strong>
-
                             <small>Communicate with customers</small>
-
                         </span>
 
                         <i class="bi bi-arrow-right seller-dashboard-action-arrow"></i>
@@ -728,17 +597,12 @@
                        class="seller-dashboard-action">
 
                         <span class="seller-dashboard-action-icon">
-
                             <i class="bi bi-shop"></i>
-
                         </span>
 
                         <span class="seller-dashboard-action-content">
-
                             <strong>Store Settings</strong>
-
                             <small>Manage your store information</small>
-
                         </span>
 
                         <i class="bi bi-arrow-right seller-dashboard-action-arrow"></i>
@@ -756,12 +620,11 @@
 
     {{-- =========================================================
          LOWER GRID
-         ========================================================= --}}
+    ========================================================== --}}
 
     <div class="row g-4 seller-dashboard-lower-grid">
 
-
-        {{-- BUSINESS SNAPSHOT --}}
+        {{-- Business Snapshot --}}
 
         <div class="col-xl-4">
 
@@ -772,17 +635,12 @@
                     <div class="seller-dashboard-panel-title">
 
                         <div class="seller-dashboard-panel-icon">
-
                             <i class="bi bi-bar-chart"></i>
-
                         </div>
 
                         <div>
-
                             <h5>Business Snapshot</h5>
-
                             <p>Current store overview</p>
-
                         </div>
 
                     </div>
@@ -797,9 +655,7 @@
                         <div class="seller-dashboard-snapshot-left">
 
                             <span class="seller-dashboard-snapshot-icon books">
-
                                 <i class="bi bi-book"></i>
-
                             </span>
 
                             <span>Total Books</span>
@@ -818,9 +674,7 @@
                         <div class="seller-dashboard-snapshot-left">
 
                             <span class="seller-dashboard-snapshot-icon pending">
-
                                 <i class="bi bi-hourglass-split"></i>
-
                             </span>
 
                             <span>Pending Review</span>
@@ -839,9 +693,7 @@
                         <div class="seller-dashboard-snapshot-left">
 
                             <span class="seller-dashboard-snapshot-icon orders">
-
                                 <i class="bi bi-bag"></i>
-
                             </span>
 
                             <span>Total Orders</span>
@@ -860,9 +712,7 @@
                         <div class="seller-dashboard-snapshot-left">
 
                             <span class="seller-dashboard-snapshot-icon sales">
-
                                 <i class="bi bi-currency-dollar"></i>
-
                             </span>
 
                             <span>Total Revenue</span>
@@ -882,7 +732,7 @@
         </div>
 
 
-        {{-- STORE PERFORMANCE --}}
+        {{-- Store Performance --}}
 
         <div class="col-xl-4">
 
@@ -893,17 +743,12 @@
                     <div class="seller-dashboard-panel-title">
 
                         <div class="seller-dashboard-panel-icon">
-
                             <i class="bi bi-graph-up-arrow"></i>
-
                         </div>
 
                         <div>
-
                             <h5>Store Performance</h5>
-
                             <p>Your current marketplace activity</p>
-
                         </div>
 
                     </div>
@@ -916,29 +761,19 @@
                     <div class="seller-dashboard-progress">
 
                         <div class="seller-dashboard-progress-top">
-
                             <span>Books reviewed</span>
-
                             <strong>{{ $reviewedRate }}%</strong>
-
                         </div>
 
                         <div class="seller-dashboard-progress-bar">
-
                             <span style="--progress: {{ $reviewedRate }}%"></span>
-
                         </div>
 
                         <small>
-
                             {{ number_format($reviewedBooks) }}
-
                             of
-
                             {{ number_format($totalBooks) }}
-
                             books reviewed
-
                         </small>
 
                     </div>
@@ -947,19 +782,15 @@
                     <div class="seller-dashboard-performance-card">
 
                         <div class="seller-dashboard-performance-icon">
-
                             <i class="bi bi-cart-check"></i>
-
                         </div>
 
                         <div>
-
                             <span>Orders Received</span>
 
                             <strong>
                                 {{ number_format($totalOrders) }}
                             </strong>
-
                         </div>
 
                     </div>
@@ -968,19 +799,15 @@
                     <div class="seller-dashboard-performance-card">
 
                         <div class="seller-dashboard-performance-icon">
-
                             <i class="bi bi-receipt-cutoff"></i>
-
                         </div>
 
                         <div>
-
                             <span>Average Order Value</span>
 
                             <strong>
                                 ${{ number_format($avgOrder, 2) }}
                             </strong>
-
                         </div>
 
                     </div>
@@ -1004,7 +831,7 @@
         </div>
 
 
-        {{-- SELLER TIP --}}
+        {{-- Seller Tip --}}
 
         <div class="col-xl-4">
 
@@ -1013,9 +840,7 @@
                 <div class="seller-dashboard-guide">
 
                     <div class="seller-dashboard-guide-icon">
-
                         <i class="bi bi-stars"></i>
-
                     </div>
 
                     <span class="seller-dashboard-guide-label">
@@ -1030,11 +855,8 @@
                     </p>
 
                     <a href="{{ route('seller.books.create') }}">
-
                         <span>Add a Book</span>
-
                         <i class="bi bi-arrow-right"></i>
-
                     </a>
 
                 </div>
@@ -1048,36 +870,29 @@
 
     {{-- =========================================================
          FOOTER
-         ========================================================= --}}
+    ========================================================== --}}
 
     <div class="seller-dashboard-footer">
 
         <div class="seller-dashboard-footer-info">
 
             <span class="seller-dashboard-footer-icon">
-
                 <i class="bi bi-shield-check"></i>
-
             </span>
 
             <div>
-
                 <strong>Your Seller Account</strong>
 
                 <span>
                     Manage your marketplace activity from your dashboard.
                 </span>
-
             </div>
 
         </div>
 
         <a href="{{ route('seller.store') }}">
-
             <span>Manage Store</span>
-
             <i class="bi bi-arrow-right"></i>
-
         </a>
 
     </div>
@@ -1086,11 +901,8 @@
 
 
 @push('js')
-
 <script>
-
 (function () {
-
     var reduce =
         window.matchMedia &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1102,7 +914,6 @@
     var els = document.querySelectorAll('[data-count]');
 
     els.forEach(function (el) {
-
         var target = parseFloat(el.dataset.count) || 0;
 
         var decimals = parseInt(
@@ -1111,25 +922,17 @@
         );
 
         var prefix = el.dataset.prefix || '';
-
         var duration = 1100;
-
         var start = null;
 
         function format(value) {
-
             return prefix + value.toLocaleString('en-US', {
-
                 minimumFractionDigits: decimals,
-
                 maximumFractionDigits: decimals
-
             });
-
         }
 
         function step(timestamp) {
-
             if (start === null) {
                 start = timestamp;
             }
@@ -1144,27 +947,19 @@
             el.textContent = format(target * eased);
 
             if (progress < 1) {
-
                 requestAnimationFrame(step);
-
             } else {
-
                 el.textContent = format(target);
-
             }
-
         }
 
         el.textContent = format(0);
 
         requestAnimationFrame(step);
-
     });
-
 })();
-
 </script>
-
 @endpush
 
 @endsection
+

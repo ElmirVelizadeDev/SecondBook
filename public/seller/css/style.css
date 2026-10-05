@@ -12,8 +12,6 @@
     --seller-primary-light: #f3ece7;
     --seller-sidebar: #111827;
     --seller-sidebar-text: #d1d5db;
-    --seller-success: #15803d;
-    --seller-warning: #b45309;
 }
 
 /* =========================================================
@@ -402,48 +400,10 @@ a {
 }
 
 /* =========================================================
-   DARK MODE
-========================================================= */
-
-:root[data-theme="dark"] {
-    --seller-bg: #0f172a;
-    --seller-card: #172033;
-    --seller-border: #263247;
-    --seller-text: #f3f4f6;
-    --seller-muted: #9ca3af;
-    --seller-primary: #b9825d;
-    --seller-primary-light: rgba(139, 94, 60, .18);
-    --seller-sidebar: #0b1120;
-}
-
-:root[data-theme="dark"] body {
-    background: var(--seller-bg);
-    color: var(--seller-text);
-}
-
-:root[data-theme="dark"] .seller-stat-card:hover {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
-}
-
-:root[data-theme="dark"] .seller-orders-table thead th {
-    background: #1b2639;
-}
-
-:root[data-theme="dark"] .seller-orders-table tbody tr:hover {
-    background: #1b2639;
-}
-
-:root[data-theme="dark"] .seller-status {
-    background: #253047;
-    color: #d1d5db;
-}
-
-/* =========================================================
    RESPONSIVE
 ========================================================= */
 
 @media (max-width: 1200px) {
-
     .seller-content {
         padding: 25px;
     }
@@ -454,7 +414,6 @@ a {
 }
 
 @media (max-width: 992px) {
-
     .seller-main {
         margin-left: 0;
     }
@@ -473,7 +432,6 @@ a {
 }
 
 @media (max-width: 768px) {
-
     .seller-content {
         padding: 18px;
     }
@@ -510,7 +468,6 @@ a {
 }
 
 @media (max-width: 576px) {
-
     .seller-header {
         height: 68px;
         padding: 0 15px;
@@ -550,3 +507,4 @@ a {
         padding-right: 14px;
     }
 }
+

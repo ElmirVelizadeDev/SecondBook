@@ -376,7 +376,7 @@
 
         .main {
             position: relative;
-            z-index: 1;
+            z-index: auto;
             min-width: 0;
             width: calc(100% - 260px);
             margin-left: 260px;

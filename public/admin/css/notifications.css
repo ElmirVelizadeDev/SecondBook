@@ -24,6 +24,33 @@ align-items: center;
 gap: 15px;
 }
 
+/* ==========================================================================
+SEND MODAL FIX
+========================================================================== */
+
+#sendNotificationModal {
+z-index: 1060;
+}
+
+#sendNotificationModal .modal-dialog {
+position: relative;
+z-index: 1061;
+}
+
+#sendNotificationModal .modal-content {
+position: relative;
+z-index: 1062;
+}
+
+.modal-backdrop {
+z-index: 1050 !important;
+}
+
+.modal-backdrop.show {
+opacity: 0.5;
+}
+
+
 .notifications-heading-icon {
 width: 50px;
 height: 50px;

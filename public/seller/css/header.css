@@ -14,33 +14,30 @@
     position: sticky;
     top: 0;
     z-index: 900;
-
     width: 100%;
     min-height: var(--hd-height);
     padding: 0 32px;
     box-sizing: border-box;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-
     background: rgba(255, 255, 255, .92);
     -webkit-backdrop-filter: blur(16px) saturate(1.2);
     backdrop-filter: blur(16px) saturate(1.2);
-
     border-bottom: 1px solid var(--hd-border);
     box-shadow: 0 6px 24px rgba(31, 24, 20, .04);
-
     animation: hdIn .4s ease backwards;
 }
 
-/* Animasiya yalnız F5 zamanı işləyir */
+/* Entry animation only on F5 */
+
 html.no-entry-animation .seller-header {
     animation: none;
 }
 
-/* Alt gradient xətt */
+/* Bottom gradient line */
+
 .seller-header::after {
     content: "";
     position: absolute;
@@ -60,10 +57,7 @@ html.no-entry-animation .seller-header {
     pointer-events: none;
 }
 
-
-/* =========================================================
-   LEFT
-========================================================= */
+/* LEFT */
 
 .seller-header-left {
     min-width: 0;
@@ -79,7 +73,8 @@ html.no-entry-animation .seller-header {
     padding-left: 14px;
 }
 
-/* Sol aksent xətti */
+/* Left accent line */
+
 .seller-header-title::before {
     content: "";
     position: absolute;
@@ -118,21 +113,16 @@ html.no-entry-animation .seller-header {
     white-space: nowrap;
 }
 
-
-/* =========================================================
-   MOBILE TOGGLE (yalnız 992px və aşağıda görünür)
-========================================================= */
+/* MOBILE TOGGLE */
 
 .seller-mobile-toggle {
     width: 42px;
     height: 42px;
     padding: 0;
     flex: 0 0 42px;
-
     display: none;
     align-items: center;
     justify-content: center;
-
     border: 1px solid #eadfd7;
     border-radius: 12px;
     background: var(--hd-soft);
@@ -140,7 +130,6 @@ html.no-entry-animation .seller-header {
     font-size: 22px;
     line-height: 1;
     cursor: pointer;
-
     transition:
         background-color .2s ease,
         border-color .2s ease,
@@ -160,10 +149,7 @@ html.no-entry-animation .seller-header {
     transform: scale(.94);
 }
 
-
-/* =========================================================
-   RIGHT
-========================================================= */
+/* RIGHT */
 
 .seller-header-right {
     min-width: 0;
@@ -180,29 +166,22 @@ html.no-entry-animation .seller-header {
     background: var(--hd-border);
 }
 
-
-/* =========================================================
-   ACTION BUTTON
-========================================================= */
+/* ACTION BUTTON */
 
 .seller-header-action {
     position: relative;
-
     width: 44px;
     height: 44px;
     flex: 0 0 44px;
-
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     border: 1px solid var(--hd-border);
     border-radius: 14px;
     background: #fff;
     color: #75675e;
     font-size: 18px;
     text-decoration: none;
-
     transition:
         background-color .2s ease,
         border-color .2s ease,
@@ -223,23 +202,19 @@ html.no-entry-animation .seller-header {
     transform: translateY(0) scale(.96);
 }
 
-
 /* Badge */
 
 .seller-header-message-badge {
     position: absolute;
     top: -6px;
     right: -6px;
-
     min-width: 20px;
     height: 20px;
     padding: 0 6px;
     box-sizing: border-box;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: 2px solid #fff;
     border-radius: 999px;
     background: linear-gradient(
@@ -251,28 +226,21 @@ html.no-entry-animation .seller-header {
     font-size: 10px;
     font-weight: 800;
     line-height: 1;
-
     box-shadow: 0 4px 10px rgba(139, 94, 60, .3);
     animation: hdPulse 2.6s ease-in-out infinite;
 }
 
-
-/* =========================================================
-   USER
-========================================================= */
+/* USER */
 
 .seller-user {
     min-width: 0;
     padding: 5px 16px 5px 5px;
-
     display: flex;
     align-items: center;
     gap: 12px;
-
     border: 1px solid var(--hd-border);
     border-radius: 999px;
     background: #fff;
-
     transition:
         background-color .2s ease,
         border-color .2s ease,
@@ -285,7 +253,8 @@ html.no-entry-animation .seller-header {
     box-shadow: 0 8px 20px rgba(31, 24, 20, .06);
 }
 
-/* Avatar wrapper: overflow visible qalmalıdır (online nöqtə üçün) */
+/* Avatar wrapper: overflow must remain visible for online indicator */
+
 .seller-user-avatar-wrap {
     position: relative;
     width: 40px;
@@ -298,15 +267,12 @@ html.no-entry-animation .seller-header {
     width: 100%;
     height: 100%;
     overflow: hidden;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
     background: linear-gradient(135deg, #f6ede5, #ecdccd);
     color: var(--hd-accent);
-
     box-shadow:
         0 0 0 2px #fff,
         0 0 0 3.5px rgba(139, 94, 60, .35);
@@ -330,16 +296,13 @@ html.no-entry-animation .seller-header {
     z-index: 2;
     right: -3px;
     bottom: -1px;
-
     width: 12px;
     height: 12px;
     box-sizing: border-box;
-
     border: 2px solid #fff;
     border-radius: 50%;
     background: #15803d;
     box-shadow: 0 2px 6px rgba(21, 128, 61, .4);
-
     animation: hdOnline 2.4s ease-in-out infinite;
 }
 
@@ -373,10 +336,7 @@ html.no-entry-animation .seller-header {
     text-transform: uppercase;
 }
 
-
-/* =========================================================
-   FOCUS
-========================================================= */
+/* FOCUS */
 
 .seller-mobile-toggle:focus-visible,
 .seller-header-action:focus-visible {
@@ -384,10 +344,7 @@ html.no-entry-animation .seller-header {
     outline-offset: 3px;
 }
 
-
-/* =========================================================
-   KEYFRAMES
-========================================================= */
+/* KEYFRAMES */
 
 @keyframes hdIn {
     from {
@@ -402,7 +359,8 @@ html.no-entry-animation .seller-header {
 }
 
 @keyframes hdPulse {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
     }
 
@@ -412,7 +370,8 @@ html.no-entry-animation .seller-header {
 }
 
 @keyframes hdOnline {
-    0%, 100% {
+    0%,
+    100% {
         box-shadow: 0 0 0 0 rgba(21, 128, 61, .45);
     }
 
@@ -421,13 +380,9 @@ html.no-entry-animation .seller-header {
     }
 }
 
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* RESPONSIVE */
 
 @media (max-width: 1200px) {
-
     .seller-header {
         padding: 0 26px;
     }
@@ -437,11 +392,9 @@ html.no-entry-animation .seller-header {
     }
 }
 
+/* Hamburger appears here */
 
-/* Hamburger burada görünür.
-   Sidebar-ın mobil breakpoint-i fərqlidirsə, bunu ona uyğun dəyişin. */
 @media (max-width: 992px) {
-
     .seller-header {
         --hd-height: 68px;
         padding: 0 20px;
@@ -461,9 +414,7 @@ html.no-entry-animation .seller-header {
     }
 }
 
-
 @media (max-width: 768px) {
-
     .seller-header {
         --hd-height: 64px;
         padding: 0 16px;
@@ -488,7 +439,8 @@ html.no-entry-animation .seller-header {
         flex-basis: 42px;
     }
 
-    /* Mobilda yalnız avatar görünür */
+    /* Only avatar is visible on mobile */
+
     .seller-user {
         padding: 4px;
         gap: 0;
@@ -500,9 +452,7 @@ html.no-entry-animation .seller-header {
     }
 }
 
-
 @media (max-width: 480px) {
-
     .seller-header {
         --hd-height: 60px;
         padding: 0 12px;
@@ -547,13 +497,9 @@ html.no-entry-animation .seller-header {
     }
 }
 
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
+/* REDUCED MOTION */
 
 @media (prefers-reduced-motion: reduce) {
-
     .seller-header,
     .seller-header-message-badge,
     .seller-user-online {
@@ -566,3 +512,4 @@ html.no-entry-animation .seller-header {
         transition: none;
     }
 }
+

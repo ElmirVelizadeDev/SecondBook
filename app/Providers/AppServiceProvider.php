@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Message;
 use App\Models\Notification;
 use App\Models\SellerApplication;
+use App\Services\MailConfigurationService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,12 +22,14 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
+    public function boot(
+        MailConfigurationService $mailConfigurationService
+    ): void {
         Paginator::useBootstrapFive();
 
-        view()->composer('layout.admin.master', function ($view) {
+        $mailConfigurationService->apply();
 
+        view()->composer('layout.admin.master', function ($view) {
             /*
              * Unread Messages
              */
@@ -34,7 +37,6 @@ class AppServiceProvider extends ServiceProvider
                 'status',
                 'unread'
             )->count();
-
 
             /*
              * Unread Notifications
@@ -50,7 +52,6 @@ class AppServiceProvider extends ServiceProvider
                     ->count();
             }
 
-
             /*
              * Pending Seller Applications
              */
@@ -58,7 +59,6 @@ class AppServiceProvider extends ServiceProvider
                 'status',
                 'pending'
             )->count();
-
 
             /*
              * Share data with admin layout

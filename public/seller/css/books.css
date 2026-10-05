@@ -1940,3 +1940,87 @@
         transition: none !important;
     }
 }
+
+/* =========================================================
+   BOOK DETAILS STATUS
+========================================================= */
+
+.seller-book-details-status {
+    margin-top: 18px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-top: 1px solid var(--seller-border);
+    background: var(--seller-card);
+}
+
+.seller-book-status,
+.seller-condition {
+    min-height: 34px;
+    padding: 0 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    white-space: nowrap;
+}
+
+.seller-book-status {
+    color: var(--seller-primary);
+    background: var(--seller-primary-light);
+}
+
+.seller-book-status i {
+    width: 7px;
+    height: 7px;
+    display: block;
+    flex: 0 0 7px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 4px rgba(139, 94, 60, .08);
+}
+
+.seller-book-status.pending {
+    color: #b45309;
+    background: rgba(245, 158, 11, .10);
+}
+
+.seller-book-status.approved {
+    color: #15803d;
+    background: rgba(34, 197, 94, .10);
+}
+
+.seller-book-status.rejected {
+    color: #dc2626;
+    background: rgba(220, 38, 38, .10);
+}
+
+.seller-condition {
+    border: 1px solid var(--seller-border);
+    background: var(--seller-input);
+    color: var(--seller-text);
+}
+
+/* Mobile */
+
+@media (max-width: 576px) {
+    .seller-book-details-status {
+        margin-top: 14px;
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .seller-book-status,
+    .seller-condition {
+        min-height: 32px;
+        padding: 0 11px;
+        font-size: 9px;
+    }
+}
+

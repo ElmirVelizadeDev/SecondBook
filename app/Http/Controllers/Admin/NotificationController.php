@@ -30,8 +30,7 @@ class NotificationController extends Controller
             $filter = 'all';
         }
 
-        $query = Notification::with('user')
-            ->latest();
+        $query = Notification::with('user')->latest();
 
         if ($filter === 'unread') {
             $query->whereNull('read_at');
@@ -47,11 +46,9 @@ class NotificationController extends Controller
 
         $totalNotifications = Notification::count();
 
-        $unreadNotifications = Notification::whereNull('read_at')
-            ->count();
+        $unreadNotifications = Notification::whereNull('read_at')->count();
 
-        $readNotifications = Notification::whereNotNull('read_at')
-            ->count();
+        $readNotifications = Notification::whereNotNull('read_at')->count();
 
         $usersNotified = Notification::distinct('user_id')
             ->count('user_id');
@@ -86,23 +83,19 @@ class NotificationController extends Controller
                 'required',
                 'in:user,all',
             ],
-
             'user_id' => [
                 'nullable',
                 'exists:users,id',
             ],
-
             'type' => [
                 'required',
                 'in:general,order,payment,review,seller,promotion,system,success,warning',
             ],
-
             'title' => [
                 'required',
                 'string',
                 'max:255',
             ],
-
             'message' => [
                 'required',
                 'string',
@@ -111,8 +104,8 @@ class NotificationController extends Controller
 
         $validator->after(function ($validator) use ($request) {
             if (
-                $request->recipient === 'user'
-                && !$request->filled('user_id')
+                $request->recipient === 'user' &&
+                !$request->filled('user_id')
             ) {
                 $validator->errors()->add(
                     'user_id',
@@ -121,13 +114,19 @@ class NotificationController extends Controller
             }
         });
 
-        $validator->validate();
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please check the form fields.',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Get recipients
-        |--------------------------------------------------------------------------
-        */
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         $query = User::query()
             ->where('status', 'active');
@@ -141,16 +140,19 @@ class NotificationController extends Controller
         ]);
 
         if ($users->isEmpty()) {
+            $message = 'No active users were found.';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 422);
+            }
+
             return back()
                 ->withInput()
-                ->with('error', 'No active users were found.');
+                ->with('error', $message);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Create notifications
-        |--------------------------------------------------------------------------
-        */
 
         DB::transaction(function () use ($users, $request) {
             $now = now();
@@ -172,12 +174,6 @@ class NotificationController extends Controller
             Notification::insert($notifications);
         });
 
-        /*
-        |--------------------------------------------------------------------------
-        | Activity Log
-        |--------------------------------------------------------------------------
-        */
-
         $recipientText = $request->recipient === 'all'
             ? 'all active users'
             : 'the selected user';
@@ -188,18 +184,23 @@ class NotificationController extends Controller
             "Notification sent to {$recipientText}: \"{$request->title}\"."
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Success message
-        |--------------------------------------------------------------------------
-        */
+        $successMessage = "Notification sent successfully to {$recipientText}.";
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $successMessage,
+                'title' => $request->title,
+                'recipient' => $recipientText,
+                'total_count' => Notification::count(),
+                'unread_count' => Notification::whereNull('read_at')->count(),
+                'read_count' => Notification::whereNotNull('read_at')->count(),
+            ]);
+        }
 
         return redirect()
             ->route('admin.notifications.index')
-            ->with(
-                'success',
-                "Notification sent successfully to {$recipientText}."
-            );
+            ->with('success', $successMessage);
     }
 
     /**
@@ -222,6 +223,9 @@ class NotificationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Notification marked as read.',
+            'unread_count' => Notification::whereNull('read_at')->count(),
+            'total_count' => Notification::count(),
+            'read_count' => Notification::whereNotNull('read_at')->count(),
         ]);
     }
 
@@ -230,19 +234,24 @@ class NotificationController extends Controller
      */
     public function markAsUnread(Notification $notification)
     {
-        $notification->update([
-            'read_at' => null,
-        ]);
+        if (!is_null($notification->read_at)) {
+            $notification->update([
+                'read_at' => null,
+            ]);
 
-        $this->activityLogService->log(
-            'updated',
-            'Notifications',
-            "Notification \"{$notification->title}\" marked as unread."
-        );
+            $this->activityLogService->log(
+                'updated',
+                'Notifications',
+                "Notification \"{$notification->title}\" marked as unread."
+            );
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Notification marked as unread.',
+            'unread_count' => Notification::whereNull('read_at')->count(),
+            'total_count' => Notification::count(),
+            'read_count' => Notification::whereNotNull('read_at')->count(),
         ]);
     }
 
@@ -253,10 +262,9 @@ class NotificationController extends Controller
     {
         $count = Notification::whereNull('read_at')->count();
 
-        Notification::whereNull('read_at')
-            ->update([
-                'read_at' => now(),
-            ]);
+        Notification::whereNull('read_at')->update([
+            'read_at' => now(),
+        ]);
 
         if ($count > 0) {
             $this->activityLogService->log(
@@ -269,6 +277,9 @@ class NotificationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'All notifications marked as read.',
+            'unread_count' => 0,
+            'total_count' => Notification::count(),
+            'read_count' => Notification::whereNotNull('read_at')->count(),
         ]);
     }
 
@@ -290,6 +301,9 @@ class NotificationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Notification deleted successfully.',
+            'unread_count' => Notification::whereNull('read_at')->count(),
+            'total_count' => Notification::count(),
+            'read_count' => Notification::whereNotNull('read_at')->count(),
         ]);
     }
 }

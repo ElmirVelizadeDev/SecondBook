@@ -133,6 +133,7 @@ class BooksController extends Controller
     /**
      * Display a single book.
      */
+
     public function show(Book $book)
     {
         if (!Setting::get('marketplace_enabled', true)) {
@@ -156,9 +157,43 @@ class BooksController extends Controller
             'seller.store',
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Related Books
+        |--------------------------------------------------------------------------
+        */
+
+        // Eyni kateqoriyadan olan digər kitablar
+        $relatedBooks = Book::with([
+            'author',
+            'category',
+        ])
+            ->where('status', 'approved')
+            ->where('category_id', $book->category_id)
+            ->where('id', '!=', $book->id)
+            ->latest()
+            ->take(4)
+            ->get();
+
+        // Eyni müəllifin digər kitabları
+        $authorBooks = Book::with([
+            'author',
+            'category',
+        ])
+            ->where('status', 'approved')
+            ->where('author_id', $book->author_id)
+            ->where('id', '!=', $book->id)
+            ->latest()
+            ->take(4)
+            ->get();
+
         return view(
             'Frontend.book-details',
-            compact('book')
+            compact(
+                'book',
+                'relatedBooks',
+                'authorBooks'
+            )
         );
     }
 }

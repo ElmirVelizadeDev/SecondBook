@@ -35,7 +35,7 @@
             </div>
 
             <a
-                href="{{ route('profile.edit') }}"
+                href="{{ route('my.profile') }}"
                 class="account-back-profile"
             >
                 <i class="bi bi-arrow-left"></i>

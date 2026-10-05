@@ -1,25 +1,103 @@
 /* =========================================================
    SECOND BOOK — PREMIUM BILLBOARD
-   SEAMLESS / RESPONSIVE / NO BOXES
+   Seamless / Animated / Responsive
 ========================================================= */
+
+/* ---------- TOKENS ---------- */
+
+.billboard-section {
+    --sb-bg: #faf8f5;
+    --sb-surface: #ffffff;
+    --sb-ink: #2a221c;
+    --sb-text: #4a3f37;
+    --sb-muted: #7f746b;
+    --sb-line: #eee4da;
+    --sb-line-strong: #e2d3c4;
+    --sb-brown: #8b5e3c;
+    --sb-brown-deep: #6b4529;
+    --sb-gold: #c9a074;
+    --sb-cream: #f7eee4;
+    --sb-accent: #8b5e3c;
+    --sb-glow: rgba(201, 160, 116, 0.22);
+    --sb-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --sb-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-theme="dark"] .billboard-section,
+.dark-mode .billboard-section,
+.dark-theme .billboard-section {
+    --sb-bg: #111827;
+    --sb-surface: #172033;
+    --sb-ink: #f3f4f6;
+    --sb-text: #d1d5db;
+    --sb-muted: #9ca3af;
+    --sb-line: #293344;
+    --sb-line-strong: #374151;
+    --sb-cream: #252f40;
+    --sb-accent: #d5b69d;
+    --sb-glow: rgba(201, 160, 116, 0.1);
+}
+
+
+/* ---------- KEYFRAMES ---------- */
+
+@keyframes bbRise {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes bbRise2 {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes bbKen {
+    from { transform: scale(1.09); }
+    to   { transform: scale(1); }
+}
+
+@keyframes bbGradient {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@keyframes bbPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(201, 160, 116, 0.55); }
+    100% { box-shadow: 0 0 0 9px rgba(201, 160, 116, 0); }
+}
+
+@keyframes bbShine {
+    from { transform: translateX(-130%) skewX(-20deg); }
+    to   { transform: translateX(300%) skewX(-20deg); }
+}
+
+@keyframes bbFloat {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50%      { transform: translate3d(0, -18px, 0); }
+}
+
+@keyframes bbWord {
+    0%, 100% { transform: translateY(-50%) rotate(90deg) translateX(0); }
+    50%      { transform: translateY(-50%) rotate(90deg) translateX(-12px); }
+}
+
+
+/* ---------- SECTION ---------- */
 
 .billboard-section {
     position: relative;
     width: 100%;
     overflow: hidden;
     padding: 50px 0 70px;
-    background: #faf8f5;
+    background:
+        radial-gradient(700px 420px at 100% 0%, var(--sb-glow), transparent 62%),
+        var(--sb-bg);
 }
 
 .billboard-section .container {
     position: relative;
     z-index: 2;
 }
-
-
-/* =========================================================
-   SLIDER
-========================================================= */
 
 .billboard-slider {
     width: 100%;
@@ -32,458 +110,409 @@
 }
 
 
-/* =========================================================
-   HERO
-========================================================= */
+/* ---------- HERO ---------- */
 
 .billboard-hero {
     position: relative;
     width: 100%;
     min-height: 650px;
-
     display: flex;
     align-items: center;
-
     overflow: hidden;
-
-    /*
-       IMPORTANT:
-       No card.
-       No border.
-       No shadow.
-       No separate boxes.
-    */
-
     background: transparent;
 }
 
 
-/* =========================================================
-   IMAGE
-========================================================= */
+/* ---------- IMAGE ---------- */
 
 .billboard-visual {
     position: absolute;
-    z-index: 1;
-
     inset: 0;
-
+    z-index: 1;
     width: 100%;
     height: 100%;
-
     overflow: hidden;
-
+    border-radius: 0 28px 28px 0;
     background: #d8ccc1;
 }
 
 .billboard-image {
+    display: block;
     width: 100%;
     height: 100%;
-
-    display: block;
-
     object-fit: cover;
     object-position: center center;
-
-    /*
-       No scale.
-       No blur effect.
-    */
-
-    transform: none;
+    transform-origin: 70% 50%;
+    animation: bbKen 14s var(--sb-ease) forwards;
 }
 
 .billboard-image-overlay {
     position: absolute;
     inset: 0;
-
     pointer-events: none;
-
     background:
         linear-gradient(
             90deg,
-            #faf8f5 0%,
-            rgba(250, 248, 245, 0.97) 15%,
-            rgba(250, 248, 245, 0.82) 28%,
-            rgba(250, 248, 245, 0.42) 43%,
-            rgba(250, 248, 245, 0.08) 62%,
-            rgba(41, 37, 34, 0.12) 100%
+            var(--sb-bg) 0%,
+            color-mix(in srgb, var(--sb-bg) 97%, transparent) 15%,
+            color-mix(in srgb, var(--sb-bg) 82%, transparent) 28%,
+            color-mix(in srgb, var(--sb-bg) 42%, transparent) 43%,
+            color-mix(in srgb, var(--sb-bg) 8%, transparent) 62%,
+            rgba(41, 37, 34, 0.14) 100%
         );
 }
 
 
-/* =========================================================
-   IMAGE DECORATION
-========================================================= */
+/* ---------- IMAGE DECORATION ---------- */
 
 .billboard-image-word {
     position: absolute;
-    z-index: 3;
-
-    right: -15px;
     top: 50%;
-
-    color: rgba(255, 255, 255, 0.18);
-
+    right: -15px;
+    z-index: 3;
+    color: rgba(255, 255, 255, 0.2);
     font-size: clamp(90px, 10vw, 150px);
     font-weight: 800;
     line-height: 0.8;
-
     letter-spacing: -0.08em;
-
     transform: translateY(-50%) rotate(90deg);
-
     pointer-events: none;
+    animation: bbWord 9s ease-in-out infinite;
 }
 
 .billboard-image-label {
     position: absolute;
-    z-index: 4;
-
     left: 42px;
     bottom: 35px;
-
+    z-index: 4;
     display: flex;
     align-items: center;
-
     gap: 10px;
-
-    color: rgba(255, 255, 255, 0.88);
-
+    color: rgba(255, 255, 255, 0.9);
     font-size: 9px;
     font-weight: 700;
-
     letter-spacing: 0.17em;
 }
 
 .billboard-image-label-line {
     width: 30px;
     height: 1px;
-
     background: rgba(255, 255, 255, 0.75);
+    transform-origin: left;
+    animation: bbRise 1s var(--sb-ease) 0.6s backwards;
+}
+
+.billboard-image-counter {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
 }
 
 
-/* =========================================================
-   CONTENT
-========================================================= */
+/* ---------- CONTENT ---------- */
 
 .billboard-content {
     position: relative;
     z-index: 5;
-
     width: 58%;
     max-width: 700px;
-
     padding: 55px 0;
-
     background: transparent;
 }
 
+/* Giriş animasiyası: hər slayd üçün ardıcıl */
+.billboard-content > * {
+    animation: bbRise 0.95s var(--sb-ease) backwards;
+}
 
-/* =========================================================
-   TOPLINE
-========================================================= */
+.billboard-content > *:nth-child(1) { animation-delay: 0.10s; }
+.billboard-content > *:nth-child(2) { animation-delay: 0.22s; }
+.billboard-content > *:nth-child(3) { animation-delay: 0.34s; }
+.billboard-content > *:nth-child(4) { animation-delay: 0.46s; }
+.billboard-content > *:nth-child(5) { animation-delay: 0.58s; }
+
+/* Slayd dəyişəndə animasiya yenidən başlasın (slick / swiper / .active) */
+:is(.slick-active, .swiper-slide-active, .is-active, .active) .billboard-content > * {
+    animation-name: bbRise2;
+}
+
+:is(.slick-active, .swiper-slide-active, .is-active, .active) .billboard-image {
+    animation-name: bbKen;
+}
+
+
+/* ---------- TOPLINE ---------- */
 
 .billboard-topline {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
-
     gap: 10px;
-
     margin-bottom: 26px;
-
-    color: #8b5e3c;
-
+    padding: 9px 16px;
+    border: 1px solid var(--sb-line-strong);
+    border-radius: 100px;
+    background: color-mix(in srgb, var(--sb-surface) 70%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--sb-accent);
     font-size: 10px;
     font-weight: 700;
-
     letter-spacing: 0.18em;
     text-transform: uppercase;
+    box-shadow: 0 6px 18px rgba(139, 94, 60, 0.08);
 }
 
 .billboard-line {
-    width: 34px;
+    width: 28px;
     height: 1px;
-
-    background: #8b5e3c;
+    background: var(--sb-accent);
 }
 
 .billboard-topline-dot {
-    width: 4px;
-    height: 4px;
-
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-
-    background: #8b5e3c;
+    background: var(--sb-gold);
+    animation: bbPulse 2s ease-out infinite;
 }
 
 
-/* =========================================================
-   TITLE
-========================================================= */
+/* ---------- TITLE ---------- */
 
 .billboard-title {
     max-width: 650px;
-
     margin: 0;
-
-    color: #292522;
-
+    color: var(--sb-ink);
     font-size: clamp(52px, 6vw, 80px);
     font-weight: 600;
-
     line-height: 0.96;
-
     letter-spacing: -0.06em;
 }
 
 .billboard-title span {
     display: block;
-
-    color: #8b5e3c;
-
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
     font-weight: 500;
+    color: var(--sb-accent);
+    background: linear-gradient(90deg, #8b5e3c, #c9a074, #8b5e3c);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: bbGradient 5s linear infinite;
 }
 
 
-/* =========================================================
-   DESCRIPTION
-========================================================= */
+/* ---------- DESCRIPTION ---------- */
 
 .billboard-description {
     max-width: 510px;
-
     margin: 30px 0 0;
-
-    color: #746d67;
-
+    color: var(--sb-muted);
     font-size: 15px;
-
     line-height: 1.85;
 }
 
 
-/* =========================================================
-   BUTTONS
-========================================================= */
+/* ---------- BUTTONS ---------- */
 
 .billboard-actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-
-    gap: 11px;
-
-    margin-top: 30px;
+    gap: 12px;
+    margin-top: 32px;
 }
 
 .billboard-btn {
-    min-height: 48px;
-
-    padding: 0 19px;
-
+    position: relative;
+    overflow: hidden;
+    min-height: 52px;
+    padding: 0 24px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     gap: 11px;
-
-    border-radius: 9px;
-
-    font-size: 12px;
-    font-weight: 600;
-
+    border-radius: 13px;
+    font-size: 13px;
+    font-weight: 700;
     text-decoration: none;
-
     transition:
-        background-color 0.25s ease,
-        border-color 0.25s ease,
-        color 0.25s ease,
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+        background 0.35s var(--sb-ease),
+        border-color 0.35s var(--sb-ease),
+        color 0.35s var(--sb-ease),
+        transform 0.35s var(--sb-ease),
+        box-shadow 0.35s var(--sb-ease);
 }
 
 .billboard-btn i {
-    font-size: 14px;
-
-    transition: transform 0.25s ease;
+    font-size: 15px;
+    transition: transform 0.4s var(--sb-spring);
 }
 
 .billboard-btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 }
 
 .billboard-btn:hover i {
-    transform: translate(2px, -2px);
+    transform: translate(3px, -3px);
 }
 
 .billboard-btn-primary {
-    border: 1px solid #8b5e3c;
+    border: 0;
+    background: linear-gradient(135deg, #a06c46, #8b5e3c 50%, #6b4529);
+    color: #fff;
+    box-shadow: 0 14px 30px rgba(107, 69, 41, 0.3);
+}
 
-    background: #8b5e3c;
-
-    color: #ffffff;
+.billboard-btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+    transform: translateX(-130%) skewX(-20deg);
+    pointer-events: none;
 }
 
 .billboard-btn-primary:hover {
-    border-color: #6f472d;
+    color: #fff;
+    box-shadow: 0 22px 40px rgba(107, 69, 41, 0.4);
+}
 
-    background: #6f472d;
-
-    color: #ffffff;
-
-    box-shadow:
-        0 12px 25px rgba(139, 94, 60, 0.20);
+.billboard-btn-primary:hover::after {
+    animation: bbShine 0.9s var(--sb-ease);
 }
 
 .billboard-btn-secondary {
-    border: 1px solid rgba(139, 94, 60, 0.28);
-
-    background: rgba(255, 255, 255, 0.38);
-
-    color: #5f5751;
-
-    backdrop-filter: blur(7px);
+    border: 1.5px solid var(--sb-line-strong);
+    background: color-mix(in srgb, var(--sb-surface) 60%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--sb-text);
 }
 
 .billboard-btn-secondary:hover {
-    border-color: #8b5e3c;
-
-    background: rgba(255, 255, 255, 0.72);
-
-    color: #8b5e3c;
+    border-color: var(--sb-brown);
+    background: var(--sb-surface);
+    color: var(--sb-accent);
+    box-shadow: 0 14px 28px rgba(139, 94, 60, 0.14);
 }
 
 
-/* =========================================================
-   BOTTOM INFO
-========================================================= */
+/* ---------- BOTTOM INFO ---------- */
 
 .billboard-bottom-info {
-    max-width: 600px;
-
+    max-width: 620px;
     margin-top: 50px;
-
     display: flex;
     align-items: center;
-
-    gap: 20px;
+    gap: 22px;
 }
 
 .billboard-info-item {
     display: flex;
     align-items: flex-start;
-
-    gap: 10px;
+    gap: 11px;
 }
 
 .billboard-info-number {
     flex: 0 0 auto;
-
-    color: #8b5e3c;
-
+    padding: 4px 8px;
+    border-radius: 100px;
+    background: var(--sb-cream);
+    color: var(--sb-accent);
     font-size: 9px;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    transition: background 0.3s var(--sb-ease), color 0.3s var(--sb-ease);
+}
 
-    letter-spacing: 0.12em;
+.billboard-info-item:hover .billboard-info-number {
+    background: var(--sb-brown);
+    color: #fff;
 }
 
 .billboard-info-item strong {
     display: block;
-
     margin-bottom: 3px;
-
-    color: #302a26;
-
-    font-size: 11px;
-    font-weight: 700;
+    color: var(--sb-ink);
+    font-size: 12px;
+    font-weight: 750;
 }
 
 .billboard-info-item small {
     display: block;
-
-    color: #8d857f;
-
-    font-size: 9px;
-
+    color: var(--sb-muted);
+    font-size: 10px;
     line-height: 1.4;
-
     white-space: nowrap;
 }
 
 .billboard-info-divider {
     width: 1px;
-    height: 30px;
-
+    height: 34px;
     flex: 0 0 1px;
-
-    background: rgba(139, 94, 60, 0.20);
+    background: linear-gradient(180deg, transparent, var(--sb-line-strong), transparent);
 }
 
 
-/* =========================================================
-   ARROWS
-========================================================= */
+/* ---------- ARROWS ---------- */
 
 .billboard-arrow {
     position: absolute;
-    z-index: 20;
-
     top: 50%;
-
-    width: 44px;
-    height: 44px;
-
+    z-index: 20;
+    width: 48px;
+    height: 48px;
     padding: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border: 1px solid rgba(139, 94, 60, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.90);
-
-    color: #6f472d;
-
-    box-shadow:
-        0 8px 24px rgba(57, 43, 34, 0.10);
-
+    background: color-mix(in srgb, var(--sb-surface) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--sb-brown-deep);
+    cursor: pointer;
+    box-shadow: 0 12px 28px rgba(57, 43, 34, 0.14);
     transform: translateY(-50%);
-
     transition:
-        background-color 0.25s ease,
-        color 0.25s ease,
-        transform 0.25s ease;
+        background 0.35s var(--sb-ease),
+        color 0.35s var(--sb-ease),
+        transform 0.45s var(--sb-spring),
+        box-shadow 0.35s var(--sb-ease);
+}
+
+[data-theme="dark"] .billboard-arrow,
+.dark-mode .billboard-arrow,
+.dark-theme .billboard-arrow {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #d5b69d;
 }
 
 .billboard-arrow:hover {
-    background: #8b5e3c;
-
-    color: #ffffff;
-
-    transform: translateY(-50%) scale(1.05);
+    background: linear-gradient(135deg, #a06c46, #6b4529);
+    color: #fff;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 18px 34px rgba(107, 69, 41, 0.35);
 }
 
-.billboard-arrow-prev {
-    left: 8px;
-}
-
-.billboard-arrow-next {
-    right: 8px;
-}
+.billboard-arrow-prev { left: 8px; }
+.billboard-arrow-next { right: 8px; }
 
 .billboard-arrow i {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 
-/* =========================================================
-   TABLET
-========================================================= */
+/* ---------- TABLET ---------- */
 
 @media (max-width: 991px) {
 
@@ -499,12 +528,12 @@
         background:
             linear-gradient(
                 90deg,
-                #faf8f5 0%,
-                rgba(250, 248, 245, 0.96) 14%,
-                rgba(250, 248, 245, 0.76) 28%,
-                rgba(250, 248, 245, 0.35) 48%,
-                rgba(250, 248, 245, 0.08) 70%,
-                rgba(41, 37, 34, 0.10) 100%
+                var(--sb-bg) 0%,
+                color-mix(in srgb, var(--sb-bg) 96%, transparent) 14%,
+                color-mix(in srgb, var(--sb-bg) 76%, transparent) 28%,
+                color-mix(in srgb, var(--sb-bg) 35%, transparent) 48%,
+                color-mix(in srgb, var(--sb-bg) 8%, transparent) 70%,
+                rgba(41, 37, 34, 0.1) 100%
             );
     }
 
@@ -516,12 +545,21 @@
     .billboard-title {
         font-size: clamp(46px, 7vw, 68px);
     }
+
+    #billboard .billboard-arrow {
+        width: 44px;
+        height: 44px;
+        top: 50%;
+        z-index: 30;
+        transform: translateY(-50%);
+    }
+
+    #billboard .billboard-arrow-prev { left: 12px; }
+    #billboard .billboard-arrow-next { right: 12px; }
 }
 
 
-/* =========================================================
-   MOBILE
-========================================================= */
+/* ---------- MOBILE ---------- */
 
 @media (max-width: 767px) {
 
@@ -536,118 +574,96 @@
 
     .billboard-hero {
         min-height: 680px;
-
         align-items: flex-end;
-
         border: 0;
         border-radius: 0;
-
         box-shadow: none;
     }
 
     .billboard-visual {
         inset: 0;
-
         width: 100%;
         height: 100%;
+        border-radius: 0;
     }
 
     .billboard-image {
         object-position: 58% center;
     }
 
-    /*
-       Mobiledə soldan sağa yox,
-       yuxarıdan aşağı yumşaq keçid.
-    */
+    #billboard .billboard-slide:first-child .billboard-image {
+        object-position: left center;
+    }
 
+    /* Soldan sağa yox, yuxarıdan aşağı yumşaq keçid */
     .billboard-image-overlay {
         background:
             linear-gradient(
                 180deg,
                 rgba(41, 37, 34, 0.02) 0%,
                 rgba(41, 37, 34, 0.02) 25%,
-                rgba(250, 248, 245, 0.10) 42%,
-                rgba(250, 248, 245, 0.58) 60%,
-                rgba(250, 248, 245, 0.91) 75%,
-                #faf8f5 94%,
-                #faf8f5 100%
+                color-mix(in srgb, var(--sb-bg) 10%, transparent) 42%,
+                color-mix(in srgb, var(--sb-bg) 58%, transparent) 60%,
+                color-mix(in srgb, var(--sb-bg) 91%, transparent) 75%,
+                var(--sb-bg) 94%,
+                var(--sb-bg) 100%
             );
     }
 
     .billboard-content {
         width: 100%;
         max-width: none;
-
         padding: 0 24px 34px;
-
-        background: transparent;
     }
 
     .billboard-topline {
         margin-bottom: 19px;
-
+        padding: 7px 12px;
         gap: 7px;
-
-        font-size: 7px;
-
+        font-size: 8px;
         letter-spacing: 0.13em;
     }
 
     .billboard-line {
-        width: 24px;
+        width: 20px;
     }
 
     .billboard-topline-dot {
-        width: 3px;
-        height: 3px;
+        width: 4px;
+        height: 4px;
     }
 
     .billboard-title {
         max-width: 500px;
-
         font-size: clamp(38px, 11vw, 52px);
-
         line-height: 0.98;
-
         letter-spacing: -0.05em;
     }
 
     .billboard-description {
         max-width: 440px;
-
         margin-top: 18px;
-
-        color: #635c56;
-
+        color: var(--sb-text);
         font-size: 13px;
-
         line-height: 1.7;
     }
 
     .billboard-actions {
         margin-top: 22px;
-
         gap: 8px;
     }
 
     .billboard-btn {
-        min-height: 43px;
-
-        padding: 0 14px;
-
-        border-radius: 8px;
-
-        font-size: 10px;
+        min-height: 46px;
+        padding: 0 16px;
+        border-radius: 11px;
+        font-size: 11px;
     }
 
     .billboard-bottom-info {
         width: 100%;
-
         margin-top: 27px;
-
         justify-content: space-between;
-
         gap: 0;
     }
 
@@ -664,29 +680,25 @@
     }
 
     .billboard-info-item strong {
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .billboard-info-item small {
-        font-size: 7px;
-
+        font-size: 8px;
         white-space: normal;
     }
 
     .billboard-image-word {
-        right: -28px;
         top: 37%;
-
+        right: -28px;
         font-size: 70px;
     }
 
     .billboard-image-label {
+        top: 24px;
         left: 22px;
         bottom: auto;
-        top: 24px;
-
-        font-size: 7px;
-
+        font-size: 8px;
         letter-spacing: 0.13em;
     }
 
@@ -694,24 +706,25 @@
         width: 22px;
     }
 
-    .billboard-arrow {
-        width: 36px;
-        height: 36px;
+    #billboard .billboard-arrow {
+        width: 40px;
+        height: 40px;
+        top: auto;
+        bottom: 22px;
+        transform: none;
+        font-size: 13px;
     }
 
-    .billboard-arrow-prev {
-        left: 10px;
+    #billboard .billboard-arrow:hover {
+        transform: scale(1.08);
     }
 
-    .billboard-arrow-next {
-        right: 10px;
-    }
+    #billboard .billboard-arrow-prev { left: 18px; }
+    #billboard .billboard-arrow-next { right: 18px; }
 }
 
 
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
+/* ---------- SMALL MOBILE ---------- */
 
 @media (max-width: 575px) {
 
@@ -728,20 +741,18 @@
     }
 
     .billboard-description {
-        font-size: 12px;
+        font-size: 12.5px;
     }
 
     .billboard-actions {
         display: grid;
-
         grid-template-columns: 1fr 1fr;
     }
 
     .billboard-btn {
         width: 100%;
-
-        padding-left: 9px;
-        padding-right: 9px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .billboard-bottom-info {
@@ -753,17 +764,16 @@
     }
 
     .billboard-info-number {
-        display: block;
-
-        margin-bottom: 4px;
+        display: inline-block;
+        margin-bottom: 5px;
     }
 
     .billboard-info-item strong {
-        font-size: 8px;
+        font-size: 9px;
     }
 
     .billboard-info-item small {
-        font-size: 6.5px;
+        font-size: 7.5px;
     }
 
     .billboard-image {
@@ -775,21 +785,28 @@
     }
 
     .billboard-image-label {
-        left: 18px;
         top: 20px;
-
-        font-size: 6px;
+        left: 18px;
+        font-size: 7px;
     }
 
     .billboard-image-counter {
-        font-size: 7px;
+        font-size: 8px;
     }
+
+    #billboard .billboard-arrow {
+        width: 36px;
+        height: 36px;
+        bottom: 18px;
+        font-size: 12px;
+    }
+
+    #billboard .billboard-arrow-prev { left: 14px; }
+    #billboard .billboard-arrow-next { right: 14px; }
 }
 
 
-/* =========================================================
-   EXTRA SMALL
-========================================================= */
+/* ---------- EXTRA SMALL ---------- */
 
 @media (max-width: 400px) {
 
@@ -802,12 +819,12 @@
     }
 
     .billboard-topline {
-        font-size: 6px;
+        font-size: 7px;
         gap: 5px;
     }
 
     .billboard-line {
-        width: 19px;
+        width: 16px;
     }
 
     .billboard-title {
@@ -816,8 +833,7 @@
 
     .billboard-description {
         margin-top: 16px;
-
-        font-size: 11px;
+        font-size: 11.5px;
     }
 
     .billboard-actions {
@@ -825,9 +841,8 @@
     }
 
     .billboard-btn {
-        min-height: 41px;
-
-        font-size: 9px;
+        min-height: 44px;
+        font-size: 10px;
     }
 
     .billboard-bottom-info {
@@ -835,11 +850,11 @@
     }
 
     .billboard-info-item strong {
-        font-size: 7.5px;
+        font-size: 8.5px;
     }
 
     .billboard-info-item small {
-        font-size: 6px;
+        font-size: 7px;
     }
 
     .billboard-image-word {
@@ -847,88 +862,16 @@
     }
 }
 
-/* =========================================================
-   BILLBOARD — RESPONSIVE ARROWS FIX
-   ========================================================= */
 
-@media (max-width: 991px) {
+/* ---------- REDUCED MOTION ---------- */
 
-    #billboard .billboard-arrow {
-        width: 42px;
-        height: 42px;
+@media (prefers-reduced-motion: reduce) {
 
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-
-        z-index: 30;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 50%;
-    }
-
-    #billboard .billboard-arrow-prev {
-        left: 12px;
-    }
-
-    #billboard .billboard-arrow-next {
-        right: 12px;
-    }
-
-}
-
-
-@media (max-width: 767px) {
-
-    #billboard .billboard-arrow {
-        width: 38px;
-        height: 38px;
-
-        top: auto;
-        bottom: 22px;
-
-        transform: none;
-
-        font-size: 13px;
-    }
-
-    #billboard .billboard-arrow-prev {
-        left: 18px;
-    }
-
-    #billboard .billboard-arrow-next {
-        right: 18px;
-    }
-
-}
-
-
-@media (max-width: 480px) {
-
-    #billboard .billboard-arrow {
-        width: 34px;
-        height: 34px;
-
-        bottom: 18px;
-
-        font-size: 12px;
-    }
-
-    #billboard .billboard-arrow-prev {
-        left: 14px;
-    }
-
-    #billboard .billboard-arrow-next {
-        right: 14px;
-    }
-
-}
-
-@media (max-width: 767px) {
-    #billboard .billboard-slide:first-child .billboard-image {
-        object-position: left center;
+    .billboard-section *,
+    .billboard-section *::before,
+    .billboard-section *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

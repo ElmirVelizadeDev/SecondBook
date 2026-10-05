@@ -2,355 +2,355 @@
 
 @section('title', 'Notifications')
 
-@push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/notifications.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/notifications.css') }}">
 @endpush
 
 @section('content')
 
 <div class="dashboard-section notifications-page">
 
-    {{-- Page Header --}}
-    <div class="notifications-page-header">
 
-        <div class="notifications-heading">
-
-            <div class="notifications-heading-icon">
-                <i class="bi bi-bell"></i>
-            </div>
-
-            <div>
-                <h1>Notifications</h1>
-                <p>
-                    Manage user notifications and keep your customers informed.
-                </p>
-            </div>
-
+{{-- Page Header --}}
+<div class="notifications-page-header">
+    <div class="notifications-heading">
+        <div class="notifications-heading-icon">
+            <i class="bi bi-bell"></i>
         </div>
 
-        <div class="notifications-header-actions">
-
-            <button
-                type="button"
-                class="btn notification-mark-all-btn"
-                id="markAllReadBtn"
-                {{ $unreadNotifications === 0 ? 'disabled' : '' }}
-            >
-                <i class="bi bi-check2-all"></i>
-                Mark all as read
-            </button>
-
-            <button
-                type="button"
-                class="btn notification-send-btn"
-                data-bs-toggle="modal"
-                data-bs-target="#sendNotificationModal"
-            >
-                <i class="bi bi-send"></i>
-                Send notification
-            </button>
-
+        <div>
+            <h1>Notifications</h1>
+            <p>
+                Manage user notifications and keep your customers informed.
+            </p>
         </div>
-
     </div>
 
+    <div class="notifications-header-actions">
+        <button
+            type="button"
+            class="btn notification-mark-all-btn"
+            id="markAllReadBtn"
+            {{ $unreadNotifications === 0 ? 'disabled' : '' }}
+        >
+            <i class="bi bi-check2-all"></i>
+            Mark all as read
+        </button>
 
-    {{-- Statistics --}}
-    <div class="notification-stats-grid">
+        <button
+            type="button"
+            class="btn notification-send-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#sendNotificationModal"
+        >
+            <i class="bi bi-send"></i>
+            Send notification
+        </button>
+    </div>
+</div>
 
-        <div class="notification-stat-card">
+{{-- Statistics --}}
+<div class="notification-stats-grid">
 
-            <div class="notification-stat-icon total">
-                <i class="bi bi-bell"></i>
-            </div>
-
-            <div class="notification-stat-content">
-                <span>Total notifications</span>
-                <strong>{{ number_format($totalNotifications) }}</strong>
-                <small>All user notifications</small>
-            </div>
-
+    <div class="notification-stat-card">
+        <div class="notification-stat-icon total">
+            <i class="bi bi-bell"></i>
         </div>
 
+        <div class="notification-stat-content">
+            <span>Total notifications</span>
 
-        <div class="notification-stat-card">
+            <strong data-total-notifications>
+                {{ number_format($totalNotifications) }}
+            </strong>
 
-            <div class="notification-stat-icon unread">
-                <i class="bi bi-envelope"></i>
-            </div>
-
-            <div class="notification-stat-content">
-                <span>Unread</span>
-                <strong>{{ number_format($unreadNotifications) }}</strong>
-                <small>Waiting to be read</small>
-            </div>
-
+            <small>All user notifications</small>
         </div>
-
-
-        <div class="notification-stat-card">
-
-            <div class="notification-stat-icon read">
-                <i class="bi bi-envelope-open"></i>
-            </div>
-
-            <div class="notification-stat-content">
-                <span>Read</span>
-                <strong>{{ number_format($readNotifications) }}</strong>
-                <small>Already viewed</small>
-            </div>
-
-        </div>
-
-
-        <div class="notification-stat-card">
-
-            <div class="notification-stat-icon users">
-                <i class="bi bi-people"></i>
-            </div>
-
-            <div class="notification-stat-content">
-                <span>Users notified</span>
-                <strong>{{ number_format($usersNotified) }}</strong>
-                <small>Unique active recipients</small>
-            </div>
-
-        </div>
-
     </div>
 
-
-    {{-- Notifications Panel --}}
-    <div class="dashboard-panel notifications-panel">
-
-        {{-- Panel Header --}}
-        <div class="notifications-panel-header">
-
-            <div>
-                <h2>Notification history</h2>
-
-                <p>
-                    View and manage notifications sent to users.
-                </p>
-            </div>
-
-
-            <div class="notification-filter-tabs">
-
-                <a
-                    href="{{ route('admin.notifications.index', ['filter' => 'all']) }}"
-                    class="notification-filter-tab {{ $filter === 'all' ? 'active' : '' }}"
-                >
-                    All
-                    <span>{{ $totalNotifications }}</span>
-                </a>
-
-                <a
-                    href="{{ route('admin.notifications.index', ['filter' => 'unread']) }}"
-                    class="notification-filter-tab {{ $filter === 'unread' ? 'active' : '' }}"
-                >
-                    Unread
-                    <span>{{ $unreadNotifications }}</span>
-                </a>
-
-                <a
-                    href="{{ route('admin.notifications.index', ['filter' => 'read']) }}"
-                    class="notification-filter-tab {{ $filter === 'read' ? 'active' : '' }}"
-                >
-                    Read
-                    <span>{{ $readNotifications }}</span>
-                </a>
-
-            </div>
-
+    <div class="notification-stat-card">
+        <div class="notification-stat-icon unread">
+            <i class="bi bi-envelope"></i>
         </div>
 
+        <div class="notification-stat-content">
+            <span>Unread</span>
 
-        {{-- Notification List --}}
-        <div class="notification-list">
+            <strong data-unread-count>
+                {{ number_format($unreadNotifications) }}
+            </strong>
 
-            @forelse($notifications as $notification)
+            <small>Waiting to be read</small>
+        </div>
+    </div>
 
-                <div
-                    class="notification-item {{ is_null($notification->read_at) ? 'is-unread' : 'is-read' }}"
-                    data-notification-id="{{ $notification->id }}"
-                >
-
-                    {{-- Notification Icon --}}
-                    <div class="notification-item-icon">
-
-                        @php
-                            $icon = match($notification->type) {
-                                'general' => 'bi-bell',
-                                'promotion' => 'bi-megaphone',
-                                'order' => 'bi-bag-check',
-                                'payment' => 'bi-credit-card',
-                                'review' => 'bi-star',
-                                'seller' => 'bi-shop',
-                                'system' => 'bi-gear',
-                                'warning' => 'bi-exclamation-triangle',
-                                'success' => 'bi-check-circle',
-                                default => 'bi-bell',
-                            };
-                        @endphp
-
-                        <i class="bi {{ $icon }}"></i>
-
-                    </div>
-
-
-                    {{-- Notification Content --}}
-                    <div class="notification-item-content">
-
-                        <div class="notification-item-top">
-
-                            <div class="notification-item-title-wrap">
-
-                                @if(is_null($notification->read_at))
-                                    <span class="notification-unread-dot"></span>
-                                @endif
-
-                                <h3>
-                                    {{ $notification->title }}
-                                </h3>
-
-                            </div>
-
-
-                            <span
-                                class="notification-type notification-type--{{ strtolower($notification->type) }}"
-                            >
-                                {{ ucfirst($notification->type) }}
-                            </span>
-
-                        </div>
-
-
-                        <p class="notification-message">
-                            {{ $notification->message }}
-                        </p>
-
-
-                        <div class="notification-meta">
-
-                            <span>
-                                <i class="bi bi-person"></i>
-
-                                {{ $notification->user?->name ?? 'Deleted user' }}
-
-                                @if($notification->user?->email)
-                                    <span class="notification-user-email">
-                                        {{ $notification->user->email }}
-                                    </span>
-                                @endif
-                            </span>
-
-
-                            <span>
-                                <i class="bi bi-clock"></i>
-                                {{ $notification->created_at->diffForHumans() }}
-                            </span>
-
-
-                            <span>
-                                <i class="bi bi-calendar3"></i>
-                                {{ $notification->created_at->format('d M Y, H:i') }}
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- Actions --}}
-                    <div class="notification-item-actions">
-
-                        @if(is_null($notification->read_at))
-
-                            <button
-                                type="button"
-                                class="notification-action-btn mark-read-btn"
-                                data-id="{{ $notification->id }}"
-                                title="Mark as read"
-                            >
-                                <i class="bi bi-envelope-open"></i>
-                            </button>
-
-                        @else
-
-                            <button
-                                type="button"
-                                class="notification-action-btn mark-unread-btn"
-                                data-id="{{ $notification->id }}"
-                                title="Mark as unread"
-                            >
-                                <i class="bi bi-envelope"></i>
-                            </button>
-
-                        @endif
-
-
-                        <button
-                            type="button"
-                            class="notification-action-btn delete-notification-btn"
-                            data-id="{{ $notification->id }}"
-                            data-url="{{ route('admin.notifications.destroy', $notification) }}"
-                            title="Delete"
-                        >
-                            <i class="bi bi-trash3"></i>
-                        </button>
-
-                    </div>
-
-                </div>
-
-            @empty
-
-                <div class="notifications-empty">
-
-                    <div class="notifications-empty-icon">
-                        <i class="bi bi-bell-slash"></i>
-                    </div>
-
-                    <h3>No notifications found</h3>
-
-                    <p>
-                        There are no notifications matching the selected filter.
-                    </p>
-
-                    @if($filter !== 'all')
-
-                        <a
-                            href="{{ route('admin.notifications.index') }}"
-                            class="btn notification-empty-btn"
-                        >
-                            View all notifications
-                        </a>
-
-                    @endif
-
-                </div>
-
-            @endforelse
-
+    <div class="notification-stat-card">
+        <div class="notification-stat-icon read">
+            <i class="bi bi-envelope-open"></i>
         </div>
 
+        <div class="notification-stat-content">
+            <span>Read</span>
 
-        {{-- Pagination --}}
-        @if($notifications->hasPages())
+            <strong data-read-count>
+                {{ number_format($readNotifications) }}
+            </strong>
 
-            <div class="notifications-pagination">
-                {{ $notifications->links() }}
-            </div>
+            <small>Already viewed</small>
+        </div>
+    </div>
 
-        @endif
+    <div class="notification-stat-card">
+        <div class="notification-stat-icon users">
+            <i class="bi bi-people"></i>
+        </div>
 
+        <div class="notification-stat-content">
+            <span>Users notified</span>
+
+            <strong data-users-notified>
+                {{ number_format($usersNotified) }}
+            </strong>
+
+            <small>Unique active recipients</small>
+        </div>
     </div>
 
 </div>
 
+{{-- Notifications Panel --}}
+<div class="dashboard-panel notifications-panel">
+
+    {{-- Panel Header --}}
+    <div class="notifications-panel-header">
+
+        <div>
+            <h2>Notification history</h2>
+
+            <p>
+                View and manage notifications sent to users.
+            </p>
+        </div>
+
+        <div class="notification-filter-tabs">
+
+            <a
+                href="{{ route('admin.notifications.index', ['filter' => 'all']) }}"
+                class="notification-filter-tab {{ $filter === 'all' ? 'active' : '' }}"
+                data-filter="all"
+            >
+                All
+
+                <span data-all-tab-count>
+                    {{ $totalNotifications }}
+                </span>
+            </a>
+
+            <a
+                href="{{ route('admin.notifications.index', ['filter' => 'unread']) }}"
+                class="notification-filter-tab {{ $filter === 'unread' ? 'active' : '' }}"
+                data-filter="unread"
+            >
+                Unread
+
+                <span data-unread-tab-count>
+                    {{ $unreadNotifications }}
+                </span>
+            </a>
+
+            <a
+                href="{{ route('admin.notifications.index', ['filter' => 'read']) }}"
+                class="notification-filter-tab {{ $filter === 'read' ? 'active' : '' }}"
+                data-filter="read"
+            >
+                Read
+
+                <span data-read-tab-count>
+                    {{ $readNotifications }}
+                </span>
+            </a>
+
+        </div>
+    </div>
+
+    {{-- Notification List --}}
+    <div class="notification-list">
+
+        @forelse($notifications as $notification)
+
+            <div
+                class="notification-item {{ is_null($notification->read_at) ? 'is-unread' : 'is-read' }}"
+                data-notification-id="{{ $notification->id }}"
+            >
+
+                <div class="notification-item-icon">
+
+                    @php
+                        $icon = match($notification->type) {
+                            'general' => 'bi-bell',
+                            'promotion' => 'bi-megaphone',
+                            'order' => 'bi-bag-check',
+                            'payment' => 'bi-credit-card',
+                            'review' => 'bi-star',
+                            'seller' => 'bi-shop',
+                            'system' => 'bi-gear',
+                            'warning' => 'bi-exclamation-triangle',
+                            'success' => 'bi-check-circle',
+                            'store_settings_updated' => 'bi-shop',
+                            default => 'bi-bell',
+                        };
+                    @endphp
+
+                    <i class="bi {{ $icon }}"></i>
+                </div>
+
+                <div class="notification-item-content">
+
+                    <div class="notification-item-top">
+
+                        <div class="notification-item-title-wrap">
+
+                            @if(is_null($notification->read_at))
+                                <span class="notification-unread-dot"></span>
+                            @endif
+
+                            <h3>
+                                {{ $notification->title }}
+                            </h3>
+
+                        </div>
+
+                        <span
+                            class="notification-type notification-type--{{ strtolower($notification->type) }}"
+                        >
+                            {{ ucfirst(str_replace('_', ' ', $notification->type)) }}
+                        </span>
+
+                    </div>
+
+                    <p class="notification-message">
+                        {{ $notification->message }}
+                    </p>
+
+                    <div class="notification-meta">
+
+                        <span>
+                            <i class="bi bi-person"></i>
+
+                            @if($notification->user)
+                                {{ $notification->user->name }}
+
+                                @if($notification->user->email)
+                                    <span class="notification-user-email">
+                                        {{ $notification->user->email }}
+                                    </span>
+                                @endif
+                            @else
+                                All admins
+                            @endif
+                        </span>
+
+                        <span>
+                            <i class="bi bi-clock"></i>
+                            {{ $notification->created_at->diffForHumans() }}
+                        </span>
+
+                        <span>
+                            <i class="bi bi-calendar3"></i>
+                            {{ $notification->created_at->format('d M Y, H:i') }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="notification-item-actions">
+
+                    @if(is_null($notification->read_at))
+
+                        <button
+                            type="button"
+                            class="notification-action-btn mark-read-btn"
+                            data-id="{{ $notification->id }}"
+                            title="Mark as read"
+                        >
+                            <i class="bi bi-envelope-open"></i>
+                        </button>
+
+                    @else
+
+                        <button
+                            type="button"
+                            class="notification-action-btn mark-unread-btn"
+                            data-id="{{ $notification->id }}"
+                            title="Mark as unread"
+                        >
+                            <i class="bi bi-envelope"></i>
+                        </button>
+
+                    @endif
+
+                    <button
+                        type="button"
+                        class="notification-action-btn delete-notification-btn"
+                        data-id="{{ $notification->id }}"
+                        data-url="{{ route('admin.notifications.destroy', $notification) }}"
+                        title="Delete"
+                    >
+                        <i class="bi bi-trash3"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <div class="notifications-empty">
+
+                <div class="notifications-empty-icon">
+                    <i class="bi bi-bell-slash"></i>
+                </div>
+
+                <h3>No notifications found</h3>
+
+                <p>
+                    There are no notifications matching the selected filter.
+                </p>
+
+                @if($filter !== 'all')
+
+                    <a
+                        href="{{ route('admin.notifications.index') }}"
+                        class="btn notification-empty-btn notification-filter-tab"
+                        data-filter="all"
+                    >
+                        View all notifications
+                    </a>
+
+                @endif
+
+            </div>
+
+        @endforelse
+
+    </div>
+
+    {{-- Pagination --}}
+    @if($notifications->hasPages())
+
+        <div class="notifications-pagination">
+            {{ $notifications->links() }}
+        </div>
+
+    @endif
+
+</div>
+
+
+</div>
 
 {{-- Send Notification Modal --}}
+
 <div
     class="modal fade"
     id="sendNotificationModal"
@@ -358,316 +358,292 @@
     aria-labelledby="sendNotificationModalLabel"
     aria-hidden="true"
 >
-
     <div class="modal-dialog modal-dialog-centered modal-lg">
 
-        <div class="modal-content notification-modal">
 
-            {{-- Modal Header --}}
-            <div class="modal-header">
+    <div class="modal-content notification-modal">
 
-                <div class="notification-modal-title">
+        {{-- Modal Header --}}
+        <div class="modal-header">
 
-                    <div class="notification-modal-icon">
-                        <i class="bi bi-send"></i>
-                    </div>
+            <div class="notification-modal-title">
 
-                    <div>
+                <div class="notification-modal-icon">
+                    <i class="bi bi-send"></i>
+                </div>
 
-                        <h5 id="sendNotificationModalLabel">
-                            Send notification
-                        </h5>
+                <div>
+                    <h5 id="sendNotificationModalLabel">
+                        Send notification
+                    </h5>
 
-                        <p>
-                            Send a message directly to your users.
-                        </p>
+                    <p>
+                        Send a message directly to your users.
+                    </p>
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+            ></button>
+
+        </div>
+
+        {{-- Form --}}
+        <form
+            action="{{ route('admin.notifications.send') }}"
+            method="POST"
+            id="sendNotificationForm"
+        >
+
+            @csrf
+
+            <div class="modal-body">
+
+                {{-- Recipient --}}
+                <div class="notification-recipient-selector">
+
+                    <label class="notification-form-label">
+                        Recipient
+                    </label>
+
+                    <div class="recipient-options">
+
+                        <label class="recipient-option active">
+
+                            <input
+                                type="radio"
+                                name="recipient"
+                                value="user"
+                                checked
+                            >
+
+                            <span class="recipient-option-icon">
+                                <i class="bi bi-person"></i>
+                            </span>
+
+                            <span>
+                                <strong>Specific user</strong>
+                                <small>Send to one active user</small>
+                            </span>
+
+                        </label>
+
+                        <label class="recipient-option">
+
+                            <input
+                                type="radio"
+                                name="recipient"
+                                value="all"
+                            >
+
+                            <span class="recipient-option-icon">
+                                <i class="bi bi-people"></i>
+                            </span>
+
+                            <span>
+                                <strong>All active users</strong>
+                                <small>Send to every active user</small>
+                            </span>
+
+                        </label>
 
                     </div>
 
                 </div>
 
+                {{-- User --}}
+                <div
+                    class="notification-user-select-wrap"
+                    id="notificationUserSelectWrap"
+                >
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                ></button>
+                    <label
+                        for="notificationUser"
+                        class="notification-form-label"
+                    >
+                        Select user
+                    </label>
 
-            </div>
-
-
-            {{-- Form --}}
-            <form
-                action="{{ route('admin.notifications.send') }}"
-                method="POST"
-                id="sendNotificationForm"
-            >
-
-                @csrf
-
-                <div class="modal-body">
-
-                    {{-- Recipient --}}
-                    <div class="notification-recipient-selector">
-
-                        <label class="notification-form-label">
-                            Recipient
-                        </label>
-
-
-                        <div class="recipient-options">
-
-                            <label class="recipient-option active">
-
-                                <input
-                                    type="radio"
-                                    name="recipient"
-                                    value="user"
-                                    checked
-                                >
-
-                                <span class="recipient-option-icon">
-                                    <i class="bi bi-person"></i>
-                                </span>
-
-                                <span>
-                                    <strong>Specific user</strong>
-                                    <small>Send to one active user</small>
-                                </span>
-
-                            </label>
-
-
-                            <label class="recipient-option">
-
-                                <input
-                                    type="radio"
-                                    name="recipient"
-                                    value="all"
-                                >
-
-                                <span class="recipient-option-icon">
-                                    <i class="bi bi-people"></i>
-                                </span>
-
-                                <span>
-                                    <strong>All active users</strong>
-                                    <small>Send to every active user</small>
-                                </span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- User --}}
-                    <div
-                        class="notification-user-select-wrap"
-                        id="notificationUserSelectWrap"
+                    <select
+                        name="user_id"
+                        id="notificationUser"
+                        class="form-select notification-form-control"
+                        required
                     >
 
+                        <option value="">
+                            Select an active user
+                        </option>
+
+                        @foreach($users as $user)
+
+                            <option value="{{ $user->id }}">
+                                {{ $user->name }} — {{ $user->email }}
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+                {{-- Type + Title --}}
+                <div class="notification-form-row">
+
+                    <div class="notification-form-group">
+
                         <label
-                            for="notificationUser"
+                            for="notificationType"
                             class="notification-form-label"
                         >
-                            Select user
+                            Type
                         </label>
 
                         <select
-                            name="user_id"
-                            id="notificationUser"
+                            name="type"
+                            id="notificationType"
                             class="form-select notification-form-control"
                             required
                         >
-
-                            <option value="">
-                                Select an active user
-                            </option>
-
-                            @foreach($users as $user)
-
-                                <option value="{{ $user->id }}">
-                                    {{ $user->name }} — {{ $user->email }}
-                                </option>
-
-                            @endforeach
-
+                            <option value="general">General</option>
+                            <option value="promotion">Promotion</option>
+                            <option value="order">Order</option>
+                            <option value="payment">Payment</option>
+                            <option value="review">Review</option>
+                            <option value="seller">Seller</option>
+                            <option value="system">System</option>
+                            <option value="success">Success</option>
+                            <option value="warning">Warning</option>
                         </select>
 
                     </div>
 
-
-                    {{-- Type + Title --}}
-                    <div class="notification-form-row">
-
-                        <div class="notification-form-group">
-
-                            <label
-                                for="notificationType"
-                                class="notification-form-label"
-                            >
-                                Type
-                            </label>
-
-                            <select
-                                name="type"
-                                id="notificationType"
-                                class="form-select notification-form-control"
-                                required
-                            >
-
-                                <option value="general">
-                                    General
-                                </option>
-
-                                <option value="promotion">
-                                    Promotion
-                                </option>
-
-                                <option value="order">
-                                    Order
-                                </option>
-
-                                <option value="payment">
-                                    Payment
-                                </option>
-
-                                <option value="review">
-                                    Review
-                                </option>
-
-                                <option value="seller">
-                                    Seller
-                                </option>
-
-                                <option value="system">
-                                    System
-                                </option>
-
-                                <option value="success">
-                                    Success
-                                </option>
-
-                                <option value="warning">
-                                    Warning
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="notification-form-group">
-
-                            <label
-                                for="notificationTitle"
-                                class="notification-form-label"
-                            >
-                                Title
-                            </label>
-
-                            <input
-                                type="text"
-                                name="title"
-                                id="notificationTitle"
-                                class="form-control notification-form-control"
-                                placeholder="Enter notification title"
-                                maxlength="255"
-                                required
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- Message --}}
                     <div class="notification-form-group">
 
                         <label
-                            for="notificationMessage"
+                            for="notificationTitle"
                             class="notification-form-label"
                         >
-                            Message
+                            Title
                         </label>
 
-                        <textarea
-                            name="message"
-                            id="notificationMessage"
-                            class="form-control notification-form-control notification-message-input"
-                            rows="5"
-                            placeholder="Write your notification message..."
+                        <input
+                            type="text"
+                            name="title"
+                            id="notificationTitle"
+                            class="form-control notification-form-control"
+                            placeholder="Enter notification title"
+                            maxlength="255"
                             required
-                        ></textarea>
-
-                    </div>
-
-
-                    {{-- Info --}}
-                    <div class="notification-send-note">
-
-                        <i class="bi bi-info-circle"></i>
-
-                        <span>
-                            Notifications will appear immediately in the
-                            recipient's notification center.
-                        </span>
+                        >
 
                     </div>
 
                 </div>
 
+                {{-- Message --}}
+                <div class="notification-form-group">
 
-                {{-- Footer --}}
-                <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="btn notification-modal-cancel"
-                        data-bs-dismiss="modal"
+                    <label
+                        for="notificationMessage"
+                        class="notification-form-label"
                     >
-                        Cancel
-                    </button>
+                        Message
+                    </label>
 
-                    <button
-                        type="submit"
-                        class="btn notification-modal-submit"
-                        id="sendNotificationSubmit"
-                    >
-                        <i class="bi bi-send"></i>
-                        Send notification
-                    </button>
+                    <textarea
+                        name="message"
+                        id="notificationMessage"
+                        class="form-control notification-form-control notification-message-input"
+                        rows="5"
+                        placeholder="Write your notification message..."
+                        required
+                    ></textarea>
 
                 </div>
 
-            </form>
+                {{-- Info --}}
+                <div class="notification-send-note">
 
-        </div>
+                    <i class="bi bi-info-circle"></i>
+
+                    <span>
+                        Notifications will appear immediately in the recipient's notification center.
+                    </span>
+
+                </div>
+
+            </div>
+
+            {{-- Footer --}}
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn notification-modal-cancel"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn notification-modal-submit"
+                    id="sendNotificationSubmit"
+                >
+                    <i class="bi bi-send"></i>
+                    <span>Send notification</span>
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
 
 </div>
 
+
+</div>
+
 @endsection
 
-
 @push('js')
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const csrfToken = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute('content');
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
+    const sendModalElement = document.getElementById(
+        'sendNotificationModal'
+    );
 
-    /*
-    |--------------------------------------------------------------------------
-    | SweetAlert Helpers
-    |--------------------------------------------------------------------------
-    */
+    const sendForm = document.getElementById(
+        'sendNotificationForm'
+    );
+
+    const sendSubmit = document.getElementById(
+        'sendNotificationSubmit'
+    );
+
+    const userSelectWrap = document.getElementById(
+        'notificationUserSelectWrap'
+    );
+
+    const notificationUser = document.getElementById(
+        'notificationUser'
+    );
+
+    const recipientOptions = document.querySelectorAll(
+        '.recipient-option'
+    );
 
     function showSuccess(message) {
         Swal.fire({
@@ -687,100 +663,494 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function cleanupModal() {
+        document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
+            backdrop.remove();
+        });
 
-    /*
-    |--------------------------------------------------------------------------
-    | Recipient Selector
-    |--------------------------------------------------------------------------
-    */
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
 
-    const recipientOptions = document.querySelectorAll(
-        '.recipient-option'
-    );
+        if (sendModalElement) {
+            sendModalElement.classList.remove('show');
+            sendModalElement.style.display = 'none';
+            sendModalElement.setAttribute('aria-hidden', 'true');
+            sendModalElement.removeAttribute('aria-modal');
+        }
+    }
 
-    const userSelectWrap = document.getElementById(
-        'notificationUserSelectWrap'
-    );
+    function closeSendModal() {
+        if (sendModalElement && typeof bootstrap !== 'undefined') {
+            const modalInstance =
+                bootstrap.Modal.getInstance(sendModalElement);
 
-    const notificationUser = document.getElementById(
-        'notificationUser'
-    );
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
 
-    recipientOptions.forEach(function (option) {
+        setTimeout(function () {
+            cleanupModal();
+        }, 150);
+    }
 
-        const radio = option.querySelector(
-            'input[type="radio"]'
-        );
-
-        if (!radio) {
+    function resetSendForm() {
+        if (!sendForm) {
             return;
         }
 
-        option.addEventListener('click', function () {
+        sendForm.reset();
 
-            radio.checked = true;
+        const userRadio = sendForm.querySelector(
+            'input[name="recipient"][value="user"]'
+        );
 
-            recipientOptions.forEach(function (item) {
-                item.classList.remove('active');
-            });
+        if (userRadio) {
+            userRadio.checked = true;
+        }
 
-            option.classList.add('active');
-
-            /*
-            |--------------------------------------------------------------------------
-            | Specific User
-            |--------------------------------------------------------------------------
-            */
-
-            if (radio.value === 'user') {
-
-                userSelectWrap.style.display = '';
-
-                notificationUser.required = true;
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | All Active Users
-            |--------------------------------------------------------------------------
-            */
-
-            if (radio.value === 'all') {
-
-                userSelectWrap.style.display = 'none';
-
-                notificationUser.required = false;
-
-                notificationUser.value = '';
-            }
-
+        recipientOptions.forEach(function (option) {
+            option.classList.remove('active');
         });
 
-    });
+        const activeOption = sendForm.querySelector(
+            '.recipient-option input[value="user"]'
+        );
 
+        if (activeOption) {
+            activeOption.closest('.recipient-option')
+                ?.classList.add('active');
+        }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Mark As Read
-    |--------------------------------------------------------------------------
-    */
+        if (userSelectWrap) {
+            userSelectWrap.style.display = '';
+        }
 
-    function attachMarkRead(button) {
+        if (notificationUser) {
+            notificationUser.required = true;
+            notificationUser.value = '';
+        }
+
+        if (sendSubmit) {
+            sendSubmit.disabled = false;
+
+            sendSubmit.innerHTML =
+                '<i class="bi bi-send"></i>' +
+                '<span>Send notification</span>';
+        }
+    }
+
+    function updateMarkAllButton(unreadCount = null) {
+        const button = document.getElementById('markAllReadBtn');
 
         if (!button) {
             return;
         }
 
-        button.addEventListener('click', async function () {
+        if (unreadCount !== null) {
+            button.disabled = Number(unreadCount) === 0;
+            return;
+        }
 
-            const id = this.dataset.id;
+        const unreadElement = document.querySelector(
+            '[data-unread-count]'
+        );
 
-            const item = document.querySelector(
-                '.notification-item[data-notification-id="' +
-                id +
-                '"]'
+        const count = unreadElement
+            ? parseInt(
+                unreadElement.textContent.replace(/,/g, ''),
+                10
+            ) || 0
+            : 0;
+
+        button.disabled = count === 0;
+    }
+
+    function updateMutationCounters(data) {
+        const unreadCount = Number(data.unread_count ?? 0);
+        const totalCount = Number(data.total_count ?? 0);
+        const readCount = Number(data.read_count ?? 0);
+
+        document
+            .querySelectorAll('[data-unread-count]')
+            .forEach(function (element) {
+                element.textContent =
+                    unreadCount.toLocaleString();
+            });
+
+        document
+            .querySelectorAll('[data-unread-tab-count]')
+            .forEach(function (element) {
+                element.textContent = unreadCount;
+            });
+
+        document
+            .querySelectorAll('[data-total-notifications]')
+            .forEach(function (element) {
+                element.textContent =
+                    totalCount.toLocaleString();
+            });
+
+        document
+            .querySelectorAll('[data-all-tab-count]')
+            .forEach(function (element) {
+                element.textContent = totalCount;
+            });
+
+        document
+            .querySelectorAll('[data-read-count]')
+            .forEach(function (element) {
+                element.textContent =
+                    readCount.toLocaleString();
+            });
+
+        document
+            .querySelectorAll('[data-read-tab-count]')
+            .forEach(function (element) {
+                element.textContent = readCount;
+            });
+
+        updateMarkAllButton(unreadCount);
+    }
+
+    async function getJson(response) {
+        const contentType =
+            response.headers.get('content-type') || '';
+
+        if (!contentType.includes('application/json')) {
+            throw new Error(
+                `Unexpected server response. (${response.status})`
             );
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.message || 'Request failed.'
+            );
+        }
+
+        return data;
+    }
+
+    async function loadNotifications(
+        url,
+        updateHistory = true
+    ) {
+        const notificationList =
+            document.querySelector('.notification-list');
+
+        if (!notificationList) {
+            return;
+        }
+
+        try {
+            notificationList.classList.add('is-loading');
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'text/html',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `Unable to load notifications. (${response.status})`
+                );
+            }
+
+            const html = await response.text();
+
+            const parser = new DOMParser();
+
+            const documentHtml =
+                parser.parseFromString(
+                    html,
+                    'text/html'
+                );
+
+            const newList =
+                documentHtml.querySelector(
+                    '.notification-list'
+                );
+
+            if (!newList) {
+                throw new Error(
+                    'Unable to load notifications.'
+                );
+            }
+
+            notificationList.innerHTML =
+                newList.innerHTML;
+
+            const currentPagination =
+                document.querySelector(
+                    '.notifications-pagination'
+                );
+
+            const newPagination =
+                documentHtml.querySelector(
+                    '.notifications-pagination'
+                );
+
+            if (currentPagination) {
+
+                if (newPagination) {
+                    currentPagination.innerHTML =
+                        newPagination.innerHTML;
+
+                    currentPagination.style.display = '';
+                } else {
+                    currentPagination.innerHTML = '';
+                    currentPagination.style.display = 'none';
+                }
+
+            } else if (newPagination) {
+
+                const panel =
+                    document.querySelector(
+                        '.notifications-panel'
+                    );
+
+                if (panel) {
+
+                    const paginationWrapper =
+                        document.createElement('div');
+
+                    paginationWrapper.className =
+                        'notifications-pagination';
+
+                    paginationWrapper.innerHTML =
+                        newPagination.innerHTML;
+
+                    panel.appendChild(
+                        paginationWrapper
+                    );
+                }
+            }
+
+            const counterSelectors = [
+                '[data-total-notifications]',
+                '[data-unread-count]',
+                '[data-read-count]',
+                '[data-users-notified]',
+                '[data-all-tab-count]',
+                '[data-unread-tab-count]',
+                '[data-read-tab-count]'
+            ];
+
+            counterSelectors.forEach(function (selector) {
+
+                const currentElements =
+                    document.querySelectorAll(selector);
+
+                const newElements =
+                    documentHtml.querySelectorAll(selector);
+
+                currentElements.forEach(
+                    function (element, index) {
+
+                        if (newElements[index]) {
+                            element.textContent =
+                                newElements[index].textContent;
+                        }
+
+                    }
+                );
+
+            });
+
+            const newActiveTab =
+                documentHtml.querySelector(
+                    '.notification-filter-tab.active'
+                );
+
+            const activeFilter =
+                newActiveTab?.dataset.filter || 'all';
+
+            document
+                .querySelectorAll(
+                    '.notification-filter-tab'
+                )
+                .forEach(function (tab) {
+
+                    tab.classList.toggle(
+                        'active',
+                        tab.dataset.filter === activeFilter
+                    );
+
+                });
+
+            updateMarkAllButton();
+
+            if (updateHistory) {
+                window.history.pushState(
+                    {
+                        notificationFilter:
+                            activeFilter
+                    },
+                    '',
+                    url
+                );
+            }
+
+        } catch (error) {
+
+            console.error(
+                'Notifications AJAX error:',
+                error
+            );
+
+            showError(
+                error.message ||
+                'Unable to load notifications.'
+            );
+
+        } finally {
+
+            notificationList.classList.remove(
+                'is-loading'
+            );
+        }
+    }
+
+    async function reloadNotifications() {
+        await loadNotifications(
+            window.location.href,
+            false
+        );
+    }
+
+    recipientOptions.forEach(function (option) {
+
+        const radio =
+            option.querySelector(
+                'input[type="radio"]'
+            );
+
+        if (!radio) {
+            return;
+        }
+
+        option.addEventListener(
+            'click',
+            function () {
+
+                radio.checked = true;
+
+                recipientOptions.forEach(
+                    function (item) {
+                        item.classList.remove('active');
+                    }
+                );
+
+                option.classList.add('active');
+
+                if (radio.value === 'user') {
+
+                    userSelectWrap.style.display = '';
+
+                    notificationUser.required = true;
+
+                } else {
+
+                    userSelectWrap.style.display = 'none';
+
+                    notificationUser.required = false;
+
+                    notificationUser.value = '';
+                }
+            }
+        );
+    });
+
+    if (sendForm) {
+
+        sendForm.addEventListener(
+            'submit',
+            async function (event) {
+
+                event.preventDefault();
+
+                if (sendSubmit) {
+                    sendSubmit.disabled = true;
+
+                    sendSubmit.innerHTML =
+                        '<span class="spinner-border spinner-border-sm me-2"></span>' +
+                        '<span>Sending...</span>';
+                }
+
+                try {
+
+                    const formData =
+                        new FormData(sendForm);
+
+                    const response =
+                        await fetch(
+                            sendForm.action,
+                            {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'X-Requested-With':
+                                        'XMLHttpRequest'
+                                },
+                                credentials: 'same-origin'
+                            }
+                        );
+
+                    const data =
+                        await getJson(response);
+
+                    closeSendModal();
+                    resetSendForm();
+
+                    await reloadNotifications();
+
+                    showSuccess(
+                        data.message ||
+                        'Notification sent successfully.'
+                    );
+
+                } catch (error) {
+
+                    if (sendSubmit) {
+                        sendSubmit.disabled = false;
+
+                        sendSubmit.innerHTML =
+                            '<i class="bi bi-send"></i>' +
+                            '<span>Send notification</span>';
+                    }
+
+                    showError(
+                        error.message ||
+                        'Unable to send notification.'
+                    );
+                }
+            }
+        );
+    }
+
+    document.addEventListener(
+        'click',
+        async function (event) {
+
+            const button =
+                event.target.closest(
+                    '.mark-read-btn'
+                );
+
+            if (!button) {
+                return;
+            }
+
+            const id = button.dataset.id;
 
             const url =
                 "{{ url('/admin/notifications') }}/" +
@@ -791,97 +1161,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
 
-                const response = await fetch(url, {
-                    method: 'POST',
-
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || !data.success) {
-                    throw new Error(
-                        data.message ||
-                        'Unable to mark notification as read.'
-                    );
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Update Item
-                |--------------------------------------------------------------------------
-                */
-
-                if (item) {
-
-                    item.classList.remove('is-unread');
-                    item.classList.add('is-read');
-
-
-                    const unreadDot = item.querySelector(
-                        '.notification-unread-dot'
+                const response =
+                    await fetch(
+                        url,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json',
+                                'X-Requested-With':
+                                    'XMLHttpRequest'
+                            },
+                            credentials: 'same-origin'
+                        }
                     );
 
-                    if (unreadDot) {
-                        unreadDot.remove();
-                    }
+                const data =
+                    await getJson(response);
 
-
-                    const actions = item.querySelector(
-                        '.notification-item-actions'
-                    );
-
-                    if (actions) {
-
-                        const deleteButton =
-                            actions.querySelector(
-                                '.delete-notification-btn'
-                            );
-
-                        const deleteUrl =
-                            deleteButton?.dataset.url || '';
-
-                        actions.innerHTML = `
-                            <button
-                                type="button"
-                                class="notification-action-btn mark-unread-btn"
-                                data-id="${id}"
-                                title="Mark as unread"
-                            >
-                                <i class="bi bi-envelope"></i>
-                            </button>
-
-                            <button
-                                type="button"
-                                class="notification-action-btn delete-notification-btn"
-                                data-id="${id}"
-                                data-url="${deleteUrl}"
-                                title="Delete"
-                            >
-                                <i class="bi bi-trash3"></i>
-                            </button>
-                        `;
-
-                        attachMarkUnread(
-                            actions.querySelector('.mark-unread-btn')
-                        );
-
-                        attachDelete(
-                            actions.querySelector(
-                                '.delete-notification-btn'
-                            )
-                        );
-                    }
-
-                }
-
-
-                updateUnreadCounters(-1);
+                await reloadNotifications();
 
                 showSuccess(data.message);
 
@@ -889,34 +1187,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 button.disabled = false;
 
-                showError(error.message);
+                showError(
+                    error.message ||
+                    'Unable to mark notification as read.'
+                );
+            }
+        }
+    );
+
+    document.addEventListener(
+        'click',
+        async function (event) {
+
+            const button =
+                event.target.closest(
+                    '.mark-unread-btn'
+                );
+
+            if (!button) {
+                return;
             }
 
-        });
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Mark As Unread
-    |--------------------------------------------------------------------------
-    */
-
-    function attachMarkUnread(button) {
-
-        if (!button) {
-            return;
-        }
-
-        button.addEventListener('click', async function () {
-
-            const id = this.dataset.id;
-
-            const item = document.querySelector(
-                '.notification-item[data-notification-id="' +
-                id +
-                '"]'
-            );
+            const id = button.dataset.id;
 
             const url =
                 "{{ url('/admin/notifications') }}/" +
@@ -927,108 +1219,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
 
-                const response = await fetch(url, {
-                    method: 'POST',
-
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || !data.success) {
-                    throw new Error(
-                        data.message ||
-                        'Unable to mark notification as unread.'
-                    );
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Update Item
-                |--------------------------------------------------------------------------
-                */
-
-                if (item) {
-
-                    item.classList.remove('is-read');
-                    item.classList.add('is-unread');
-
-
-                    const titleWrap = item.querySelector(
-                        '.notification-item-title-wrap'
+                const response =
+                    await fetch(
+                        url,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json',
+                                'X-Requested-With':
+                                    'XMLHttpRequest'
+                            },
+                            credentials: 'same-origin'
+                        }
                     );
 
-                    if (
-                        titleWrap &&
-                        !titleWrap.querySelector(
-                            '.notification-unread-dot'
-                        )
-                    ) {
+                const data =
+                    await getJson(response);
 
-                        const dot = document.createElement('span');
-
-                        dot.className =
-                            'notification-unread-dot';
-
-                        titleWrap.prepend(dot);
-                    }
-
-
-                    const actions = item.querySelector(
-                        '.notification-item-actions'
-                    );
-
-                    if (actions) {
-
-                        const deleteButton =
-                            actions.querySelector(
-                                '.delete-notification-btn'
-                            );
-
-                        const deleteUrl =
-                            deleteButton?.dataset.url || '';
-
-                        actions.innerHTML = `
-                            <button
-                                type="button"
-                                class="notification-action-btn mark-read-btn"
-                                data-id="${id}"
-                                title="Mark as read"
-                            >
-                                <i class="bi bi-envelope-open"></i>
-                            </button>
-
-                            <button
-                                type="button"
-                                class="notification-action-btn delete-notification-btn"
-                                data-id="${id}"
-                                data-url="${deleteUrl}"
-                                title="Delete"
-                            >
-                                <i class="bi bi-trash3"></i>
-                            </button>
-                        `;
-
-                        attachMarkRead(
-                            actions.querySelector('.mark-read-btn')
-                        );
-
-                        attachDelete(
-                            actions.querySelector(
-                                '.delete-notification-btn'
-                            )
-                        );
-                    }
-
-                }
-
-
-                updateUnreadCounters(1);
+                await reloadNotifications();
 
                 showSuccess(data.message);
 
@@ -1036,22 +1245,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 button.disabled = false;
 
-                showError(error.message);
+                showError(
+                    error.message ||
+                    'Unable to mark notification as unread.'
+                );
             }
-
-        });
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Mark All As Read
-    |--------------------------------------------------------------------------
-    */
-
-    const markAllReadBtn = document.getElementById(
-        'markAllReadBtn'
+        }
     );
+
+    const markAllReadBtn =
+        document.getElementById(
+            'markAllReadBtn'
+        );
 
     if (markAllReadBtn) {
 
@@ -1061,15 +1266,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const button = this;
 
-                const result = await Swal.fire({
-                    icon: 'question',
-                    title: 'Mark all as read?',
-                    text: 'All unread notifications will be marked as read.',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, mark all',
-                    cancelButtonText: 'Cancel',
-                    reverseButtons: true
-                });
+                const result =
+                    await Swal.fire({
+                        icon: 'question',
+                        title: 'Mark all as read?',
+                        text:
+                            'All unread notifications will be marked as read.',
+                        showCancelButton: true,
+                        confirmButtonText:
+                            'Yes, mark all',
+                        cancelButtonText:
+                            'Cancel',
+                        reverseButtons: true
+                    });
 
                 if (!result.isConfirmed) {
                     return;
@@ -1079,159 +1288,58 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 try {
 
-                    const response = await fetch(
-                        "{{ route('admin.notifications.read-all') }}",
-                        {
-                            method: 'POST',
-
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
+                    const response =
+                        await fetch(
+                            "{{ route('admin.notifications.read-all') }}",
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN':
+                                        csrfToken,
+                                    'Accept':
+                                        'application/json',
+                                    'X-Requested-With':
+                                        'XMLHttpRequest'
+                                },
+                                credentials:
+                                    'same-origin'
                             }
-                        }
-                    );
-
-                    const data = await response.json();
-
-                    if (!response.ok || !data.success) {
-                        throw new Error(
-                            data.message ||
-                            'Unable to mark all notifications as read.'
                         );
-                    }
 
+                    const data =
+                        await getJson(response);
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Update All Items
-                    |--------------------------------------------------------------------------
-                    */
-
-                    document
-                        .querySelectorAll(
-                            '.notification-item.is-unread'
-                        )
-                        .forEach(function (item) {
-
-                            item.classList.remove('is-unread');
-                            item.classList.add('is-read');
-
-
-                            const unreadDot = item.querySelector(
-                                '.notification-unread-dot'
-                            );
-
-                            if (unreadDot) {
-                                unreadDot.remove();
-                            }
-
-
-                            const actions = item.querySelector(
-                                '.notification-item-actions'
-                            );
-
-                            if (actions) {
-
-                                const deleteButton =
-                                    actions.querySelector(
-                                        '.delete-notification-btn'
-                                    );
-
-                                const deleteUrl =
-                                    deleteButton?.dataset.url || '';
-
-                                const id =
-                                    deleteButton?.dataset.id ||
-                                    item.dataset.notificationId;
-
-                                actions.innerHTML = `
-                                    <button
-                                        type="button"
-                                        class="notification-action-btn mark-unread-btn"
-                                        data-id="${id}"
-                                        title="Mark as unread"
-                                    >
-                                        <i class="bi bi-envelope"></i>
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="notification-action-btn delete-notification-btn"
-                                        data-id="${id}"
-                                        data-url="${deleteUrl}"
-                                        title="Delete"
-                                    >
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
-                                `;
-
-                                attachMarkUnread(
-                                    actions.querySelector(
-                                        '.mark-unread-btn'
-                                    )
-                                );
-
-                                attachDelete(
-                                    actions.querySelector(
-                                        '.delete-notification-btn'
-                                    )
-                                );
-                            }
-
-                        });
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Update Unread Counters
-                    |--------------------------------------------------------------------------
-                    */
-
-                    document
-                        .querySelectorAll('[data-unread-count]')
-                        .forEach(function (element) {
-                            element.textContent = '0';
-                        });
-
-                    document
-                        .querySelectorAll('[data-unread-tab-count]')
-                        .forEach(function (element) {
-                            element.textContent = '0';
-                        });
-
+                    await reloadNotifications();
 
                     showSuccess(data.message);
 
                 } catch (error) {
 
-                    button.disabled = false;
+                    updateMarkAllButton();
 
-                    showError(error.message);
+                    showError(
+                        error.message ||
+                        'Unable to mark all notifications as read.'
+                    );
                 }
-
             }
         );
-
     }
 
+    document.addEventListener(
+        'click',
+        function (event) {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Delete Notification
-    |--------------------------------------------------------------------------
-    */
+            const button =
+                event.target.closest(
+                    '.delete-notification-btn'
+                );
 
-    function attachDelete(button) {
+            if (!button) {
+                return;
+            }
 
-        if (!button) {
-            return;
-        }
-
-        button.addEventListener('click', function () {
-
-            const id = this.dataset.id;
-            const url = this.dataset.url;
+            const url = button.dataset.url;
 
             if (!url) {
                 showError('Delete URL is missing.');
@@ -1241,220 +1349,141 @@ document.addEventListener('DOMContentLoaded', function () {
             Swal.fire({
                 icon: 'warning',
                 title: 'Delete notification?',
-                text: 'This notification will be permanently deleted.',
+                text:
+                    'This notification will be permanently deleted.',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it',
-                cancelButtonText: 'Cancel',
+                confirmButtonText:
+                    'Yes, delete it',
+                cancelButtonText:
+                    'Cancel',
                 reverseButtons: true
-            }).then(async function (result) {
+            }).then(
+                async function (result) {
 
-                if (!result.isConfirmed) {
-                    return;
-                }
+                    if (!result.isConfirmed) {
+                        return;
+                    }
 
-                button.disabled = true;
+                    button.disabled = true;
 
-                try {
+                    try {
 
-                    const response = await fetch(url, {
-                        method: 'DELETE',
+                        const response =
+                            await fetch(
+                                url,
+                                {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN':
+                                            csrfToken,
+                                        'Accept':
+                                            'application/json',
+                                        'X-Requested-With':
+                                            'XMLHttpRequest'
+                                    },
+                                    credentials:
+                                        'same-origin'
+                                }
+                            );
 
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    });
+                        const data =
+                            await getJson(response);
 
-                    const data = await response.json();
+                        await reloadNotifications();
 
-                    if (!response.ok || !data.success) {
-                        throw new Error(
-                            data.message ||
+                        showSuccess(data.message);
+
+                    } catch (error) {
+
+                        button.disabled = false;
+
+                        showError(
+                            error.message ||
                             'Unable to delete notification.'
                         );
                     }
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Remove Item
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const item = document.querySelector(
-                        '.notification-item[data-notification-id="' +
-                        id +
-                        '"]'
-                    );
-
-                    if (item) {
-                        item.remove();
-                    }
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Update Unread Count
-                    |--------------------------------------------------------------------------
-                    */
-
-                    if (
-                        typeof data.unread_count !==
-                        'undefined'
-                    ) {
-
-                        document
-                            .querySelectorAll(
-                                '[data-unread-count]'
-                            )
-                            .forEach(function (element) {
-
-                                element.textContent =
-                                    data.unread_count;
-                            });
-
-                        document
-                            .querySelectorAll(
-                                '[data-unread-tab-count]'
-                            )
-                            .forEach(function (element) {
-
-                                element.textContent =
-                                    data.unread_count;
-                            });
-                    }
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Empty State
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const notificationList =
-                        document.querySelector(
-                            '.notification-list'
-                        );
-
-                    if (
-                        notificationList &&
-                        !notificationList.querySelector(
-                            '.notification-item'
-                        )
-                    ) {
-
-                        notificationList.innerHTML = `
-                            <div class="notifications-empty">
-                                <div class="notifications-empty-icon">
-                                    <i class="bi bi-bell-slash"></i>
-                                </div>
-
-                                <h3>No notifications found</h3>
-
-                                <p>
-                                    There are no notifications matching
-                                    the selected filter.
-                                </p>
-                            </div>
-                        `;
-                    }
-
-
-                    showSuccess(data.message);
-
-                } catch (error) {
-
-                    button.disabled = false;
-
-                    showError(error.message);
                 }
+            );
+        }
+    );
 
-            });
+    document.addEventListener(
+        'click',
+        function (event) {
 
-        });
-    }
+            const filterTab =
+                event.target.closest(
+                    '.notification-filter-tab'
+                );
 
+            if (!filterTab) {
+                return;
+            }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Update Unread Counters
-    |--------------------------------------------------------------------------
-    */
+            event.preventDefault();
 
-    function updateUnreadCounters(change) {
+            const url =
+                filterTab.getAttribute('href');
 
-        document
-            .querySelectorAll('[data-unread-count]')
-            .forEach(function (element) {
+            if (!url) {
+                return;
+            }
 
-                const current =
-                    parseInt(element.textContent.replace(/,/g, '')) || 0;
+            loadNotifications(url);
+        }
+    );
 
-                element.textContent =
-                    Math.max(0, current + change);
-            });
+    document.addEventListener(
+        'click',
+        function (event) {
 
-        document
-            .querySelectorAll('[data-unread-tab-count]')
-            .forEach(function (element) {
+            const paginationLink =
+                event.target.closest(
+                    '.notifications-pagination a'
+                );
 
-                const current =
-                    parseInt(element.textContent.replace(/,/g, '')) || 0;
+            if (!paginationLink) {
+                return;
+            }
 
-                element.textContent =
-                    Math.max(0, current + change);
-            });
+            event.preventDefault();
 
-    }
+            const url =
+                paginationLink.getAttribute('href');
 
+            if (!url) {
+                return;
+            }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Initialize Existing Buttons
-    |--------------------------------------------------------------------------
-    */
+            loadNotifications(url);
+        }
+    );
 
-    document
-        .querySelectorAll('.mark-read-btn')
-        .forEach(attachMarkRead);
+    window.addEventListener(
+        'popstate',
+        function () {
 
-    document
-        .querySelectorAll('.mark-unread-btn')
-        .forEach(attachMarkUnread);
+            loadNotifications(
+                window.location.href,
+                false
+            );
+        }
+    );
 
-    document
-        .querySelectorAll('.delete-notification-btn')
-        .forEach(attachDelete);
+    if (sendModalElement) {
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Initial Recipient State
-    |--------------------------------------------------------------------------
-    */
-
-    const selectedRecipient =
-        document.querySelector(
-            'input[name="recipient"]:checked'
+        sendModalElement.addEventListener(
+            'hidden.bs.modal',
+            function () {
+                cleanupModal();
+                resetSendForm();
+            }
         );
-
-    if (
-        selectedRecipient &&
-        selectedRecipient.value === 'all'
-    ) {
-
-        userSelectWrap.style.display = 'none';
-
-        notificationUser.required = false;
-
-    } else {
-
-        userSelectWrap.style.display = '';
-
-        notificationUser.required = true;
     }
+
+    updateMarkAllButton();
 
 });
 </script>
+
 @endpush

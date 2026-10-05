@@ -9,7 +9,7 @@
 
 <section class="books-hero">
 
-```
+
 <div class="books-hero-bg"></div>
 
 <div class="container">
@@ -148,13 +148,13 @@
     </div>
 
 </div>
-```
+
 
 </section>
 
 <section class="books-stats-section">
 
-```
+
 <div class="container">
 
     <div class="books-stats">
@@ -214,13 +214,13 @@
     </div>
 
 </div>
-```
+
 
 </section>
 
 <section class="books-section" id="books-collection">
 
-```
+
 <div class="container">
 
     <div class="books-section-heading">
@@ -1082,13 +1082,13 @@
     @endif
 
 </div>
-```
+
 
 </section>
 
 <section class="books-sell-section">
 
-```
+
 <div class="container">
 
     <div class="books-sell-card">
@@ -1129,7 +1129,7 @@
     </div>
 
 </div>
-```
+
 
 </section>
 

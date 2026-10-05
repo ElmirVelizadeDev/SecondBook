@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\Notification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class MessagesController extends Controller
 {
@@ -225,27 +224,33 @@ class MessagesController extends Controller
             'user:id,name,email,profile_photo'
         );
 
+        $sellerName =
+            $messageReply->user?->full_name
+            ?: $messageReply->user?->name
+            ?: 'Seller';
+
+        $customerName =
+            $message->user?->full_name
+            ?: $message->user?->name
+            ?: 'Customer';
+
         /* Notify Customer */
         if ($message->user_id) {
             Notification::create([
                 'user_id' => $message->user_id,
                 'type' => 'seller_message_reply',
                 'title' => 'New Seller Message',
-                'message' => 'The seller replied to "' .
-                    $message->subject .
-                    '": ' .
-                    $messageReply->reply,
+                'message' =>
+                    'Seller: ' . $sellerName .
+                    ' | Customer: ' . $customerName .
+                    ' | Subject: "' . $message->subject .
+                    '" | Message: ' . $messageReply->reply,
                 'read_at' => null,
             ]);
         }
 
         /* AJAX Response */
         if ($request->expectsJson()) {
-            $replyUserName =
-                $messageReply->user?->full_name
-                ?: $messageReply->user?->name
-                ?: 'Seller';
-
             return response()->json([
                 'success' => true,
                 'message' => 'Reply sent successfully.',
@@ -264,7 +269,7 @@ class MessagesController extends Controller
                         : null,
                     'initial' => strtoupper(
                         substr(
-                            $replyUserName,
+                            $sellerName,
                             0,
                             1
                         )
@@ -293,20 +298,32 @@ class MessagesController extends Controller
         $messageModel = Message::query()
             ->whereKey($message)
             ->where('seller_id', auth()->id())
+            ->with('user:id,name,email,profile_photo')
             ->firstOrFail();
 
         $messageReply = $messageModel->replies()
             ->whereKey($reply)
             ->where('user_id', auth()->id())
             ->where('sender_type', 'seller')
+            ->with('user:id,name,email,profile_photo')
             ->firstOrFail();
 
         if ($messageModel->user_id) {
+            $sellerName =
+                $messageReply->user?->full_name
+                ?: $messageReply->user?->name
+                ?: 'Seller';
+
+            $customerName =
+                $messageModel->user?->full_name
+                ?: $messageModel->user?->name
+                ?: 'Customer';
+
             $notificationMessage =
-                'The seller replied to "' .
-                $messageModel->subject .
-                '": ' .
-                $messageReply->reply;
+                'Seller: ' . $sellerName .
+                ' | Customer: ' . $customerName .
+                ' | Subject: "' . $messageModel->subject .
+                '" | Message: ' . $messageReply->reply;
 
             Notification::query()
                 ->where('user_id', $messageModel->user_id)

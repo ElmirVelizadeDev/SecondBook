@@ -8,6 +8,7 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\Notification;
 use App\Models\Publisher;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -72,7 +73,6 @@ class BookController extends Controller
         ));
     }
 
-
     /**
      * Show create book page.
      */
@@ -89,7 +89,6 @@ class BookController extends Controller
         ));
     }
 
-
     /**
      * Store a new book.
      */
@@ -101,72 +100,60 @@ class BookController extends Controller
                 'string',
                 'max:255',
             ],
-
             'isbn' => [
                 'nullable',
                 'string',
                 'max:255',
             ],
-
             'category_id' => [
                 'nullable',
                 'exists:categories,id',
             ],
-
             'author_id' => [
                 'nullable',
                 'exists:authors,id',
             ],
-
             'publisher_id' => [
                 'nullable',
                 'exists:publishers,id',
             ],
-
             'description' => [
                 'nullable',
                 'string',
                 'max:10000',
             ],
-
             'cover' => [
                 'nullable',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
                 'max:2048',
             ],
-
             'publication_year' => [
                 'nullable',
                 'integer',
                 'min:1000',
                 'max:' . date('Y'),
             ],
-
             'pages' => [
                 'nullable',
                 'integer',
                 'min:1',
             ],
-
             'language' => [
                 'nullable',
                 'string',
                 'max:100',
             ],
-
             'price' => [
                 'required',
                 'numeric',
                 'min:0',
             ],
-
             'stock' => [
                 'required',
                 'integer',
                 'min:1',
             ],
-
             'condition' => [
                 'required',
                 'in:new,like_new,good,fair',
@@ -199,8 +186,11 @@ class BookController extends Controller
         ]);
 
         /*
-         * Seller notification
-         */
+        |--------------------------------------------------------------------------
+        | Seller Notification
+        |--------------------------------------------------------------------------
+        */
+
         Notification::create([
             'user_id' => auth()->id(),
             'type' => 'book_created',
@@ -209,6 +199,20 @@ class BookController extends Controller
             'read_at' => null,
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Admin Notification
+        |--------------------------------------------------------------------------
+        */
+
+        $this->notifyAdmins(
+            'book_created',
+            'New Seller Book',
+            'Seller "' . $this->sellerName() . '" added "' .
+            $book->title .
+            '" and it is waiting for approval.'
+        );
+
         return redirect()
             ->route('seller.books.index')
             ->with(
@@ -216,7 +220,6 @@ class BookController extends Controller
                 'Book added successfully and is waiting for admin approval.'
             );
     }
-
 
     /**
      * Display a single book.
@@ -235,7 +238,6 @@ class BookController extends Controller
 
         return view('seller.books.show', compact('book'));
     }
-
 
     /**
      * Show edit book page.
@@ -258,7 +260,6 @@ class BookController extends Controller
         ));
     }
 
-
     /**
      * Update seller book.
      */
@@ -274,71 +275,59 @@ class BookController extends Controller
                 'string',
                 'max:255',
             ],
-
             'isbn' => [
                 'nullable',
                 'string',
                 'max:255',
             ],
-
             'category_id' => [
                 'nullable',
                 'exists:categories,id',
             ],
-
             'author_id' => [
                 'nullable',
                 'exists:authors,id',
             ],
-
             'publisher_id' => [
                 'nullable',
                 'exists:publishers,id',
             ],
-
             'description' => [
                 'nullable',
                 'string',
             ],
-
             'cover' => [
                 'nullable',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
                 'max:2048',
             ],
-
             'publication_year' => [
                 'nullable',
                 'integer',
                 'min:1000',
                 'max:' . date('Y'),
             ],
-
             'pages' => [
                 'nullable',
                 'integer',
                 'min:1',
             ],
-
             'language' => [
                 'nullable',
                 'string',
                 'max:100',
             ],
-
             'price' => [
                 'required',
                 'numeric',
                 'min:0',
             ],
-
             'stock' => [
                 'required',
                 'integer',
                 'min:1',
             ],
-
             'condition' => [
                 'required',
                 'in:new,like_new,good,fair',
@@ -357,15 +346,21 @@ class BookController extends Controller
         }
 
         /*
-         * Any seller edit requires admin approval again.
-         */
+        |--------------------------------------------------------------------------
+        | Seller Edit Requires Admin Approval
+        |--------------------------------------------------------------------------
+        */
+
         $validated['status'] = 'pending';
 
         $book->update($validated);
 
         /*
-         * Seller notification
-         */
+        |--------------------------------------------------------------------------
+        | Seller Notification
+        |--------------------------------------------------------------------------
+        */
+
         Notification::create([
             'user_id' => auth()->id(),
             'type' => 'book_updated',
@@ -374,6 +369,20 @@ class BookController extends Controller
             'read_at' => null,
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Admin Notification
+        |--------------------------------------------------------------------------
+        */
+
+        $this->notifyAdmins(
+            'book_updated',
+            'Seller Book Updated',
+            'Seller "' . $this->sellerName() . '" updated "' .
+            $book->title .
+            '". Approval is required again.'
+        );
+
         return redirect()
             ->route('seller.books.index')
             ->with(
@@ -381,7 +390,6 @@ class BookController extends Controller
                 'Book updated successfully and is waiting for admin approval.'
             );
     }
-
 
     /**
      * Delete seller book.
@@ -395,20 +403,15 @@ class BookController extends Controller
             ], 403);
         }
 
-        /*
-        * Save the title before deleting the book.
-        */
         $bookTitle = $book->title;
 
         try {
-
             /*
-            * A book that already exists in an order
-            * must not be physically deleted.
-            *
-            * Orders are historical records and must remain
-            * connected to their original book.
+            |--------------------------------------------------------------------------
+            | Delete Restriction
+            |--------------------------------------------------------------------------
             */
+
             if ($book->orders()->exists()) {
                 return response()->json([
                     'success' => false,
@@ -423,11 +426,11 @@ class BookController extends Controller
             $book->delete();
 
             /*
-            * Seller notification
-            *
-            * The notification is created after the book is
-            * deleted, using the saved title.
+            |--------------------------------------------------------------------------
+            | Seller Notification
+            |--------------------------------------------------------------------------
             */
+
             Notification::create([
                 'user_id' => auth()->id(),
                 'type' => 'book_deleted',
@@ -436,17 +439,80 @@ class BookController extends Controller
                 'read_at' => null,
             ]);
 
+            /*
+            |--------------------------------------------------------------------------
+            | Admin Notification
+            |--------------------------------------------------------------------------
+            */
+
+            $this->notifyAdmins(
+                'book_deleted',
+                'Seller Book Deleted',
+                'Seller "' . $this->sellerName() . '" deleted "' .
+                $bookTitle .
+                '".'
+            );
+
             return response()->json([
                 'success' => true,
                 'message' => 'Book deleted successfully.',
             ]);
-
         } catch (Throwable $e) {
-
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to delete the book.',
             ], 500);
         }
+    }
+
+    /**
+     * Get authenticated seller name.
+     */
+    private function sellerName(): string
+    {
+        $seller = auth()->user();
+
+        return $seller?->full_name
+            ?: $seller?->name
+            ?: 'Seller';
+    }
+
+    /**
+     * Send notification to all active admins.
+     */
+    private function notifyAdmins(
+        string $type,
+        string $title,
+        string $message
+    ): void {
+        $adminIds = User::query()
+            ->where('role', 'admin')
+            ->where('status', 'active')
+            ->pluck('id');
+
+        if ($adminIds->isEmpty()) {
+            return;
+        }
+
+        $now = now();
+
+        $notifications = $adminIds->map(function ($adminId) use (
+            $type,
+            $title,
+            $message,
+            $now
+        ) {
+            return [
+                'user_id' => $adminId,
+                'type' => $type,
+                'title' => $title,
+                'message' => $message,
+                'read_at' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        })->all();
+
+        Notification::insert($notifications);
     }
 }

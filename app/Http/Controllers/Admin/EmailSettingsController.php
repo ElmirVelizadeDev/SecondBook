@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Services\ActivityLogService;
+use App\Services\MailConfigurationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -15,7 +15,8 @@ use Throwable;
 class EmailSettingsController extends Controller
 {
     public function __construct(
-        protected ActivityLogService $activityLogService
+        protected ActivityLogService $activityLogService,
+        protected MailConfigurationService $mailConfigurationService
     ) {
     }
 
@@ -45,19 +46,16 @@ class EmailSettingsController extends Controller
                 'nullable',
                 'boolean',
             ],
-
             'mail_mailer' => [
                 'required',
                 'in:smtp,log',
             ],
-
             'mail_host' => [
                 'required_if:mail_mailer,smtp',
                 'nullable',
                 'string',
                 'max:255',
             ],
-
             'mail_port' => [
                 'required_if:mail_mailer,smtp',
                 'nullable',
@@ -65,42 +63,35 @@ class EmailSettingsController extends Controller
                 'min:1',
                 'max:65535',
             ],
-
             'mail_username' => [
                 'nullable',
                 'string',
                 'max:255',
             ],
-
             'mail_password' => [
                 'nullable',
                 'string',
                 'max:1000',
             ],
-
             'mail_encryption' => [
                 'nullable',
                 'in:none,tls,ssl',
             ],
-
             'mail_from_address' => [
                 'required',
                 'email',
                 'max:255',
             ],
-
             'mail_from_name' => [
                 'required',
                 'string',
                 'max:255',
             ],
-
             'mail_reply_to_address' => [
                 'nullable',
                 'email',
                 'max:255',
             ],
-
             'mail_reply_to_name' => [
                 'nullable',
                 'string',
@@ -262,7 +253,7 @@ class EmailSettingsController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $this->applyMailConfiguration();
+            $this->mailConfigurationService->apply();
 
             $mailer = Setting::get(
                 'mail_mailer',
@@ -332,206 +323,6 @@ class EmailSettingsController extends Controller
                     'Test email could not be sent. '
                     . 'Please check your SMTP settings.'
                 );
-        }
-    }
-
-    /**
-     * Apply database email settings to Laravel mail configuration.
-     */
-    private function applyMailConfiguration(): void
-    {
-        $settings = Setting::query()
-            ->where('group_name', 'email')
-            ->get()
-            ->keyBy('key');
-
-        $mailer = $this->settingValue(
-            $settings,
-            'mail_mailer',
-            'smtp'
-        );
-
-        $host = $this->settingValue(
-            $settings,
-            'mail_host',
-            ''
-        );
-
-        $port = (int) $this->settingValue(
-            $settings,
-            'mail_port',
-            587
-        );
-
-        $username = $this->settingValue(
-            $settings,
-            'mail_username',
-            ''
-        );
-
-        $encryptedPassword = $this->settingValue(
-            $settings,
-            'mail_password',
-            ''
-        );
-
-        $password = $this->decryptPassword(
-            $encryptedPassword
-        );
-
-        $encryption = $this->settingValue(
-            $settings,
-            'mail_encryption',
-            'tls'
-        );
-
-        $fromAddress = $this->settingValue(
-            $settings,
-            'mail_from_address',
-            config('mail.from.address')
-        );
-
-        $fromName = $this->settingValue(
-            $settings,
-            'mail_from_name',
-            config('mail.from.name')
-        );
-
-        $replyToAddress = $this->settingValue(
-            $settings,
-            'mail_reply_to_address',
-            ''
-        );
-
-        $replyToName = $this->settingValue(
-            $settings,
-            'mail_reply_to_name',
-            ''
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Default Mailer
-        |--------------------------------------------------------------------------
-        */
-
-        Config::set(
-            'mail.default',
-            $mailer
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | SMTP Configuration
-        |--------------------------------------------------------------------------
-        */
-
-        Config::set(
-            'mail.mailers.smtp.transport',
-            'smtp'
-        );
-
-        Config::set(
-            'mail.mailers.smtp.host',
-            $host
-        );
-
-        Config::set(
-            'mail.mailers.smtp.port',
-            $port
-        );
-
-        Config::set(
-            'mail.mailers.smtp.encryption',
-            $encryption === 'none'
-                ? null
-                : $encryption
-        );
-
-        Config::set(
-            'mail.mailers.smtp.username',
-            $username ?: null
-        );
-
-        Config::set(
-            'mail.mailers.smtp.password',
-            $password ?: null
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | From Address
-        |--------------------------------------------------------------------------
-        */
-
-        Config::set(
-            'mail.from.address',
-            $fromAddress
-        );
-
-        Config::set(
-            'mail.from.name',
-            $fromName
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Reply-To
-        |--------------------------------------------------------------------------
-        */
-
-        if ($replyToAddress) {
-            Config::set(
-                'mail.reply_to.address',
-                $replyToAddress
-            );
-
-            Config::set(
-                'mail.reply_to.name',
-                $replyToName
-            );
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Clear Existing SMTP Mailer Instance
-        |--------------------------------------------------------------------------
-        */
-
-        Mail::purge('smtp');
-    }
-
-    /**
-     * Get setting value from keyed collection.
-     */
-    private function settingValue(
-        $settings,
-        string $key,
-        mixed $default = null
-    ): mixed {
-        if (!isset($settings[$key])) {
-            return $default;
-        }
-
-        return $settings[$key]->value ?? $default;
-    }
-
-    /**
-     * Decrypt SMTP password.
-     *
-     * Supports old plain-text values as a fallback.
-     */
-    private function decryptPassword(
-        ?string $value
-    ): string {
-        if (!$value) {
-            return '';
-        }
-
-        try {
-            return Crypt::decryptString($value);
-        } catch (Throwable) {
-            return $value;
         }
     }
 }
