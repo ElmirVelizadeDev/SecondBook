@@ -2,12 +2,7 @@
 
 @section('title', 'Books Report')
 
-@push('css')
-
-
-<link rel="stylesheet" href="{{ asset('admin/css/reports.css') }}">
-
-
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/reports.css') }}">
 @endpush
 
 @section('content')
@@ -16,7 +11,6 @@
 
 
 {{-- Header --}}
-
 <div class="dashboard-panel reports-header-panel">
 
     <div class="reports-header-content">
@@ -49,12 +43,12 @@
 
 
 {{-- Date Filter --}}
-
 <div class="dashboard-panel reports-filter-panel">
 
     <form
         method="GET"
         action="{{ route('admin.reports.books') }}"
+        class="books-filter-form"
     >
 
         <div class="reports-filter-row">
@@ -119,17 +113,13 @@
 
 
 {{-- Statistics --}}
-
 <div class="reports-stats-grid">
 
     {{-- Total Books --}}
-
     <div class="reports-stat-card">
 
         <div class="reports-stat-icon reports-icon-books">
-
             <i class="bi bi-book"></i>
-
         </div>
 
         <div class="reports-stat-content">
@@ -146,13 +136,10 @@
 
 
     {{-- Active Books --}}
-
     <div class="reports-stat-card">
 
         <div class="reports-stat-icon reports-icon-success">
-
             <i class="bi bi-check-circle"></i>
-
         </div>
 
         <div class="reports-stat-content">
@@ -169,13 +156,10 @@
 
 
     {{-- Low Stock --}}
-
     <div class="reports-stat-card">
 
         <div class="reports-stat-icon reports-icon-warning">
-
             <i class="bi bi-exclamation-triangle"></i>
-
         </div>
 
         <div class="reports-stat-content">
@@ -192,13 +176,10 @@
 
 
     {{-- Out Of Stock --}}
-
     <div class="reports-stat-card">
 
         <div class="reports-stat-icon reports-icon-danger">
-
             <i class="bi bi-box-seam"></i>
-
         </div>
 
         <div class="reports-stat-content">
@@ -217,15 +198,12 @@
 
 
 {{-- Sales Summary --}}
-
 <div class="reports-stats-grid">
 
     <div class="reports-stat-card">
 
         <div class="reports-stat-icon reports-icon-orders">
-
             <i class="bi bi-bag-check"></i>
-
         </div>
 
         <div class="reports-stat-content">
@@ -244,9 +222,7 @@
     <div class="reports-stat-card">
 
         <div class="reports-stat-icon reports-icon-revenue">
-
             <i class="bi bi-currency-dollar"></i>
-
         </div>
 
         <div class="reports-stat-content">
@@ -265,7 +241,6 @@
 
 
 {{-- Books Table --}}
-
 <div class="dashboard-panel reports-panel books-report-panel">
 
     <div class="reports-panel-header">
@@ -290,23 +265,14 @@
             <thead>
 
                 <tr>
-
                     <th>Book</th>
-
                     <th>Category</th>
-
                     <th>Seller</th>
-
                     <th>Price</th>
-
                     <th>Stock</th>
-
                     <th>Sold</th>
-
                     <th>Revenue</th>
-
                     <th>Status</th>
-
                 </tr>
 
             </thead>
@@ -334,9 +300,7 @@
                                     @else
 
                                         <div class="books-report-cover-placeholder">
-
                                             <i class="bi bi-book"></i>
-
                                         </div>
 
                                     @endif
@@ -364,9 +328,7 @@
                         <td>
 
                             <span class="books-report-secondary-text">
-
                                 {{ $book->category?->name ?? 'Uncategorized' }}
-
                             </span>
 
                         </td>
@@ -375,9 +337,7 @@
                         <td>
 
                             <span class="books-report-secondary-text">
-
                                 {{ $book->seller?->name ?? 'Platform' }}
-
                             </span>
 
                         </td>
@@ -386,9 +346,7 @@
                         <td>
 
                             <strong class="books-report-price">
-
                                 ${{ number_format($book->price, 2) }}
-
                             </strong>
 
                         </td>
@@ -422,9 +380,7 @@
                         <td>
 
                             <strong class="books-report-sold">
-
                                 {{ number_format($book->sold_count ?? 0) }}
-
                             </strong>
 
                         </td>
@@ -433,9 +389,7 @@
                         <td>
 
                             <strong class="books-report-revenue">
-
                                 ${{ number_format($book->revenue ?? 0, 2) }}
-
                             </strong>
 
                         </td>
@@ -480,9 +434,7 @@
                         <td colspan="8">
 
                             <div class="reports-table-empty">
-
                                 No books found.
-
                             </div>
 
                         </td>
@@ -514,3 +466,133 @@
 </div>
 
 @endsection
+
+@push('js')
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const page = document.querySelector('.books-report-page');
+
+    if (!page) {
+        return;
+    }
+
+    function loadBooksReport(url, pushState = true) {
+
+        page.classList.add('is-loading');
+
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error('Request failed');
+            }
+
+            return response.text();
+        })
+        .then(html => {
+
+            const parser = new DOMParser();
+            const documentHtml = parser.parseFromString(html, 'text/html');
+            const newPage = documentHtml.querySelector('.books-report-page');
+
+            if (!newPage) {
+                window.location.href = url;
+                return;
+            }
+
+            page.innerHTML = newPage.innerHTML;
+
+            if (pushState) {
+                window.history.pushState({}, '', url);
+            }
+
+            page.classList.remove('is-loading');
+
+        })
+        .catch(() => {
+
+            page.classList.remove('is-loading');
+            window.location.href = url;
+
+        });
+
+    }
+
+
+    document.addEventListener('submit', function (event) {
+
+        const form = event.target.closest('.books-filter-form');
+
+        if (!form) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        formData.forEach((value, key) => {
+
+            if (value !== '') {
+                params.append(key, value);
+            }
+
+        });
+
+        const url = form.action + (
+            params.toString()
+                ? '?' + params.toString()
+                : ''
+        );
+
+        loadBooksReport(url);
+
+    });
+
+
+    document.addEventListener('click', function (event) {
+
+        const resetButton = event.target.closest('.reports-reset-btn');
+
+        if (resetButton) {
+
+            event.preventDefault();
+
+            loadBooksReport(resetButton.href);
+
+            return;
+        }
+
+
+        const paginationLink = event.target.closest(
+            '.reports-pagination a'
+        );
+
+        if (paginationLink) {
+
+            event.preventDefault();
+
+            loadBooksReport(paginationLink.href);
+
+        }
+
+    });
+
+
+    window.addEventListener('popstate', function () {
+
+        loadBooksReport(window.location.href, false);
+
+    });
+
+});
+</script>
+
+@endpush
