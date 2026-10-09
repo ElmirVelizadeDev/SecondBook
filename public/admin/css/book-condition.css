@@ -1,10 +1,6 @@
 /* =========================================================
    BOOK CONDITIONS MANAGEMENT
-   Premium Admin UI
-   Same visual system as Publishers Management
-   Button colors identical to Publishers
-   Light + Dark Mode | Responsive
-   ========================================================= */
+========================================================= */
 
 .book-condition-page {
     --condition-primary: #2563eb;

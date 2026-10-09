@@ -1,18 +1,5 @@
 /* =========================================================
-   SECOND BOOK — BOOKS MANAGEMENT
-   One shared stylesheet: Index + Create + Edit + Show
-
-   Structure
-   01 Tokens (light + dark)      08 Table
-   02 Base                       09 Cells, pills, actions
-   03 Hero                       10 Empty state
-   04 Statistics                 11 Pagination
-   05 Panel + buttons            12 Focus
-   06 Filters                    13 Responsive
-   07 Form (create / edit)
-
-   Dark mode only changes the tokens in section 01, so no
-   component needs its own dark-mode copy.
+    BOOKS
 ========================================================= */
 
 
@@ -541,6 +528,8 @@
 }
 
 
+
+
 /* =========================================================
    07 FORM (create / edit)
 ========================================================= */
@@ -939,6 +928,16 @@
 .book-cancel-btn {
     width: 100%;
     min-height: 44px;
+}
+
+.book-search-field input {
+padding-left: 40px;
+box-sizing: border-box;
+}
+
+.book-search-field > i {
+left: 14px;
+pointer-events: none;
 }
 
 

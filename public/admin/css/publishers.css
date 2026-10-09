@@ -1,106 +1,77 @@
+
 /* =========================================================
-   PUBLISHERS MANAGEMENT
-   Same visual system as Books Management
-   ========================================================= */
+   PUBLISHERS
+========================================================= */
 
 .publishers-page {
     --pub-primary: #2563eb;
     --pub-primary-hover: #1d4ed8;
     --pub-primary-soft: rgba(37, 99, 235, 0.10);
-
     --pub-surface: #ffffff;
     --pub-surface-alt: #f8fafc;
     --pub-surface-soft: #f1f5f9;
-
     --pub-border: #e2e8f0;
     --pub-divider: #edf2f7;
-
     --pub-title: #0f172a;
     --pub-text: #334155;
     --pub-muted: #64748b;
-
     --pub-input-bg: #ffffff;
     --pub-input-border: #cbd5e1;
-
     --pub-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
     --pub-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-
     --pub-radius: 16px;
     --pub-radius-sm: 10px;
-
     --pub-success: #16a34a;
     --pub-success-soft: rgba(22, 163, 74, 0.10);
-
     --pub-warning: #b45309;
     --pub-warning-soft: #fffbeb;
     --pub-warning-border: #fde68a;
-
     --pub-danger: #dc2626;
     --pub-danger-soft: #fef2f2;
     --pub-danger-border: #fecaca;
-
     --pub-info: #2563eb;
     --pub-info-soft: #eff6ff;
     --pub-info-border: #bfdbfe;
-
     --pub-purple: #7c3aed;
     --pub-purple-soft: rgba(124, 58, 237, 0.10);
-
     --pub-hero-start: #0f172a;
     --pub-hero-end: #1e3a8a;
 }
-
-/* =========================================================
-   DARK THEME
-   ========================================================= */
 
 :root[data-theme="dark"] .publishers-page {
     --pub-primary: #3b82f6;
     --pub-primary-hover: #60a5fa;
     --pub-primary-soft: rgba(59, 130, 246, 0.14);
-
     --pub-surface: #151d2a;
     --pub-surface-alt: #111827;
     --pub-surface-soft: #1e293b;
-
     --pub-border: #2b3648;
     --pub-divider: #253044;
-
     --pub-title: #f8fafc;
     --pub-text: #cbd5e1;
     --pub-muted: #94a3b8;
-
     --pub-input-bg: #111827;
     --pub-input-border: #334155;
-
     --pub-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.20);
     --pub-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
-
     --pub-success: #4ade80;
     --pub-success-soft: rgba(74, 222, 128, 0.12);
-
     --pub-warning: #fbbf24;
     --pub-warning-soft: rgba(251, 191, 36, 0.12);
     --pub-warning-border: rgba(251, 191, 36, 0.28);
-
     --pub-danger: #f87171;
     --pub-danger-soft: rgba(248, 113, 113, 0.12);
     --pub-danger-border: rgba(248, 113, 113, 0.28);
-
     --pub-info: #60a5fa;
     --pub-info-soft: rgba(59, 130, 246, 0.14);
     --pub-info-border: rgba(96, 165, 250, 0.30);
-
     --pub-purple: #a78bfa;
     --pub-purple-soft: rgba(167, 139, 250, 0.12);
-
     --pub-hero-start: #0b1120;
     --pub-hero-end: #172554;
 }
 
-/* =========================================================
-   BASE
-   ========================================================= */
+/* BASE */
 
 .publishers-page,
 .publishers-page * {
@@ -123,9 +94,7 @@
     font-family: inherit;
 }
 
-/* =========================================================
-   HERO
-   ========================================================= */
+/* HERO */
 
 .publishers-hero {
     position: relative;
@@ -233,9 +202,7 @@
     padding: 22px 26px;
 }
 
-/* =========================================================
-   STATS
-   ========================================================= */
+/* STATS */
 
 .publishers-stats {
     display: grid;
@@ -305,9 +272,7 @@
     line-height: 1.15;
 }
 
-/* =========================================================
-   PANELS
-   ========================================================= */
+/* PANELS */
 
 .publishers-panel {
     overflow: hidden;
@@ -348,9 +313,7 @@
     flex-shrink: 0;
 }
 
-/* =========================================================
-   BUTTONS
-   ========================================================= */
+/* BUTTONS */
 
 .publishers-add-btn,
 .publisher-form-submit {
@@ -420,11 +383,6 @@
     transform: translateX(-2px);
 }
 
-/* =========================================================
-   DARK MODE — SECONDARY BUTTON
-   Fixes white hover in dark mode
-   ========================================================= */
-
 :root[data-theme="dark"] .publisher-secondary-btn {
     border-color: #334155;
     background: #1e293b;
@@ -442,9 +400,7 @@
     color: #60a5fa;
 }
 
-/* =========================================================
-   FILTERS
-   ========================================================= */
+/* FILTERS */
 
 .publisher-filters {
     padding: 15px 20px;
@@ -559,6 +515,12 @@
     border: 1px solid var(--pub-border);
     background: var(--pub-surface);
     color: var(--pub-text);
+    transition:
+        color 0.18s ease,
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
 }
 
 .publisher-clear-filter:hover {
@@ -567,9 +529,28 @@
     color: #2563eb;
 }
 
-/* =========================================================
-   TABLE
-   ========================================================= */
+/* RESET BUTTON — DARK MODE */
+
+:root[data-theme="dark"] .publisher-clear-filter {
+    border-color: #334155;
+    background: #151d2a;
+    color: #cbd5e1;
+}
+
+:root[data-theme="dark"] .publisher-clear-filter:hover,
+:root[data-theme="dark"] .publisher-clear-filter:focus-visible {
+    border-color: rgba(248, 113, 113, 0.40);
+    background: rgba(248, 113, 113, 0.12);
+    color: #f87171;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+:root[data-theme="dark"] .publisher-clear-filter:hover i,
+:root[data-theme="dark"] .publisher-clear-filter:focus-visible i {
+    color: #f87171;
+}
+
+/* TABLE */
 
 .publishers-table-wrap {
     width: 100%;
@@ -624,16 +605,14 @@
     background: var(--pub-surface-alt);
 }
 
-/* =========================================================
-   TABLE COLUMN SIZING
-   ========================================================= */
+/* TABLE COLUMN SIZING */
 
 .publishers-table .publisher-col-id {
-    width: 55px;
+    width: 45px;
 }
 
 .publishers-table .publisher-col-publisher {
-    width: 250px;
+    width: 260px;
 }
 
 .publishers-table .publisher-col-country {
@@ -660,9 +639,7 @@
     width: 125px;
 }
 
-/* =========================================================
-   TABLE CELLS
-   ========================================================= */
+/* TABLE CELLS */
 
 .publisher-id {
     color: var(--pub-muted);
@@ -767,9 +744,7 @@
     -webkit-line-clamp: 2;
 }
 
-/* =========================================================
-   STATUS
-   ========================================================= */
+/* STATUS */
 
 .publisher-status-pill {
     display: inline-flex;
@@ -808,9 +783,7 @@
     background: currentColor;
 }
 
-/* =========================================================
-   ACTIONS
-   ========================================================= */
+/* ACTIONS */
 
 .publisher-actions {
     display: flex;
@@ -845,9 +818,7 @@
     transform: translateY(-1px);
 }
 
-/* =========================================================
-   VIEW
-   ========================================================= */
+/* VIEW */
 
 .publisher-view-btn {
     color: #64748b;
@@ -861,9 +832,7 @@
     color: #2563eb;
 }
 
-/* =========================================================
-   EDIT
-   ========================================================= */
+/* EDIT */
 
 .publisher-edit-btn {
     color: #b45309;
@@ -877,9 +846,7 @@
     color: #92400e;
 }
 
-/* =========================================================
-   DELETE
-   ========================================================= */
+/* DELETE */
 
 .publisher-delete-btn {
     color: #dc2626;
@@ -893,9 +860,7 @@
     color: #b91c1c;
 }
 
-/* =========================================================
-   STATUS ACTION
-   ========================================================= */
+/* STATUS ACTION */
 
 .publisher-status-btn {
     color: var(--pub-muted);
@@ -914,9 +879,7 @@
     color: var(--pub-warning);
 }
 
-/* =========================================================
-   DARK ACTION COLORS
-   ========================================================= */
+/* DARK ACTION COLORS */
 
 :root[data-theme="dark"] .publisher-view-btn {
     color: #94a3b8;
@@ -966,9 +929,7 @@
     color: #fbbf24;
 }
 
-/* =========================================================
-   EMPTY STATE
-   ========================================================= */
+/* EMPTY STATE */
 
 .publishers-empty-state {
     padding: 58px 24px;
@@ -1001,9 +962,7 @@
     font-size: 13px;
 }
 
-/* =========================================================
-   PAGINATION
-   ========================================================= */
+/* PAGINATION */
 
 .publishers-pagination {
     display: flex;
@@ -1058,10 +1017,6 @@
     pointer-events: none;
 }
 
-/* =========================================================
-   DARK PAGINATION
-   ========================================================= */
-
 :root[data-theme="dark"] .publisher-pager-btn:hover {
     border-color: rgba(96, 165, 250, 0.40);
     background: rgba(59, 130, 246, 0.14);
@@ -1083,9 +1038,7 @@
     color: var(--pub-muted);
 }
 
-/* =========================================================
-   FORM
-   ========================================================= */
+/* FORM */
 
 .publisher-form-layout {
     display: grid;
@@ -1154,10 +1107,7 @@
     padding-left: 18px;
 }
 
-/* =========================================================
-   FILE UPLOAD
-   Premium Create Page
-   ========================================================= */
+/* FILE UPLOAD */
 
 .publisher-file-upload {
     position: relative;
@@ -1246,9 +1196,7 @@
     font-weight: 500;
 }
 
-/* =========================================================
-   LOGO PREVIEW
-   ========================================================= */
+/* LOGO PREVIEW */
 
 .publisher-logo-preview {
     margin-top: 15px;
@@ -1316,9 +1264,7 @@
     border-radius: 12px;
 }
 
-/* =========================================================
-   CURRENT LOGO / DETAIL IMAGE
-   ========================================================= */
+/* CURRENT LOGO / DETAIL IMAGE */
 
 .publisher-cover-preview {
     display: flex;
@@ -1352,9 +1298,7 @@
     background: var(--pub-surface-alt);
 }
 
-/* =========================================================
-   CHECKBOX
-   ========================================================= */
+/* CHECKBOX */
 
 .publisher-status-toggle {
     display: flex;
@@ -1382,10 +1326,6 @@
     cursor: pointer;
 }
 
-/* =========================================================
-   DARK MODE — STATUS TOGGLE
-   ========================================================= */
-
 :root[data-theme="dark"] .publisher-status-toggle {
     border-color: #334155;
     background: #151d2a;
@@ -1395,9 +1335,7 @@
     color: #cbd5e1;
 }
 
-/* =========================================================
-   FORM ACTIONS
-   ========================================================= */
+/* FORM ACTIONS */
 
 .publisher-form-actions {
     display: flex;
@@ -1408,9 +1346,7 @@
     border-top: 1px solid var(--pub-divider);
 }
 
-/* =========================================================
-   DETAIL PAGE
-   ========================================================= */
+/* DETAIL PAGE */
 
 .publisher-detail-layout {
     display: grid;
@@ -1521,9 +1457,7 @@
     margin-top: 18px;
 }
 
-/* =========================================================
-   ALERTS
-   ========================================================= */
+/* ALERTS */
 
 .publishers-page .alert {
     border-radius: 10px;
@@ -1542,19 +1476,13 @@
     color: var(--pub-danger);
 }
 
-/* =========================================================
-   DARK MODE — FORM ALERT
-   ========================================================= */
-
 :root[data-theme="dark"] .publisher-form-alert {
     border-color: rgba(248, 113, 113, 0.28);
     background: rgba(248, 113, 113, 0.10);
     color: #f87171;
 }
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* RESPONSIVE */
 
 @media (max-width: 1399.98px) {
     .publisher-form-layout {
@@ -1712,10 +1640,7 @@
         margin: 0 auto;
     }
 
-    .publisher-detail-name {
-        text-align: center;
-    }
-
+    .publisher-detail-name,
     .publisher-detail-country {
         text-align: center;
     }
@@ -1728,18 +1653,12 @@
         grid-column: auto;
     }
 
-    .publisher-detail-actions {
-        flex-direction: column;
-    }
-
-    .publisher-detail-actions > * {
-        width: 100%;
-    }
-
+    .publisher-detail-actions,
     .publisher-form-actions {
         flex-direction: column;
     }
 
+    .publisher-detail-actions > *,
     .publisher-form-actions > * {
         width: 100%;
     }
@@ -1824,10 +1743,6 @@
         min-height: 150px;
     }
 }
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
     .publishers-page *,

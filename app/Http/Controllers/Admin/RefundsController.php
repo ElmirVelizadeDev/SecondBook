@@ -75,6 +75,20 @@ class RefundsController extends Controller
             'amount' => Refund::where('status', 'processed')->sum('amount'),
         ];
 
+        if ($request->expectsJson()) {
+            $html = view(
+                'Admin.refunds.partials.table',
+                compact('refunds')
+            )->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'stats' => $stats,
+                'pagination' => $refunds->links()->render(),
+            ]);
+        }
+
         return view(
             'Admin.refunds.index',
             compact(
@@ -144,10 +158,7 @@ class RefundsController extends Controller
 
         return redirect()
             ->route('admin.refunds.show', $refund)
-            ->with(
-                'success',
-                'Refund created successfully.'
-            );
+            ->with('success', 'Refund created successfully.');
     }
 
     public function show(Refund $refund)
@@ -218,16 +229,14 @@ class RefundsController extends Controller
 
         return redirect()
             ->route('admin.refunds.show', $refund)
-            ->with(
-                'success',
-                'Refund updated successfully.'
-            );
+            ->with('success', 'Refund updated successfully.');
     }
 
     public function updateStatus(Request $request, Refund $refund)
     {
-        $next = $request->validate([
+        $validated = $request->validate([
             'status' => [
+                'required',
                 Rule::in([
                     'approved',
                     'rejected',
@@ -235,7 +244,9 @@ class RefundsController extends Controller
                     'cancelled',
                 ]),
             ],
-        ])['status'];
+        ]);
+
+        $next = $validated['status'];
 
         $allowed = match ($refund->status) {
             'pending' => [
@@ -251,10 +262,16 @@ class RefundsController extends Controller
         };
 
         if (!in_array($next, $allowed, true)) {
-            return back()->with(
-                'error',
-                'This refund status transition is not allowed.'
-            );
+            $message = 'This refund status transition is not allowed.';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 422);
+            }
+
+            return back()->with('error', $message);
         }
 
         $oldStatus = $refund->status;
@@ -285,27 +302,33 @@ class RefundsController extends Controller
             "Refund \"{$refund->refund_number}\" status changed from {$oldStatus} to {$next}."
         );
 
-        return back()->with(
-            'success',
-            'Refund ' . $next . ' successfully.'
-        );
+        $message = 'Refund ' . $next . ' successfully.';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'status' => $next,
+                'refund_id' => $refund->id,
+            ]);
+        }
+
+        return back()->with('success', $message);
     }
 
-    public function destroy(Refund $refund)
+    public function destroy(Request $request, Refund $refund)
     {
         if ($refund->status === 'processed') {
+            $message = 'Processed refunds cannot be deleted.';
 
-            if (request()->expectsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Processed refunds cannot be deleted.',
+                    'message' => $message,
                 ], 422);
             }
 
-            return back()->with(
-                'error',
-                'Processed refunds cannot be deleted.'
-            );
+            return back()->with('error', $message);
         }
 
         $refundNumber = $refund->refund_number;
@@ -318,19 +341,19 @@ class RefundsController extends Controller
 
         $refund->delete();
 
-        if (request()->expectsJson()) {
+        $message = "Refund {$refundNumber} deleted successfully.";
+
+        if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => "Refund {$refundNumber} deleted successfully.",
+                'message' => $message,
+                'refund_id' => $refund->id,
             ]);
         }
 
         return redirect()
             ->route('admin.refunds.index')
-            ->with(
-                'success',
-                'Refund deleted successfully.'
-            );
+            ->with('success', 'Refund deleted successfully.');
     }
 
     private function validateRefund(Request $request): array
@@ -361,8 +384,7 @@ class RefundsController extends Controller
     private function nextRefundNumber(): string
     {
         do {
-            $number =
-                'REF-'
+            $number = 'REF-'
                 . now()->format('Ymd')
                 . '-'
                 . str_pad(
@@ -378,4 +400,3 @@ class RefundsController extends Controller
         return $number;
     }
 }
-
