@@ -1,156 +1,70 @@
-<section id="why-choose" class="why-choose-section">
+@php
+    $whyFeatures = [
+        [
+            'icon'  => 'bi-collection',
+            'title' => 'Thousands of Books',
+            'text'  => 'Explore a constantly growing catalog across different genres and interests.',
+        ],
+        [
+            'icon'  => 'bi-tags',
+            'title' => 'Affordable Prices',
+            'text'  => 'Find quality second-hand books at prices that make reading easier on your budget.',
+        ],
+        [
+            'icon'  => 'bi-patch-check',
+            'title' => 'Trusted Sellers',
+            'text'  => 'Shop with confidence through verified sellers and reliable marketplace listings.',
+        ],
+        [
+            'icon'  => 'bi-shield-lock',
+            'title' => 'Secure Shopping',
+            'text'  => 'Enjoy a protected shopping experience from browsing to checkout.',
+        ],
+    ];
+@endphp
 
+<section id="why-choose" class="why-choose-section">
     <div class="container">
 
-        {{-- Section Header --}}
-        <div class="why-choose-header">
+        {{-- ================= HEADER ================= --}}
+        <header class="why-choose-header">
 
-            <span class="why-choose-eyebrow">
-                Built for readers and resellers
-            </span>
+            <span class="why-choose-eyebrow">Built for readers and resellers</span>
 
-            <h2 class="why-choose-title">
-                Why Choose SecondBook
-            </h2>
-
-            <div class="why-choose-divider"></div>
+            <h2 class="why-choose-title">Why Choose SecondBook</h2>
 
             <p class="why-choose-description">
                 A marketplace designed to make discovering, buying, and
                 selling books simple, reliable, and rewarding.
             </p>
 
-        </div>
+        </header>
 
 
-        {{-- Features --}}
+        {{-- ================= FEATURES ================= --}}
         <div class="why-choose-grid">
 
-            {{-- Feature 1 --}}
-            <article class="why-card">
+            @foreach($whyFeatures as $feature)
 
-                <div class="why-card-top">
-                    <span class="why-card-number">01</span>
+                <article class="why-card">
 
-                    <div class="why-card-icon">
-                        <i class="bi bi-collection"></i>
+                    <div class="why-card-top">
+                        <div class="why-card-icon">
+                            <i class="bi {{ $feature['icon'] }}"></i>
+                        </div>
+
                     </div>
-                </div>
 
-                <div class="why-card-content">
-
-                    <h4>
-                        Thousands of Books
-                    </h4>
-
-                    <p>
-                        Explore a constantly growing catalog across
-                        different genres and interests.
-                    </p>
-
-                </div>
-
-                <span class="why-card-arrow">
-                    <i class="bi bi-arrow-up-right"></i>
-                </span>
-
-            </article>
-
-
-            {{-- Feature 2 --}}
-            <article class="why-card">
-
-                <div class="why-card-top">
-                    <span class="why-card-number">02</span>
-
-                    <div class="why-card-icon">
-                        <i class="bi bi-tags"></i>
+                    <div class="why-card-content">
+                        <h4>{{ $feature['title'] }}</h4>
+                        <p>{{ $feature['text'] }}</p>
                     </div>
-                </div>
 
-                <div class="why-card-content">
+                </article>
 
-                    <h4>
-                        Affordable Prices
-                    </h4>
-
-                    <p>
-                        Find quality second-hand books at prices
-                        that make reading easier on your budget.
-                    </p>
-
-                </div>
-
-                <span class="why-card-arrow">
-                    <i class="bi bi-arrow-up-right"></i>
-                </span>
-
-            </article>
-
-
-            {{-- Feature 3 --}}
-            <article class="why-card">
-
-                <div class="why-card-top">
-                    <span class="why-card-number">03</span>
-
-                    <div class="why-card-icon">
-                        <i class="bi bi-patch-check"></i>
-                    </div>
-                </div>
-
-                <div class="why-card-content">
-
-                    <h4>
-                        Trusted Sellers
-                    </h4>
-
-                    <p>
-                        Shop with confidence through verified sellers
-                        and reliable marketplace listings.
-                    </p>
-
-                </div>
-
-                <span class="why-card-arrow">
-                    <i class="bi bi-arrow-up-right"></i>
-                </span>
-
-            </article>
-
-
-            {{-- Feature 4 --}}
-            <article class="why-card">
-
-                <div class="why-card-top">
-                    <span class="why-card-number">04</span>
-
-                    <div class="why-card-icon">
-                        <i class="bi bi-shield-lock"></i>
-                    </div>
-                </div>
-
-                <div class="why-card-content">
-
-                    <h4>
-                        Secure Shopping
-                    </h4>
-
-                    <p>
-                        Enjoy a protected shopping experience from
-                        browsing to checkout.
-                    </p>
-
-                </div>
-
-                <span class="why-card-arrow">
-                    <i class="bi bi-arrow-up-right"></i>
-                </span>
-
-            </article>
+            @endforeach
 
         </div>
 
     </div>
-
 </section>

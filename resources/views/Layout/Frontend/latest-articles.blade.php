@@ -1,25 +1,53 @@
-<section id="latest-blog" class="latest-blog-section">
+{{-- =========================================================
+    LATEST ARTICLES — SecondBook
+========================================================== --}}
 
+@php
+    $latestArticles = [
+        [
+            'image'    => 'frontend-assets/images/post-img1.jpg',
+            'alt'      => 'Reading books',
+            'category' => 'Inspiration',
+            'date'     => 'Mar 30, 2026',
+            'read'     => '4 min read',
+            'title'    => 'Why Reading Still Makes Everyday Moments Better',
+            'excerpt'  => 'Explore how books can turn ordinary moments into meaningful experiences and lasting memories.',
+            'url'      => '#',
+        ],
+        [
+            'image'    => 'frontend-assets/images/post-img2.jpg',
+            'alt'      => 'Books and reading',
+            'category' => 'Book Guide',
+            'date'     => 'Mar 24, 2026',
+            'read'     => '5 min read',
+            'title'    => 'How to Choose Your Next Book Without Overthinking',
+            'excerpt'  => 'A simple approach to finding your next great read based on your interests, mood, and reading habits.',
+            'url'      => '#',
+        ],
+        [
+            'image'    => 'frontend-assets/images/post-img3.jpg',
+            'alt'      => 'Second-hand books',
+            'category' => 'Marketplace',
+            'date'     => 'Mar 18, 2026',
+            'read'     => '6 min read',
+            'title'    => "The Smart Reader's Guide to Buying Pre-Owned Books",
+            'excerpt'  => 'Learn what to look for when buying second-hand books and how to find quality editions at better prices.',
+            'url'      => '#',
+        ],
+    ];
+@endphp
+
+<section id="latest-blog" class="latest-blog-section">
     <div class="container">
 
-        {{-- Section Header --}}
-        <div class="latest-blog-header">
+        {{-- ================= HEADER ================= --}}
+        <header class="latest-blog-header">
 
-            <div class="latest-blog-eyebrow">
-                From the Journal
-            </div>
+            <div class="latest-blog-eyebrow">From the Journal</div>
 
             <div class="latest-blog-heading-row">
 
-                <div>
-
-                    <h2 class="latest-blog-title">
-                        Latest Articles
-                    </h2>
-
-                    <div class="latest-blog-divider"></div>
-
-                </div>
+                <h2 class="latest-blog-title">Latest Articles</h2>
 
                 <a href="#" class="latest-blog-view-all">
                     <span>View All Articles</span>
@@ -33,163 +61,55 @@
                 and useful insights from the SecondBook community.
             </p>
 
-        </div>
+        </header>
 
 
-        {{-- Articles --}}
+        {{-- ================= ARTICLES ================= --}}
         <div class="latest-blog-grid">
 
-            {{-- Article 1 --}}
-            <article class="latest-blog-card">
+            @foreach($latestArticles as $article)
 
-                <a href="#" class="latest-blog-image image-hvr-effect">
+                <article class="latest-blog-card">
 
-                    <img
-                        src="{{ asset('frontend-assets/images/post-img1.jpg') }}"
-                        alt="Reading books"
-                        class="post-image"
-                    >
+                    <a href="{{ $article['url'] }}" class="latest-blog-image image-hvr-effect">
 
-                    <span class="latest-blog-category">
-                        Inspiration
-                    </span>
+                        <img
+                            src="{{ asset($article['image']) }}"
+                            alt="{{ $article['alt'] }}"
+                            class="post-image"
+                            loading="lazy"
+                        >
 
-                </a>
+                        <span class="latest-blog-category">{{ $article['category'] }}</span>
 
-                <div class="latest-blog-content">
+                    </a>
 
-                    <div class="latest-blog-meta">
+                    <div class="latest-blog-content">
 
-                        <span>Mar 30, 2026</span>
+                        <div class="latest-blog-meta">
+                            <span>{{ $article['date'] }}</span>
+                            <span class="latest-blog-meta-dot"></span>
+                            <span>{{ $article['read'] }}</span>
+                        </div>
 
-                        <span class="latest-blog-meta-dot"></span>
+                        <h3>
+                            <a href="{{ $article['url'] }}">{{ $article['title'] }}</a>
+                        </h3>
 
-                        <span>4 min read</span>
+                        <p>{{ $article['excerpt'] }}</p>
+
+                        <a href="{{ $article['url'] }}" class="latest-blog-read-more">
+                            <span>Read Article</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
 
                     </div>
 
-                    <h3>
-                        <a href="#">
-                            Why Reading Still Makes Everyday Moments Better
-                        </a>
-                    </h3>
+                </article>
 
-                    <p>
-                        Explore how books can turn ordinary moments into
-                        meaningful experiences and lasting memories.
-                    </p>
-
-                    <a href="#" class="latest-blog-read-more">
-                        Read Article
-                        <i class="bi bi-arrow-right"></i>
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            {{-- Article 2 --}}
-            <article class="latest-blog-card">
-
-                <a href="#" class="latest-blog-image image-hvr-effect">
-
-                    <img
-                        src="{{ asset('frontend-assets/images/post-img2.jpg') }}"
-                        alt="Books and reading"
-                        class="post-image"
-                    >
-
-                    <span class="latest-blog-category">
-                        Book Guide
-                    </span>
-
-                </a>
-
-                <div class="latest-blog-content">
-
-                    <div class="latest-blog-meta">
-
-                        <span>Mar 24, 2026</span>
-
-                        <span class="latest-blog-meta-dot"></span>
-
-                        <span>5 min read</span>
-
-                    </div>
-
-                    <h3>
-                        <a href="#">
-                            How to Choose Your Next Book Without Overthinking
-                        </a>
-                    </h3>
-
-                    <p>
-                        A simple approach to finding your next great read
-                        based on your interests, mood, and reading habits.
-                    </p>
-
-                    <a href="#" class="latest-blog-read-more">
-                        Read Article
-                        <i class="bi bi-arrow-right"></i>
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            {{-- Article 3 --}}
-            <article class="latest-blog-card">
-
-                <a href="#" class="latest-blog-image image-hvr-effect">
-
-                    <img
-                        src="{{ asset('frontend-assets/images/post-img3.jpg') }}"
-                        alt="Second-hand books"
-                        class="post-image"
-                    >
-
-                    <span class="latest-blog-category">
-                        Marketplace
-                    </span>
-
-                </a>
-
-                <div class="latest-blog-content">
-
-                    <div class="latest-blog-meta">
-
-                        <span>Mar 18, 2026</span>
-
-                        <span class="latest-blog-meta-dot"></span>
-
-                        <span>6 min read</span>
-
-                    </div>
-
-                    <h3>
-                        <a href="#">
-                            The Smart Reader's Guide to Buying Pre-Owned Books
-                        </a>
-                    </h3>
-
-                    <p>
-                        Learn what to look for when buying second-hand books
-                        and how to find quality editions at better prices.
-                    </p>
-
-                    <a href="#" class="latest-blog-read-more">
-                        Read Article
-                        <i class="bi bi-arrow-right"></i>
-                    </a>
-
-                </div>
-
-            </article>
+            @endforeach
 
         </div>
 
     </div>
-
 </section>

@@ -1,0 +1,139 @@
+
+/* =========================================================
+    CART ALERT BUTTONS
+========================================================= */
+
+.swal2-container .swal2-popup .swal2-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    column-gap: 18px;
+    row-gap: 12px;
+    width: 100%;
+    margin: 28px auto 4px;
+    padding: 0 8px;
+}
+
+.swal2-container .swal2-popup .swal2-actions > button {
+    margin: 0;
+}
+
+.swal2-container .swal2-popup .cart-auth-actions {
+    gap: 18px;
+}
+
+/* Shared Button Styles */
+.swal2-container .swal2-popup .logout-confirm-btn,
+.swal2-container .swal2-popup .logout-cancel-btn {
+    position: relative;
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 48px;
+    padding: 13px 24px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease;
+}
+
+/* Primary Button */
+.swal2-container .swal2-popup .logout-confirm-btn {
+    color: #fff;
+    background: linear-gradient(135deg, #a8754f, #8b5e3c 48%, #684329);
+    border-color: #9c704d;
+    box-shadow:
+        0 8px 20px rgb(91 56 32 / 18%),
+        inset 0 1px 0 rgb(255 255 255 / 18%);
+}
+
+.swal2-container .swal2-popup .logout-confirm-btn:hover {
+    color: #fff;
+    background: linear-gradient(135deg, #b9825d, #986744 48%, #795033);
+    border-color: #b9825d;
+    box-shadow:
+        0 12px 26px rgb(91 56 32 / 25%),
+        inset 0 1px 0 rgb(255 255 255 / 22%);
+    transform: translateY(-2px);
+}
+
+/* Secondary Buttons */
+.swal2-container .swal2-popup .logout-cancel-btn {
+    color: #795033;
+    background: linear-gradient(145deg, #fff, #faf4ee);
+    border-color: #e4cbb7;
+    box-shadow:
+        0 5px 15px rgb(91 56 32 / 7%),
+        inset 0 1px 0 #fff;
+}
+
+.swal2-container .swal2-popup .logout-cancel-btn:hover {
+    color: #603d25;
+    background: linear-gradient(145deg, #f8ede3, #f0dfcf);
+    border-color: #cba17e;
+    box-shadow: 0 9px 22px rgb(91 56 32 / 12%);
+    transform: translateY(-2px);
+}
+
+/* Focus and Active States */
+.swal2-container .swal2-popup .logout-confirm-btn:focus-visible,
+.swal2-container .swal2-popup .logout-cancel-btn:focus-visible {
+    outline: 3px solid rgb(185 130 93 / 45%);
+    outline-offset: 4px;
+}
+
+.swal2-container .swal2-popup .logout-confirm-btn:active,
+.swal2-container .swal2-popup .logout-cancel-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.swal2-container .swal2-popup .logout-confirm-btn:disabled,
+.swal2-container .swal2-popup .logout-cancel-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .swal2-container .swal2-popup .swal2-actions,
+    .swal2-container .swal2-popup .cart-auth-actions {
+        column-gap: 10px;
+        row-gap: 10px;
+        margin-top: 22px;
+        padding: 0 4px;
+    }
+
+    .swal2-container .swal2-popup .logout-confirm-btn,
+    .swal2-container .swal2-popup .logout-cancel-btn {
+        flex: 1 1 100px;
+        min-width: 0;
+        min-height: 46px;
+        padding: 11px 15px;
+        border-radius: 12px;
+        font-size: 12px;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .swal2-container .swal2-popup .logout-confirm-btn,
+    .swal2-container .swal2-popup .logout-cancel-btn {
+        transition: none;
+    }
+}

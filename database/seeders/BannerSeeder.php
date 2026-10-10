@@ -14,7 +14,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Discover Your Next Book',
                 'subtitle' => 'Explore thousands of new and pre-owned books.',
-                'image' => 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Shop Books',
                 'button_url' => '/books',
                 'position' => 1,
@@ -23,7 +23,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Give Books a Second Life',
                 'subtitle' => 'Sell your books and connect with readers.',
-                'image' => 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Become a Seller',
                 'button_url' => '/seller/apply',
                 'position' => 2,
@@ -32,7 +32,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Build Your Personal Library',
                 'subtitle' => 'Find classics, fiction, technology and more.',
-                'image' => 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Explore',
                 'button_url' => '/books',
                 'position' => 3,
@@ -41,7 +41,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Stories Worth Sharing',
                 'subtitle' => 'Discover books that deserve another reader.',
-                'image' => 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Browse Collection',
                 'button_url' => '/books',
                 'position' => 4,
@@ -50,7 +50,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Read More, Spend Less',
                 'subtitle' => 'Find quality pre-owned books at affordable prices.',
-                'image' => 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Shop Now',
                 'button_url' => '/books',
                 'position' => 5,
@@ -59,7 +59,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Classics Never Get Old',
                 'subtitle' => 'Rediscover timeless stories and unforgettable authors.',
-                'image' => 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Explore Classics',
                 'button_url' => '/books',
                 'position' => 6,
@@ -68,7 +68,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Find Your Next Favorite',
                 'subtitle' => 'From fiction to technology, there is something for everyone.',
-                'image' => 'https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Find a Book',
                 'button_url' => '/books',
                 'position' => 7,
@@ -77,7 +77,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Turn Your Books Into Value',
                 'subtitle' => 'Sell books you no longer need and reach new readers.',
-                'image' => 'https://images.unsplash.com/photo-1550399105-c4db5fb85c18?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Sell Your Books',
                 'button_url' => '/seller/apply',
                 'position' => 8,
@@ -86,7 +86,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'A Library for Every Reader',
                 'subtitle' => 'Explore carefully selected books across many categories.',
-                'image' => 'https://images.unsplash.com/photo-1526243741027-444d633d7365?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'View Categories',
                 'button_url' => '/categories',
                 'position' => 9,
@@ -95,7 +95,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Technology & Knowledge',
                 'subtitle' => 'Level up your skills with books about programming and technology.',
-                'image' => 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Explore Technology',
                 'button_url' => '/books',
                 'position' => 10,
@@ -104,7 +104,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Stories for Every Mood',
                 'subtitle' => 'Romance, mystery, adventure and more are waiting for you.',
-                'image' => 'https://images.unsplash.com/photo-1511108690759-009324a90311?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Discover Stories',
                 'button_url' => '/books',
                 'position' => 11,
@@ -113,7 +113,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Make Room for New Stories',
                 'subtitle' => 'Sell your old books and make space for your next favorites.',
-                'image' => 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Start Selling',
                 'button_url' => '/seller/apply',
                 'position' => 12,
@@ -122,7 +122,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Books That Inspire',
                 'subtitle' => 'Discover ideas, perspectives and stories that stay with you.',
-                'image' => 'https://images.unsplash.com/photo-1510172951991-856a654b9e6f?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Explore Books',
                 'button_url' => '/books',
                 'position' => 13,
@@ -131,7 +131,7 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'Your Next Adventure Starts Here',
                 'subtitle' => 'Open a book and step into a completely different world.',
-                'image' => 'https://images.unsplash.com/photo-1474932430478-367dbb6832c1?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Start Exploring',
                 'button_url' => '/books',
                 'position' => 14,
@@ -140,23 +140,41 @@ class BannerSeeder extends Seeder
             [
                 'title' => 'SecondBook — Read. Share. Repeat.',
                 'subtitle' => 'Give great books another chapter with a new reader.',
-                'image' => 'https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=1600&q=85',
+                'image' => '',
                 'button_text' => 'Explore SecondBook',
                 'button_url' => '/books',
                 'position' => 15,
             ],
+            ['title' => 'A World of New Ideas', 'subtitle' => 'Find thoughtful reads in science, history and culture.', 'image' => '', 'button_text' => 'Explore Ideas', 'button_url' => '/books', 'position' => 16],
+            ['title' => 'Stories for the Weekend', 'subtitle' => 'Choose your next page-turner from independent sellers.', 'image' => '', 'button_text' => 'Browse Stories', 'button_url' => '/books', 'position' => 17],
+            ['title' => 'Build Better Reading Habits', 'subtitle' => 'Make time for books that inspire and inform.', 'image' => '', 'button_text' => 'Find a Book', 'button_url' => '/books', 'position' => 18],
+            ['title' => 'Discover Local Bookshops', 'subtitle' => 'Support sellers and keep good books in circulation.', 'image' => '', 'button_text' => 'View Stores', 'button_url' => '/stores', 'position' => 19],
+            ['title' => 'A New Reader for Every Book', 'subtitle' => 'Give pre-owned books another chance to be enjoyed.', 'image' => '', 'button_text' => 'Shop Pre-Owned', 'button_url' => '/books', 'position' => 20],
+            ['title' => 'Explore More Than Fiction', 'subtitle' => 'Browse learning, business, science and creative titles.', 'image' => '', 'button_text' => 'Browse Categories', 'button_url' => '/categories', 'position' => 21],
+            ['title' => 'Read, Review, Recommend', 'subtitle' => 'Help other readers discover books they will love.', 'image' => '', 'button_text' => 'See Reviews', 'button_url' => '/books', 'position' => 22],
+            ['title' => 'Find a Thoughtful Gift', 'subtitle' => 'Choose a memorable book for someone special.', 'image' => '', 'button_text' => 'Explore Books', 'button_url' => '/books', 'position' => 23],
+            ['title' => 'Books That Travel Further', 'subtitle' => 'Pass along stories and ideas to another reader.', 'image' => '', 'button_text' => 'Start Browsing', 'button_url' => '/books', 'position' => 24],
+            ['title' => 'Your Next Chapter Starts Here', 'subtitle' => 'Discover a new favorite in the SecondBook marketplace.', 'image' => '', 'button_text' => 'Shop Books', 'button_url' => '/books', 'position' => 25],
 
         ];
 
         foreach ($banners as $banner) {
-            DB::table('banners')->updateOrInsert(
-                ['title' => $banner['title']],
-                array_merge($banner, [
+            $existing = DB::table('banners')
+                ->where('title', $banner['title'])
+                ->first();
+
+            if ($existing) {
+                DB::table('banners')
+                    ->where('id', $existing->id)
+                    ->update(['image' => '', 'updated_at' => now()]);
+                continue;
+            }
+
+            DB::table('banners')->insert(array_merge($banner, [
                     'status' => 'active',
                     'updated_at' => now(),
                     'created_at' => now(),
-                ])
-            );
+                ]));
         }
     }
 }

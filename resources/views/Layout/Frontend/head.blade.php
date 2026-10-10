@@ -307,6 +307,11 @@
     href="{{ asset('frontend-assets/css/quotation.css') }}"
 >
 
+<link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ asset('frontend-assets/css/cart-alert.css') }}"
+>
 
 {{-- =========================================================
    HEADER CSS

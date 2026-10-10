@@ -2,7 +2,7 @@
 
 @section('title', 'Create Blog')
 
-@push('css') <link rel="stylesheet" href="{{ asset('admin/css/blogs.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/blog.css') }}">
 @endpush
 
 @section('content')

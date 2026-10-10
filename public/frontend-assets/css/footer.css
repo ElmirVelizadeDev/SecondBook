@@ -1,41 +1,66 @@
 /* =========================================================
-   SECOND BOOK — FOOTER + BOTTOM BAR
-   Premium redesign. Same markup, same class names.
-   Same palette and motion language as header.css.
-
-   01 Tokens + motion          05 Contact
-   02 Footer shell             06 In-footer tagline row
-   03 Brand + socials          07 Bottom bar (#footer-bottom)
-   04 Titles + links           08 Responsive + reduced motion
+   FOOTER
 ========================================================= */
 
 
 /* =========================================================
-   01 TOKENS + MOTION
+   01 TOKENS (light sayt)
 ========================================================= */
 
 #footer,
 #footer-bottom {
-    --ft-brown: #8b5e3c;
-    --ft-brown-dark: #6f472d;
-    --ft-brown-light: #a87648;
-    --ft-gold: #d7b08c;
-    --ft-gold-soft: #c9a27e;
-    --ft-ink: #302a26;
-    --ft-text: #70665e;
-    --ft-soft: #766c64;
-    --ft-faint: #9a9088;
-    --ft-line: #ded3c9;
-    --ft-cream: #f3eee8;
-    --ft-cream-2: #faf8f5;
-    --ft-espresso: #2d2723;
-    --ft-espresso-deep: #211c19;
-    --ft-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --fo-bg-1: #3d2c21;
+    --fo-bg-2: #2a1e16;
+    --fo-bg-3: #1d130d;
+    --fo-bar-1: #1d130d;
+    --fo-bar-2: #140c07;
+
+    --fo-brown: #8b5e3c;
+    --fo-brown-deep: #6b4529;
+    --fo-gold: #c9a074;
+    --fo-gold-soft: #e6c9a6;
+
+    --fo-title: #ffffff;
+    --fo-text: rgba(255, 255, 255, 0.70);
+    --fo-soft: rgba(255, 255, 255, 0.62);
+    --fo-faint: rgba(255, 255, 255, 0.48);
+    --fo-line: rgba(255, 255, 255, 0.12);
+    --fo-glass: rgba(255, 255, 255, 0.07);
+    --fo-glass-border: rgba(255, 255, 255, 0.16);
+
+    --fo-grad: linear-gradient(135deg, #a06c46, #8b5e3c 50%, #6b4529);
+
+    --fo-serif: Georgia, "Times New Roman", serif;
+    --fo-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --fo-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes ft-rise {
+
+/* =========================================================
+   TOKENS 
+========================================================= */
+
+[data-theme="dark"] #footer,
+[data-theme="dark"] #footer-bottom,
+.dark-mode #footer,
+.dark-mode #footer-bottom,
+.dark-theme #footer,
+.dark-theme #footer-bottom {
+    --fo-bg-1: #1a2233;
+    --fo-bg-2: #131a29;
+    --fo-bg-3: #0e1420;
+    --fo-bar-1: #0e1420;
+    --fo-bar-2: #0a0f19;
+}
+
+
+@keyframes fo-rise {
     from { opacity: 0; translate: 0 28px; }
     to   { opacity: 1; translate: 0 0; }
+}
+
+@keyframes fo-spin {
+    to { transform: rotate(360deg); }
 }
 
 
@@ -45,39 +70,56 @@
 
 #footer.site-footer {
     position: relative;
-
     margin-top: 100px;
-    padding: 84px 0 0;
+    padding: 92px 0 0;
     overflow: hidden;
-
-    color: var(--ft-text);
-
-    background:
-        radial-gradient(circle at 0% 0%, rgba(215, 176, 140, 0.20), transparent 38%),
-        radial-gradient(circle at 100% 100%, rgba(139, 94, 60, 0.07), transparent 40%),
-        linear-gradient(180deg, #f6f1eb 0%, var(--ft-cream) 100%);
-
     border-top: 0;
+    color: var(--fo-text);
+    background:
+        radial-gradient(700px 420px at 100% 0%, rgba(201, 160, 116, 0.26), transparent 65%),
+        radial-gradient(600px 400px at 0% 100%, rgba(139, 94, 60, 0.22), transparent 65%),
+        linear-gradient(135deg, var(--fo-bg-1) 0%, var(--fo-bg-2) 55%, var(--fo-bg-3) 100%);
 }
 
-/* brown → gold hairline across the top edge */
+/* yuxarı kənarda qəhvəyi → qızılı xətt */
 #footer.site-footer::before {
-    content: "";
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
+    left: 0;
     height: 3px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--fo-brown) 25%,
+        var(--fo-gold) 50%,
+        var(--fo-brown) 75%,
+        transparent 100%
+    );
+    content: "";
+}
 
-    background:
-        linear-gradient(
-            90deg,
-            transparent 0%,
-            var(--ft-brown) 30%,
-            var(--ft-gold-soft) 50%,
-            var(--ft-brown) 70%,
-            transparent 100%
-        );
+/* dekorativ halqa (Special Offers / books "sell" kartı ilə eyni dil) */
+#footer.site-footer::after {
+    position: absolute;
+    top: -160px;
+    right: 7%;
+    width: 340px;
+    height: 340px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+    animation: fo-spin 60s linear infinite;
+}
+
+#footer *,
+#footer *::before,
+#footer *::after,
+#footer-bottom *,
+#footer-bottom *::before,
+#footer-bottom *::after {
+    box-sizing: border-box;
 }
 
 #footer .container {
@@ -106,37 +148,38 @@
     padding-right: 25px;
 }
 
+/* Loqo hansı rəngdə olursa olsun görünsün deyə krem lövhə üzərində */
 #footer .footer-logo-link {
     display: inline-flex;
     align-items: center;
-
-    margin-bottom: 25px;
-
+    margin-bottom: 26px;
+    padding: 12px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    background: linear-gradient(135deg, #fffaf4, #f7eee4);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
     text-decoration: none;
+    transition: transform 0.45s var(--fo-ease), box-shadow 0.45s var(--fo-ease);
+}
+
+#footer .footer-logo-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.38);
 }
 
 #footer .footer-logo {
     display: block;
     width: auto;
-    max-width: 185px;
-    max-height: 68px;
+    max-width: 170px;
+    max-height: 56px;
     height: auto;
-
     object-fit: contain;
-
-    transition: transform 0.4s var(--ft-ease), opacity 0.3s ease;
-}
-
-#footer .footer-logo-link:hover .footer-logo {
-    transform: scale(1.04);
-    opacity: 0.92;
 }
 
 #footer .footer-description {
-    max-width: 310px;
+    max-width: 320px;
     margin: 0;
-
-    color: var(--ft-soft);
+    color: var(--fo-soft);
     font-family: var(--body-font);
     font-size: 14px;
     line-height: 1.85;
@@ -145,63 +188,55 @@
 #footer .footer-socials {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
-
-    margin-top: 26px;
+    margin-top: 28px;
 }
 
 #footer .footer-socials a {
     position: relative;
-
-    width: 40px;
-    height: 40px;
-
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
+    width: 42px;
+    height: 42px;
     overflow: hidden;
-
-    border: 1px solid #d7c9bd;
-    border-radius: 50%;
-
-    color: #76553e;
-    background: rgba(255, 255, 255, 0.55);
-
+    border: 1px solid var(--fo-glass-border);
+    border-radius: 14px;
+    background: var(--fo-glass);
+    color: var(--fo-gold-soft);
     text-decoration: none;
-
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     transition:
         color 0.3s ease,
         border-color 0.3s ease,
-        transform 0.35s var(--ft-ease),
-        box-shadow 0.35s var(--ft-ease);
+        transform 0.4s var(--fo-spring),
+        box-shadow 0.35s var(--fo-ease);
 }
 
-/* brown fill rises from the bottom on hover */
+/* qəhvəyi gradient hover-də aşağıdan qalxır */
 #footer .footer-socials a::before {
-    content: "";
     position: absolute;
     inset: 0;
-
-    background: linear-gradient(135deg, var(--ft-brown-light), var(--ft-brown-dark));
-
+    background: var(--fo-grad);
+    content: "";
     translate: 0 100%;
-    transition: translate 0.35s var(--ft-ease);
+    transition: translate 0.35s var(--fo-ease);
 }
 
 #footer .footer-socials a i {
     position: relative;
     z-index: 1;
-
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1;
 }
 
 #footer .footer-socials a:hover {
-    color: #ffffff;
-    border-color: var(--ft-brown);
-    transform: translateY(-4px);
-    box-shadow: 0 10px 22px rgba(92, 61, 40, 0.22);
+    border-color: transparent;
+    color: #fff;
+    transform: translateY(-4px) rotate(-4deg);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.38);
 }
 
 #footer .footer-socials a:hover::before {
@@ -209,9 +244,8 @@
 }
 
 #footer .footer-copyright {
-    margin: 26px 0 0;
-
-    color: var(--ft-faint);
+    margin: 28px 0 0;
+    color: var(--fo-faint);
     font-family: var(--body-font);
     font-size: 12px;
     line-height: 1.6;
@@ -224,34 +258,27 @@
 
 #footer .footer-title {
     position: relative;
-
     display: inline-block;
-
-    margin: 0 0 26px;
-    padding-bottom: 12px;
-
-    color: var(--ft-ink);
-    font-family: var(--heading-font);
-    font-size: 17px;
+    margin: 0 0 28px;
+    padding-bottom: 14px;
+    color: var(--fo-title);
+    font-family: var(--fo-serif);
+    font-size: 20px;
     font-weight: 500;
     line-height: 1.3;
-    letter-spacing: 0.15px;
+    letter-spacing: -0.005em;
 }
 
 #footer .footer-title::after {
-    content: "";
     position: absolute;
-    left: 0;
     bottom: 0;
-
+    left: 0;
     width: 30px;
     height: 2px;
-
     border-radius: 2px;
-
-    background: linear-gradient(90deg, var(--ft-brown), var(--ft-gold-soft));
-
-    transition: width 0.45s var(--ft-ease);
+    background: linear-gradient(90deg, var(--fo-brown), var(--fo-gold));
+    content: "";
+    transition: width 0.45s var(--fo-ease);
 }
 
 #footer .footer-column:hover .footer-title::after {
@@ -262,10 +289,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-
     margin: 0;
     padding: 0;
-
     list-style: none;
 }
 
@@ -277,45 +302,33 @@
 
 #footer .footer-links a {
     position: relative;
-
     display: inline-block;
-
     padding: 2px 0;
-
-    color: var(--ft-text);
+    color: var(--fo-text);
     font-family: var(--body-font);
     font-size: 14px;
     line-height: 1.65;
     text-decoration: none;
-
-    transition:
-        color 0.3s ease,
-        translate 0.35s var(--ft-ease);
+    transition: color 0.3s ease, translate 0.35s var(--fo-ease);
 }
 
-/* small line slides in from the left; text moves, layout does not */
+/* soldan kiçik qızılı xətt sürüşərək gəlir */
 #footer .footer-links a::before {
-    content: "";
     position: absolute;
-    left: -16px;
     top: 50%;
-
+    left: -16px;
     width: 9px;
     height: 1px;
-
-    background: var(--ft-brown);
-
+    background: var(--fo-gold);
+    content: "";
     opacity: 0;
     scale: 0 1;
     transform-origin: left center;
-
-    transition:
-        opacity 0.3s ease,
-        scale 0.35s var(--ft-ease);
+    transition: opacity 0.3s ease, scale 0.35s var(--fo-ease);
 }
 
 #footer .footer-links a:hover {
-    color: var(--ft-brown);
+    color: var(--fo-gold-soft);
     translate: 10px 0;
 }
 
@@ -333,22 +346,18 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
-
     margin: 0;
     padding: 0;
-
     list-style: none;
 }
 
 #footer .footer-contact-list li {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-
+    gap: 13px;
     margin: 0;
     padding: 0;
-
-    color: var(--ft-text);
+    color: var(--fo-text);
     font-family: var(--body-font);
     font-size: 14px;
     line-height: 1.65;
@@ -356,43 +365,40 @@
 }
 
 #footer .footer-contact-list i {
-    width: 32px;
-    height: 32px;
-    flex: 0 0 32px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
     margin: 0;
-
-    border: 1px solid #e3d7cc;
-    border-radius: 10px;
-
-    color: var(--ft-brown);
-    background: rgba(255, 255, 255, 0.6);
-
-    font-size: 14px;
+    border: 1px solid var(--fo-glass-border);
+    border-radius: 12px;
+    background: var(--fo-glass);
+    color: var(--fo-gold-soft);
+    font-size: 15px;
     line-height: 1;
-
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     transition:
         color 0.3s ease,
-        background-color 0.3s ease,
+        background 0.3s ease,
         border-color 0.3s ease,
-        transform 0.35s var(--ft-ease);
+        transform 0.4s var(--fo-spring),
+        box-shadow 0.3s ease;
 }
 
 #footer .footer-contact-list li:hover i {
-    color: #ffffff;
-    border-color: var(--ft-brown);
-    background: var(--ft-brown);
-    transform: translateY(-2px) rotate(-6deg);
+    border-color: transparent;
+    background: var(--fo-grad);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+    color: #fff;
+    transform: translateY(-2px) rotate(-8deg);
 }
 
 #footer .footer-contact-list span {
     min-width: 0;
-    padding-top: 4px;
-
+    padding-top: 7px;
     overflow-wrap: anywhere;
 }
 
@@ -403,45 +409,39 @@
 
 #footer .footer-bottom {
     position: relative;
-
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 14px;
-
-    margin-top: 68px;
-    padding: 24px 0;
-
+    margin-top: 72px;
+    padding: 26px 0;
     border-top: 0;
-
-    color: var(--ft-faint);
+    color: var(--fo-faint);
     font-family: var(--body-font);
-    font-size: 12px;
+    font-size: 12.5px;
     line-height: 1.5;
     text-align: center;
 }
 
 #footer .footer-bottom::before {
-    content: "";
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
+    left: 0;
     height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            var(--ft-line) 20%,
-            var(--ft-gold-soft) 50%,
-            var(--ft-line) 80%,
-            transparent
-        );
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--fo-line) 20%,
+        rgba(201, 160, 116, 0.6) 50%,
+        var(--fo-line) 80%,
+        transparent
+    );
+    content: "";
 }
 
 #footer .footer-bottom > span:first-child {
-    color: var(--ft-brown);
+    color: var(--fo-gold-soft);
     font-weight: 600;
     letter-spacing: 0.3px;
 }
@@ -449,66 +449,46 @@
 #footer .footer-bottom-separator {
     width: 4px;
     height: 4px;
-
     border-radius: 50%;
-
-    background: var(--ft-gold-soft);
+    background: var(--fo-gold);
 }
 
 
 /* =========================================================
    07 BOTTOM BAR  (#footer-bottom)
-   Dark espresso, mirrors the header top bar.
+   Footer-dən bir pillə tünd; üstündə incə qızılı xətt.
 ========================================================= */
 
 #footer-bottom.footer-bottom-bar {
     position: relative;
-
     width: 100%;
     margin: 0;
     padding: 0;
-
     border-top: 0;
-
-    background:
-        linear-gradient(
-            90deg,
-            var(--ft-espresso-deep) 0%,
-            var(--ft-espresso) 50%,
-            var(--ft-espresso-deep) 100%
-        );
+    background: linear-gradient(90deg, var(--fo-bar-1) 0%, var(--fo-bar-2) 50%, var(--fo-bar-1) 100%);
 }
 
 #footer-bottom.footer-bottom-bar::before {
-    content: "";
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
+    left: 0;
     height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(215, 176, 140, 0.55),
-            transparent
-        );
+    background: linear-gradient(90deg, transparent, rgba(201, 160, 116, 0.5), transparent);
+    content: "";
 }
 
 #footer-bottom .footer-bottom-inner {
-    min-height: 68px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 30px;
+    min-height: 72px;
 }
 
 #footer-bottom .footer-copyright {
     margin: 0;
-
-    color: rgba(255, 255, 255, 0.58);
+    color: rgba(255, 255, 255, 0.55);
     font-family: var(--body-font);
     font-size: 12px;
     font-weight: 400;
@@ -524,41 +504,33 @@
 
 #footer-bottom .footer-legal a {
     position: relative;
-
     display: inline-block;
-
     padding: 2px 0;
-
     color: rgba(255, 255, 255, 0.78);
     font-family: var(--body-font);
     font-size: 12px;
     font-weight: 500;
     line-height: 1.6;
     text-decoration: none;
-
     transition: color 0.3s ease;
 }
 
-/* gold underline grows from the left */
+/* qızılı alt xətt soldan böyüyür */
 #footer-bottom .footer-legal a::after {
-    content: "";
     position: absolute;
-    left: 0;
     right: 0;
     bottom: 0;
-
+    left: 0;
     height: 1px;
-
-    background: var(--ft-gold);
-
+    background: var(--fo-gold);
+    content: "";
     scale: 0 1;
     transform-origin: left center;
-
-    transition: scale 0.4s var(--ft-ease);
+    transition: scale 0.4s var(--fo-ease);
 }
 
 #footer-bottom .footer-legal a:hover {
-    color: var(--ft-gold);
+    color: var(--fo-gold-soft);
 }
 
 #footer-bottom .footer-legal a:hover::after {
@@ -567,27 +539,23 @@
 
 #footer-bottom .footer-legal-divider {
     display: block;
+    flex: 0 0 4px;
     width: 4px;
     height: 4px;
-    flex: 0 0 4px;
-
     border-radius: 50%;
-
-    background: var(--ft-gold-soft);
+    background: var(--fo-gold);
     opacity: 0.6;
 }
 
 
 /* =========================================================
-   SCROLL REVEAL (CSS only)
-   Columns rise one after another as the footer enters the screen.
-   Browsers without scroll-driven animations just show it static.
+   08 SCROLL REVEAL (yalnız CSS)
+   Dəstəkləməyən brauzerlərdə footer statik görünür.
 ========================================================= */
 
 @supports (animation-timeline: view()) {
-
     #footer .footer-column {
-        animation: ft-rise linear both;
+        animation: fo-rise linear both;
         animation-timeline: view();
     }
 
@@ -603,25 +571,19 @@
    FOCUS
 ========================================================= */
 
-#footer a:focus-visible {
-    outline: 2px solid rgba(139, 94, 60, 0.5);
-    outline-offset: 3px;
-    border-radius: 4px;
-}
-
+#footer a:focus-visible,
 #footer-bottom a:focus-visible {
-    outline: 2px solid rgba(215, 176, 140, 0.75);
+    outline: 2px solid rgba(230, 201, 166, 0.85);
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 
 /* =========================================================
-   08 RESPONSIVE
+   RESPONSIVE
 ========================================================= */
 
 @media screen and (max-width: 1199px) {
-
     #footer .footer-main {
         grid-template-columns:
             minmax(220px, 1.5fr)
@@ -640,10 +602,9 @@
 }
 
 @media screen and (max-width: 991px) {
-
     #footer.site-footer {
         margin-top: 80px;
-        padding-top: 68px;
+        padding-top: 72px;
     }
 
     #footer .footer-main {
@@ -661,7 +622,7 @@
     }
 
     #footer .footer-title {
-        margin-bottom: 20px;
+        margin-bottom: 22px;
     }
 
     #footer .footer-bottom {
@@ -670,10 +631,9 @@
 }
 
 @media screen and (max-width: 767px) {
-
     #footer.site-footer {
         margin-top: 65px;
-        padding-top: 56px;
+        padding-top: 58px;
     }
 
     #footer .footer-main {
@@ -686,13 +646,17 @@
     }
 
     #footer .footer-logo {
-        max-width: 175px;
-        max-height: 65px;
+        max-width: 155px;
+        max-height: 52px;
     }
 
     #footer .footer-description {
         max-width: 100%;
         font-size: 13px;
+    }
+
+    #footer .footer-title {
+        font-size: 18px;
     }
 
     #footer .footer-links a,
@@ -701,8 +665,9 @@
     }
 
     #footer .footer-socials a {
-        width: 38px;
-        height: 38px;
+        width: 40px;
+        height: 40px;
+        border-radius: 13px;
     }
 
     #footer .footer-bottom {
@@ -713,7 +678,7 @@
     }
 
     #footer-bottom .footer-bottom-inner {
-        min-height: 62px;
+        min-height: 64px;
         gap: 15px;
     }
 
@@ -728,28 +693,23 @@
 }
 
 @media screen and (max-width: 575px) {
-
     #footer.site-footer {
         margin-top: 55px;
-        padding-top: 46px;
+        padding-top: 48px;
     }
 
     #footer .footer-main {
         grid-template-columns: 1fr;
-        gap: 35px;
+        gap: 36px;
     }
 
     #footer .footer-brand {
         grid-column: auto;
     }
 
-    #footer .footer-logo {
-        max-width: 165px;
-    }
-
     #footer .footer-title {
         margin-bottom: 18px;
-        font-size: 16px;
+        font-size: 18px;
     }
 
     #footer .footer-links {
@@ -773,9 +733,7 @@
         flex-direction: column;
         justify-content: center;
         gap: 8px;
-
         padding: 18px 0;
-
         text-align: center;
     }
 
@@ -792,7 +750,6 @@
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
     #footer *,
     #footer *::before,
     #footer *::after,

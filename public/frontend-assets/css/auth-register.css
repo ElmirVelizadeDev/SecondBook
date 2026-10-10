@@ -1,18 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
-
 /* =========================================================
-   SECOND BOOK — REGISTER AUTH
-   Premium Register Page
-   ========================================================= */
+   REGISTER 
+========================================================= */
 
 .frontend-main {
     padding: 0 !important;
 }
 
 /* =========================================================
-   AUTH BACKGROUND
-   EXACT LOGIN BACKGROUND SYSTEM
-   ========================================================= */
+   BACKGROUND
+========================================================= */
 
 .auth-page-bg {
     min-height: 100vh;

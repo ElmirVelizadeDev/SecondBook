@@ -658,19 +658,26 @@ class FAQSeeder extends Seeder
                 'answer' => 'Visit the Privacy Policy page on SecondBook for detailed privacy information.',
                 'sort_order' => 104,
             ],
+            ['category' => 'Buying', 'question' => 'How do I compare two book listings?', 'answer' => 'Review each listing’s condition, edition details, price, seller information, and delivery options before choosing.', 'sort_order' => 105],
+            ['category' => 'Buying', 'question' => 'Can I order books from different sellers?', 'answer' => 'Yes. Each listing identifies its seller, and delivery details are shown for the books in your order.', 'sort_order' => 106],
+            ['category' => 'Books', 'question' => 'What should I check in a used-book listing?', 'answer' => 'Check the listed condition, description, edition, publication details, and any seller notes before ordering.', 'sort_order' => 107],
+            ['category' => 'Orders', 'question' => 'Where can I find my order number?', 'answer' => 'Open the Orders section of your account and select the relevant order to view its number and details.', 'sort_order' => 108],
+            ['category' => 'Orders', 'question' => 'Can I update my delivery address after ordering?', 'answer' => 'Contact support promptly. Address changes may depend on whether the order has already been dispatched.', 'sort_order' => 109],
+            ['category' => 'Selling', 'question' => 'How should I describe a book condition?', 'answer' => 'Describe visible wear accurately and select the condition that best matches the book’s overall state.', 'sort_order' => 110],
+            ['category' => 'Selling', 'question' => 'Can I edit a book listing after publishing it?', 'answer' => 'Sellers can manage their listings through the seller area, subject to the listing’s current review status.', 'sort_order' => 111],
+            ['category' => 'Payments', 'question' => 'Which payment methods can I use?', 'answer' => 'Available payment methods are shown during checkout and may depend on current marketplace settings.', 'sort_order' => 112],
+            ['category' => 'Privacy', 'question' => 'How can I control profile visibility?', 'answer' => 'Review the profile visibility option in your account settings and choose the available preference.', 'sort_order' => 113],
+            ['category' => 'Support', 'question' => 'What details should I include when contacting support?', 'answer' => 'Include your account email, order number where relevant, and a clear description of the issue.', 'sort_order' => 114],
         ];
 
         foreach ($faqs as $faq) {
-            DB::table('faqs')->updateOrInsert(
-                [
-                    'question' => $faq['question'],
-                ],
-                array_merge($faq, [
+            if (!DB::table('faqs')->where('question', $faq['question'])->exists()) {
+                DB::table('faqs')->insert(array_merge($faq, [
                     'is_active' => true,
                     'updated_at' => now(),
                     'created_at' => now(),
-                ])
-            );
+                ]));
+            }
         }
     }
 }

@@ -41,10 +41,20 @@ class PublisherSeeder extends Seeder
             ['Gallimard', 'France'],
             ['Editorial Planeta', 'Spain'],
             ['Kodansha', 'Japan'],
+            ['Crown Publishing Group', 'USA'],
+            ['Atria Books', 'USA'],
+            ['Tor Books', 'USA'],
+            ['Orbit Books', 'UK'],
+            ['National Geographic Books', 'USA'],
+            ['Workman Publishing', 'USA'],
+            ['Chronicle Books', 'USA'],
+            ['Penguin Classics', 'UK'],
+            ['Bonnier Books', 'UK'],
+            ['Houghton Mifflin Harcourt', 'USA'],
         ];
 
         foreach ($publishers as [$name, $country]) {
-            Publisher::updateOrCreate(
+            Publisher::firstOrCreate(
                 ['name' => $name],
                 [
                     'country' => $country,

@@ -41,10 +41,20 @@ class AuthorSeeder extends Seeder
             ['Matt Haig', 'https://randomuser.me/api/portraits/men/80.jpg'],
             ['Alex Michaelides', 'https://randomuser.me/api/portraits/men/81.jpg'],
             ['Neil Gaiman', 'https://randomuser.me/api/portraits/men/82.jpg'],
+            ['Patrick Rothfuss', 'https://randomuser.me/api/portraits/men/83.jpg'],
+            ['Taylor Jenkins Reid', 'https://randomuser.me/api/portraits/women/83.jpg'],
+            ['Dan Brown', 'https://randomuser.me/api/portraits/men/84.jpg'],
+            ['Tara Westover', 'https://randomuser.me/api/portraits/women/84.jpg'],
+            ['Andrew Hunt', 'https://randomuser.me/api/portraits/men/85.jpg'],
+            ['Bessel van der Kolk', 'https://randomuser.me/api/portraits/men/86.jpg'],
+            ['Chimamanda Ngozi Adichie', 'https://randomuser.me/api/portraits/women/85.jpg'],
+            ['Michelle Obama', 'https://randomuser.me/api/portraits/women/86.jpg'],
+            ['Bill Bryson', 'https://randomuser.me/api/portraits/men/87.jpg'],
+            ['Mary Roach', 'https://randomuser.me/api/portraits/women/87.jpg'],
         ];
 
         foreach ($authors as [$name, $photo]) {
-            Author::updateOrCreate(
+            Author::firstOrCreate(
                 ['name' => $name],
                 [
                     'bio' => $name . ' is an author featured in the SecondBook marketplace.',

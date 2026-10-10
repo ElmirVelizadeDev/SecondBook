@@ -1,5 +1,9 @@
 @extends('layout.admin.master')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/reviews.css') }}">
+@endpush
+
 @section('title', 'Review Details')
 
 @section('content')
@@ -12,14 +16,6 @@
 
             <div>
                 <div class="d-flex align-items-center gap-2 mb-1">
-                    <a
-                        href="{{ route('admin.reviews.index') }}"
-                        class="review-back-btn"
-                        title="Back to Reviews"
-                    >
-                        <i class="bi bi-arrow-left"></i>
-                    </a>
-
                     <h5 class="mb-0">
                         Review Details
                     </h5>

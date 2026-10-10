@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class SellerApplicationSeeder extends Seeder
 {
@@ -12,12 +13,12 @@ class SellerApplicationSeeder extends Seeder
         $buyers = DB::table('users')
             ->where('role', 'user')
             ->where('status', 'active')
+            ->where('email', 'like', '%@example.com')
             ->orderBy('id')
             ->get();
 
         if ($buyers->isEmpty()) {
-            $this->command->warn('No active buyers found.');
-            return;
+            throw new RuntimeException('No active demo buyers found for seller application seeding.');
         }
 
         $applications = [
@@ -142,15 +143,33 @@ class SellerApplicationSeeder extends Seeder
                 'address' => 'Baku, Azerbaijan',
             ],
         ];
+        $historicalApplications = [
+            ['store_name' => 'Old Town Book Nook', 'description' => 'A neighborhood collection of classic and contemporary titles.'],
+            ['store_name' => 'Paper Lantern Books', 'description' => 'Carefully selected fiction and poetry for local readers.'],
+            ['store_name' => 'Open Shelf Azerbaijan', 'description' => 'Affordable books with a focus on education and lifelong learning.'],
+            ['store_name' => 'The Study Shelf', 'description' => 'Academic titles and practical references for students.'],
+            ['store_name' => 'Caspian Pages', 'description' => 'A varied selection of regional and international literature.'],
+            ['store_name' => 'Quiet Chapter', 'description' => 'A small curated collection for relaxed reading.'],
+            ['store_name' => 'Bright Ideas Books', 'description' => 'Business, science and personal development titles.'],
+            ['store_name' => 'Blue Door Bookshop', 'description' => 'Pre-owned novels and classics in good condition.'],
+            ['store_name' => 'New Leaf Reads', 'description' => 'A fresh selection of books for readers of every age.'],
+            ['store_name' => 'Chapter Exchange', 'description' => 'Books that can be enjoyed and shared by another reader.'],
+        ];
+        $insertIfMissing = static function (array $application): void {
+            $exists = DB::table('seller_applications')
+                ->where('user_id', $application['user_id'])
+                ->where('store_name', $application['store_name'])
+                ->exists();
+
+            if (!$exists) {
+                DB::table('seller_applications')->insert($application);
+            }
+        };
 
         foreach ($buyers as $index => $buyer) {
             $application = $applications[$index % count($applications)];
 
-            DB::table('seller_applications')->updateOrInsert(
-                [
-                    'user_id' => $buyer->id,
-                ],
-                [
+            $insertIfMissing([
                     'user_id' => $buyer->id,
                     'store_name' => $application['store_name'],
                     'description' => $application['description'],
@@ -163,14 +182,29 @@ class SellerApplicationSeeder extends Seeder
                     'rejection_reason' => null,
                     'reviewed_at' => null,
 
-                    'created_at' => now()->subDays(rand(1, 20)),
+                    'created_at' => now()->subDays(($index % 20) + 1),
                     'updated_at' => now(),
-                ]
-            );
+                ]);
+
+            if (isset($historicalApplications[$index])) {
+                $historical = $historicalApplications[$index];
+                $insertIfMissing([
+                        'user_id' => $buyer->id,
+                        'store_name' => $historical['store_name'],
+                        'description' => $historical['description'],
+                        'phone' => $buyer->phone,
+                        'address' => ($buyer->city ?: 'Baku') . ', Azerbaijan',
+                        'status' => 'rejected',
+                        'rejection_reason' => 'The application was not completed; the account may submit an updated application.',
+                        'reviewed_at' => now()->subDays(20),
+                        'created_at' => now()->subDays(30 + $index),
+                        'updated_at' => now()->subDays(20),
+                    ]);
+            }
         }
 
         $this->command->info(
-            $buyers->count() . ' pending seller applications seeded successfully.'
+            $buyers->count() . ' current applications and 10 historical application records seeded successfully.'
         );
     }
 }

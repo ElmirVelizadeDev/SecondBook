@@ -1,3 +1,9 @@
+/*
+ * @Author: mikey.zhaopeng 
+ * @Date: 2026-10-10 11:22:31 
+ * @Last Modified by:   mikey.zhaopeng 
+ * @Last Modified time: 2026-10-10 11:22:31 
+ */
 @extends('layout.admin.master')
 
 @section('title', 'Edit Book')
@@ -1282,7 +1288,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
         });
-
     }
 
 });

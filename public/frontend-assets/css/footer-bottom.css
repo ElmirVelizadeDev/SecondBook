@@ -1,18 +1,72 @@
 /* =========================================================
-   SECOND BOOK — FOOTER BOTTOM BAR
-   ========================================================= */
+   FOOTER BOTTOM BAR
+========================================================= */
+
+
+/* =========================================================
+   TOKENS (light sayt)
+========================================================= */
+
+#footer-bottom {
+    --fb-bar-1: #1d130d;
+    --fb-bar-2: #140c07;
+
+    --fb-gold: #c9a074;
+    --fb-gold-soft: #e6c9a6;
+
+    --fb-text: rgba(255, 255, 255, 0.55);
+    --fb-link: rgba(255, 255, 255, 0.78);
+
+    --fb-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* =========================================================
+   TOKENS (dark sayt)
+========================================================= */
+
+[data-theme="dark"] #footer-bottom,
+.dark-mode #footer-bottom,
+.dark-theme #footer-bottom {
+    --fb-bar-1: #0e1420;
+    --fb-bar-2: #0a0f19;
+}
+
+
+/* =========================================================
+   BAR
+========================================================= */
 
 #footer-bottom.footer-bottom-bar {
+    position: relative;
     width: 100%;
     margin: 0;
     padding: 0;
-    background: #eee7df;
-    border-top: 1px solid #ddd2c8;
+    border-top: 0;
+    background: linear-gradient(90deg, var(--fb-bar-1) 0%, var(--fb-bar-2) 50%, var(--fb-bar-1) 100%);
 }
+
+/* yuxarıda incə qızılı xətt */
+#footer-bottom.footer-bottom-bar::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 160, 116, 0.5), transparent);
+    content: "";
+}
+
+#footer-bottom *,
+#footer-bottom *::before,
+#footer-bottom *::after {
+    box-sizing: border-box;
+}
+
 
 /* =========================================================
    INNER
-   ========================================================= */
+========================================================= */
 
 #footer-bottom .footer-bottom-inner {
     display: flex;
@@ -22,67 +76,96 @@
     min-height: 72px;
 }
 
+
 /* =========================================================
    COPYRIGHT
-   ========================================================= */
+========================================================= */
 
 #footer-bottom .footer-copyright {
     margin: 0;
-    color: #877c74;
+    color: var(--fb-text);
     font-family: var(--body-font);
     font-size: 12px;
     font-weight: 400;
     line-height: 1.6;
 }
 
+
 /* =========================================================
    LEGAL LINKS
-   ========================================================= */
+========================================================= */
 
 #footer-bottom .footer-legal {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 15px;
+    gap: 16px;
 }
 
 #footer-bottom .footer-legal a {
     position: relative;
     display: inline-block;
-    color: #756a62;
+    padding: 2px 0;
+    color: var(--fb-link);
     font-family: var(--body-font);
     font-size: 12px;
     font-weight: 500;
     line-height: 1.6;
     text-decoration: none;
-    transition: color 0.25s ease;
+    transition: color 0.3s ease;
+}
+
+/* qızılı alt xətt soldan böyüyür */
+#footer-bottom .footer-legal a::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: var(--fb-gold);
+    content: "";
+    scale: 0 1;
+    transform-origin: left center;
+    transition: scale 0.4s var(--fb-ease);
 }
 
 #footer-bottom .footer-legal a:hover {
-    color: #8b5e3c;
+    color: var(--fb-gold-soft);
 }
+
+#footer-bottom .footer-legal a:hover::after {
+    scale: 1 1;
+}
+
+#footer-bottom .footer-legal a:focus-visible {
+    outline: 2px solid rgba(230, 201, 166, 0.85);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
 
 /* =========================================================
    DIVIDER
-   ========================================================= */
+========================================================= */
 
 #footer-bottom .footer-legal-divider {
     display: block;
-    width: 3px;
-    height: 3px;
-    flex: 0 0 3px;
+    flex: 0 0 4px;
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
-    background: #b9aaa0;
+    background: var(--fb-gold);
+    opacity: 0.6;
 }
 
+
 /* =========================================================
-   TABLET
-   ========================================================= */
+   RESPONSIVE
+========================================================= */
 
 @media screen and (max-width: 767px) {
-
     #footer-bottom .footer-bottom-inner {
-        min-height: 65px;
+        min-height: 64px;
         gap: 15px;
     }
 
@@ -92,16 +175,11 @@
     }
 
     #footer-bottom .footer-legal {
-        gap: 11px;
+        gap: 12px;
     }
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
 @media screen and (max-width: 575px) {
-
     #footer-bottom .footer-bottom-inner {
         flex-direction: column;
         justify-content: center;
@@ -113,11 +191,20 @@
     #footer-bottom .footer-legal {
         justify-content: center;
         flex-wrap: wrap;
-        gap: 8px 12px;
+        gap: 8px 14px;
     }
+}
 
-    #footer-bottom .footer-copyright,
-    #footer-bottom .footer-legal a {
-        font-size: 11px;
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    #footer-bottom *,
+    #footer-bottom *::before,
+    #footer-bottom *::after {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
     }
 }

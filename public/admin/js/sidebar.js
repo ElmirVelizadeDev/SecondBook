@@ -44,8 +44,10 @@ function openSidebar() {
 
     if (isDesktop()) {
         document.body.classList.remove("sidebar-open");
+        document.body.classList.remove("sidebar-collapsed");
     } else {
         document.body.classList.add("sidebar-open");
+        document.body.classList.remove("sidebar-collapsed");
     }
 
     setToggleState(true);
@@ -59,6 +61,12 @@ function closeSidebar() {
 
     sidebar.classList.remove("show");
     document.body.classList.remove("sidebar-open");
+
+    if (isDesktop()) {
+        document.body.classList.add("sidebar-collapsed");
+    } else {
+        document.body.classList.remove("sidebar-collapsed");
+    }
 
     setToggleState(false);
     setOverlayState(false);
@@ -80,12 +88,14 @@ function initSidebar() {
     if (isDesktop()) {
         sidebar.classList.add("show");
         document.body.classList.remove("sidebar-open");
+        document.body.classList.remove("sidebar-collapsed");
 
         setToggleState(true);
         setOverlayState(false);
     } else {
         sidebar.classList.remove("show");
         document.body.classList.remove("sidebar-open");
+        document.body.classList.remove("sidebar-collapsed");
 
         setToggleState(false);
         setOverlayState(false);
@@ -200,4 +210,3 @@ window.addEventListener("resize", function () {
 */
 
 initSidebar();
-

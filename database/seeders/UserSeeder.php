@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -16,16 +17,17 @@ class UserSeeder extends Seeder
         */
 
         User::updateOrCreate(
-            ['email' => 'admin@secondbook.test'],
+            ['email' => 'admin@gmail.com'],
             [
                 'name' => 'SecondBook Admin',
                 'first_name' => 'SecondBook',
                 'last_name' => 'Admin',
-                'username' => 'admin',
-                'password' => 'password',
+                'username' => 'secondbook_admin',
+                'password' => Hash::make('password'),
                 'role' => 'admin',
                 'status' => 'active',
                 'email_verified_at' => now(),
+                'profile_photo' => null,
                 'profile_visibility' => true,
                 'receive_email_notifications' => true,
                 'receive_order_updates' => true,
@@ -35,7 +37,7 @@ class UserSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Sellers - 15
+        | Sellers - 25
         |--------------------------------------------------------------------------
         */
 
@@ -46,7 +48,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_ali',
                 'email' => 'seller.ali@secondbook.test',
                 'phone' => '+994501000001',
-                'photo' => 'https://randomuser.me/api/portraits/men/32.jpg',
             ],
             [
                 'first_name' => 'Nigar',
@@ -54,7 +55,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_nigar',
                 'email' => 'seller.nigar@secondbook.test',
                 'phone' => '+994501000002',
-                'photo' => 'https://randomuser.me/api/portraits/women/44.jpg',
             ],
             [
                 'first_name' => 'Rauf',
@@ -62,7 +62,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_rauf',
                 'email' => 'seller.rauf@secondbook.test',
                 'phone' => '+994501000003',
-                'photo' => 'https://randomuser.me/api/portraits/men/46.jpg',
             ],
             [
                 'first_name' => 'Aysel',
@@ -70,7 +69,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_aysel',
                 'email' => 'seller.aysel@secondbook.test',
                 'phone' => '+994501000004',
-                'photo' => 'https://randomuser.me/api/portraits/women/65.jpg',
             ],
             [
                 'first_name' => 'Murad',
@@ -78,7 +76,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_murad',
                 'email' => 'seller.murad@secondbook.test',
                 'phone' => '+994501000005',
-                'photo' => 'https://randomuser.me/api/portraits/men/75.jpg',
             ],
             [
                 'first_name' => 'Leyla',
@@ -86,7 +83,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_leyla',
                 'email' => 'seller.leyla@secondbook.test',
                 'phone' => '+994501000006',
-                'photo' => 'https://randomuser.me/api/portraits/women/68.jpg',
             ],
             [
                 'first_name' => 'Kamran',
@@ -94,7 +90,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_kamran',
                 'email' => 'seller.kamran@secondbook.test',
                 'phone' => '+994501000007',
-                'photo' => 'https://randomuser.me/api/portraits/men/52.jpg',
             ],
             [
                 'first_name' => 'Sabina',
@@ -102,7 +97,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_sabina',
                 'email' => 'seller.sabina@secondbook.test',
                 'phone' => '+994501000008',
-                'photo' => 'https://randomuser.me/api/portraits/women/49.jpg',
             ],
             [
                 'first_name' => 'Orkhan',
@@ -110,7 +104,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_orkhan',
                 'email' => 'seller.orkhan@secondbook.test',
                 'phone' => '+994501000009',
-                'photo' => 'https://randomuser.me/api/portraits/men/41.jpg',
             ],
             [
                 'first_name' => 'Zehra',
@@ -118,7 +111,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_zehra',
                 'email' => 'seller.zehra@secondbook.test',
                 'phone' => '+994501000010',
-                'photo' => 'https://randomuser.me/api/portraits/women/33.jpg',
             ],
             [
                 'first_name' => 'Tural',
@@ -126,7 +118,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_tural',
                 'email' => 'seller.tural@secondbook.test',
                 'phone' => '+994501000011',
-                'photo' => 'https://randomuser.me/api/portraits/men/36.jpg',
             ],
             [
                 'first_name' => 'Gunay',
@@ -134,7 +125,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_gunay',
                 'email' => 'seller.gunay@secondbook.test',
                 'phone' => '+994501000012',
-                'photo' => 'https://randomuser.me/api/portraits/women/24.jpg',
             ],
             [
                 'first_name' => 'Elvin',
@@ -142,7 +132,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_elvin',
                 'email' => 'seller.elvin@secondbook.test',
                 'phone' => '+994501000013',
-                'photo' => 'https://randomuser.me/api/portraits/men/22.jpg',
             ],
             [
                 'first_name' => 'Narmin',
@@ -150,7 +139,6 @@ class UserSeeder extends Seeder
                 'username' => 'seller_narmin',
                 'email' => 'seller.narmin@secondbook.test',
                 'phone' => '+994501000014',
-                'photo' => 'https://randomuser.me/api/portraits/women/29.jpg',
             ],
             [
                 'first_name' => 'Samir',
@@ -158,7 +146,76 @@ class UserSeeder extends Seeder
                 'username' => 'seller_samir',
                 'email' => 'seller.samir@secondbook.test',
                 'phone' => '+994501000015',
-                'photo' => 'https://randomuser.me/api/portraits/men/61.jpg',
+            ],
+            [
+                'first_name' => 'Amin',
+                'last_name' => 'Rustamov',
+                'username' => 'seller_amin',
+                'email' => 'seller.amin@secondbook.test',
+                'phone' => '+994501000016',
+            ],
+            [
+                'first_name' => 'Lamia',
+                'last_name' => 'Isgandarova',
+                'username' => 'seller_lamia',
+                'email' => 'seller.lamia@secondbook.test',
+                'phone' => '+994501000017',
+            ],
+            [
+                'first_name' => 'Javid',
+                'last_name' => 'Mammadli',
+                'username' => 'seller_javid',
+                'email' => 'seller.javid@secondbook.test',
+                'phone' => '+994501000018',
+            ],
+            [
+                'first_name' => 'Fidan',
+                'last_name' => 'Huseynli',
+                'username' => 'seller_fidan',
+                'email' => 'seller.fidan@secondbook.test',
+                'phone' => '+994501000019',
+            ],
+            [
+                'first_name' => 'Eldar',
+                'last_name' => 'Guliyev',
+                'username' => 'seller_eldar',
+                'email' => 'seller.eldar@secondbook.test',
+                'phone' => '+994501000020',
+            ],
+            [
+                'first_name' => 'Amina',
+                'last_name' => 'Aliyeva',
+                'username' => 'seller_amina',
+                'email' => 'seller.amina@secondbook.test',
+                'phone' => '+994501000021',
+            ],
+            [
+                'first_name' => 'Farhad',
+                'last_name' => 'Nabiyev',
+                'username' => 'seller_farhad',
+                'email' => 'seller.farhad@secondbook.test',
+                'phone' => '+994501000022',
+            ],
+            [
+                'first_name' => 'Gunel',
+                'last_name' => 'Mammadova',
+                'username' => 'seller_gunel',
+                'email' => 'seller.gunel@secondbook.test',
+                'phone' => '+994501000023',
+            ],
+            [
+                'first_name' => 'Ramil',
+                'last_name' => 'Aliyev',
+                'username' => 'seller_ramil',
+                'email' => 'seller.ramil@secondbook.test',
+                'phone' => '+994501000024',
+            ],
+            [
+                'first_name' => 'Sevda',
+                'last_name' => 'Karimova',
+                'username' => 'seller_sevda',
+                'email' => 'seller.sevda@secondbook.test',
+                'phone' => '+994501000025',
             ],
         ];
 
@@ -170,11 +227,11 @@ class UserSeeder extends Seeder
                     'first_name' => $seller['first_name'],
                     'last_name' => $seller['last_name'],
                     'username' => $seller['username'],
-                    'password' => 'password',
+                    'password' => Hash::make('password'),
                     'role' => 'seller',
                     'status' => 'active',
                     'phone' => $seller['phone'],
-                    'profile_photo' => $seller['photo'],
+                    'profile_photo' => null,
                     'email_verified_at' => now(),
                     'profile_visibility' => true,
                     'receive_email_notifications' => true,
@@ -221,9 +278,10 @@ class UserSeeder extends Seeder
                     'first_name' => $buyer[0],
                     'last_name' => $buyer[1],
                     'username' => $buyer[2],
-                    'password' => 'password',
+                    'password' => Hash::make('password'),
                     'role' => 'user',
                     'status' => 'active',
+                    'profile_photo' => null,
                     'email_verified_at' => now(),
                     'profile_visibility' => true,
                     'receive_email_notifications' => true,
@@ -234,8 +292,7 @@ class UserSeeder extends Seeder
         }
 
         $this->command->info(
-            'Users, 15 sellers and 20 buyers seeded successfully.'
+            'Users, 25 sellers and 20 buyers seeded successfully.'
         );
     }
 }
-

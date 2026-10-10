@@ -41,6 +41,16 @@ class CategorySeeder extends Seeder
             'Young Adult',
             'Poetry',
             'Drama',
+            'Art',
+            'Comics & Graphic Novels',
+            'Religion & Spirituality',
+            'Language Learning',
+            'Reference',
+            'Sports',
+            'Music',
+            'Nature',
+            'Law',
+            'Crafts & Hobbies',
         ];
 
         $images = [
@@ -52,7 +62,7 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $index => $name) {
-            Category::updateOrCreate(
+            Category::firstOrCreate(
                 ['slug' => Str::slug($name)],
                 [
                     'name' => $name,

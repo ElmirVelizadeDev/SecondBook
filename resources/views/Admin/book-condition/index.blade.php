@@ -3,7 +3,7 @@
 @section('title', 'Book Conditions')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/book-conditions.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/book-condition.css') }}">
 @endpush
 
 @section('content')
@@ -722,4 +722,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
-

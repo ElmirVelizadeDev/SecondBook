@@ -1,10 +1,8 @@
 /* =========================================================
-   STOREFRONT STORE PAGE — PREMIUM
-   SecondBook | Light Theme
-   ========================================================= */
+   STOREFRONT STORE PAGE
+========================================================= */
 
-/* Variables are shared with the contact modal, because the
-   modal is rendered OUTSIDE of .store-page in the markup. */
+
 .store-page,
 .store-contact-modal {
     --brand: #8b5e3c;

@@ -1,3 +1,4 @@
+
 @extends('Layout.Frontend.master')
 
 @section('title', 'Contact Us | SecondBook')
@@ -23,14 +24,9 @@
 
             <div class="contact-hero-inner">
 
-                {{-- =====================================================
-                    Hero Content
-                ====================================================== --}}
+                {{-- Hero Content --}}
 
-                <div
-                    class="contact-hero-content"
-                    data-aos="fade-right"
-                >
+                <div class="contact-hero-content" data-aos="fade-right">
 
                     <div class="title">
                         <span>
@@ -67,15 +63,9 @@
 
                 </div>
 
+                {{-- Hero Visual --}}
 
-                {{-- =====================================================
-                    Hero Visual
-                ====================================================== --}}
-
-                <div
-                    class="contact-hero-visual"
-                    data-aos="fade-left"
-                >
+                <div class="contact-hero-visual" data-aos="fade-left">
 
                     <div class="contact-hero-orbit"></div>
 
@@ -104,7 +94,6 @@
 
                     </div>
 
-
                     <div class="contact-hero-floating contact-hero-floating-top">
 
                         <i class="bi bi-envelope-heart"></i>
@@ -115,7 +104,6 @@
                         </div>
 
                     </div>
-
 
                     <div class="contact-hero-floating contact-hero-floating-bottom">
 
@@ -136,7 +124,6 @@
 
     </div>
 
-
     {{-- =========================================================
         Contact Content
     ========================================================== --}}
@@ -147,17 +134,11 @@
 
             <div class="row g-5 align-items-stretch">
 
-
-                {{-- =====================================================
-                    Contact Information
-                ====================================================== --}}
+                {{-- Contact Information --}}
 
                 <div class="col-lg-5">
 
-                    <div
-                        class="contact-info"
-                        data-aos="fade-right"
-                    >
+                    <div class="contact-info" data-aos="fade-right">
 
                         <div class="section-header">
 
@@ -171,18 +152,13 @@
 
                         </div>
 
-
                         <p class="contact-intro">
                             Whether you need help with an order, want to
                             report an issue, or simply have a question about
                             SecondBook, we'd love to hear from you.
                         </p>
 
-
-                        {{-- Contact Information List --}}
-
                         <div class="contact-info-list">
-
 
                             {{-- Email --}}
 
@@ -193,17 +169,14 @@
                                 </div>
 
                                 <div>
-
                                     <span>Email</span>
 
                                     <a href="mailto:support@secondbook.com">
                                         support@secondbook.com
                                     </a>
-
                                 </div>
 
                             </div>
-
 
                             {{-- Phone --}}
 
@@ -214,17 +187,14 @@
                                 </div>
 
                                 <div>
-
                                     <span>Phone</span>
 
                                     <a href="tel:+994501234567">
                                         +994 50 123 45 67
                                     </a>
-
                                 </div>
 
                             </div>
-
 
                             {{-- Address --}}
 
@@ -235,17 +205,12 @@
                                 </div>
 
                                 <div>
-
                                     <span>Address</span>
 
-                                    <p>
-                                        Nakhchivan, Azerbaijan
-                                    </p>
-
+                                    <p>Nakhchivan, Azerbaijan</p>
                                 </div>
 
                             </div>
-
 
                             {{-- Working Hours --}}
 
@@ -256,19 +221,14 @@
                                 </div>
 
                                 <div>
-
                                     <span>Working Hours</span>
 
-                                    <p>
-                                        Monday – Friday, 09:00 – 18:00
-                                    </p>
-
+                                    <p>Monday – Friday, 09:00 – 18:00</p>
                                 </div>
 
                             </div>
 
                         </div>
-
 
                         {{-- Contact Note --}}
 
@@ -295,17 +255,11 @@
 
                 </div>
 
-
-                {{-- =====================================================
-                    Contact Form
-                ====================================================== --}}
+                {{-- Contact Form --}}
 
                 <div class="col-lg-7">
 
-                    <div
-                        class="contact-form-card"
-                        data-aos="fade-left"
-                    >
+                    <div class="contact-form-card" data-aos="fade-left">
 
                         <div class="contact-form-header">
 
@@ -313,9 +267,7 @@
                                 <span>Send us a message</span>
                             </div>
 
-                            <h2>
-                                How Can We Help?
-                            </h2>
+                            <h2>How Can We Help?</h2>
 
                             <p>
                                 Fill out the form below and we'll get back
@@ -324,10 +276,7 @@
 
                         </div>
 
-
-                        {{-- =================================================
-                            Success Message
-                        ================================================== --}}
+                        {{-- Success Message --}}
 
                         @if(session('success'))
 
@@ -335,19 +284,13 @@
                                 class="alert alert-success contact-alert"
                                 role="alert"
                             >
-
                                 <i class="bi bi-check-circle me-2"></i>
-
                                 {{ session('success') }}
-
                             </div>
 
                         @endif
 
-
-                        {{-- =================================================
-                            Error Message
-                        ================================================== --}}
+                        {{-- Error Message --}}
 
                         @if(session('error'))
 
@@ -355,19 +298,13 @@
                                 class="alert alert-danger contact-alert"
                                 role="alert"
                             >
-
                                 <i class="bi bi-exclamation-circle me-2"></i>
-
                                 {{ session('error') }}
-
                             </div>
 
                         @endif
 
-
-                        {{-- =================================================
-                            Validation Errors
-                        ================================================== --}}
+                        {{-- Validation Errors --}}
 
                         @if($errors->any())
 
@@ -383,11 +320,7 @@
                                 <ul class="mb-0">
 
                                     @foreach($errors->all() as $error)
-
-                                        <li>
-                                            {{ $error }}
-                                        </li>
-
+                                        <li>{{ $error }}</li>
                                     @endforeach
 
                                 </ul>
@@ -396,49 +329,279 @@
 
                         @endif
 
+                        {{-- Authenticated User Form --}}
 
-                        {{-- =================================================
-                            Contact Form
-                        ================================================== --}}
+                        @auth
 
-                        <form
-                            action="{{ route('frontend.contact.store') }}"
-                            method="POST"
-                            class="contact-form"
-                        >
+                            <form
+                                action="{{ route('frontend.contact.store') }}"
+                                method="POST"
+                                class="contact-form"
+                            >
 
-                            @csrf
+                                @csrf
 
+                                <div class="row">
 
-                            <div class="row">
+                                    {{-- Name --}}
 
+                                    <div class="col-md-6">
 
-                                {{-- =================================================
-                                    Name
-                                ================================================== --}}
+                                        <div class="contact-field">
 
-                                <div class="col-md-6">
+                                            <label for="name">
+                                                Your Name
+                                            </label>
 
-                                    <div class="contact-field">
+                                            <div class="contact-input-wrap">
 
-                                        <label for="name">
-                                            Your Name
-                                        </label>
+                                                <i class="bi bi-person"></i>
 
-                                        <div class="contact-input-wrap">
+                                                <input
+                                                    type="text"
+                                                    id="name"
+                                                    name="name"
+                                                    value="{{ auth()->user()->name }}"
+                                                    placeholder="Your name"
+                                                    maxlength="100"
+                                                    autocomplete="name"
+                                                    readonly
+                                                    required
+                                                >
 
-                                            <i class="bi bi-person"></i>
+                                            </div>
 
-                                            <input
-                                                type="text"
-                                                id="name"
-                                                name="name"
-                                                value="{{ old('name', auth()->user()?->name) }}"
-                                                placeholder="Enter your name"
-                                                maxlength="100"
-                                                autocomplete="name"
-                                                required
+                                        </div>
+
+                                    </div>
+
+                                    {{-- Email --}}
+
+                                    <div class="col-md-6">
+
+                                        <div class="contact-field">
+
+                                            <label for="email">
+                                                Email Address
+                                            </label>
+
+                                            <div class="contact-input-wrap">
+
+                                                <i class="bi bi-envelope"></i>
+
+                                                <input
+                                                    type="email"
+                                                    id="email"
+                                                    name="email"
+                                                    value="{{ auth()->user()->email }}"
+                                                    placeholder="Your email address"
+                                                    maxlength="255"
+                                                    autocomplete="email"
+                                                    readonly
+                                                    required
+                                                >
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {{-- Subject --}}
+
+                                    <div class="col-12">
+
+                                        <div class="contact-field">
+
+                                            <label for="subject">
+                                                Subject
+                                            </label>
+
+                                            <div class="contact-input-wrap">
+
+                                                <i class="bi bi-chat-left-text"></i>
+
+                                                <select
+                                                    id="subject"
+                                                    name="subject"
+                                                    required
+                                                >
+
+                                                    <option
+                                                        value="General Inquiry"
+                                                        {{ old('subject', 'General Inquiry') === 'General Inquiry' ? 'selected' : '' }}
+                                                    >
+                                                        General Inquiry
+                                                    </option>
+
+                                                    <option
+                                                        value="Order Issue"
+                                                        {{ old('subject') === 'Order Issue' ? 'selected' : '' }}
+                                                    >
+                                                        Order Issue
+                                                    </option>
+
+                                                    <option
+                                                        value="Payment Issue"
+                                                        {{ old('subject') === 'Payment Issue' ? 'selected' : '' }}
+                                                    >
+                                                        Payment Issue
+                                                    </option>
+
+                                                    <option
+                                                        value="Shipping & Delivery"
+                                                        {{ old('subject') === 'Shipping & Delivery' ? 'selected' : '' }}
+                                                    >
+                                                        Shipping & Delivery
+                                                    </option>
+
+                                                    <option
+                                                        value="Book Information"
+                                                        {{ old('subject') === 'Book Information' ? 'selected' : '' }}
+                                                    >
+                                                        Book Information
+                                                    </option>
+
+                                                    <option
+                                                        value="Account Problem"
+                                                        {{ old('subject') === 'Account Problem' ? 'selected' : '' }}
+                                                    >
+                                                        Account Problem
+                                                    </option>
+
+                                                    <option
+                                                        value="Wishlist Issue"
+                                                        {{ old('subject') === 'Wishlist Issue' ? 'selected' : '' }}
+                                                    >
+                                                        Wishlist Issue
+                                                    </option>
+
+                                                    <option
+                                                        value="Cart Issue"
+                                                        {{ old('subject') === 'Cart Issue' ? 'selected' : '' }}
+                                                    >
+                                                        Cart Issue
+                                                    </option>
+
+                                                    <option
+                                                        value="Return & Refund"
+                                                        {{ old('subject') === 'Return & Refund' ? 'selected' : '' }}
+                                                    >
+                                                        Return & Refund
+                                                    </option>
+
+                                                    <option
+                                                        value="Selling on SecondBook"
+                                                        {{ old('subject') === 'Selling on SecondBook' ? 'selected' : '' }}
+                                                    >
+                                                        Selling on SecondBook
+                                                    </option>
+
+                                                    <option
+                                                        value="Seller Support"
+                                                        {{ old('subject') === 'Seller Support' ? 'selected' : '' }}
+                                                    >
+                                                        Seller Support
+                                                    </option>
+
+                                                    <option
+                                                        value="Technical Issue"
+                                                        {{ old('subject') === 'Technical Issue' ? 'selected' : '' }}
+                                                    >
+                                                        Technical Issue
+                                                    </option>
+
+                                                    <option
+                                                        value="Suggestion / Feedback"
+                                                        {{ old('subject') === 'Suggestion / Feedback' ? 'selected' : '' }}
+                                                    >
+                                                        Suggestion / Feedback
+                                                    </option>
+
+                                                    <option
+                                                        value="Report a Problem"
+                                                        {{ old('subject') === 'Report a Problem' ? 'selected' : '' }}
+                                                    >
+                                                        Report a Problem
+                                                    </option>
+
+                                                    <option
+                                                        value="Privacy & Security"
+                                                        {{ old('subject') === 'Privacy & Security' ? 'selected' : '' }}
+                                                    >
+                                                        Privacy & Security
+                                                    </option>
+
+                                                    <option
+                                                        value="Partnership / Business Inquiry"
+                                                        {{ old('subject') === 'Partnership / Business Inquiry' ? 'selected' : '' }}
+                                                    >
+                                                        Partnership / Business Inquiry
+                                                    </option>
+
+                                                    <option
+                                                        value="Other"
+                                                        {{ old('subject') === 'Other' ? 'selected' : '' }}
+                                                    >
+                                                        Other
+                                                    </option>
+
+                                                </select>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {{-- Message --}}
+
+                                    <div class="col-12">
+
+                                        <div class="contact-field">
+
+                                            <label for="message">
+                                                Message
+                                            </label>
+
+                                            <div class="contact-textarea-wrap">
+
+                                                <i class="bi bi-pencil-square"></i>
+
+                                                <textarea
+                                                    id="message"
+                                                    name="message"
+                                                    rows="7"
+                                                    minlength="10"
+                                                    maxlength="5000"
+                                                    placeholder="Write your message here..."
+                                                    required
+                                                >{{ old('message') }}</textarea>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {{-- Form Footer --}}
+
+                                    <div class="col-12">
+
+                                        <div class="contact-form-footer">
+
+                                            <p>
+                                                <i class="bi bi-shield-check"></i>
+                                                Your message will be handled securely.
+                                            </p>
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-accent contact-submit"
                                             >
+                                                Send Message
+                                                <i class="bi bi-arrow-right"></i>
+                                            </button>
 
                                         </div>
 
@@ -446,224 +609,50 @@
 
                                 </div>
 
+                            </form>
 
-                                {{-- =================================================
-                                    Email
-                                ================================================== --}}
+                        @else
 
-                                <div class="col-md-6">
+                            {{-- Guest Login / Register Notice --}}
 
-                                    <div class="contact-field">
+                            <div class="contact-auth-notice">
 
-                                        <label for="email">
-                                            Email Address
-                                        </label>
-
-                                        <div class="contact-input-wrap">
-
-                                            <i class="bi bi-envelope"></i>
-
-                                            <input
-                                                type="email"
-                                                id="email"
-                                                name="email"
-                                                value="{{ old('email', auth()->user()?->email) }}"
-                                                placeholder="Enter your email"
-                                                maxlength="255"
-                                                autocomplete="email"
-                                                required
-                                            >
-
-                                        </div>
-
-                                    </div>
-
+                                <div class="contact-auth-icon">
+                                    <i class="bi bi-shield-lock"></i>
                                 </div>
 
+                                <h3>Sign In to Contact Us</h3>
 
-                                {{-- =================================================
-                                    Subject
-                                ================================================== --}}
+                                <p>
+                                    To send a message to our team, please log
+                                    in to your SecondBook account or create a
+                                    new account. Your name and email address
+                                    will be linked to your account.
+                                </p>
 
-                                <div class="col-12">
+                                <div class="contact-auth-actions">
 
-                                    <div class="contact-field">
+                                    <a
+                                        href="{{ route('frontend.auth.login') }}"
+                                        class="btn btn-accent"
+                                    >
+                                        <i class="bi bi-box-arrow-in-right"></i>
+                                        Login
+                                    </a>
 
-                                        <label for="subject">
-                                            Subject
-                                        </label>
-
-                                        <div class="contact-input-wrap">
-
-                                            <i class="bi bi-chat-left-text"></i>
-
-                                            <select
-                                                id="subject"
-                                                name="subject"
-                                                required
-                                            >
-
-                                                <option value="General Inquiry"
-                                                    {{ old('subject') === 'General Inquiry' ? 'selected' : '' }}>
-                                                    General Inquiry
-                                                </option>
-
-                                                <option value="Order Issue"
-                                                    {{ old('subject') === 'Order Issue' ? 'selected' : '' }}>
-                                                    Order Issue
-                                                </option>
-
-                                                <option value="Payment Issue"
-                                                    {{ old('subject') === 'Payment Issue' ? 'selected' : '' }}>
-                                                    Payment Issue
-                                                </option>
-
-                                                <option value="Shipping & Delivery"
-                                                    {{ old('subject') === 'Shipping & Delivery' ? 'selected' : '' }}>
-                                                    Shipping & Delivery
-                                                </option>
-
-                                                <option value="Book Information"
-                                                    {{ old('subject') === 'Book Information' ? 'selected' : '' }}>
-                                                    Book Information
-                                                </option>
-
-                                                <option value="Account Problem"
-                                                    {{ old('subject') === 'Account Problem' ? 'selected' : '' }}>
-                                                    Account Problem
-                                                </option>
-
-                                                <option value="Wishlist Issue"
-                                                    {{ old('subject') === 'Wishlist Issue' ? 'selected' : '' }}>
-                                                    Wishlist Issue
-                                                </option>
-
-                                                <option value="Cart Issue"
-                                                    {{ old('subject') === 'Cart Issue' ? 'selected' : '' }}>
-                                                    Cart Issue
-                                                </option>
-
-                                                <option value="Return & Refund"
-                                                    {{ old('subject') === 'Return & Refund' ? 'selected' : '' }}>
-                                                    Return & Refund
-                                                </option>
-
-                                                <option value="Selling on SecondBook"
-                                                    {{ old('subject') === 'Selling on SecondBook' ? 'selected' : '' }}>
-                                                    Selling on SecondBook
-                                                </option>
-
-                                                <option value="Seller Support"
-                                                    {{ old('subject') === 'Seller Support' ? 'selected' : '' }}>
-                                                    Seller Support
-                                                </option>
-
-                                                <option value="Technical Issue"
-                                                    {{ old('subject') === 'Technical Issue' ? 'selected' : '' }}>
-                                                    Technical Issue
-                                                </option>
-
-                                                <option value="Suggestion / Feedback"
-                                                    {{ old('subject') === 'Suggestion / Feedback' ? 'selected' : '' }}>
-                                                    Suggestion / Feedback
-                                                </option>
-
-                                                <option value="Report a Problem"
-                                                    {{ old('subject') === 'Report a Problem' ? 'selected' : '' }}>
-                                                    Report a Problem
-                                                </option>
-
-                                                <option value="Privacy & Security"
-                                                    {{ old('subject') === 'Privacy & Security' ? 'selected' : '' }}>
-                                                    Privacy & Security
-                                                </option>
-
-                                                <option value="Partnership / Business Inquiry"
-                                                    {{ old('subject') === 'Partnership / Business Inquiry' ? 'selected' : '' }}>
-                                                    Partnership / Business Inquiry
-                                                </option>
-
-                                                <option value="Other"
-                                                    {{ old('subject') === 'Other' ? 'selected' : '' }}>
-                                                    Other
-                                                </option>
-
-                                            </select>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                {{-- =================================================
-                                    Message
-                                ================================================== --}}
-
-                                <div class="col-12">
-
-                                    <div class="contact-field">
-
-                                        <label for="message">
-                                            Message
-                                        </label>
-
-                                        <div class="contact-textarea-wrap">
-
-                                            <i class="bi bi-pencil-square"></i>
-
-                                            <textarea
-                                                id="message"
-                                                name="message"
-                                                rows="7"
-                                                minlength="10"
-                                                maxlength="5000"
-                                                placeholder="Write your message here..."
-                                                required
-                                            >{{ old('message') }}</textarea>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                                {{-- =================================================
-                                    Form Footer
-                                ================================================== --}}
-
-                                <div class="col-12">
-
-                                    <div class="contact-form-footer">
-
-                                        <p>
-
-                                            <i class="bi bi-shield-check"></i>
-
-                                            Your message will be handled securely.
-
-                                        </p>
-
-
-                                        <button
-                                            type="submit"
-                                            class="btn btn-accent contact-submit"
-                                        >
-
-                                            Send Message
-
-                                            <i class="bi bi-arrow-right"></i>
-
-                                        </button>
-
-                                    </div>
+                                    <a
+                                        href="{{ route('frontend.auth.register') }}"
+                                        class="btn btn-outline-secondary"
+                                    >
+                                        <i class="bi bi-person-plus"></i>
+                                        Register
+                                    </a>
 
                                 </div>
 
                             </div>
 
-                        </form>
+                        @endauth
 
                     </div>
 
@@ -675,9 +664,8 @@
 
     </section>
 
-
     {{-- =========================================================
-    Bottom CTA
+        Bottom CTA
     ========================================================== --}}
 
     <section class="contact-cta">
@@ -687,14 +675,9 @@
 
         <div class="container">
 
-            <div
-                class="contact-cta-inner"
-                data-aos="fade-up"
-            >
+            <div class="contact-cta-inner" data-aos="fade-up">
 
-                {{-- =====================================================
-                    CTA Content
-                ====================================================== --}}
+                {{-- CTA Content --}}
 
                 <div class="contact-cta-content">
 
@@ -702,12 +685,9 @@
 
                         <i class="bi bi-book-half"></i>
 
-                        <span>
-                            SecondBook marketplace
-                        </span>
+                        <span>SecondBook marketplace</span>
 
                     </div>
-
 
                     <h2>
                         Your next
@@ -715,12 +695,10 @@
                         is waiting.
                     </h2>
 
-
                     <p>
                         Explore affordable books from trusted sellers and
                         discover something new for your shelf.
                     </p>
-
 
                     <div class="contact-cta-actions">
 
@@ -728,23 +706,15 @@
                             href="{{ route('frontend.books') }}"
                             class="contact-cta-button"
                         >
-
-                            <span>
-                                Browse Books
-                            </span>
-
+                            <span>Browse Books</span>
                             <i class="bi bi-arrow-up-right"></i>
-
                         </a>
 
                     </div>
 
                 </div>
 
-
-                {{-- =====================================================
-                    CTA Visual
-                ====================================================== --}}
+                {{-- CTA Visual --}}
 
                 <div class="contact-cta-visual">
 
@@ -758,9 +728,7 @@
 
                             <i class="bi bi-book"></i>
 
-                            <span>
-                                FIND YOUR
-                            </span>
+                            <span>FIND YOUR</span>
 
                             <strong>
                                 NEXT
@@ -771,7 +739,6 @@
                         </div>
 
                     </div>
-
 
                     <div class="contact-cta-floating">
 

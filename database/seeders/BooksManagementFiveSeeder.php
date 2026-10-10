@@ -8,137 +8,88 @@ use App\Models\Category;
 use App\Models\Publisher;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use RuntimeException;
 
 class BooksManagementFiveSeeder extends Seeder
 {
-    /**
-     * Seed 5 records for books-management database tables.
-     */
     public function run(): void
     {
-        $categoryNames = [
-            'Fiction',
-            'Non-Fiction',
-            'Science',
-            'History',
-            'Technology',
-        ];
+        $sellers = User::where('role', 'seller')
+            ->where('status', 'active')
+            ->where('email', 'like', 'seller.%@secondbook.test')
+            ->orderBy('email')
+            ->get();
 
-        $authorNames = [
-            'George Orwell',
-            'Jane Austen',
-            'Yuval Noah Harari',
-            'Agatha Christie',
-            'Robert C. Martin',
-        ];
-
-        $publisherRows = [
-            ['name' => 'Penguin Books', 'country' => 'UK', 'website' => 'https://www.penguin.com'],
-            ['name' => 'HarperCollins', 'country' => 'USA', 'website' => 'https://www.harpercollins.com'],
-            ['name' => "O'Reilly Media", 'country' => 'USA', 'website' => 'https://www.oreilly.com'],
-            ['name' => 'Bloomsbury', 'country' => 'UK', 'website' => 'https://www.bloomsbury.com'],
-            ['name' => 'Vintage', 'country' => 'USA', 'website' => 'https://www.vintagebooks.com'],
-        ];
-
-        $sellerRows = [
-            ['first_name' => 'Ali', 'last_name' => 'Mammadov', 'username' => 'seller_ali', 'email' => 'seller.ali@secondbook.test'],
-            ['first_name' => 'Nigar', 'last_name' => 'Hasanli', 'username' => 'seller_nigar', 'email' => 'seller.nigar@secondbook.test'],
-            ['first_name' => 'Rauf', 'last_name' => 'Karimov', 'username' => 'seller_rauf', 'email' => 'seller.rauf@secondbook.test'],
-            ['first_name' => 'Aysel', 'last_name' => 'Quliyeva', 'username' => 'seller_aysel', 'email' => 'seller.aysel@secondbook.test'],
-            ['first_name' => 'Murad', 'last_name' => 'Aliyev', 'username' => 'seller_murad', 'email' => 'seller.murad@secondbook.test'],
-        ];
-
-        foreach ($categoryNames as $name) {
-            Category::updateOrCreate(
-                ['name' => $name],
-                [
-                    'slug' => Str::slug($name),
-                    'description' => $name . ' books collection.',
-                    'status' => 1,
-                ]
-            );
+        if ($sellers->isEmpty()) {
+            throw new RuntimeException('No active demo sellers are available for the books-management records.');
         }
 
-        foreach ($authorNames as $name) {
-            Author::updateOrCreate(
-                ['name' => $name],
-                [
-                    'bio' => $name . ' is a featured author in SecondBook.',
-                    'status' => 1,
-                ]
-            );
-        }
-
-        foreach ($publisherRows as $publisher) {
-            Publisher::updateOrCreate(
-                ['name' => $publisher['name']],
-                [
-                    'country' => $publisher['country'],
-                    'website' => $publisher['website'],
-                    'description' => $publisher['name'] . ' publishing house.',
-                    'status' => 1,
-                ]
-            );
-        }
-
-        foreach ($sellerRows as $seller) {
-            $fullName = $seller['first_name'] . ' ' . $seller['last_name'];
-
-            User::updateOrCreate(
-                ['email' => $seller['email']],
-                [
-                    'name' => $fullName,
-                    'first_name' => $seller['first_name'],
-                    'last_name' => $seller['last_name'],
-                    'username' => $seller['username'],
-                    'role' => 'user',
-                    'password' => Hash::make('Password@123'),
-                    'profile_visibility' => true,
-                    'receive_email_notifications' => true,
-                    'receive_order_updates' => true,
-                    'receive_promotional_emails' => false,
-                ]
-            );
-        }
-
-        $categories = Category::orderBy('id')->take(5)->get();
-        $authors = Author::orderBy('id')->take(5)->get();
-        $publishers = Publisher::orderBy('id')->take(5)->get();
-        $sellers = User::where('email', 'like', 'seller.%@secondbook.test')->orderBy('id')->take(5)->get();
-
-        $bookRows = [
-            ['title' => '1984', 'isbn' => '9780451524935', 'price' => 12.50, 'condition' => 'good', 'status' => 'approved'],
-            ['title' => 'Pride and Prejudice', 'isbn' => '9780141439518', 'price' => 14.99, 'condition' => 'like_new', 'status' => 'approved'],
-            ['title' => 'Sapiens', 'isbn' => '9780062316097', 'price' => 18.90, 'condition' => 'new', 'status' => 'approved'],
-            ['title' => 'Murder on the Orient Express', 'isbn' => '9780062693662', 'price' => 11.75, 'condition' => 'fair', 'status' => 'pending'],
-            ['title' => 'Clean Code', 'isbn' => '9780132350884', 'price' => 21.00, 'condition' => 'good', 'status' => 'approved'],
+        $books = [
+            ['1984', '9780451524935', 'George Orwell', 'Fiction', 'Penguin Random House', 12.50],
+            ['Pride and Prejudice', '9780141439518', 'Jane Austen', 'Classic Literature', 'Penguin Random House', 14.99],
+            ['Sapiens', '9780062316097', 'Yuval Noah Harari', 'History', 'HarperCollins', 18.90],
+            ['Murder on the Orient Express', '9780062693662', 'Agatha Christie', 'Mystery', 'HarperCollins', 11.75],
+            ['Clean Code', '9780132350884', 'Robert C. Martin', 'Programming', "O'Reilly Media", 21.00],
+            ["The Wise Man's Fear", '9780756407919', 'Patrick Rothfuss', 'Fantasy', 'Crown Publishing Group', 17.50],
+            ['Daisy Jones & The Six', '9781524798642', 'Taylor Jenkins Reid', 'Fiction', 'Atria Books', 16.25],
+            ['Angels & Demons', '9780671027360', 'Dan Brown', 'Thriller', 'Doubleday', 13.99],
+            ['Programming Ruby', '9780201710894', 'Andrew Hunt', 'Programming', 'Pearson', 24.50],
+            ['Americanah', '9780307455925', 'Chimamanda Ngozi Adichie', 'Fiction', 'Random House', 15.75],
+            ['Becoming', '9781524763138', 'Michelle Obama', 'Biography', 'Crown Publishing Group', 19.99],
+            ['A Short History of Nearly Everything', '9780767908184', 'Bill Bryson', 'Science', 'Penguin Random House', 18.25],
+            ['Stiff', '9780393324822', 'Mary Roach', 'Science', 'W. W. Norton & Company', 14.50],
+            ['Broken April', '9781611453653', 'Ismail Kadare', 'Historical Fiction', 'Canongate Books', 12.99],
+            ['21 Lessons for the 21st Century', '9780525512172', 'Yuval Noah Harari', 'History', 'Penguin Random House', 17.99],
         ];
 
-        foreach ($bookRows as $index => $row) {
-            if (!isset($categories[$index], $authors[$index], $publishers[$index], $sellers[$index])) {
+        foreach ($books as $index => [$title, $isbn, $authorName, $categoryName, $publisherName, $price]) {
+            $author = Author::where('name', $authorName)->first();
+            $category = Category::where('name', $categoryName)->first();
+            $publisher = Publisher::where('name', $publisherName)->first();
+
+            if (!$author || !$category || !$publisher) {
+                throw new RuntimeException(
+                    "Missing seeded relation for book \"{$title}\"."
+                );
+            }
+
+            $seller = $sellers[$index % $sellers->count()];
+            $existingBook = Book::where('isbn', $isbn)->first();
+
+            if (
+                $existingBook
+                && !str_contains(
+                    (string) $existingBook->description,
+                    'seeded book available in the SecondBook marketplace'
+                )
+            ) {
+                $this->command->warn(
+                    "Preserving existing non-seed book with ISBN {$isbn}."
+                );
                 continue;
             }
 
-            Book::updateOrCreate(
-                ['isbn' => $row['isbn']],
+            Book::firstOrCreate(
+                ['isbn' => $isbn],
                 [
-                    'title' => $row['title'],
-                    'category_id' => $categories[$index]->id,
-                    'author_id' => $authors[$index]->id,
-                    'publisher_id' => $publishers[$index]->id,
-                    'seller_id' => $sellers[$index]->id,
-                    'description' => $row['title'] . ' sample book for admin management.',
-                    'publication_year' => 2000 + $index,
-                    'pages' => 220 + ($index * 30),
+                    'title' => $title,
+                    'category_id' => $category->id,
+                    'author_id' => $author->id,
+                    'publisher_id' => $publisher->id,
+                    'seller_id' => $seller->id,
+                    'description' => "{$title} is a seeded book available in the SecondBook marketplace.",
+                    'cover' => "https://covers.openlibrary.org/b/isbn/{$isbn}-L.jpg",
+                    'publication_year' => 2000 + ($index % 25),
+                    'pages' => 220 + (($index * 31) % 400),
                     'language' => 'English',
-                    'price' => $row['price'],
-                    'stock' => 5 + $index,
-                    'condition' => $row['condition'],
-                    'status' => $row['status'],
+                    'price' => $price,
+                    'stock' => 8 + ($index % 12),
+                    'condition' => ['new', 'like_new', 'good', 'fair'][$index % 4],
+                    'status' => 'approved',
                 ]
             );
         }
+
+        $this->command->info('15 books-management records checked; 10 additional books are uniquely keyed by ISBN.');
     }
 }

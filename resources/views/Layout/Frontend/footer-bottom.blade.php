@@ -1,9 +1,17 @@
+{{-- =========================================================
+    FOOTER BOTTOM BAR — SecondBook
+========================================================== --}}
+
+@php
+    $bottomSiteName = \App\Models\Setting::get('site_name', 'SecondBook');
+@endphp
+
 <div id="footer-bottom" class="footer-bottom-bar">
     <div class="container">
         <div class="footer-bottom-inner">
 
             <p class="footer-copyright">
-                © 2026 SecondBook. All Rights Reserved.
+                © {{ date('Y') }} {{ $bottomSiteName }}. All Rights Reserved.
             </p>
 
             <nav class="footer-legal" aria-label="Legal links">

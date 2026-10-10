@@ -712,7 +712,7 @@
                 <div class="dashboard-panel users-edit-actions">
 
                     <a
-                        href="{{ route('admin.users.show', $user) }}"
+                        href="{{ route('admin.users.index') }}"
                         class="users-edit-cancel-btn"
                     >
                         <i class="bi bi-arrow-left"></i>

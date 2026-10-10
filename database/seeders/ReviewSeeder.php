@@ -4,24 +4,31 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class ReviewSeeder extends Seeder
 {
     public function run(): void
     {
         $users = DB::table('users')
-            ->where('status', true)
-            ->where('email', '!=', 'admin@secondbook.com')
+            ->where('status', 'active')
+            ->whereIn('role', ['seller', 'user'])
+            ->where(function ($query) {
+                $query->where('email', 'like', 'seller.%@secondbook.test')
+                    ->orWhere('email', 'like', '%@example.com');
+            })
+            ->orderBy('id')
             ->pluck('id')
             ->values();
 
         $books = DB::table('books')
             ->where('status', 'approved')
+            ->where('description', 'like', '%seeded book available in the SecondBook marketplace%')
             ->pluck('id')
             ->values();
 
         if ($users->isEmpty() || $books->isEmpty()) {
-            return;
+            throw new RuntimeException('Active demo users and approved books are required for review seeding.');
         }
 
         $comments = [
@@ -38,27 +45,33 @@ class ReviewSeeder extends Seeder
         ];
 
         $counter = 0;
+        $insertIfMissing = static function (array $review): void {
+            $exists = DB::table('reviews')
+                ->where('user_id', $review['user_id'])
+                ->where('book_id', $review['book_id'])
+                ->exists();
 
-        foreach ($users as $userId) {
-            for ($i = 0; $i < 3; $i++) {
+            if (!$exists) {
+                DB::table('reviews')->insert($review);
+            }
+        };
 
+        foreach ($users as $userIndex => $userId) {
+            $reviewsForUser = $userIndex < 35 ? 3 : 1;
+
+            for ($i = 0; $i < $reviewsForUser; $i++) {
                 $bookId = $books[$counter % $books->count()];
 
-                $counter++;
-
-                DB::table('reviews')->updateOrInsert(
-                    [
+                $insertIfMissing([
                         'user_id' => $userId,
                         'book_id' => $bookId,
-                    ],
-                    [
-                        'rating' => rand(4, 5),
-                        'comment' => $comments[array_rand($comments)],
+                        'rating' => 4 + ($counter % 2),
+                        'comment' => $comments[$counter % count($comments)],
                         'status' => 'approved',
-                        'created_at' => now()->subDays(rand(1, 50)),
+                        'created_at' => now()->subDays(($counter % 50) + 1),
                         'updated_at' => now(),
-                    ]
-                );
+                    ]);
+                $counter++;
             }
         }
     }

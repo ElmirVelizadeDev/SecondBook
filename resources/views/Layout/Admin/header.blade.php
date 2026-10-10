@@ -330,39 +330,6 @@
 
 
     /* =========================================================
-       SIDEBAR ARIA STATE
-    ========================================================= */
-
-    const toggle =
-        document.getElementById('toggleSidebar');
-
-    if (toggle) {
-
-        const sync = function () {
-
-            toggle.setAttribute(
-                'aria-expanded',
-                toggle.classList.contains('is-active')
-                    ? 'true'
-                    : 'false'
-            );
-
-        };
-
-        sync();
-
-        new MutationObserver(sync).observe(
-            toggle,
-            {
-                attributes: true,
-                attributeFilter: ['class']
-            }
-        );
-
-    }
-
-
-    /* =========================================================
        SCROLL STATE + PROGRESS
     ========================================================= */
 

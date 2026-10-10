@@ -5,8 +5,8 @@
         <div class="billboard-slider">
 
             {{-- =====================================================
-                 SLIDE 01
-                 ===================================================== --}}
+                SLIDE 01
+            ====================================================== --}}
 
             <div class="billboard-slide">
 
@@ -66,27 +66,82 @@
                                 <i class="bi bi-arrow-up-right"></i>
                             </a>
 
-                            @if(auth()->check() && auth()->user()->role === 'seller')
+                            @auth
+                                @php
+                                    $user = auth()->user();
 
-                                <a
-                                    href="{{ route('seller.dashboard') }}"
-                                    class="billboard-btn billboard-btn-secondary"
-                                >
-                                    <span>Seller Panel</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
+                                    /*
+                                     * Role names are stored in the roles table.
+                                     * Adjust the relation only if your User model
+                                     * uses a different role relationship.
+                                     */
+                                    $userRole = $user->role ?? null;
+
+                                    if (!$userRole && method_exists($user, 'roles')) {
+                                        $userRole = $user->roles()
+                                            ->value('name');
+                                    }
+
+                                    if (is_object($userRole)) {
+                                        $userRole = $userRole->name ?? null;
+                                    }
+
+                                    $userRole = strtolower((string) $userRole);
+
+                                    $adminRoles = [
+                                        'super-admin',
+                                        'admin',
+                                        'manager',
+                                        'editor',
+                                        'moderator',
+                                        'support',
+                                        'accountant',
+                                    ];
+                                @endphp
+
+                                @if($userRole === 'seller')
+
+                                    <a
+                                        href="{{ route('seller.dashboard') }}"
+                                        class="billboard-btn billboard-btn-secondary"
+                                    >
+                                        <span>Seller Panel</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+
+                                @elseif(in_array($userRole, $adminRoles, true))
+
+                                    <a
+                                        href="{{ route('admin.dashboard') }}"
+                                        class="billboard-btn billboard-btn-secondary"
+                                    >
+                                        <span>Admin Panel</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+
+                                @else
+
+                                    <a
+                                        href="{{ route('frontend.seller-application') }}"
+                                        class="billboard-btn billboard-btn-secondary"
+                                    >
+                                        <span>Become a Seller</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+
+                                @endif
 
                             @else
 
                                 <a
-                                    href="{{ route('frontend.seller-application') }}"
+                                    href="{{ route('frontend.auth.login') }}"
                                     class="billboard-btn billboard-btn-secondary"
                                 >
                                     <span>Become a Seller</span>
                                     <i class="bi bi-arrow-right"></i>
                                 </a>
 
-                            @endif
+                            @endauth
 
                         </div>
 
@@ -133,8 +188,8 @@
 
 
             {{-- =====================================================
-                 SLIDE 02
-                 ===================================================== --}}
+                SLIDE 02
+            ====================================================== --}}
 
             <div class="billboard-slide">
 
@@ -172,11 +227,11 @@
                             <span>YOUR NEXT STORY</span>
                         </div>
 
-                        <h1 class="billboard-title">
+                        <h2 class="billboard-title">
                             Find a story
                             <span>that stays</span>
                             with you.
-                        </h1>
+                        </h2>
 
                         <p class="billboard-description">
                             Explore carefully selected books from different
@@ -249,10 +304,9 @@
 
     </div>
 
-
     {{-- =====================================================
-         SLIDER CONTROLS
-         ===================================================== --}}
+        SLIDER CONTROLS
+    ====================================================== --}}
 
     <button
         type="button"
@@ -274,11 +328,10 @@
 
 
 {{-- =========================================================
-     BILLBOARD SLIDER
-     ========================================================= --}}
+    BILLBOARD SLIDER
+========================================================== --}}
 
 @push('js')
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -293,45 +346,25 @@
         }
 
         billboardSlider.slick({
-
             slidesToShow: 1,
-
             slidesToScroll: 1,
-
             infinite: true,
-
             arrows: true,
-
             prevArrow: $('.billboard-arrow-prev'),
-
             nextArrow: $('.billboard-arrow-next'),
-
             dots: false,
-
             autoplay: true,
-
             autoplaySpeed: 6000,
-
             speed: 700,
-
             fade: true,
-
             cssEase: 'ease-in-out',
-
             adaptiveHeight: false,
-
             pauseOnHover: true,
-
             pauseOnFocus: true,
-
             swipe: true,
-
             touchMove: true
-
         });
 
     });
 </script>
-
 @endpush
-

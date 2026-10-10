@@ -1,13 +1,10 @@
 /* =========================================================
-   SECOND BOOK — PREMIUM ABOUT PAGE
-   Editorial / Luxury Bookstore / Modern Marketplace
-   Shares its design tokens, motion and surfaces with the
-   Books page so both pages feel like one product.
+   ABOUT PAGE
 ========================================================= */
 
 
 /* =========================================================
-   TOKENS (light)
+   TOKENS
 ========================================================= */
 
 :root,
@@ -44,7 +41,7 @@
     --sb-gold: #c9a074;
     --sb-accent: #8b5e3c;
 
-    /* Deep brown (shared with the Books sell card) */
+    /* Deep brown */
     --sb-deep-1: #3d2c21;
     --sb-deep-2: #2a1e16;
     --sb-deep-3: #1d130d;
@@ -62,14 +59,19 @@
     --sb-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
     /* Elevation */
-    --sb-shadow-sm: 0 1px 2px rgba(60, 40, 25, 0.04),
-                    0 8px 24px rgba(60, 40, 25, 0.055);
-    --sb-shadow-md: 0 2px 4px rgba(60, 40, 25, 0.04),
-                    0 20px 48px rgba(60, 40, 25, 0.10);
-    --sb-shadow-lg: 0 4px 8px rgba(60, 40, 25, 0.05),
-                    0 32px 64px rgba(60, 40, 25, 0.16);
+    --sb-shadow-sm:
+        0 1px 2px rgba(60, 40, 25, 0.04),
+        0 8px 24px rgba(60, 40, 25, 0.055);
 
-    /* Legacy aliases (kept so existing markup keeps working) */
+    --sb-shadow-md:
+        0 2px 4px rgba(60, 40, 25, 0.04),
+        0 20px 48px rgba(60, 40, 25, 0.10);
+
+    --sb-shadow-lg:
+        0 4px 8px rgba(60, 40, 25, 0.05),
+        0 32px 64px rgba(60, 40, 25, 0.16);
+
+    /* Legacy aliases */
     --sb-paper: var(--sb-bg);
     --sb-ink-soft: var(--sb-deep-1);
     --sb-sand: var(--sb-line-strong);
@@ -78,130 +80,159 @@
 
 
 /* =========================================================
-   TOKENS (dark)
-========================================================= */
-
-:is([data-theme="dark"], .dark-mode, .dark-theme) :is(
-    .sb-about,
-    .sb-about-hero,
-    .sb-manifesto,
-    .sb-editorial,
-    .sb-values,
-    .sb-journey,
-    .sb-numbers,
-    .sb-final
-) {
-    --sb-bg: #111827;
-    --sb-bg-2: #111827;
-    --sb-surface: #172033;
-    --sb-surface-2: #1c2639;
-    --sb-cream: #252f40;
-    --sb-frame: rgba(23, 32, 51, 0.9);
-
-    --sb-ink: #f3f4f6;
-    --sb-text: #d1d5db;
-    --sb-muted: #9ca3af;
-    --sb-faint: #7f8998;
-
-    --sb-line: #293344;
-    --sb-line-strong: #374151;
-
-    --sb-accent: #d5b69d;
-
-    --sb-deep-1: #1c2639;
-    --sb-deep-2: #141c2c;
-    --sb-deep-3: #0d1320;
-
-    --sb-hero-a: #111827;
-    --sb-hero-b: #0f1626;
-
-    --sb-glow-1: rgba(201, 160, 116, 0.08);
-    --sb-glow-2: rgba(139, 94, 60, 0.06);
-
-    --sb-shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.22);
-    --sb-shadow-md: 0 20px 48px rgba(0, 0, 0, 0.32);
-    --sb-shadow-lg: 0 32px 64px rgba(0, 0, 0, 0.45);
-}
-
-
-/* =========================================================
    KEYFRAMES
-   Individual transform properties (translate / rotate / scale)
-   are used on purpose, so animations never fight with the
-   hover transforms defined on the same elements.
 ========================================================= */
 
 @keyframes sbReveal {
-    from { opacity: 0; translate: 0 36px; scale: 0.97; }
-    to   { opacity: 1; translate: 0 0;    scale: 1; }
+    from {
+        opacity: 0;
+        translate: 0 36px;
+        scale: 0.97;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+    }
 }
 
 @keyframes sbRevealSoft {
-    from { opacity: 0; translate: 0 22px; }
-    to   { opacity: 1; translate: 0 0; }
+    from {
+        opacity: 0;
+        translate: 0 22px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
 }
 
 @keyframes sbGradientMove {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
 }
 
 @keyframes sbGradientMoveY {
-    0%   { background-position: 50% 0%; }
-    100% { background-position: 50% 200%; }
+    0% {
+        background-position: 50% 0%;
+    }
+
+    100% {
+        background-position: 50% 200%;
+    }
 }
 
 @keyframes sbSpin {
-    to { rotate: 360deg; }
+    to {
+        rotate: 360deg;
+    }
 }
 
 @keyframes sbSpinReverse {
-    to { rotate: -360deg; }
+    to {
+        rotate: -360deg;
+    }
 }
 
 @keyframes sbRingSpin {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to   { transform: translate(-50%, -50%) rotate(360deg); }
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 @keyframes sbRingSpinReverse {
-    from { transform: translate(-50%, -50%) rotate(360deg); }
-    to   { transform: translate(-50%, -50%) rotate(0deg); }
+    from {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
 }
 
 @keyframes sbFloat {
-    0%, 100% { translate: 0 0; }
-    50%      { translate: 0 -10px; }
+    0%, 100% {
+        translate: 0 0;
+    }
+
+    50% {
+        translate: 0 -10px;
+    }
 }
 
 @keyframes sbFloatSlow {
-    0%, 100% { translate: 0 0; }
-    50%      { translate: 0 -14px; }
+    0%, 100% {
+        translate: 0 0;
+    }
+
+    50% {
+        translate: 0 -14px;
+    }
 }
 
 @keyframes sbPulse {
-    0%   { box-shadow: 0 0 0 0 rgba(201, 160, 116, 0.55); }
-    100% { box-shadow: 0 0 0 9px rgba(201, 160, 116, 0); }
+    0% {
+        box-shadow: 0 0 0 0 rgba(201, 160, 116, 0.55);
+    }
+
+    100% {
+        box-shadow: 0 0 0 9px rgba(201, 160, 116, 0);
+    }
 }
 
 @keyframes sbPulseRing {
-    0%   { box-shadow: 0 8px 24px rgba(139, 94, 60, 0.22), 0 0 0 0 rgba(201, 160, 116, 0.5); }
-    100% { box-shadow: 0 8px 24px rgba(139, 94, 60, 0.22), 0 0 0 16px rgba(201, 160, 116, 0); }
+    0% {
+        box-shadow:
+            0 8px 24px rgba(139, 94, 60, 0.22),
+            0 0 0 0 rgba(201, 160, 116, 0.5);
+    }
+
+    100% {
+        box-shadow:
+            0 8px 24px rgba(139, 94, 60, 0.22),
+            0 0 0 16px rgba(201, 160, 116, 0);
+    }
 }
 
 @keyframes sbShine {
-    from { transform: translateX(-130%) skewX(-20deg); }
-    to   { transform: translateX(300%) skewX(-20deg); }
+    from {
+        transform: translateX(-130%) skewX(-20deg);
+    }
+
+    to {
+        transform: translateX(300%) skewX(-20deg);
+    }
 }
 
 @keyframes sbScrollCue {
-    0%   { transform: translateX(-100%); }
-    100% { transform: translateX(260%); }
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(260%);
+    }
 }
 
 @keyframes sbParallax {
-    from { translate: 0 -5%; }
-    to   { translate: 0 5%; }
+    from {
+        translate: 0 -5%;
+    }
+
+    to {
+        translate: 0 5%;
+    }
 }
 
 
@@ -249,7 +280,6 @@
 
 /* =========================================================
    ANIMATED GRADIENT TEXT
-   (same treatment as the Books page headings)
 ========================================================= */
 
 .sb-hero-copy h1 span,
@@ -263,16 +293,6 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: sbGradientMove 5s linear infinite;
-}
-
-:is([data-theme="dark"], .dark-mode, .dark-theme) :is(
-    .sb-hero-copy h1 span,
-    .sb-manifesto-content h2 em,
-    .sb-values-header h2 em,
-    .sb-journey-heading h2 em
-) {
-    background-image: linear-gradient(90deg, #d5b69d, #f3dfca, #d5b69d);
-    background-size: 200% 100%;
 }
 
 .sb-editorial-word em,
@@ -322,12 +342,6 @@
         );
     background-size: 7px 7px;
     mix-blend-mode: multiply;
-}
-
-:is([data-theme="dark"], .dark-mode, .dark-theme) .sb-hero-noise {
-    opacity: 0.06;
-    mix-blend-mode: normal;
-    filter: invert(1);
 }
 
 .sb-hero-orbit {
@@ -811,7 +825,10 @@
     font-size: 17px;
     font-weight: 600;
     animation: sbPulse 2.6s ease-out infinite;
-    transition: transform 0.5s var(--sb-spring), background 0.3s var(--sb-ease), color 0.3s var(--sb-ease);
+    transition:
+        transform 0.5s var(--sb-spring),
+        background 0.3s var(--sb-ease),
+        color 0.3s var(--sb-ease);
 }
 
 .sb-manifesto-signature:hover .sb-signature-mark {
@@ -1066,11 +1083,6 @@
         transform 0.5s var(--sb-spring),
         background 0.3s var(--sb-ease),
         color 0.3s var(--sb-ease);
-}
-
-:is([data-theme="dark"], .dark-mode, .dark-theme) .sb-value-top i {
-    background: linear-gradient(135deg, #2b3548, #252f40);
-    box-shadow: none;
 }
 
 .sb-value:hover .sb-value-top i {
@@ -1840,9 +1852,6 @@
 
 /* =========================================================
    SCROLL REVEAL
-   - Supporting browsers reveal each block as it scrolls in
-   - Others get a staggered entrance on page load
-   Below-the-hero blocks only; the hero has its own sequence.
 ========================================================= */
 
 .sb-manifesto-grid > *,
@@ -1859,7 +1868,6 @@
 }
 
 @supports (animation-timeline: view()) {
-
     .sb-manifesto-grid > *,
     .sb-editorial-caption,
     .sb-values-header,
@@ -1884,17 +1892,24 @@
 }
 
 @supports not (animation-timeline: view()) {
-
     .sb-values-grid > .sb-value:nth-child(4n + 1),
-    .sb-journey-grid > .sb-journey-item:nth-child(3n + 2) { animation-delay: 0.05s; }
+    .sb-journey-grid > .sb-journey-item:nth-child(3n + 2) {
+        animation-delay: 0.05s;
+    }
 
     .sb-values-grid > .sb-value:nth-child(4n + 2),
-    .sb-journey-grid > .sb-journey-item:nth-child(3n + 3) { animation-delay: 0.15s; }
+    .sb-journey-grid > .sb-journey-item:nth-child(3n + 3) {
+        animation-delay: 0.15s;
+    }
 
     .sb-values-grid > .sb-value:nth-child(4n + 3),
-    .sb-journey-grid > .sb-journey-item:nth-child(3n + 4) { animation-delay: 0.25s; }
+    .sb-journey-grid > .sb-journey-item:nth-child(3n + 4) {
+        animation-delay: 0.25s;
+    }
 
-    .sb-values-grid > .sb-value:nth-child(4n + 4) { animation-delay: 0.35s; }
+    .sb-values-grid > .sb-value:nth-child(4n + 4) {
+        animation-delay: 0.35s;
+    }
 }
 
 
@@ -1903,7 +1918,6 @@
 ========================================================= */
 
 @media (max-width: 1199px) {
-
     .sb-about-hero {
         min-height: 720px;
     }
@@ -1940,7 +1954,6 @@
 ========================================================= */
 
 @media (max-width: 991px) {
-
     .sb-about-hero {
         min-height: auto;
         padding: 90px 0 75px;
@@ -2072,7 +2085,6 @@
 ========================================================= */
 
 @media (max-width: 767px) {
-
     .sb-about-hero {
         padding: 70px 0 55px;
     }
@@ -2305,7 +2317,6 @@
 ========================================================= */
 
 @media (max-width: 575px) {
-
     .sb-about-hero {
         padding: 60px 15px 40px;
     }
@@ -2484,7 +2495,6 @@
 ========================================================= */
 
 @media (max-width: 400px) {
-
     .sb-hero-copy h1 {
         font-size: 41px;
     }
@@ -2527,7 +2537,6 @@
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
     .sb-about *,
     .sb-about *::before,
     .sb-about *::after,

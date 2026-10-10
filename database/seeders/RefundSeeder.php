@@ -6,32 +6,26 @@ use App\Models\Order;
 use App\Models\Refund;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
+use RuntimeException;
 
 class RefundSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::where('role', 'admin')->first();
-
-        if (!$admin) {
-            $this->command->error('No admin found.');
-            return;
-        }
-
-        // Remove previous seeded refunds
-        Refund::where('refund_number', 'like', 'REF-SEED-%')->delete();
-
+        $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
         $orders = Order::with('payment')
+            ->where('note', 'Seeded marketplace order.')
             ->whereIn('payment_status', ['paid', 'refunded'])
-            ->whereIn('order_status', ['delivered', 'cancelled'])
-            ->orderBy('id')
-            ->take(15)
+            ->whereHas('payment')
+            ->whereHas('user', function ($query) {
+                $query->where('email', 'like', '%@example.com');
+            })
+            ->orderBy('order_number')
+            ->take(25)
             ->get();
 
-        if ($orders->isEmpty()) {
-            $this->command->warn('No suitable orders found for refunds.');
-            return;
+        if ($orders->count() < 25) {
+            throw new RuntimeException('At least 25 paid demo orders with payments are required before seeding refunds.');
         }
 
         $reasons = [
@@ -51,7 +45,6 @@ class RefundSeeder extends Seeder
             'Seller could not fulfill the order',
             'Customer requested cancellation',
         ];
-
         $statuses = [
             'pending',
             'approved',
@@ -72,72 +65,52 @@ class RefundSeeder extends Seeder
 
         foreach ($orders as $index => $order) {
             $payment = $order->payment;
-
-            if (!$payment) {
-                continue;
-            }
-
-            $paymentAmount = (float) $payment->amount;
-
+            $status = $statuses[$index % count($statuses)];
             $amount = round(
-                $paymentAmount * [0.25, 0.50, 0.75, 1.00][$index % 4],
+                (float) $payment->amount * [0.25, 0.50, 0.75, 1.00][$index % 4],
                 2
             );
-
-            $status = $statuses[$index];
-
-            $requestedAt = now()->subDays(
-                rand(2, 30)
-            )->subHours(
-                rand(1, 12)
-            );
-
-            $processedAt = in_array($status, [
-                'approved',
-                'processed',
-                'rejected',
-            ])
-                ? $requestedAt->copy()->addHours(rand(2, 48))
+            $requestedAt = now()->subDays($index + 2);
+            $processedAt = in_array($status, ['approved', 'processed', 'rejected'], true)
+                ? $requestedAt->copy()->addHours(12)
                 : null;
-
-            Refund::create([
+            $refundNumber = 'REF-SEED-' . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT);
+            $attributes = [
                 'order_id' => $order->id,
                 'payment_id' => $payment->id,
                 'user_id' => $order->user_id,
-
-                'processed_by' => in_array($status, [
-                    'approved',
-                    'processed',
-                    'rejected',
-                ])
-                    ? $admin->id
-                    : null,
-
-                'refund_number' => 'REF-SEED-' .
-                    now()->format('Ymd') . '-' .
-                    str_pad(
-                        $index + 1,
-                        4,
-                        '0',
-                        STR_PAD_LEFT
-                    ),
-
+                'processed_by' => $status === 'pending' ? null : $admin->id,
                 'amount' => $amount,
-
-                'reason' => $reasons[$index],
-
-                'note' => 'Seeded refund record.',
-
+                'reason' => $reasons[$index % count($reasons)],
+                'note' => 'Seeded refund request.',
                 'status' => $status,
-
                 'requested_at' => $requestedAt,
-
                 'processed_at' => $processedAt,
-            ]);
+            ];
+
+            $refund = Refund::where('refund_number', $refundNumber)->first()
+                ?? Refund::where('order_id', $order->id)
+                    ->where('refund_number', 'like', 'REF-SEED-%')
+                    ->first();
+
+            if ($refund) {
+                $refund->update(array_merge(
+                    ['refund_number' => $refundNumber],
+                    $attributes
+                ));
+            } else {
+                Refund::create(array_merge(
+                    ['refund_number' => $refundNumber],
+                    $attributes
+                ));
+            }
+
+            if ($status === 'processed' && $amount >= (float) $payment->amount) {
+                $payment->update(['payment_status' => 'refunded']);
+                $order->update(['payment_status' => 'refunded']);
+            }
         }
 
-        $this->command->info(
-            '15 refund records seeded successfully.'
-        );
+        $this->command->info('25 stable demo refund records seeded successfully.');
     }
 }

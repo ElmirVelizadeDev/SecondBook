@@ -11,12 +11,18 @@ class UserSettingSeeder extends Seeder
     {
         $users = DB::table('users')
             ->where('status', true)
+            ->where(function ($query) {
+                $query->where('email', 'like', 'seller.%@secondbook.test')
+                    ->orWhere('email', 'like', '%@example.com')
+                    ->orWhere('email', 'admin@gmail.com');
+            })
             ->pluck('id');
 
         foreach ($users as $index => $userId) {
-            DB::table('user_settings')->updateOrInsert(
-                ['user_id' => $userId],
-                [
+            $exists = DB::table('user_settings')->where('user_id', $userId)->exists();
+
+            if (!$exists) {
+                DB::table('user_settings')->insert([
                     'user_id' => $userId,
                     'email_notifications' => true,
                     'order_updates' => true,
@@ -24,8 +30,8 @@ class UserSettingSeeder extends Seeder
                     'profile_visible' => true,
                     'updated_at' => now(),
                     'created_at' => now(),
-                ]
-            );
+                ]);
+            }
         }
     }
 }

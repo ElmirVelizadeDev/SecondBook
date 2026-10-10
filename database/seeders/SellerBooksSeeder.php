@@ -5,38 +5,36 @@ namespace Database\Seeders;
 use App\Models\Book;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use RuntimeException;
 
 class SellerBooksSeeder extends Seeder
 {
     public function run(): void
     {
         $sellers = User::where('role', 'seller')
+            ->where('status', 'active')
+            ->where('email', 'like', 'seller.%@secondbook.test')
             ->orderBy('id')
             ->get();
 
         if ($sellers->isEmpty()) {
-            $this->command->error('No sellers found.');
-            return;
+            throw new RuntimeException('No active demo sellers found for book assignment verification.');
         }
 
-        $books = Book::orderBy('id')->get();
+        $sellerIds = $sellers->modelKeys();
+        $unassignedBooks = Book::where('description', 'like', '%seeded book available in the SecondBook marketplace%')
+            ->where(function ($query) use ($sellerIds) {
+                $query->whereNull('seller_id')
+                    ->orWhereNotIn('seller_id', $sellerIds);
+            })
+            ->count();
 
-        if ($books->isEmpty()) {
-            $this->command->error('No books found.');
-            return;
-        }
-
-        foreach ($books as $index => $book) {
-            $seller = $sellers[$index % $sellers->count()];
-
-            $book->update([
-                'seller_id' => $seller->id,
-                'status' => 'approved',
-            ]);
+        if ($unassignedBooks > 0) {
+            throw new RuntimeException("{$unassignedBooks} demo books have no valid seller.");
         }
 
         $this->command->info(
-            $books->count() . ' books assigned to sellers successfully.'
+            'Demo book-to-seller assignments verified without changing existing listings.'
         );
     }
 }

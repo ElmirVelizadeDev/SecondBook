@@ -58,13 +58,8 @@
     >
 
     {{-- =========================================================
-         CUSTOM CSS
+         ADMIN SHELL CSS
     ========================================================== --}}
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/dashboard-premium.css') }}"
-    >
 
     <link
         rel="stylesheet"
@@ -83,82 +78,7 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('admin/css/dashboard.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
         href="{{ asset('admin/css/responsive.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/books.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/users.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/reviews.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/banner.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/blog.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/book-requests.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/book-condition.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/analysis.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/authors.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/category.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/publishers.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/sellers.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/roles.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('admin/css/settings.css') }}"
     >
 
     @stack('css')
@@ -368,18 +288,12 @@
             min-height: 100vh;
         }
 
-        /*
-         * IMPORTANT:
-         * Sidebar is fixed, therefore .main must reserve
-         * the sidebar width on desktop.
-         */
-
         .main {
             position: relative;
             z-index: auto;
             min-width: 0;
-            width: calc(100% - 260px);
-            margin-left: 260px;
+            width: calc(100% - 270px);
+            margin-left: 270px;
         }
 
         .main > .container-fluid {
@@ -391,8 +305,14 @@
         @media (min-width: 992px) {
 
             .main {
-                width: calc(100% - 260px);
-                margin-left: 260px;
+                width: calc(100% - 270px);
+                margin-left: 270px;
+            }
+
+            body.sidebar-collapsed .main {
+                width: 100%;
+                max-width: 100%;
+                margin-left: 0;
             }
 
         }

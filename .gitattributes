@@ -1,10 +1,15 @@
+
 * text=auto eol=lf
 
 *.blade.php diff=html
 *.css diff=css
 *.html diff=html
+*.js diff=javascript
 *.md diff=markdown
 *.php diff=php
+*.json diff=json
+*.yml diff=yaml
+*.yaml diff=yaml
 
 /.github export-ignore
 CHANGELOG.md export-ignore

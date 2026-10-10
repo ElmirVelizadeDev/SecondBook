@@ -814,18 +814,15 @@
 
 /* =========================================================
    DARK MODE
-   ========================================================= */
+========================================================= */
 
 .dark-mode .users-hero,
 .dark-theme .users-hero,
-[data-theme="dark"] .users-hero {
-    background:
-        linear-gradient(
-            135deg,
-            #111827 0%,
-            #16213a 55%,
-            #18243e 100%
-        );
+[data-theme="dark"] .users-hero,
+.dark-mode .users-edit-hero,
+.dark-theme .users-edit-hero,
+[data-theme="dark"] .users-edit-hero {
+    background: linear-gradient(135deg, #111827 0%, #16213a 55%, #18243e 100%);
     border-color: #26344d;
 }
 
@@ -837,21 +834,30 @@
 
 .dark-mode .users-hero h1,
 .dark-theme .users-hero h1,
-[data-theme="dark"] .users-hero h1 {
+[data-theme="dark"] .users-hero h1,
+.dark-mode .users-edit-hero h1,
+.dark-theme .users-edit-hero h1,
+[data-theme="dark"] .users-edit-hero h1 {
     color: #f8fafc;
 }
 
 .dark-mode .users-hero p,
 .dark-theme .users-hero p,
-[data-theme="dark"] .users-hero p {
+[data-theme="dark"] .users-hero p,
+.dark-mode .users-edit-hero p,
+.dark-theme .users-edit-hero p,
+[data-theme="dark"] .users-edit-hero p {
     color: #94a3b8;
 }
 
 .dark-mode .users-hero-mark,
 .dark-theme .users-hero-mark,
-[data-theme="dark"] .users-hero-mark {
+[data-theme="dark"] .users-hero-mark,
+.dark-mode .users-edit-hero-mark,
+.dark-theme .users-edit-hero-mark,
+[data-theme="dark"] .users-edit-hero-mark {
     background: rgba(59, 130, 246, 0.10);
-    color: rgba(147, 176, 255, 0.40);
+    color: rgba(147, 176, 255, 0.65);
 }
 
 .dark-mode .user-stat-card,
@@ -877,41 +883,54 @@
 .dark-theme .stat-blue > i,
 [data-theme="dark"] .stat-blue > i {
     background: rgba(37, 99, 235, 0.14);
+    color: #60a5fa;
 }
 
 .dark-mode .stat-green > i,
 .dark-theme .stat-green > i,
 [data-theme="dark"] .stat-green > i {
     background: rgba(5, 150, 105, 0.14);
+    color: #4ade80;
 }
 
 .dark-mode .stat-orange > i,
 .dark-theme .stat-orange > i,
 [data-theme="dark"] .stat-orange > i {
     background: rgba(234, 88, 12, 0.14);
+    color: #fb923c;
 }
 
 .dark-mode .stat-purple > i,
 .dark-theme .stat-purple > i,
 [data-theme="dark"] .stat-purple > i {
     background: rgba(124, 58, 237, 0.14);
+    color: #c4b5fd;
 }
 
 .dark-mode .users-panel-header,
 .dark-theme .users-panel-header,
-[data-theme="dark"] .users-panel-header {
+[data-theme="dark"] .users-panel-header,
+.dark-mode .users-edit-panel-header,
+.dark-theme .users-edit-panel-header,
+[data-theme="dark"] .users-edit-panel-header {
     border-color: #26344d;
 }
 
 .dark-mode .users-panel-header h5,
 .dark-theme .users-panel-header h5,
-[data-theme="dark"] .users-panel-header h5 {
+[data-theme="dark"] .users-panel-header h5,
+.dark-mode .users-edit-panel-header h5,
+.dark-theme .users-edit-panel-header h5,
+[data-theme="dark"] .users-edit-panel-header h5 {
     color: #f8fafc;
 }
 
 .dark-mode .users-panel-header p,
 .dark-theme .users-panel-header p,
-[data-theme="dark"] .users-panel-header p {
+[data-theme="dark"] .users-panel-header p,
+.dark-mode .users-edit-panel-header p,
+.dark-theme .users-edit-panel-header p,
+[data-theme="dark"] .users-edit-panel-header p {
     color: #94a3b8;
 }
 
@@ -923,24 +942,25 @@
 
 .dark-mode .search-field input,
 .dark-theme .search-field input,
-[data-theme="dark"] .search-field input {
-    background: #0f172a;
+[data-theme="dark"] .search-field input,
+.dark-mode .users-page .form-control,
+.dark-theme .users-page .form-control,
+[data-theme="dark"] .users-page .form-control,
+.dark-mode .users-page .form-select,
+.dark-theme .users-page .form-select,
+[data-theme="dark"] .users-page .form-select {
+    background-color: #0f172a;
     border-color: #334155;
     color: #f8fafc;
 }
 
 .dark-mode .search-field input::placeholder,
 .dark-theme .search-field input::placeholder,
-[data-theme="dark"] .search-field input::placeholder {
+[data-theme="dark"] .search-field input::placeholder,
+.dark-mode .users-page .form-control::placeholder,
+.dark-theme .users-page .form-control::placeholder,
+[data-theme="dark"] .users-page .form-control::placeholder {
     color: #64748b;
-}
-
-.dark-mode .user-filters .form-select,
-.dark-theme .user-filters .form-select,
-[data-theme="dark"] .user-filters .form-select {
-    background-color: #0f172a;
-    border-color: #334155;
-    color: #f8fafc;
 }
 
 .dark-mode .users-table-wrap,
@@ -998,12 +1018,16 @@
     color: #94a3b8;
 }
 
+/* =========================================================
+   ROLE COLORS
+========================================================= */
+
 .dark-mode .role-admin,
 .dark-theme .role-admin,
 [data-theme="dark"] .role-admin {
     background: rgba(79, 70, 229, 0.16) !important;
     color: #a5b4fc !important;
-    border-color: transparent !important;
+    border-color: rgba(165, 180, 252, 0.2) !important;
 }
 
 .dark-mode .role-admin i,
@@ -1017,14 +1041,376 @@
 [data-theme="dark"] .role-member {
     background: #1e293b;
     color: #cbd5e1;
+    border-color: #334155;
 }
 
-.dark-mode .status-inactive,
-.dark-theme .status-inactive,
-[data-theme="dark"] .status-inactive {
-    background: #1e293b;
+.dark-mode .role-member i,
+.dark-theme .role-member i,
+[data-theme="dark"] .role-member i {
+    color: #cbd5e1;
+}
+
+/* =========================================================
+   USER STATUS COLORS - INDEX
+========================================================= */
+
+.dark-mode .users-table .status-active,
+.dark-theme .users-table .status-active,
+[data-theme="dark"] .users-table .status-active {
+    background: rgba(34, 197, 94, 0.14) !important;
+    color: #4ade80 !important;
+    border-color: rgba(74, 222, 128, 0.25) !important;
+}
+
+.dark-mode .users-table .status-active i,
+.dark-theme .users-table .status-active i,
+[data-theme="dark"] .users-table .status-active i {
+    color: #4ade80 !important;
+}
+
+.dark-mode .users-table .status-inactive,
+.dark-theme .users-table .status-inactive,
+[data-theme="dark"] .users-table .status-inactive {
+    background: rgba(148, 163, 184, 0.12) !important;
+    color: #cbd5e1 !important;
+    border-color: rgba(148, 163, 184, 0.22) !important;
+}
+
+.dark-mode .users-table .status-inactive i,
+.dark-theme .users-table .status-inactive i,
+[data-theme="dark"] .users-table .status-inactive i {
+    color: #94a3b8 !important;
+}
+
+.dark-mode .users-table .status-banned,
+.dark-theme .users-table .status-banned,
+[data-theme="dark"] .users-table .status-banned {
+    background: rgba(239, 68, 68, 0.14) !important;
+    color: #f87171 !important;
+    border-color: rgba(248, 113, 113, 0.25) !important;
+}
+
+.dark-mode .users-table .status-banned i,
+.dark-theme .users-table .status-banned i,
+[data-theme="dark"] .users-table .status-banned i {
+    color: #f87171 !important;
+}
+
+/* =========================================================
+   USER STATUS COLORS - EDIT
+========================================================= */
+
+.dark-mode .users-edit-status.status-active,
+.dark-theme .users-edit-status.status-active,
+[data-theme="dark"] .users-edit-status.status-active {
+    color: #4ade80 !important;
+    background: rgba(34, 197, 94, 0.14) !important;
+    border-color: rgba(74, 222, 128, 0.25) !important;
+}
+
+.dark-mode .users-edit-status.status-inactive,
+.dark-theme .users-edit-status.status-inactive,
+[data-theme="dark"] .users-edit-status.status-inactive {
+    color: #cbd5e1 !important;
+    background: rgba(148, 163, 184, 0.12) !important;
+    border-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+.dark-mode .users-edit-status.status-banned,
+.dark-theme .users-edit-status.status-banned,
+[data-theme="dark"] .users-edit-status.status-banned {
+    color: #f87171 !important;
+    background: rgba(239, 68, 68, 0.14) !important;
+    border-color: rgba(248, 113, 113, 0.25) !important;
+}
+
+/* =========================================================
+   USER STATUS COLORS - SHOW
+========================================================= */
+
+.dark-mode .users-show-page .status-pill.status-active,
+.dark-theme .users-show-page .status-pill.status-active,
+[data-theme="dark"] .users-show-page .status-pill.status-active,
+.dark-mode .users-show-page .users-show-summary-status.status-active,
+.dark-theme .users-show-page .users-show-summary-status.status-active,
+[data-theme="dark"] .users-show-page .users-show-summary-status.status-active {
+    background: rgba(34, 197, 94, 0.14) !important;
+    color: #4ade80 !important;
+    border-color: rgba(74, 222, 128, 0.25) !important;
+}
+
+.dark-mode .users-show-page .status-pill.status-active i,
+.dark-theme .users-show-page .status-pill.status-active i,
+[data-theme="dark"] .users-show-page .status-pill.status-active i,
+.dark-mode .users-show-page .users-show-summary-status.status-active i,
+.dark-theme .users-show-page .users-show-summary-status.status-active i,
+[data-theme="dark"] .users-show-page .users-show-summary-status.status-active i {
+    color: #4ade80 !important;
+}
+
+.dark-mode .users-show-page .status-pill.status-inactive,
+.dark-theme .users-show-page .status-pill.status-inactive,
+[data-theme="dark"] .users-show-page .status-pill.status-inactive,
+.dark-mode .users-show-page .users-show-summary-status.status-inactive,
+.dark-theme .users-show-page .users-show-summary-status.status-inactive,
+[data-theme="dark"] .users-show-page .users-show-summary-status.status-inactive {
+    background: rgba(148, 163, 184, 0.12) !important;
+    color: #cbd5e1 !important;
+    border-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+.dark-mode .users-show-page .status-pill.status-inactive i,
+.dark-theme .users-show-page .status-pill.status-inactive i,
+[data-theme="dark"] .users-show-page .status-pill.status-inactive i,
+.dark-mode .users-show-page .users-show-summary-status.status-inactive i,
+.dark-theme .users-show-page .users-show-summary-status.status-inactive i,
+[data-theme="dark"] .users-show-page .users-show-summary-status.status-inactive i {
+    color: #94a3b8 !important;
+}
+
+.dark-mode .users-show-page .status-pill.status-banned,
+.dark-theme .users-show-page .status-pill.status-banned,
+[data-theme="dark"] .users-show-page .status-pill.status-banned,
+.dark-mode .users-show-page .users-show-summary-status.status-banned,
+.dark-theme .users-show-page .users-show-summary-status.status-banned,
+[data-theme="dark"] .users-show-page .users-show-summary-status.status-banned {
+    background: rgba(239, 68, 68, 0.14) !important;
+    color: #f87171 !important;
+    border-color: rgba(248, 113, 113, 0.25) !important;
+}
+
+.dark-mode .users-show-page .status-pill.status-banned i,
+.dark-theme .users-show-page .status-pill.status-banned i,
+[data-theme="dark"] .users-show-page .status-pill.status-banned i,
+.dark-mode .users-show-page .users-show-summary-status.status-banned i,
+.dark-theme .users-show-page .users-show-summary-status.status-banned i,
+[data-theme="dark"] .users-show-page .users-show-summary-status.status-banned i {
+    color: #f87171 !important;
+}
+
+/* =========================================================
+   USER SHOW - PROFILE AND CARDS
+========================================================= */
+
+.dark-mode .users-show-page .users-show-profile,
+.dark-theme .users-show-page .users-show-profile,
+[data-theme="dark"] .users-show-page .users-show-profile,
+.dark-mode .users-show-page .users-show-panel,
+.dark-theme .users-show-page .users-show-panel,
+[data-theme="dark"] .users-show-page .users-show-panel,
+.dark-mode .users-show-page .users-show-side-panel,
+.dark-theme .users-show-page .users-show-side-panel,
+[data-theme="dark"] .users-show-page .users-show-side-panel,
+.dark-mode .users-show-page .users-show-actions,
+.dark-theme .users-show-page .users-show-actions,
+[data-theme="dark"] .users-show-page .users-show-actions {
+    background: #111827;
+    border-color: #26344d;
+}
+
+.dark-mode .users-show-page .users-show-profile-info h2,
+.dark-theme .users-show-page .users-show-profile-info h2,
+[data-theme="dark"] .users-show-page .users-show-profile-info h2,
+.dark-mode .users-show-page .users-show-name-row h2,
+.dark-theme .users-show-page .users-show-name-row h2,
+[data-theme="dark"] .users-show-page .users-show-name-row h2 {
+    color: #f8fafc;
+}
+
+.dark-mode .users-show-page .users-show-username,
+.dark-theme .users-show-page .users-show-username,
+[data-theme="dark"] .users-show-page .users-show-username,
+.dark-mode .users-show-page .users-show-email,
+.dark-theme .users-show-page .users-show-email,
+[data-theme="dark"] .users-show-page .users-show-email {
+    color: #cbd5e1;
+}
+
+.dark-mode .users-show-page .users-show-profile-status,
+.dark-theme .users-show-page .users-show-profile-status,
+[data-theme="dark"] .users-show-page .users-show-profile-status,
+.dark-mode .users-show-page .users-show-profile-status .users-show-status-label,
+.dark-theme .users-show-page .users-show-profile-status .users-show-status-label,
+[data-theme="dark"] .users-show-page .users-show-profile-status .users-show-status-label {
     color: #94a3b8;
 }
+
+.dark-mode .users-show-page .users-show-quick-stats,
+.dark-theme .users-show-page .users-show-quick-stats,
+[data-theme="dark"] .users-show-page .users-show-quick-stats {
+    border-color: #26344d;
+}
+
+.dark-mode .users-show-page .users-show-quick-stat,
+.dark-theme .users-show-page .users-show-quick-stat,
+[data-theme="dark"] .users-show-page .users-show-quick-stat {
+    border-color: #26344d;
+}
+
+.dark-mode .users-show-page .users-show-quick-stat span,
+.dark-theme .users-show-page .users-show-quick-stat span,
+[data-theme="dark"] .users-show-page .users-show-quick-stat span,
+.dark-mode .users-show-page .users-show-activity-card span,
+.dark-theme .users-show-page .users-show-activity-card span,
+[data-theme="dark"] .users-show-page .users-show-activity-card span {
+    color: #94a3b8;
+}
+
+.dark-mode .users-show-page .users-show-quick-stat strong,
+.dark-theme .users-show-page .users-show-quick-stat strong,
+[data-theme="dark"] .users-show-page .users-show-quick-stat strong,
+.dark-mode .users-show-page .users-show-activity-card strong,
+.dark-theme .users-show-page .users-show-activity-card strong,
+[data-theme="dark"] .users-show-page .users-show-activity-card strong {
+    color: #f8fafc;
+}
+
+.dark-mode .users-show-page .users-show-info-item > span,
+.dark-theme .users-show-page .users-show-info-item > span,
+[data-theme="dark"] .users-show-page .users-show-info-item > span,
+.dark-mode .users-show-page .users-show-info-item > strong,
+.dark-theme .users-show-page .users-show-info-item > strong,
+[data-theme="dark"] .users-show-page .users-show-info-item > strong {
+    color: #cbd5e1;
+}
+
+.dark-mode .users-show-page .users-show-side-header h5,
+.dark-theme .users-show-page .users-show-side-header h5,
+[data-theme="dark"] .users-show-page .users-show-side-header h5 {
+    color: #f8fafc;
+}
+
+.dark-mode .users-show-page .users-show-side-header span,
+.dark-theme .users-show-page .users-show-side-header span,
+[data-theme="dark"] .users-show-page .users-show-side-header span {
+    color: #94a3b8;
+}
+
+.dark-mode .users-show-page .users-show-summary-list > div,
+.dark-theme .users-show-page .users-show-summary-list > div,
+[data-theme="dark"] .users-show-page .users-show-summary-list > div {
+    border-color: #26344d;
+}
+
+.dark-mode .users-show-page .users-show-summary-list > div > span,
+.dark-theme .users-show-page .users-show-summary-list > div > span,
+[data-theme="dark"] .users-show-page .users-show-summary-list > div > span {
+    color: #94a3b8;
+}
+
+.dark-mode .users-show-page .users-show-summary-list > div > strong,
+.dark-theme .users-show-page .users-show-summary-list > div > strong,
+[data-theme="dark"] .users-show-page .users-show-summary-list > div > strong {
+    color: #e2e8f0;
+}
+
+.dark-mode .users-show-page .users-show-email-card,
+.dark-theme .users-show-page .users-show-email-card,
+[data-theme="dark"] .users-show-page .users-show-email-card {
+    background: #0f172a;
+    border-color: #26344d;
+}
+
+.dark-mode .users-show-page .users-show-email-card strong,
+.dark-theme .users-show-page .users-show-email-card strong,
+[data-theme="dark"] .users-show-page .users-show-email-card strong {
+    color: #e2e8f0;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   USER SHOW - ICON COLORS
+========================================================= */
+
+.dark-mode .users-show-page .users-show-quick-icon,
+.dark-theme .users-show-page .users-show-quick-icon,
+[data-theme="dark"] .users-show-page .users-show-quick-icon,
+.dark-mode .users-show-page .users-show-activity-icon,
+.dark-theme .users-show-page .users-show-activity-icon,
+[data-theme="dark"] .users-show-page .users-show-activity-icon,
+.dark-mode .users-show-page .users-show-side-icon,
+.dark-theme .users-show-page .users-show-side-icon,
+[data-theme="dark"] .users-show-page .users-show-side-icon,
+.dark-mode .users-show-page .users-show-email-icon,
+.dark-theme .users-show-page .users-show-email-icon,
+[data-theme="dark"] .users-show-page .users-show-email-icon,
+.dark-mode .users-show-page .users-edit-section-icon,
+.dark-theme .users-show-page .users-edit-section-icon,
+[data-theme="dark"] .users-show-page .users-edit-section-icon {
+    background: rgba(147, 176, 255, 0.12) !important;
+    color: #9bbcff !important;
+    border-color: rgba(147, 176, 255, 0.22) !important;
+}
+
+.dark-mode .users-show-page .users-show-quick-icon i,
+.dark-theme .users-show-page .users-show-quick-icon i,
+[data-theme="dark"] .users-show-page .users-show-quick-icon i,
+.dark-mode .users-show-page .users-show-activity-icon i,
+.dark-theme .users-show-page .users-show-activity-icon i,
+[data-theme="dark"] .users-show-page .users-show-activity-icon i,
+.dark-mode .users-show-page .users-show-side-icon i,
+.dark-theme .users-show-page .users-show-side-icon i,
+[data-theme="dark"] .users-show-page .users-show-side-icon i,
+.dark-mode .users-show-page .users-show-email-icon i,
+.dark-theme .users-show-page .users-show-email-icon i,
+[data-theme="dark"] .users-show-page .users-show-email-icon i,
+.dark-mode .users-show-page .users-edit-section-icon i,
+.dark-theme .users-show-page .users-edit-section-icon i,
+[data-theme="dark"] .users-show-page .users-edit-section-icon i {
+    color: #9bbcff !important;
+}
+
+.dark-mode .users-show-page .users-show-email > i,
+.dark-theme .users-show-page .users-show-email > i,
+[data-theme="dark"] .users-show-page .users-show-email > i {
+    color: #9bbcff !important;
+}
+
+.dark-mode .users-show-page .users-show-name-row .role-pill i,
+.dark-theme .users-show-page .users-show-name-row .role-pill i,
+[data-theme="dark"] .users-show-page .users-show-name-row .role-pill i,
+.dark-mode .users-show-page .users-show-info-grid .role-pill i,
+.dark-theme .users-show-page .users-show-info-grid .role-pill i,
+[data-theme="dark"] .users-show-page .users-show-info-grid .role-pill i {
+    color: inherit !important;
+}
+
+.dark-mode .users-show-page .users-show-verification.verified,
+.dark-theme .users-show-page .users-show-verification.verified,
+[data-theme="dark"] .users-show-page .users-show-verification.verified {
+    color: #4ade80;
+}
+
+.dark-mode .users-show-page .users-show-verification.verified i,
+.dark-theme .users-show-page .users-show-verification.verified i,
+[data-theme="dark"] .users-show-page .users-show-verification.verified i {
+    color: #4ade80 !important;
+}
+
+.dark-mode .users-show-page .users-show-verification.unverified,
+.dark-theme .users-show-page .users-show-verification.unverified,
+[data-theme="dark"] .users-show-page .users-show-verification.unverified {
+    color: #fbbf24;
+}
+
+.dark-mode .users-show-page .users-show-verification.unverified i,
+.dark-theme .users-show-page .users-show-verification.unverified i,
+[data-theme="dark"] .users-show-page .users-show-verification.unverified i {
+    color: #fbbf24 !important;
+}
+
+.dark-mode .users-show-page .users-show-edit-btn i,
+.dark-theme .users-show-page .users-show-edit-btn i,
+[data-theme="dark"] .users-show-page .users-show-edit-btn i,
+.dark-mode .users-show-page .users-show-back-btn i,
+.dark-theme .users-show-page .users-show-back-btn i,
+[data-theme="dark"] .users-show-page .users-show-back-btn i {
+    color: inherit !important;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
 
 .dark-mode .empty-state strong,
 .dark-theme .empty-state strong,
@@ -1037,6 +1423,10 @@
 [data-theme="dark"] .empty-state span {
     color: #64748b;
 }
+
+/* =========================================================
+   PAGINATION
+========================================================= */
 
 .dark-mode .users-pagination .page-link,
 .dark-theme .users-pagination .page-link,
@@ -1052,6 +1442,10 @@
     background: #1e293b;
     color: #9bbcff;
 }
+
+/* =========================================================
+   DELETE CONFIRMATION
+========================================================= */
 
 .dark-mode .user-delete-popup.swal2-popup,
 .dark-theme .user-delete-popup.swal2-popup,
@@ -1085,7 +1479,6 @@
     background: #374151 !important;
     color: #ffffff !important;
 }
-
 
 /* =========================================================
    RESPONSIVE

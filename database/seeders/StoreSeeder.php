@@ -6,44 +6,40 @@ use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class StoreSeeder extends Seeder
 {
     public function run(): void
     {
         $sellers = User::where('role', 'seller')
+            ->where('status', 'active')
+            ->where('email', 'like', 'seller.%@secondbook.test')
             ->orderBy('id')
             ->get();
 
         if ($sellers->isEmpty()) {
-            $this->command->error('No sellers found.');
-            return;
+            throw new RuntimeException('No active demo sellers found for store seeding.');
         }
 
-        $storeNames = [
-            'Ali Books',
-            'Nigar Reading House',
-            'Rauf Book Market',
-            'Aysel Book Corner',
-            'Murad Readers Store',
-        ];
-
         foreach ($sellers as $index => $seller) {
-            $name = $storeNames[$index % count($storeNames)];
+            $name = $seller->first_name . "'s Bookshop";
 
             Store::updateOrCreate(
                 ['seller_id' => $seller->id],
                 [
                     'name' => $name,
-                    'slug' => Str::slug($name),
+                    'slug' => Str::slug($seller->username . '-' . $name),
                     'description' => 'A trusted SecondBook marketplace store.',
                     'logo' => null,
-                    'phone' => '+994500000000',
-                    'address' => 'Baku, Azerbaijan',
+                    'phone' => $seller->phone,
+                    'address' => $seller->city
+                        ? $seller->city . ', Azerbaijan'
+                        : 'Baku, Azerbaijan',
                     'status' => 'active',
                     'accept_orders' => true,
                     'auto_approve_orders' => false,
-                    'processing_time' => rand(1, 3),
+                    'processing_time' => ($index % 3) + 1,
                     'minimum_order_amount' => 0,
                     'order_note' => 'Books are carefully packed before shipping.',
                 ]

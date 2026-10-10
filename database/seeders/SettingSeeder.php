@@ -94,16 +94,25 @@ class SettingSeeder extends Seeder
                 'value' => '0',
                 'type' => 'boolean',
             ],
+            ['key' => 'marketplace_enabled', 'group_name' => 'general', 'value' => '1', 'type' => 'boolean'],
+            ['key' => 'default_shipping_fee', 'group_name' => 'shipping', 'value' => '3.99', 'type' => 'number'],
+            ['key' => 'free_shipping_threshold', 'group_name' => 'shipping', 'value' => '50', 'type' => 'number'],
+            ['key' => 'payments_enabled', 'group_name' => 'payments', 'value' => '1', 'type' => 'boolean'],
+            ['key' => 'payment_methods', 'group_name' => 'payments', 'value' => '["cash_on_delivery","credit_card","debit_card","paypal"]', 'type' => 'json'],
+            ['key' => 'default_payment_method', 'group_name' => 'payments', 'value' => 'cash_on_delivery', 'type' => 'text'],
+            ['key' => 'minimum_password_length', 'group_name' => 'security', 'value' => '8', 'type' => 'number'],
+            ['key' => 'login_attempt_limit', 'group_name' => 'security', 'value' => '5', 'type' => 'number'],
+            ['key' => 'cancel_order_period', 'group_name' => 'orders', 'value' => '24', 'type' => 'number'],
+            ['key' => 'session_lifetime', 'group_name' => 'security', 'value' => '120', 'type' => 'number'],
         ];
 
         foreach ($settings as $setting) {
-            DB::table('settings')->updateOrInsert(
-                ['key' => $setting['key']],
-                array_merge($setting, [
+            if (!DB::table('settings')->where('key', $setting['key'])->exists()) {
+                DB::table('settings')->insert(array_merge($setting, [
                     'updated_at' => now(),
                     'created_at' => now(),
-                ])
-            );
+                ]));
+            }
         }
     }
 }

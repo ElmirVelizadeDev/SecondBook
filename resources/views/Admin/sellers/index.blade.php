@@ -1,5 +1,9 @@
 @extends('layout.admin.master')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('admin/css/sellers.css') }}">
+@endpush
+
 @section('title', 'Sellers')
 
 @section('content')

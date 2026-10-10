@@ -1,207 +1,175 @@
 <section id="featured-books" class="featured-books-section">
+    <div class="container">
 
+        {{-- ================= HEADER ================= --}}
+        <header class="featured-books-header">
 
-<div class="container">
+            <div class="featured-books-heading">
+                <span class="featured-books-eyebrow">Some quality items</span>
+                <h2 class="featured-books-title">Featured Books</h2>
+            </div>
 
-    {{-- Section Header --}}
-    <div class="featured-books-header">
+            <div class="featured-books-aside">
+                <p class="featured-books-description">
+                    Handpicked books selected from the SecondBook marketplace
+                    for readers looking for something worth discovering.
+                </p>
 
-        <div class="featured-books-heading">
+                <a href="{{ route('frontend.books') }}" class="featured-books-view-all">
+                    <span>View All Books</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
 
-            <span class="featured-books-eyebrow">
-                Some quality items
-            </span>
+        </header>
 
-            <h2 class="featured-books-title">
-                Featured Books
-            </h2>
+        {{-- ================= PRODUCT LIST ================= --}}
+        <div class="featured-books-list">
 
-            <div class="featured-books-divider"></div>
+            <div class="featured-books-grid">
 
-            <p class="featured-books-description">
-                Handpicked books selected from the SecondBook marketplace
-                for readers looking for something worth discovering.
-            </p>
+                @forelse($featuredBooks as $book)
 
-        </div>
+                    @php
+                        $bookImage = null;
 
-        <a
-            href="{{ route('frontend.books') }}"
-            class="featured-books-view-all"
-        >
-            <span>View All Books</span>
-            <i class="bi bi-arrow-right"></i>
-        </a>
+                        if (!empty($book->cover)) {
+                            $bookImage = filter_var($book->cover, FILTER_VALIDATE_URL)
+                                ? $book->cover
+                                : asset('storage/' . $book->cover);
+                        }
 
-    </div>
+                        $originalPrice = (float) $book->price;
+                        $discountedPrice = (float) $book->discounted_price;
 
+                        $bookDetailsUrl = route('frontend.books.show', $book);
+                    @endphp
 
-    {{-- Product List --}}
-    <div class="featured-books-list">
+                    <article
+                        class="featured-book-card"
+                        onclick="if (!event.target.closest('a, button, form')) window.location.href = '{{ $bookDetailsUrl }}';"
+                        style="cursor: pointer;"
+                    >
 
-        <div class="featured-books-grid">
+                        {{-- Cover --}}
+                        <div class="featured-book-image-wrap">
 
-            @forelse($featuredBooks as $book)
+                            @if($bookImage)
 
-                @php
+                                <a href="{{ $bookDetailsUrl }}" class="featured-book-image">
+                                    <img
+                                        src="{{ $bookImage }}"
+                                        alt="{{ $book->title }}"
+                                        loading="lazy"
+                                    >
+                                </a>
 
-                    $bookImage = null;
+                            @else
 
-                    if (!empty($book->cover)) {
-
-                        $bookImage = filter_var(
-                            $book->cover,
-                            FILTER_VALIDATE_URL
-                        )
-                            ? $book->cover
-                            : asset('storage/' . $book->cover);
-
-                    }
-
-                    $originalPrice = (float) $book->price;
-                    $discountedPrice = (float) $book->discounted_price;
-
-                @endphp
-
-
-                <article class="featured-book-card">
-
-                    {{-- Book Cover --}}
-                    <div class="featured-book-image-wrap">
-
-                        @if($bookImage)
-
-                            <a
-                                href="#"
-                                class="featured-book-image"
-                            >
-                                <img
-                                    src="{{ $bookImage }}"
-                                    alt="{{ $book->title }}"
-                                    loading="lazy"
+                                <a
+                                    href="{{ $bookDetailsUrl }}"
+                                    class="featured-book-image featured-book-placeholder"
+                                    aria-label="View {{ $book->title }} details"
                                 >
-                            </a>
+                                    <i class="bi bi-book"></i>
+                                </a>
 
-                        @else
+                            @endif
 
-                            <div class="featured-book-image featured-book-placeholder">
-                                <i class="bi bi-book"></i>
-                            </div>
+                            @if($book->is_discount_active)
+                                <span class="featured-book-discount">
+                                    {{ $book->discount_label }}
+                                </span>
+                            @endif
 
-                        @endif
-
-
-                        {{-- Discount Badge --}}
-                        @if($book->is_discount_active)
-
-                            <span class="featured-book-discount">
-                                {{ $book->discount_label }}
-                            </span>
-
-                        @endif
-
-
-                        {{-- Cart Button --}}
-                        <form
-                            action="{{ route('frontend.cart.add', $book) }}"
-                            method="POST"
-                            class="add-to-cart-form"
-                        >
-                            @csrf
-
-                            <input
-                                type="hidden"
-                                name="quantity"
-                                value="1"
+                            {{-- Add to Cart — original functionality preserved --}}
+                            <form
+                                action="{{ route('frontend.cart.add', $book) }}"
+                                method="POST"
+                                class="add-to-cart-form"
                             >
+                                @csrf
 
-                            <button
-                                type="submit"
-                                class="add-to-cart featured-book-cart-btn"
-                            >
-                                <i class="bi bi-cart3"></i>
-                                <span>Add to Cart</span>
-                            </button>
+                                <input type="hidden" name="quantity" value="1">
 
-                        </form>
-
-                    </div>
-
-
-                    {{-- Book Information --}}
-                    <div class="featured-book-info">
-
-                        <span class="featured-book-label">
-                            Featured
-                        </span>
-
-                        <h3 class="featured-book-title">
-                            {{ $book->title }}
-                        </h3>
-
-                        <p class="featured-book-author">
-                            {{ $book->author->name ?? 'Unknown Author' }}
-                        </p>
-
-                        <div class="featured-book-bottom">
-
-                            <div class="featured-book-price-wrap">
-
-                                @if($book->is_discount_active)
-
-                                    <span class="featured-book-old-price">
-                                        ${{ number_format($originalPrice, 2) }}
-                                    </span>
-
-                                    <span class="featured-book-price featured-book-discounted-price">
-                                        ${{ number_format($discountedPrice, 2) }}
-                                    </span>
-
-                                @else
-
-                                    <span class="featured-book-price">
-                                        ${{ number_format($originalPrice, 2) }}
-                                    </span>
-
-                                @endif
-
-                            </div>
-
-                            <span class="featured-book-arrow">
-                                <i class="bi bi-arrow-up-right"></i>
-                            </span>
+                                <button type="submit" class="add-to-cart featured-book-cart-btn">
+                                    <i class="bi bi-cart3"></i>
+                                    <span>Add to Cart</span>
+                                </button>
+                            </form>
 
                         </div>
 
+                        {{-- Info --}}
+                        <div class="featured-book-info">
+
+                            <span class="featured-book-label">Featured</span>
+
+                            <h3 class="featured-book-title" title="{{ $book->title }}">
+                                {{ $book->title }}
+                            </h3>
+
+                            <p class="featured-book-author">
+                                {{ $book->author->name ?? 'Unknown Author' }}
+                            </p>
+
+                            <div class="featured-book-bottom">
+
+                                <div class="featured-book-price-wrap">
+
+                                    @if($book->is_discount_active)
+
+                                        <span class="featured-book-price featured-book-discounted-price">
+                                            ${{ number_format($discountedPrice, 2) }}
+                                        </span>
+
+                                        <span class="featured-book-old-price">
+                                            ${{ number_format($originalPrice, 2) }}
+                                        </span>
+
+                                    @else
+
+                                        <span class="featured-book-price">
+                                            ${{ number_format($originalPrice, 2) }}
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                                <a
+                                    href="{{ $bookDetailsUrl }}"
+                                    class="featured-book-arrow"
+                                    aria-label="View {{ $book->title }} details"
+                                >
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                @empty
+
+                    <div class="featured-books-empty">
+                        <div class="featured-books-empty-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+
+                        <h3>No Featured Books Available</h3>
+
+                        <p>
+                            Featured books will appear here once they are added.
+                        </p>
                     </div>
 
-                </article>
+                @endforelse
 
-            @empty
-
-                <div class="featured-books-empty">
-
-                    <div class="featured-books-empty-icon">
-                        <i class="bi bi-book"></i>
-                    </div>
-
-                    <h3>
-                        No Featured Books Available
-                    </h3>
-
-                    <p>
-                        Featured books will appear here once they are added.
-                    </p>
-
-                </div>
-
-            @endforelse
+            </div>
 
         </div>
 
     </div>
-
-</div>
-
-
 </section>

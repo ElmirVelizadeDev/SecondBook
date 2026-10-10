@@ -4,18 +4,24 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class MessageSeeder extends Seeder
 {
     public function run(): void
     {
         $users = DB::table('users')
-            ->where('email', '!=', 'admin@secondbook.com')
             ->where('status', true)
+            ->where(function ($query) {
+                $query->where('email', 'like', 'seller.%@secondbook.test')
+                    ->orWhere('email', 'like', '%@example.com')
+                    ->orWhere('email', 'admin@gmail.com');
+            })
+            ->orderBy('email')
             ->get(['name', 'email']);
 
         if ($users->isEmpty()) {
-            return;
+            throw new RuntimeException('No active demo users found for support message seeding.');
         }
 
         $subjects = [
@@ -44,21 +50,20 @@ class MessageSeeder extends Seeder
             $subject = $subjects[$index % count($subjects)];
             $message = $messages[$index % count($messages)];
 
-            DB::table('messages')->updateOrInsert(
-                [
-                    'email' => $user->email,
-                    'subject' => $subject,
-                ],
-                [
+            if (!DB::table('messages')
+                ->where('email', $user->email)
+                ->where('subject', $subject)
+                ->exists()) {
+                DB::table('messages')->insert([
                     'name' => $user->name,
                     'email' => $user->email,
                     'subject' => $subject,
                     'message' => $message,
                     'status' => $index % 3 === 0 ? 'unread' : 'read',
                     'updated_at' => now(),
-                    'created_at' => now()->subDays(rand(1, 20)),
-                ]
-            );
+                    'created_at' => now()->subDays(($index % 20) + 1),
+                ]);
+            }
         }
     }
 }
