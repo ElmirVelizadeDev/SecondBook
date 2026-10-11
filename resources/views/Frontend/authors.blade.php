@@ -9,8 +9,8 @@
 @section('content')
 
 {{-- =========================================================
-     AUTHORS HERO
-========================================================= --}}
+     AUTHORS HERO  
+========================================================== --}}
 
 <section class="authors-hero">
 
@@ -168,8 +168,43 @@
 
 
 {{-- =========================================================
+     MARQUEE  
+========================================================== --}}
+
+@if($authors->count())
+
+    <section class="authors-marquee" aria-label="Author names">
+
+        <div class="authors-marquee-viewport">
+
+            <div class="authors-marquee-track">
+
+                @foreach([1, 2] as $copy)
+
+                    <div class="authors-marquee-group" @if($copy === 2) aria-hidden="true" @endif>
+
+                        @for($repeat = 0; $repeat < 6; $repeat++)
+                            @foreach($authors as $marqueeAuthor)
+                                <span class="authors-marquee-item">{{ $marqueeAuthor->name }}</span>
+                            @endforeach
+                        @endfor
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+    </section>
+
+@endif
+
+
+{{-- =========================================================
      INTRO
-========================================================= --}}
+========================================================== --}}
 
 <section class="authors-intro">
 
@@ -211,7 +246,7 @@
 
 {{-- =========================================================
      AUTHOR SPOTLIGHT
-========================================================= --}}
+========================================================== --}}
 
 @if($authors->count())
 
@@ -336,7 +371,7 @@
 
 {{-- =========================================================
      AUTHORS LIST
-========================================================= --}}
+========================================================== --}}
 
 <section class="authors-list-section" id="authors-list">
 
@@ -365,9 +400,9 @@
         </div>
 
 
-        {{-- =====================================================
+        {{-- ===================================================
              AUTHOR SEARCH
-        ====================================================== --}}
+        ==================================================== --}}
 
         <div class="authors-search-wrapper">
 
@@ -402,17 +437,15 @@
                         aria-label="Search authors"
                     >
 
-                    @if(request('search'))
-
-                        <a
-                            href="{{ route('frontend.authors') }}"
-                            class="authors-search-clear"
-                            aria-label="Clear search"
-                        >
-                            <i class="bi bi-x"></i>
-                        </a>
-
-                    @endif
+                    <a
+                        href="{{ route('frontend.authors') }}"
+                        class="authors-search-clear"
+                        id="authors-search-clear"
+                        aria-label="Clear search"
+                        @if(!request('search')) hidden @endif
+                    >
+                        <i class="bi bi-x"></i>
+                    </a>
 
                 </div>
 
@@ -429,375 +462,379 @@
         </div>
 
 
-        {{-- =====================================================
-             AUTHORS RESULTS
-        ====================================================== --}}
+        {{-- ===================================================
+             RESULTS (AJAX bu bloku bütövlükdə yeniləyir)
+        ==================================================== --}}
 
-        @if($authors->count())
+        <div id="authors-results" class="authors-results">
 
-            <div class="authors-results-meta">
+            @if($authors->count())
 
-                <div>
+                <div class="authors-results-meta">
 
-                    <span class="authors-results-label">
-                        AUTHORS
-                    </span>
+                    <div>
 
-                    <strong>
-                        {{ $authors->total() }}
-                    </strong>
+                        <span class="authors-results-label">
+                            AUTHORS
+                        </span>
+
+                        <strong>
+                            {{ $authors->total() }}
+                        </strong>
+
+                    </div>
+
+                    @if(request('search'))
+
+                        <div class="authors-active-search">
+                            Results for
+                            <strong>"{{ request('search') }}"</strong>
+                        </div>
+
+                    @else
+
+                        <div class="authors-active-search">
+                            Discover the collection
+                        </div>
+
+                    @endif
 
                 </div>
 
-                @if(request('search'))
 
-                    <div class="authors-active-search">
-                        Results for
-                        <strong>"{{ request('search') }}"</strong>
-                    </div>
+                <div class="authors-grid" id="authors-grid">
 
-                @else
+                    @foreach($authors as $index => $author)
 
-                    <div class="authors-active-search">
-                        Discover the collection
-                    </div>
+                        @php
+                            $authorImage = null;
 
-                @endif
+                            if (!empty($author->photo)) {
+                                $authorImage = filter_var(
+                                    $author->photo,
+                                    FILTER_VALIDATE_URL
+                                )
+                                    ? $author->photo
+                                    : asset('storage/' . $author->photo);
+                            }
+                        @endphp
 
-            </div>
+                        <article class="author-card" style="--i: {{ $loop->index }}">
 
+                            <div class="author-card-image">
 
-            <div class="authors-grid" id="authors-grid">
+                                @if($authorImage)
 
-                @foreach($authors as $index => $author)
+                                    <img
+                                        src="{{ $authorImage }}"
+                                        alt="{{ $author->name }}"
+                                        loading="lazy"
+                                    >
 
-                    @php
-                        $authorImage = null;
+                                @else
 
-                        if (!empty($author->photo)) {
-                            $authorImage = filter_var(
-                                $author->photo,
-                                FILTER_VALIDATE_URL
-                            )
-                                ? $author->photo
-                                : asset('storage/' . $author->photo);
-                        }
-                    @endphp
+                                    <div class="author-card-placeholder">
+                                        <i class="bi bi-person"></i>
+                                    </div>
 
-                    <article class="author-card">
+                                @endif
 
-                        <div class="author-card-image">
+                                <div class="author-image-overlay"></div>
 
-                            @if($authorImage)
-
-                                <img
-                                    src="{{ $authorImage }}"
-                                    alt="{{ $author->name }}"
-                                    loading="lazy"
-                                >
-
-                            @else
-
-                                <div class="author-card-placeholder">
-                                    <i class="bi bi-person"></i>
-                                </div>
-
-                            @endif
-
-                            <div class="author-image-overlay"></div>
-
-                            <span class="author-number">
-                                {{ str_pad(
-                                    ($authors->currentPage() - 1) * $authors->perPage() + $loop->iteration,
-                                    2,
-                                    '0',
-                                    STR_PAD_LEFT
-                                ) }}
-                            </span>
-
-                            <span class="author-card-view">
-                                <i class="bi bi-arrow-up-right"></i>
-                            </span>
-
-                        </div>
-
-
-                        <div class="author-card-content">
-
-                            <div class="author-card-top">
-
-                                <span class="author-label">
-                                    AUTHOR
+                                <span class="author-number">
+                                    {{ str_pad(
+                                        ($authors->currentPage() - 1) * $authors->perPage() + $loop->iteration,
+                                        2,
+                                        '0',
+                                        STR_PAD_LEFT
+                                    ) }}
                                 </span>
 
-                                <span class="author-card-line"></span>
+                                <span class="author-card-view">
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </span>
 
                             </div>
 
-                            <h3>
-                                {{ $author->name }}
-                            </h3>
 
-                            <p>
-                                {{ \Illuminate\Support\Str::limit(
-                                    $author->bio ?: 'Discover books and stories from ' . $author->name . '.',
-                                    120
-                                ) }}
-                            </p>
+                            <div class="author-card-content">
 
-                            <a
-                                href="{{ route('frontend.books', ['search' => $author->name]) }}"
-                                class="author-view-btn"
-                            >
-                                <span>View Books</span>
-                                <i class="bi bi-arrow-up-right"></i>
-                            </a>
+                                <div class="author-card-top">
 
-                        </div>
+                                    <span class="author-label">
+                                        AUTHOR
+                                    </span>
 
-                    </article>
+                                    <span class="author-card-line"></span>
 
-                @endforeach
+                                </div>
 
-            </div>
+                                <h3 title="{{ $author->name }}">
+                                    {{ $author->name }}
+                                </h3>
 
-
-            {{-- =================================================
-                 PAGINATION
-            ================================================== --}}
-
-            @if($authors->hasPages())
-
-                @php
-                    $pagination = $authors->appends(request()->except('page'));
-                    $currentPage = $authors->currentPage();
-                    $lastPage = $authors->lastPage();
-                    $startPage = max(1, $currentPage - 2);
-                    $endPage = min($lastPage, $currentPage + 2);
-                @endphp
-
-                <div
-                    class="authors-pagination-wrapper"
-                    id="authors-pagination"
-                >
-
-                    <div class="authors-pagination">
-
-                        <div class="authors-pagination-info">
-
-                            <span>SHOWING</span>
-
-                            <strong>
-                                {{ $authors->firstItem() }}
-                            </strong>
-
-                            <span>—</span>
-
-                            <strong>
-                                {{ $authors->lastItem() }}
-                            </strong>
-
-                            <span>OF</span>
-
-                            <strong>
-                                {{ $authors->total() }}
-                            </strong>
-
-                            <span>AUTHORS</span>
-
-                        </div>
-
-
-                        <div class="authors-pagination-links">
-
-                            @if($authors->onFirstPage())
-
-                                <span
-                                    class="authors-page-link disabled"
-                                    aria-disabled="true"
-                                >
-                                    <i class="bi bi-arrow-left"></i>
-                                </span>
-
-                            @else
+                                <p>
+                                    {{ \Illuminate\Support\Str::limit(
+                                        $author->bio ?: 'Discover books and stories from ' . $author->name . '.',
+                                        120
+                                    ) }}
+                                </p>
 
                                 <a
-                                    href="{{ $pagination->previousPageUrl() }}"
-                                    class="authors-page-link"
-                                    rel="prev"
-                                    aria-label="Previous page"
+                                    href="{{ route('frontend.books', ['search' => $author->name]) }}"
+                                    class="author-view-btn"
                                 >
-                                    <i class="bi bi-arrow-left"></i>
+                                    <span>View Books</span>
+                                    <i class="bi bi-arrow-up-right"></i>
                                 </a>
 
-                            @endif
+                            </div>
+
+                        </article>
+
+                    @endforeach
+
+                </div>
 
 
-                            @if($startPage > 1)
+                {{-- =============================================
+                     PAGINATION
+                ============================================== --}}
 
-                                <a
-                                    href="{{ $pagination->url(1) }}"
-                                    class="authors-page-link"
-                                >
-                                    1
-                                </a>
+                @if($authors->hasPages())
 
-                            @endif
+                    @php
+                        $pagination = $authors->appends(request()->except('page'));
+                        $currentPage = $authors->currentPage();
+                        $lastPage = $authors->lastPage();
+                        $startPage = max(1, $currentPage - 2);
+                        $endPage = min($lastPage, $currentPage + 2);
+                    @endphp
+
+                    <div
+                        class="authors-pagination-wrapper"
+                        id="authors-pagination"
+                    >
+
+                        <div class="authors-pagination">
+
+                            <div class="authors-pagination-info">
+
+                                <span>SHOWING</span>
+
+                                <strong>
+                                    {{ $authors->firstItem() }}
+                                </strong>
+
+                                <span>—</span>
+
+                                <strong>
+                                    {{ $authors->lastItem() }}
+                                </strong>
+
+                                <span>OF</span>
+
+                                <strong>
+                                    {{ $authors->total() }}
+                                </strong>
+
+                                <span>AUTHORS</span>
+
+                            </div>
 
 
-                            @if($startPage > 2)
+                            <div class="authors-pagination-links">
 
-                                <span class="authors-page-ellipsis">
-                                    ...
-                                </span>
-
-                            @endif
-
-
-                            @for($page = $startPage; $page <= $endPage; $page++)
-
-                                @if($page == $currentPage)
+                                @if($authors->onFirstPage())
 
                                     <span
-                                        class="authors-page-link active"
-                                        aria-current="page"
+                                        class="authors-page-link disabled"
+                                        aria-disabled="true"
                                     >
-                                        {{ $page }}
+                                        <i class="bi bi-arrow-left"></i>
                                     </span>
 
                                 @else
 
                                     <a
-                                        href="{{ $pagination->url($page) }}"
+                                        href="{{ $pagination->previousPageUrl() }}"
                                         class="authors-page-link"
+                                        rel="prev"
+                                        aria-label="Previous page"
                                     >
-                                        {{ $page }}
+                                        <i class="bi bi-arrow-left"></i>
                                     </a>
 
                                 @endif
 
-                            @endfor
+
+                                @if($startPage > 1)
+
+                                    <a
+                                        href="{{ $pagination->url(1) }}"
+                                        class="authors-page-link"
+                                    >
+                                        1
+                                    </a>
+
+                                @endif
 
 
-                            @if($endPage < $lastPage - 1)
+                                @if($startPage > 2)
 
-                                <span class="authors-page-ellipsis">
-                                    ...
-                                </span>
+                                    <span class="authors-page-ellipsis">
+                                        ...
+                                    </span>
 
-                            @endif
-
-
-                            @if($endPage < $lastPage)
-
-                                <a
-                                    href="{{ $pagination->url($lastPage) }}"
-                                    class="authors-page-link"
-                                >
-                                    {{ $lastPage }}
-                                </a>
-
-                            @endif
+                                @endif
 
 
-                            @if($authors->hasMorePages())
+                                @for($page = $startPage; $page <= $endPage; $page++)
 
-                                <a
-                                    href="{{ $pagination->nextPageUrl() }}"
-                                    class="authors-page-link"
-                                    rel="next"
-                                    aria-label="Next page"
-                                >
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
+                                    @if($page == $currentPage)
 
-                            @else
+                                        <span
+                                            class="authors-page-link active"
+                                            aria-current="page"
+                                        >
+                                            {{ $page }}
+                                        </span>
 
-                                <span
-                                    class="authors-page-link disabled"
-                                    aria-disabled="true"
-                                >
-                                    <i class="bi bi-arrow-right"></i>
-                                </span>
+                                    @else
 
-                            @endif
+                                        <a
+                                            href="{{ $pagination->url($page) }}"
+                                            class="authors-page-link"
+                                        >
+                                            {{ $page }}
+                                        </a>
+
+                                    @endif
+
+                                @endfor
+
+
+                                @if($endPage < $lastPage - 1)
+
+                                    <span class="authors-page-ellipsis">
+                                        ...
+                                    </span>
+
+                                @endif
+
+
+                                @if($endPage < $lastPage)
+
+                                    <a
+                                        href="{{ $pagination->url($lastPage) }}"
+                                        class="authors-page-link"
+                                    >
+                                        {{ $lastPage }}
+                                    </a>
+
+                                @endif
+
+
+                                @if($authors->hasMorePages())
+
+                                    <a
+                                        href="{{ $pagination->nextPageUrl() }}"
+                                        class="authors-page-link"
+                                        rel="next"
+                                        aria-label="Next page"
+                                    >
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+
+                                @else
+
+                                    <span
+                                        class="authors-page-link disabled"
+                                        aria-disabled="true"
+                                    >
+                                        <i class="bi bi-arrow-right"></i>
+                                    </span>
+
+                                @endif
+
+                            </div>
 
                         </div>
 
                     </div>
 
+                @endif
+
+            @else
+
+                {{-- ===========================================
+                     EMPTY STATE
+                ============================================ --}}
+
+                <div class="authors-empty">
+
+                    <div class="authors-empty-number">
+                        00
+                    </div>
+
+                    <div class="authors-empty-icon">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+
+                    @if(request('search'))
+
+                        <span class="authors-small-label">
+                            SEARCH RESULTS
+                        </span>
+
+                        <h3>
+                            No authors found.
+                        </h3>
+
+                        <p>
+                            We couldn't find any authors matching
+                            "<strong>{{ request('search') }}</strong>".
+                            Try another search.
+                        </p>
+
+                        <a
+                            href="{{ route('frontend.authors') }}"
+                            class="authors-primary-btn"
+                        >
+                            <span>View All Authors</span>
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                    @else
+
+                        <span class="authors-small-label">
+                            THE COLLECTION
+                        </span>
+
+                        <h3>
+                            No authors available yet.
+                        </h3>
+
+                        <p>
+                            Our author collection is growing.
+                            Check back soon for new writers and stories.
+                        </p>
+
+                        <a
+                            href="{{ route('frontend.books') }}"
+                            class="authors-primary-btn"
+                        >
+                            <span>Browse Books</span>
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                    @endif
+
                 </div>
 
             @endif
 
-        @else
-
-            {{-- =================================================
-                 EMPTY STATE
-            ================================================== --}}
-
-            <div class="authors-empty">
-
-                <div class="authors-empty-number">
-                    00
-                </div>
-
-                <div class="authors-empty-icon">
-                    <i class="bi bi-person-lines-fill"></i>
-                </div>
-
-                @if(request('search'))
-
-                    <span class="authors-small-label">
-                        SEARCH RESULTS
-                    </span>
-
-                    <h3>
-                        No authors found.
-                    </h3>
-
-                    <p>
-                        We couldn't find any authors matching
-                        "<strong>{{ request('search') }}</strong>".
-                        Try another search.
-                    </p>
-
-                    <a
-                        href="{{ route('frontend.authors') }}"
-                        class="authors-primary-btn"
-                    >
-                        <span>View All Authors</span>
-                        <i class="bi bi-arrow-up-right"></i>
-                    </a>
-
-                @else
-
-                    <span class="authors-small-label">
-                        THE COLLECTION
-                    </span>
-
-                    <h3>
-                        No authors available yet.
-                    </h3>
-
-                    <p>
-                        Our author collection is growing.
-                        Check back soon for new writers and stories.
-                    </p>
-
-                    <a
-                        href="{{ route('frontend.books') }}"
-                        class="authors-primary-btn"
-                    >
-                        <span>Browse Books</span>
-                        <i class="bi bi-arrow-up-right"></i>
-                    </a>
-
-                @endif
-
-            </div>
-
-        @endif
+        </div>
 
     </div>
 
@@ -806,7 +843,7 @@
 
 {{-- =========================================================
      AUTHOR DISCOVERY
-========================================================= --}}
+========================================================== --}}
 
 <section class="authors-discovery">
 
@@ -879,7 +916,7 @@
 
 {{-- =========================================================
      BOTTOM CTA
-========================================================= --}}
+========================================================== --}}
 
 <section class="authors-cta">
 
@@ -926,93 +963,118 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const authorsGrid = document.getElementById('authors-grid');
-    const paginationContainer = document.getElementById('authors-pagination');
+    const results = document.getElementById('authors-results');
     const searchForm = document.getElementById('authors-search-form');
+    const searchInput = searchForm ? searchForm.querySelector('input[name="search"]') : null;
+    const clearButton = document.getElementById('authors-search-clear');
+    const listSection = document.getElementById('authors-list');
 
-    function loadAuthors(url, scrollToAuthors = true) {
+    let controller = null;
+
+
+    function toggleClear() {
+
+        if (!clearButton || !searchInput) {
+            return;
+        }
+
+        clearButton.hidden = searchInput.value.trim() === '';
+
+    }
+
+
+    /*
+     * Nəticələr blokunu (say + grid + pagination və ya boş vəziyyət)
+     * serverdən gətirib bütövlükdə əvəz edir.
+     */
+    function loadAuthors(url, mode) {
+
+        if (!results) {
+            window.location.href = url;
+            return;
+        }
+
+        if (controller) {
+            controller.abort();
+        }
+
+        controller = new AbortController();
+
+        results.classList.add('is-loading');
 
         fetch(url, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
-            }
+            },
+            signal: controller.signal
         })
         .then(response => response.text())
         .then(html => {
 
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const freshResults = doc.querySelector('#authors-results');
 
-            const newGrid = doc.querySelector('#authors-grid');
-            const newPagination = doc.querySelector('#authors-pagination');
-
-            if (newGrid && authorsGrid) {
-                authorsGrid.innerHTML = newGrid.innerHTML;
+            if (!freshResults) {
+                window.location.href = url;
+                return;
             }
 
-            if (paginationContainer) {
+            results.innerHTML = freshResults.innerHTML;
 
-                if (newPagination) {
-                    paginationContainer.innerHTML = newPagination.innerHTML;
-                    paginationContainer.style.display = '';
-                } else {
-                    paginationContainer.innerHTML = '';
-                    paginationContainer.style.display = 'none';
-                }
+            if (mode === 'pagination' && searchForm) {
+
+                const position =
+                    searchForm.getBoundingClientRect().bottom +
+                    window.scrollY +
+                    20;
+
+                window.scrollTo({
+                    top: position,
+                    behavior: 'smooth'
+                });
 
             }
 
-            bindPagination();
+            if (mode === 'search' && listSection) {
 
-            if (scrollToAuthors) {
-
-                const search = document.getElementById('authors-search-form');
-
-                if (search) {
-
-                    const offset = 20;
-
-                    const position =
-                        search.getBoundingClientRect().bottom +
-                        window.scrollY +
-                        offset;
-
-                    window.scrollTo({
-                        top: position,
-                        behavior: 'smooth'
-                    });
-
-                }
+                listSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
 
             }
 
         })
         .catch(error => {
-            console.error('Authors pagination error:', error);
+
+            if (error.name !== 'AbortError') {
+                console.error('Authors load error:', error);
+            }
+
+        })
+        .finally(() => {
+            results.classList.remove('is-loading');
         });
 
     }
 
 
-    function bindPagination() {
+    /* Pagination: bloku əvəz etdikdə də işləsin deyə delegation */
+    if (results) {
 
-        const links = document.querySelectorAll(
-            '#authors-pagination a'
-        );
+        results.addEventListener('click', function (event) {
 
-        links.forEach(link => {
+            const link = event.target.closest('a.authors-page-link');
 
-            link.addEventListener('click', function (event) {
+            if (!link) {
+                return;
+            }
 
-                event.preventDefault();
+            event.preventDefault();
 
-                const url = this.href;
+            window.history.pushState({}, '', link.href);
 
-                window.history.pushState({}, '', url);
-
-                loadAuthors(url, true);
-
-            });
+            loadAuthors(link.href, 'pagination');
 
         });
 
@@ -1025,8 +1087,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             event.preventDefault();
 
-            const formData = new FormData(searchForm);
-            const params = new URLSearchParams(formData);
+            const params = new URLSearchParams(new FormData(searchForm));
 
             const url =
                 searchForm.action +
@@ -1034,18 +1095,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
             window.history.pushState({}, '', url);
 
-            loadAuthors(url, false);
+            loadAuthors(url, 'search');
 
-            const search = document.getElementById('authors-list');
+        });
 
-            if (search) {
+    }
 
-                search.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
 
+    if (searchInput) {
+        searchInput.addEventListener('input', toggleClear);
+    }
+
+
+    if (clearButton) {
+
+        clearButton.addEventListener('click', function (event) {
+
+            event.preventDefault();
+
+            if (searchInput) {
+                searchInput.value = '';
             }
+
+            toggleClear();
+
+            window.history.pushState({}, '', clearButton.href);
+
+            loadAuthors(clearButton.href, 'search');
 
         });
 
@@ -1054,12 +1130,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('popstate', function () {
 
-        loadAuthors(window.location.href, false);
+        if (searchInput) {
+            searchInput.value = new URLSearchParams(window.location.search).get('search') || '';
+        }
+
+        toggleClear();
+
+        loadAuthors(window.location.href, null);
 
     });
-
-
-    bindPagination();
 
 });
 </script>

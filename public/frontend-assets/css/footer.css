@@ -1,3 +1,4 @@
+
 /* =========================================================
    FOOTER
 ========================================================= */
@@ -55,12 +56,21 @@
 
 
 @keyframes fo-rise {
-    from { opacity: 0; translate: 0 28px; }
-    to   { opacity: 1; translate: 0 0; }
+    from {
+        opacity: 0;
+        translate: 0 28px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
 }
 
 @keyframes fo-spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 
@@ -70,7 +80,7 @@
 
 #footer.site-footer {
     position: relative;
-    margin-top: 100px;
+    margin-top: 0;
     padding: 92px 0 0;
     overflow: hidden;
     border-top: 0;
@@ -559,8 +569,8 @@
         animation-timeline: view();
     }
 
-    #footer .footer-column:nth-child(1) { animation-range: entry 0%  entry 55%; }
-    #footer .footer-column:nth-child(2) { animation-range: entry 6%  entry 61%; }
+    #footer .footer-column:nth-child(1) { animation-range: entry 0% entry 55%; }
+    #footer .footer-column:nth-child(2) { animation-range: entry 6% entry 61%; }
     #footer .footer-column:nth-child(3) { animation-range: entry 12% entry 67%; }
     #footer .footer-column:nth-child(4) { animation-range: entry 18% entry 73%; }
     #footer .footer-column:nth-child(5) { animation-range: entry 24% entry 79%; }
@@ -603,7 +613,7 @@
 
 @media screen and (max-width: 991px) {
     #footer.site-footer {
-        margin-top: 80px;
+        margin-top: 0;
         padding-top: 72px;
     }
 
@@ -632,7 +642,7 @@
 
 @media screen and (max-width: 767px) {
     #footer.site-footer {
-        margin-top: 65px;
+        margin-top: 0;
         padding-top: 58px;
     }
 
@@ -694,7 +704,7 @@
 
 @media screen and (max-width: 575px) {
     #footer.site-footer {
-        margin-top: 55px;
+        margin-top: 0;
         padding-top: 48px;
     }
 

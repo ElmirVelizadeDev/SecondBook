@@ -1,3 +1,4 @@
+
 @extends('Layout.Frontend.master')
 
 @section('title', 'Order Details | SecondBook')
@@ -34,7 +35,6 @@
         <div class="container">
 
             <div class="order-details-breadcrumb">
-
                 <a href="{{ route('frontend.home') }}">
                     <i class="bi bi-house-door"></i>
                     <span>Home</span>
@@ -48,12 +48,8 @@
 
                 <i class="bi bi-chevron-right"></i>
 
-                <span class="is-current">
-                    Order Details
-                </span>
-
+                <span class="is-current">Order Details</span>
             </div>
-
 
             <div class="order-details-hero-grid">
 
@@ -63,7 +59,6 @@
                         <span class="order-details-eyebrow-icon">
                             <i class="bi bi-receipt"></i>
                         </span>
-
                         Order Information
                     </span>
 
@@ -78,7 +73,6 @@
                     </p>
 
                 </div>
-
 
                 <a
                     href="{{ route('frontend.orders') }}"
@@ -103,38 +97,27 @@
             {{-- Alerts --}}
             @if(session('success'))
                 <div class="order-alert order-alert-success">
-
                     <span class="order-alert-icon">
                         <i class="bi bi-check-lg"></i>
                     </span>
 
                     <div class="order-alert-content">
                         <strong>Order Updated</strong>
-
-                        <span>
-                            {{ session('success') }}
-                        </span>
+                        <span>{{ session('success') }}</span>
                     </div>
-
                 </div>
             @endif
 
-
             @if(session('error'))
                 <div class="order-alert order-alert-error">
-
                     <span class="order-alert-icon">
                         <i class="bi bi-exclamation-lg"></i>
                     </span>
 
                     <div class="order-alert-content">
                         <strong>Something went wrong</strong>
-
-                        <span>
-                            {{ session('error') }}
-                        </span>
+                        <span>{{ session('error') }}</span>
                     </div>
-
                 </div>
             @endif
 
@@ -147,50 +130,32 @@
                 <div class="order-overview-header">
 
                     <div class="order-reference">
-
-                        <span class="order-label">
-                            Order Number
-                        </span>
+                        <span class="order-label">Order Number</span>
 
                         <div class="order-reference-row">
-
-                            <h2>
-                                #{{ $order->order_number }}
-                            </h2>
+                            <h2>#{{ $order->order_number }}</h2>
 
                             <span class="order-type-badge">
                                 <i class="bi bi-bag"></i>
                                 Purchase
                             </span>
-
                         </div>
-
                     </div>
 
-
                     <div class="order-status-wrapper">
-
-                        <span class="order-label">
-                            Order Status
-                        </span>
+                        <span class="order-label">Order Status</span>
 
                         <span class="order-status status-{{ $orderStatus }}">
-
                             <span class="status-dot"></span>
-
                             {{ ucfirst(str_replace('_', ' ', $orderStatus)) }}
-
                         </span>
-
                     </div>
 
                 </div>
 
-
                 <div class="order-overview-meta">
 
                     <div class="order-meta-item">
-
                         <span class="order-label">
                             <i class="bi bi-calendar3"></i>
                             Order Date
@@ -199,44 +164,30 @@
                         <strong>
                             {{ $order->created_at->format('d M Y, H:i') }}
                         </strong>
-
                     </div>
 
-
                     <div class="order-meta-item">
-
                         <span class="order-label">
                             <i class="bi bi-wallet2"></i>
                             Payment Method
                         </span>
 
-                        <strong>
-                            {{ $paymentMethod }}
-                        </strong>
-
+                        <strong>{{ $paymentMethod }}</strong>
                     </div>
 
-
                     <div class="order-meta-item">
-
                         <span class="order-label">
                             <i class="bi bi-shield-check"></i>
                             Payment Status
                         </span>
 
                         <span class="payment-status payment-{{ $paymentStatus }}">
-
                             <span class="status-dot"></span>
-
                             {{ ucfirst(str_replace('_', ' ', $paymentStatus)) }}
-
                         </span>
-
                     </div>
 
-
                     <div class="order-meta-item">
-
                         <span class="order-label">
                             <i class="bi bi-cash-stack"></i>
                             Total
@@ -245,7 +196,6 @@
                         <strong class="order-total">
                             ₼{{ number_format($order->total_price, 2) }}
                         </strong>
-
                     </div>
 
                 </div>
@@ -262,7 +212,6 @@
                 <article class="order-product-card">
 
                     <div class="section-card-header">
-
                         <div class="section-card-heading">
 
                             <span class="section-card-icon">
@@ -276,19 +225,14 @@
 
                         </div>
 
-                        <span class="section-card-number">
-                            01
-                        </span>
-
+                        <span class="section-card-number">01</span>
                     </div>
-
 
                     <div class="order-product">
 
                         <div class="order-product-image">
 
                             @if($coverUrl)
-
                                 <img
                                     src="{{ $coverUrl }}"
                                     alt="{{ $order->book->title }}"
@@ -298,38 +242,27 @@
 
                                 <div
                                     class="order-product-placeholder"
-                                    style="display:none;"
+                                    style="display: none;"
                                 >
                                     <i class="bi bi-book"></i>
                                 </div>
-
                             @else
-
                                 <div class="order-product-placeholder">
                                     <i class="bi bi-book"></i>
                                 </div>
-
                             @endif
 
                         </div>
 
-
                         <div class="order-product-info">
 
                             @if($order->book)
+                                <span class="product-eyebrow">BOOK</span>
 
-                                <span class="product-eyebrow">
-                                    BOOK
-                                </span>
-
-                                <h4>
-                                    {{ $order->book->title }}
-                                </h4>
+                                <h4>{{ $order->book->title }}</h4>
 
                                 @if($order->book->author)
-
                                     <p class="order-product-author">
-
                                         <span class="author-icon">
                                             <i class="bi bi-person"></i>
                                         </span>
@@ -337,56 +270,34 @@
                                         <span>
                                             {{ $order->book->author->name }}
                                         </span>
-
                                     </p>
-
                                 @endif
-
                             @else
-
-                                <span class="product-eyebrow">
-                                    PRODUCT
-                                </span>
-
-                                <h4>
-                                    Book no longer available
-                                </h4>
-
+                                <span class="product-eyebrow">PRODUCT</span>
+                                <h4>Book no longer available</h4>
                             @endif
-
 
                             <div class="product-info-list">
 
                                 <div class="product-info-row">
-
                                     <span>Unit Price</span>
 
                                     <strong>
                                         ₼{{ number_format($order->book_price, 2) }}
                                     </strong>
-
                                 </div>
-
 
                                 <div class="product-info-row">
-
                                     <span>Quantity</span>
-
-                                    <strong>
-                                        ×{{ $order->quantity }}
-                                    </strong>
-
+                                    <strong>×{{ $order->quantity }}</strong>
                                 </div>
 
-
                                 <div class="product-info-row product-total-row">
-
                                     <span>Product Total</span>
 
                                     <strong>
                                         ₼{{ number_format($order->total_price, 2) }}
                                     </strong>
-
                                 </div>
 
                             </div>
@@ -402,7 +313,6 @@
                 <article class="order-shipping-card">
 
                     <div class="section-card-header">
-
                         <div class="section-card-heading">
 
                             <span class="section-card-icon">
@@ -416,100 +326,65 @@
 
                         </div>
 
-                        <span class="section-card-number">
-                            02
-                        </span>
-
+                        <span class="section-card-number">02</span>
                     </div>
-
 
                     <div class="shipping-info">
 
                         <div class="shipping-row">
-
                             <span>
                                 <i class="bi bi-person"></i>
                                 Full Name
                             </span>
 
-                            <strong>
-                                {{ $order->full_name }}
-                            </strong>
-
+                            <strong>{{ $order->full_name }}</strong>
                         </div>
 
-
                         <div class="shipping-row">
-
                             <span>
                                 <i class="bi bi-telephone"></i>
                                 Phone
                             </span>
 
-                            <strong>
-                                {{ $order->phone }}
-                            </strong>
-
+                            <strong>{{ $order->phone }}</strong>
                         </div>
 
-
                         <div class="shipping-row">
-
                             <span>
                                 <i class="bi bi-globe2"></i>
                                 Country
                             </span>
 
-                            <strong>
-                                {{ $order->country }}
-                            </strong>
-
+                            <strong>{{ $order->country }}</strong>
                         </div>
 
-
                         <div class="shipping-row">
-
                             <span>
                                 <i class="bi bi-building"></i>
                                 City
                             </span>
 
-                            <strong>
-                                {{ $order->city }}
-                            </strong>
-
+                            <strong>{{ $order->city }}</strong>
                         </div>
 
-
                         @if($order->postal_code)
-
                             <div class="shipping-row">
-
                                 <span>
                                     <i class="bi bi-mailbox"></i>
                                     Postal Code
                                 </span>
 
-                                <strong>
-                                    {{ $order->postal_code }}
-                                </strong>
-
+                                <strong>{{ $order->postal_code }}</strong>
                             </div>
-
                         @endif
 
-
                         <div class="shipping-row shipping-address">
-
                             <span>
                                 <i class="bi bi-house"></i>
                                 Address
                             </span>
 
-                            <strong>
-                                {{ $order->address }}
-                            </strong>
-
+                            <strong>{{ $order->address }}</strong>
                         </div>
 
                     </div>
@@ -528,7 +403,6 @@
                 <article class="order-summary-card">
 
                     <div class="section-card-header">
-
                         <div class="section-card-heading">
 
                             <span class="section-card-icon">
@@ -542,65 +416,40 @@
 
                         </div>
 
-                        <span class="section-card-number">
-                            03
-                        </span>
-
+                        <span class="section-card-number">03</span>
                     </div>
-
 
                     <div class="summary-list">
 
                         <div class="summary-row">
-
                             <span>Book Price</span>
 
                             <strong>
                                 ₼{{ number_format($order->book_price, 2) }}
                             </strong>
-
                         </div>
 
-
                         <div class="summary-row">
-
                             <span>Quantity</span>
-
-                            <strong>
-                                ×{{ $order->quantity }}
-                            </strong>
-
+                            <strong>×{{ $order->quantity }}</strong>
                         </div>
-
 
                         <div class="summary-row">
-
                             <span>Shipping</span>
-
-                            <strong class="summary-free">
-                                FREE
-                            </strong>
-
+                            <strong class="summary-free">FREE</strong>
                         </div>
-
 
                         <div class="summary-divider"></div>
 
-
                         <div class="summary-row summary-total">
-
                             <div>
                                 <span>Total Amount</span>
-
-                                <small>
-                                    Including shipping
-                                </small>
+                                <small>Including shipping</small>
                             </div>
 
                             <strong>
                                 ₼{{ number_format($order->total_price, 2) }}
                             </strong>
-
                         </div>
 
                     </div>
@@ -612,7 +461,6 @@
                 <article class="order-note-card">
 
                     <div class="section-card-header">
-
                         <div class="section-card-heading">
 
                             <span class="section-card-icon">
@@ -626,29 +474,20 @@
 
                         </div>
 
-                        <span class="section-card-number">
-                            04
-                        </span>
-
+                        <span class="section-card-number">04</span>
                     </div>
 
-
                     @if($order->note)
-
                         <div class="order-note-content">
 
                             <div class="order-note-quote">
                                 <i class="bi bi-quote"></i>
                             </div>
 
-                            <p>
-                                {{ $order->note }}
-                            </p>
+                            <p>{{ $order->note }}</p>
 
                         </div>
-
                     @else
-
                         <div class="order-note-empty">
 
                             <div class="order-note-empty-icon">
@@ -656,19 +495,14 @@
                             </div>
 
                             <div>
-
-                                <strong>
-                                    No additional note
-                                </strong>
+                                <strong>No additional note</strong>
 
                                 <span>
                                     No additional note was provided for this order.
                                 </span>
-
                             </div>
 
                         </div>
-
                     @endif
 
                 </article>
@@ -678,11 +512,9 @@
 
             {{-- STORE NOTE --}}
             @if($order->order_note)
-
                 <article class="order-note-card order-store-note-card">
 
                     <div class="section-card-header">
-
                         <div class="section-card-heading">
 
                             <span class="section-card-icon">
@@ -696,12 +528,8 @@
 
                         </div>
 
-                        <span class="section-card-number">
-                            05
-                        </span>
-
+                        <span class="section-card-number">05</span>
                     </div>
-
 
                     <div class="order-note-content">
 
@@ -709,14 +537,11 @@
                             <i class="bi bi-info-circle"></i>
                         </div>
 
-                        <p>
-                            {{ $order->order_note }}
-                        </p>
+                        <p>{{ $order->order_note }}</p>
 
                     </div>
 
                 </article>
-
             @endif
 
 
@@ -724,7 +549,6 @@
                  PAYMENT STATUS
             ================================================== --}}
             @if($paymentStatus !== 'paid')
-
                 <div class="order-payment-banner">
 
                     <div class="order-payment-banner-icon">
@@ -732,21 +556,15 @@
                     </div>
 
                     <div class="order-payment-banner-content">
-
-                        <strong>
-                            Payment is still pending
-                        </strong>
+                        <strong>Payment is still pending</strong>
 
                         <span>
                             Complete your payment to confirm this order.
                         </span>
-
                     </div>
 
                 </div>
-
             @else
-
                 <div class="order-payment-complete">
 
                     <div class="order-payment-complete-icon">
@@ -754,19 +572,14 @@
                     </div>
 
                     <div>
-
-                        <strong>
-                            Payment completed
-                        </strong>
+                        <strong>Payment completed</strong>
 
                         <span>
                             Your payment for this order has been successfully completed.
                         </span>
-
                     </div>
 
                 </div>
-
             @endif
 
 
@@ -783,9 +596,7 @@
                     <span>Back to My Orders</span>
                 </a>
 
-
                 @if($paymentStatus !== 'paid')
-
                     <a
                         href="{{ route('frontend.payment', $order->id) }}"
                         class="order-action payment"
@@ -793,12 +604,9 @@
                         <i class="bi bi-credit-card"></i>
                         <span>Pay Now</span>
                     </a>
-
                 @endif
 
-
                 @if($orderStatus === 'delivered' && !$reviewed)
-
                     <a
                         href="{{ route('frontend.reviews.create', $order->id) }}"
                         class="order-action review"
@@ -806,9 +614,7 @@
                         <i class="bi bi-star"></i>
                         <span>Write a Review</span>
                     </a>
-
                 @endif
-
 
                 <a
                     href="{{ route('frontend.order-tracking', $order->id) }}"

@@ -15,94 +15,214 @@
 <main class="sb-about">
 
     {{-- =====================================================
-         HERO
+        HERO
     ====================================================== --}}
 
-    <section class="sb-about-hero">
+    <section class="sb-about-hero sb-about-hero-premium">
 
         <div class="sb-hero-noise"></div>
+        <div class="sb-hero-glow sb-hero-glow-one"></div>
+        <div class="sb-hero-glow sb-hero-glow-two"></div>
+
+        <div class="sb-hero-grid-pattern"></div>
 
         <div class="sb-hero-orbit sb-hero-orbit-1"></div>
         <div class="sb-hero-orbit sb-hero-orbit-2"></div>
 
         <div class="container">
 
+            <div class="sb-hero-topline">
+                <a href="{{ url('/') }}" class="sb-hero-breadcrumb">
+                    <span>SECOND BOOK</span>
+                    <i class="bi bi-arrow-right"></i>
+                    <span>OUR STORY</span>
+                </a>
+
+                <span class="sb-hero-edition">
+                    <span class="sb-hero-live-dot"></span>
+                    A NEW CHAPTER BEGINS
+                </span>
+            </div>
+
             <div class="sb-hero-layout">
+
+                {{-- LEFT: EDITORIAL CONTENT --}}
 
                 <div class="sb-hero-copy">
 
                     <div class="sb-eyebrow">
                         <span class="sb-eyebrow-line"></span>
-                        <span>SECOND BOOK / ABOUT</span>
+                        <span>MORE THAN JUST BOOKS</span>
                     </div>
 
                     <h1>
-                        Books don't
-                        <span>belong</span>
-                        to just one
-                        reader.
+                        Every book
+                        <span>has another</span>
+                        <span class="sb-hero-title-highlight">life to live.</span>
                     </h1>
 
-                    <div class="sb-hero-bottom">
+                    <p class="sb-hero-description">
+                        A story does not end when the last page turns.
+                        It begins again in another reader's hands.
+                        We bring books and people together, one story at a time.
+                    </p>
 
-                        <p>
-                            We believe a great book should keep moving.
-                            From one shelf to another, from one reader
-                            to the next — every story deserves another life.
-                        </p>
+                    <div class="sb-hero-actions">
 
                         <a
                             href="{{ route('frontend.books') }}"
-                            class="sb-circle-link"
-                            aria-label="Explore books"
+                            class="sb-hero-primary-btn"
                         >
-                            <span>EXPLORE</span>
+                            <span>DISCOVER OUR BOOKS</span>
                             <i class="bi bi-arrow-up-right"></i>
                         </a>
+
+                        <a href="#about-story" class="sb-hero-text-link">
+                            <span class="sb-hero-play-icon">
+                                <i class="bi bi-arrow-down"></i>
+                            </span>
+                            <span>OUR STORY</span>
+                        </a>
+
+                    </div>
+
+                    <div class="sb-hero-bottom">
+
+                        <div class="sb-hero-reader-stack" aria-hidden="true">
+                            <span><i class="bi bi-person-fill"></i></span>
+                            <span><i class="bi bi-book-half"></i></span>
+                            <span><i class="bi bi-heart-fill"></i></span>
+                        </div>
+
+                        <div class="sb-hero-community-copy">
+                            <strong>A COMMUNITY BUILT ON STORIES</strong>
+                            <span>Read it. Love it. Pass it on.</span>
+                        </div>
+
+                        <div class="sb-hero-bottom-mark">
+                            <i class="bi bi-stars"></i>
+                        </div>
 
                     </div>
 
                 </div>
 
+                {{-- RIGHT: CINEMATIC BOOK COMPOSITION --}}
 
                 <div class="sb-hero-art">
 
-                    <div class="sb-art-label">
-                        <span>THE IDEA</span>
-                        <i class="bi bi-arrow-down-right"></i>
+                    <div class="sb-hero-art-index">
+                        <span>FIG.</span>
+                        <strong>01</strong>
+                        <span>THE ART OF READING</span>
                     </div>
 
-                    <div class="sb-art-ring sb-art-ring-outer"></div>
-                    <div class="sb-art-ring sb-art-ring-inner"></div>
+                    <div class="sb-hero-art-halo"></div>
+                    <div class="sb-hero-art-ring sb-hero-art-ring-outer"></div>
+                    <div class="sb-hero-art-ring sb-hero-art-ring-inner"></div>
 
-                    <div class="sb-hero-photo">
-                        <img
-                            src="https://images.pexels.com/photos/590493/pexels-photo-590493.jpeg"
-                            alt="Books arranged on a wooden table"
-                        >
+                    <div class="sb-hero-book-scene">
+
+                        <div class="sb-hero-book-back">
+                            
+                        </div>
+
+                        <div class="sb-hero-book-front">
+                            <div class="sb-hero-book-cover">
+                                <span class="sb-book-ornament">
+                                    <i class="bi bi-flower1"></i>
+                                </span>
+
+                                <span class="sb-book-edition">SECOND BOOK EDITION</span>
+
+                                <span class="sb-book-title">
+                                    Stories
+                                    <em>Never</em>
+                                    End.
+                                </span>
+
+                                <span class="sb-book-cover-line"></span>
+
+                                <span class="sb-book-subtitle">
+                                    A WORLD BETWEEN
+                                    THE COVERS
+                                </span>
+
+                                <span class="sb-book-bottom-mark">SB</span>
+                            </div>
+                        </div>
+
+                        <div class="sb-hero-book-side">
+                            <span></span>
+                        </div>
+
+                        <div class="sb-hero-art-light"></div>
+
+                    </div>
+
+                    <div class="sb-hero-floating-note sb-hero-note-top">
+                        <span class="sb-hero-note-icon">
+                            <i class="bi bi-bookmark-heart"></i>
+                        </span>
+
+                        <span class="sb-hero-note-copy">
+                            <strong>Stories Worth Keeping</strong>
+                            <small>Find your next favourite</small>
+                        </span>
+
+                        <i class="bi bi-arrow-up-right sb-hero-note-arrow"></i>
+                    </div>
+
+                    <div class="sb-hero-floating-note sb-hero-note-bottom">
+                        <span class="sb-hero-note-star">
+                            <i class="bi bi-stars"></i>
+                        </span>
+
+                        <span class="sb-hero-note-copy">
+                            <strong>Pass It Forward</strong>
+                            <small>Every book deserves a new chapter</small>
+                        </span>
                     </div>
 
                     <div class="sb-hero-stamp">
                         <span>READ</span>
+                        <i class="bi bi-asterisk"></i>
                         <span>SHARE</span>
+                        <i class="bi bi-asterisk"></i>
                         <span>REPEAT</span>
                     </div>
 
-                    <div class="sb-hero-bookmark">
-                        <i class="bi bi-bookmark-heart"></i>
-                    </div>
-
-                    <div class="sb-hero-number">
-                        01
+                    <div class="sb-hero-art-caption">
+                        <span>01 / 03</span>
+                        <span>GIVE STORIES ANOTHER LIFE</span>
                     </div>
 
                 </div>
 
             </div>
 
+            {{-- BOTTOM SIGNATURE STRIP --}}
+
+            <div class="sb-hero-signature">
+
+                <div class="sb-hero-signature-label">
+                    <span class="sb-hero-signature-line"></span>
+                    <span>THE SECOND BOOK PHILOSOPHY</span>
+                </div>
+
+                <p>
+                    A good story is too precious to be read only once.
+                </p>
+
+                <a href="#about-story" aria-label="Discover our philosophy">
+                    <i class="bi bi-arrow-down-right"></i>
+                </a>
+
+            </div>
+
             <div class="sb-hero-scroll">
                 <span>SCROLL TO DISCOVER</span>
-                <div></div>
+                <span class="sb-hero-scroll-line"></span>
             </div>
 
         </div>

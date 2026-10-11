@@ -30,8 +30,12 @@
             function confirmLogout(formId) {
                 const form = document.getElementById(formId);
 
+                if (!form) {
+                    return;
+                }
+
                 if (typeof Swal === 'undefined') {
-                    form?.submit();
+                    form.submit();
                     return;
                 }
 
@@ -51,7 +55,7 @@
                     }
                 }).then(function (result) {
                     if (result.isConfirmed) {
-                        form?.submit();
+                        form.submit();
                     }
                 });
             }
@@ -59,7 +63,8 @@
             const profileLogoutBtn = document.getElementById('profileLogoutBtn');
 
             if (profileLogoutBtn) {
-                profileLogoutBtn.addEventListener('click', function () {
+                profileLogoutBtn.addEventListener('click', function (event) {
+                    event.preventDefault();
                     confirmLogout('profileLogoutForm');
                 });
             }
@@ -70,8 +75,79 @@
 
     {{-- =========================================================
         Global Add-to-Cart Handler
-        Works across frontend Blade pages and shared components.
+        Shared handler for frontend cart forms.
     ========================================================== --}}
+    <style>
+        .book-cart-btn.is-adding::before,
+        .book-cart-btn.is-adding::after,
+        .book-cart-btn.is-added::before,
+        .book-cart-btn.is-added::after {
+            content: none !important;
+            display: none !important;
+        }
+
+        .book-cart-btn.is-added {
+            color: #198754 !important;
+        }
+
+        .book-cart-btn.is-added .cart-success-icon {
+            color: #198754 !important;
+            font-size: 24px !important;
+            font-weight: 700;
+            width: 100%;
+            height: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            animation: cartSuccessPop 0.25s ease-out both;
+        }
+
+        .book-cart-btn .cart-loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: cartButtonSpin 0.65s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes cartButtonSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes cartSuccessPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.55);
+            }
+
+            70% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .book-cart-btn .cart-success-icon {
+                animation: none;
+            }
+
+            .book-cart-btn .cart-loading-spinner {
+                animation-duration: 1.5s;
+            }
+        }
+    </style>
+
     <script>
         (function () {
             'use strict';
@@ -81,6 +157,11 @@
             const registerUrl = @json(route('frontend.auth.register'));
 
             function showAuthPrompt() {
+                if (typeof Swal === 'undefined') {
+                    window.location.href = loginUrl;
+                    return Promise.resolve();
+                }
+
                 return Swal.fire({
                     title: 'Sign in to continue',
                     text: 'Please log in or create an account to add books to your cart.',
@@ -107,6 +188,11 @@
             }
 
             function showCartError(message) {
+                if (typeof Swal === 'undefined') {
+                    window.alert(message || 'Something went wrong. Please try again.');
+                    return Promise.resolve();
+                }
+
                 return Swal.fire({
                     title: 'Unable to add book',
                     text: message || 'Something went wrong. Please try again.',
@@ -124,7 +210,7 @@
                 document.querySelectorAll(
                     '#header-cart-count, [data-cart-count]'
                 ).forEach(function (element) {
-                    element.textContent = count;
+                    element.textContent = Number(count) > 99 ? '99+' : count;
                 });
             }
 
@@ -138,7 +224,27 @@
                 }
             }
 
-            // Intercept cart forms globally before page-specific handlers.
+            function showButtonSuccess(button) {
+                if (!button) {
+                    return;
+                }
+
+                button.classList.remove('is-adding');
+                button.classList.add('is-added');
+                button.innerHTML =
+                    '<i class="bi bi-check-lg cart-success-icon" aria-hidden="true"></i>';
+            }
+
+            function restoreButton(button, originalHtml, originalDisabled) {
+                if (!button) {
+                    return;
+                }
+
+                button.innerHTML = originalHtml;
+                button.classList.remove('is-adding', 'is-added');
+                button.disabled = originalDisabled;
+            }
+
             document.addEventListener('submit', async function (event) {
                 const form = event.target;
 
@@ -154,16 +260,6 @@
                 event.stopImmediatePropagation();
 
                 if (form.dataset.cartSubmitting === 'true') {
-                    return;
-                }
-
-                if (typeof Swal === 'undefined') {
-                    if (!isAuthenticated) {
-                        window.location.href = loginUrl;
-                        return;
-                    }
-
-                    form.submit();
                     return;
                 }
 
@@ -183,9 +279,13 @@
 
                 if (button) {
                     button.disabled = true;
+                    button.classList.remove('is-added');
+                    button.classList.add('is-adding');
                     button.innerHTML =
-                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
+                        '<span class="cart-loading-spinner" aria-hidden="true"></span>';
                 }
+
+                let succeeded = false;
 
                 try {
                     const token =
@@ -216,43 +316,85 @@
                         response.status === 401 ||
                         data.message === 'Unauthenticated.'
                     ) {
+                        if (button) {
+                            restoreButton(
+                                button,
+                                originalButtonHtml,
+                                originalDisabled
+                            );
+                        }
+
+                        delete form.dataset.cartSubmitting;
                         await showAuthPrompt();
                         return;
                     }
 
-                    if (!response.ok || data.success === false) {
+                    if (
+                        !response.ok ||
+                        data.success === false ||
+                        data.status === 'error'
+                    ) {
                         throw new Error(
                             data.message ||
                             'Could not add this book to your cart.'
                         );
                     }
 
+                    succeeded = true;
+
                     if (data.cart_count !== undefined) {
                         updateCartCount(data.cart_count);
                     }
 
-                    await Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: data.message || 'Book added to cart successfully!',
-                        showConfirmButton: false,
-                        timer: 2600,
-                        timerProgressBar: true
-                    });
+                    // Show the success icon immediately after a successful response.
+                    showButtonSuccess(button);
+
+                    // Keep the checkmark visible while the toast is displayed.
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: data.message || 'Book added to cart successfully!',
+                            showConfirmButton: false,
+                            timer: 2600,
+                            timerProgressBar: true
+                        });
+                    }
                 } catch (error) {
+                    console.error('Add-to-cart error:', error);
+
+                    if (button) {
+                        restoreButton(
+                            button,
+                            originalButtonHtml,
+                            originalDisabled
+                        );
+                    }
+
                     await showCartError(error.message);
                 } finally {
                     delete form.dataset.cartSubmitting;
 
                     if (button) {
-                        button.disabled = originalDisabled;
-                        button.innerHTML = originalButtonHtml;
+                        if (succeeded) {
+                            // Do not restore the original icon before the checkmark appears.
+                            window.setTimeout(function () {
+                                restoreButton(
+                                    button,
+                                    originalButtonHtml,
+                                    originalDisabled
+                                );
+                            }, 900);
+                        } else {
+                            button.classList.remove('is-adding', 'is-added');
+                            button.disabled = originalDisabled;
+                        }
                     }
                 }
             }, true);
 
-            // Handle guest-only cart links on the Books page.
+            // Guest-only cart links on the Books page.
             document.addEventListener('click', async function (event) {
                 const target = event.target;
 
@@ -272,11 +414,7 @@
                 event.preventDefault();
                 event.stopImmediatePropagation();
 
-                if (typeof Swal !== 'undefined') {
-                    await showAuthPrompt();
-                } else {
-                    window.location.href = loginUrl;
-                }
+                await showAuthPrompt();
             }, true);
         })();
     </script>

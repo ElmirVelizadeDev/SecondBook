@@ -1,3 +1,4 @@
+
 @extends('Layout.Frontend.master')
 
 @section('title', 'My Orders | SecondBook')
@@ -80,7 +81,6 @@
             {{-- Alerts --}}
             @if(session('success'))
                 <div class="sb-orders-alert sb-alert-success">
-
                     <span class="sb-alert-icon">
                         <i class="bi bi-check-circle"></i>
                     </span>
@@ -89,13 +89,11 @@
                         <strong>Order Updated</strong>
                         <span>{{ session('success') }}</span>
                     </div>
-
                 </div>
             @endif
 
             @if(session('error'))
                 <div class="sb-orders-alert sb-alert-error">
-
                     <span class="sb-alert-icon">
                         <i class="bi bi-exclamation-circle"></i>
                     </span>
@@ -104,7 +102,6 @@
                         <strong>Something went wrong</strong>
                         <span>{{ session('error') }}</span>
                     </div>
-
                 </div>
             @endif
 
@@ -115,7 +112,6 @@
                 <div class="sb-orders-heading-row">
 
                     <div class="sb-orders-heading">
-
                         <span class="sb-orders-section-kicker">
                             <i class="bi bi-box-seam"></i>
                             Your Purchases
@@ -126,7 +122,6 @@
                         <p>
                             Review your recent purchases and track every order.
                         </p>
-
                     </div>
 
                     <a
@@ -147,7 +142,6 @@
                     @foreach($orders as $order)
 
                         @php
-
                             $statusClass = match($order->order_status) {
                                 'pending' => 'status-pending',
                                 'processing' => 'status-processing',
@@ -158,13 +152,7 @@
                             };
 
                             $paymentMethod = $order->payment_method
-                                ? ucwords(
-                                    str_replace(
-                                        '\_',
-                                        ' ',
-                                        $order->payment_method
-                                    )
-                                )
+                                ? ucwords(str_replace('_', ' ', $order->payment_method))
                                 : 'Not selected';
 
                             $paymentStatus = $order->payment_status
@@ -181,9 +169,7 @@
                                     ->copy()
                                     ->addDays($cancelOrderPeriod)
                                     ->isFuture();
-
                         @endphp
-
 
                         <article class="sb-order-card">
 
@@ -191,7 +177,6 @@
                             <div class="sb-order-card-header">
 
                                 <div class="sb-order-card-heading">
-
                                     <div class="sb-order-card-icon">
                                         <i class="bi bi-receipt"></i>
                                     </div>
@@ -201,16 +186,11 @@
                                             Order Number
                                         </span>
 
-                                        <h2>
-                                            #{{ $order->order_number }}
-                                        </h2>
+                                        <h2>#{{ $order->order_number }}</h2>
                                     </div>
-
                                 </div>
 
-
                                 <div class="sb-order-date">
-
                                     <span class="sb-order-date-icon">
                                         <i class="bi bi-calendar3"></i>
                                     </span>
@@ -222,7 +202,6 @@
                                             {{ $order->created_at->format('M d, Y') }}
                                         </strong>
                                     </div>
-
                                 </div>
 
                             </div>
@@ -239,7 +218,6 @@
                                         @if($order->book && !empty($order->book->cover))
 
                                             @php
-
                                                 $cover = $order->book->cover;
 
                                                 $coverUrl = filter_var(
@@ -248,10 +226,8 @@
                                                 )
                                                     ? $cover
                                                     : asset(
-                                                        'storage/' .
-                                                        ltrim($cover, '/')
+                                                        'storage/' . ltrim($cover, '/')
                                                     );
-
                                             @endphp
 
                                             <img
@@ -278,7 +254,6 @@
 
                                     </div>
 
-
                                     <div class="sb-order-book-content">
 
                                         <span class="sb-order-book-kicker">
@@ -290,7 +265,6 @@
                                         </h3>
 
                                         <div class="sb-order-book-meta">
-
                                             <span>
                                                 <i class="bi bi-box-seam"></i>
                                                 {{ $order->quantity }}
@@ -303,7 +277,6 @@
                                                 ${{ number_format($order->book_price, 2) }}
                                                 each
                                             </span>
-
                                         </div>
 
                                     </div>
@@ -313,38 +286,32 @@
 
                                 {{-- Total --}}
                                 <div class="sb-order-info-card">
-
                                     <span>Total</span>
 
                                     <strong>
                                         ${{ number_format($order->total_price, 2) }}
                                     </strong>
-
                                 </div>
 
 
                                 {{-- Payment --}}
                                 <div class="sb-order-info-card">
-
                                     <span>Payment</span>
 
                                     <strong class="sb-order-payment-method">
                                         {{ $paymentMethod }}
                                     </strong>
-
                                 </div>
 
 
                                 {{-- Status --}}
                                 <div class="sb-order-info-card sb-order-status-info">
-
                                     <span>Order Status</span>
 
                                     <span class="sb-order-status-badge {{ $statusClass }}">
                                         <span class="sb-order-status-dot"></span>
                                         {{ ucfirst($order->order_status) }}
                                     </span>
-
                                 </div>
 
                             </div>
@@ -354,21 +321,15 @@
                             <div class="sb-order-card-footer">
 
                                 <div class="sb-order-payment-status">
-
                                     <div class="sb-order-payment-icon">
                                         <i class="bi bi-credit-card-2-front"></i>
                                     </div>
 
                                     <div class="sb-order-payment-content">
-
                                         <span>Payment Status</span>
 
-                                        <strong>
-                                            {{ $paymentStatus }}
-                                        </strong>
-
+                                        <strong>{{ $paymentStatus }}</strong>
                                     </div>
-
                                 </div>
 
 
@@ -391,7 +352,6 @@
                                             $reviewedBookIds
                                         )
                                     )
-
                                         <a
                                             href="{{ route('frontend.reviews.create', $order->id) }}"
                                             class="sb-order-review-btn"
@@ -399,18 +359,15 @@
                                             <i class="bi bi-star"></i>
                                             <span>Write Review</span>
                                         </a>
-
                                     @endif
 
 
                                     @if($canCancelOrder)
-
                                         <form
                                             action="{{ route('frontend.orders.cancel', $order->id) }}"
                                             method="POST"
                                             class="sb-cancel-order-form"
                                         >
-
                                             @csrf
 
                                             <button
@@ -421,9 +378,7 @@
                                                 <i class="bi bi-x-circle"></i>
                                                 <span>Cancel Order</span>
                                             </button>
-
                                         </form>
-
                                     @endif
 
                                 </div>
@@ -439,11 +394,9 @@
 
                 {{-- Pagination --}}
                 @if($orders->hasPages())
-
                     <div class="sb-orders-pagination">
                         {{ $orders->links() }}
                     </div>
-
                 @endif
 
 
@@ -503,8 +456,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 Swal.fire({
                     title: 'Cancel Order?',
-                    text:
-                        `Are you sure you want to cancel order #${orderNumber}?`,
+                    text: `Are you sure you want to cancel order #${orderNumber}?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, Cancel Order',
