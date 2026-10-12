@@ -15,109 +15,238 @@
         Page Hero
     ========================================================== --}}
 
-    <div class="contact-hero">
+    <div class="contact-hero contact-hero-premium">
 
+        {{-- Animated Background Decorations --}}
         <div class="contact-hero-decoration contact-hero-decoration-1"></div>
         <div class="contact-hero-decoration contact-hero-decoration-2"></div>
+        <div class="contact-hero-decoration contact-hero-decoration-3"></div>
+
+        <div class="contact-hero-grid"></div>
 
         <div class="container">
-
             <div class="contact-hero-inner">
 
                 {{-- Hero Content --}}
+                <div class="contact-hero-content" data-aos="fade-right" data-aos-duration="1000">
 
-                <div class="contact-hero-content" data-aos="fade-right">
-
-                    <div class="title">
-                        <span>
+                    <div class="contact-hero-eyebrow">
+                        <span class="contact-hero-eyebrow-icon">
                             <i class="bi bi-chat-square-heart"></i>
-                            We are here to help
                         </span>
+
+                        <span>WE'RE HERE FOR YOU</span>
+
+                        <span class="contact-hero-eyebrow-line"></span>
                     </div>
 
-                    <h1 class="section-title">
-                        Let's Talk.
-                        <br>
-                        <em>We're Listening.</em>
+                    <h1 class="section-title contact-hero-title">
+                        Every great story
+                        <span class="contact-hero-title-accent">
+                            starts with
+                            <em>a conversation.</em>
+                        </span>
                     </h1>
 
-                    <p>
-                        Have a question about a book, your order, or selling on
-                        SecondBook? Send us a message and our team will get back
-                        to you.
+                    <p class="contact-hero-description">
+                        Questions, ideas, or simply a little help finding your way?
+                        We're listening. Reach out to the SecondBook team and let's
+                        make your next chapter a great one.
                     </p>
 
+                    {{-- Contact Details --}}
                     <div class="contact-hero-meta">
 
-                        <div class="contact-hero-meta-item">
-                            <i class="bi bi-envelope"></i>
-                            <span>support@secondbook.com</span>
-                        </div>
+                        <a href="mailto:support@secondbook.com"
+                           class="contact-hero-meta-item">
+
+                            <span class="contact-hero-meta-icon">
+                                <i class="bi bi-envelope-heart"></i>
+                            </span>
+
+                            <span class="contact-hero-meta-content">
+                                <span class="contact-hero-meta-label">SEND US AN EMAIL</span>
+                                <strong>support@secondbook.com</strong>
+                            </span>
+
+                            <i class="bi bi-arrow-up-right contact-hero-meta-arrow"></i>
+                        </a>
 
                         <div class="contact-hero-meta-item">
-                            <i class="bi bi-clock"></i>
-                            <span>Mon – Fri · 09:00 – 18:00</span>
+
+                            <span class="contact-hero-meta-icon">
+                                <i class="bi bi-clock-history"></i>
+                            </span>
+
+                            <span class="contact-hero-meta-content">
+                                <span class="contact-hero-meta-label">OUR AVAILABILITY</span>
+                                <strong>Mon – Fri · 09:00 – 18:00</strong>
+                            </span>
+
+                            <span class="contact-hero-status-dot"></span>
                         </div>
 
+                    </div>
+
+                    {{-- Trust Note --}}
+                    <div class="contact-hero-trust">
+                        <span class="contact-hero-trust-icon">
+                            <i class="bi bi-heart-fill"></i>
+                        </span>
+
+                        <span>
+                            Real people. Thoughtful answers.
+                            <strong>Every message matters.</strong>
+                        </span>
                     </div>
 
                 </div>
 
                 {{-- Hero Visual --}}
+                <div class="contact-hero-visual contact-hero-visual-premium"
+                     data-aos="fade-left"
+                     data-aos-duration="1100"
+                     data-aos-delay="150">
 
-                <div class="contact-hero-visual" data-aos="fade-left">
+                    {{-- Ambient Glow --}}
+                    <div class="contact-hero-visual-glow"></div>
 
-                    <div class="contact-hero-orbit"></div>
+                    {{-- Decorative Orbit --}}
+                    <div class="contact-hero-orbit">
+                        <span class="contact-hero-orbit-dot contact-hero-orbit-dot-1"></span>
+                        <span class="contact-hero-orbit-dot contact-hero-orbit-dot-2"></span>
+                        <span class="contact-hero-orbit-dot contact-hero-orbit-dot-3"></span>
+                    </div>
 
+                    {{-- Decorative Rings --}}
+                    <div class="contact-hero-ring contact-hero-ring-1"></div>
+                    <div class="contact-hero-ring contact-hero-ring-2"></div>
+
+                    {{-- Main Message Card --}}
                     <div class="contact-hero-card contact-hero-card-main">
 
-                        <div class="contact-hero-card-icon">
-                            <i class="bi bi-chat-dots"></i>
+                        <div class="contact-hero-card-top">
+                            <span class="contact-hero-card-brand">
+                                <span class="contact-hero-card-brand-icon">
+                                    <i class="bi bi-book-half"></i>
+                                </span>
+
+                                <span>SECOND<span>BOOK</span></span>
+                            </span>
+
+                            <span class="contact-hero-card-menu">
+                                <i class="bi bi-three-dots"></i>
+                            </span>
                         </div>
 
-                        <span class="contact-hero-card-small">
-                            Have a question?
-                        </span>
+                        <div class="contact-hero-card-illustration">
 
-                        <strong>
-                            We'd love
-                            <br>
-                            to hear from you.
-                        </strong>
+                            <div class="contact-hero-card-illustration-circle"></div>
 
-                        <div class="contact-hero-card-line"></div>
+                            <div class="contact-hero-book contact-hero-book-back">
+                                <span></span>
+                            </div>
 
-                        <span class="contact-hero-card-bottom">
+                            <div class="contact-hero-book contact-hero-book-front">
+                                <span class="contact-hero-book-symbol">
+                                    <i class="bi bi-chat-heart"></i>
+                                </span>
+
+                                <span class="contact-hero-book-title">
+                                    YOUR
+                                    <strong>STORY</strong>
+                                </span>
+
+                                <span class="contact-hero-book-decoration"></span>
+                            </div>
+
+                            <span class="contact-hero-spark contact-hero-spark-1">
+                                <i class="bi bi-stars"></i>
+                            </span>
+
+                            <span class="contact-hero-spark contact-hero-spark-2">
+                                <i class="bi bi-plus-lg"></i>
+                            </span>
+
+                            <span class="contact-hero-spark contact-hero-spark-3">
+                                <i class="bi bi-asterisk"></i>
+                            </span>
+
+                        </div>
+
+                        <div class="contact-hero-card-message">
+                            <span class="contact-hero-card-small">A NOTE FROM OUR TEAM</span>
+
+                            <h2>
+                                We'd love
+                                <em>to hear from you.</em>
+                            </h2>
+
+                            <p>
+                                Every question opens a door to a better reading experience.
+                            </p>
+                        </div>
+
+                        <div class="contact-hero-card-footer">
+                            <span class="contact-hero-card-footer-icon">
+                                <i class="bi bi-chat-dots"></i>
+                            </span>
+
+                            <span>Let's start a conversation</span>
+
                             <i class="bi bi-arrow-up-right"></i>
-                            Start a conversation
-                        </span>
+                        </div>
 
                     </div>
 
+                    {{-- Floating Response Card --}}
                     <div class="contact-hero-floating contact-hero-floating-top">
 
-                        <i class="bi bi-envelope-heart"></i>
+                        <span class="contact-hero-floating-icon">
+                            <i class="bi bi-envelope-check"></i>
+                        </span>
 
-                        <div>
-                            <strong>Quick Response</strong>
-                            <span>We're here for you</span>
-                        </div>
+                        <span class="contact-hero-floating-content">
+                            <strong>We're listening</strong>
+                            <span>Your message matters</span>
+                        </span>
+
+                        <span class="contact-hero-floating-indicator"></span>
 
                     </div>
 
+                    {{-- Floating Community Card --}}
                     <div class="contact-hero-floating contact-hero-floating-bottom">
 
-                        <i class="bi bi-book-half"></i>
+                        <span class="contact-hero-floating-bottom-icon">
+                            <i class="bi bi-heart"></i>
+                        </span>
 
-                        <span>
-                            Your story
-                            <strong>matters.</strong>
+                        <span class="contact-hero-floating-bottom-content">
+                            <strong>Made for book lovers</strong>
+                            <span>Connected through stories</span>
                         </span>
 
                     </div>
+
+                    {{-- Decorative Floating Elements --}}
+                    <span class="contact-hero-deco-star contact-hero-deco-star-1">
+                        <i class="bi bi-stars"></i>
+                    </span>
+
+                    <span class="contact-hero-deco-star contact-hero-deco-star-2">
+                        <i class="bi bi-plus-lg"></i>
+                    </span>
 
                 </div>
 
+            </div>
+
+            {{-- Bottom Accent --}}
+            <div class="contact-hero-bottom-accent">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
 
         </div>

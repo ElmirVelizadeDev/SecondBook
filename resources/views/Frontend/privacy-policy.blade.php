@@ -8,57 +8,128 @@
 
 @section('content')
 
+{{-- =========================================================
+     Bütün mətnlər, ikonlar, route-lar və kliklənən kartların
+     `data-faq-url` məntiqi saxlanılıb. Təkrarlanan kartlar
+     massivlərdən yaradılır.
+========================================================== --}}
+
+@php
+    $collectCards = [
+        ['faq' => 'account', 'icon' => 'bi-person',          'title' => 'Account Information',
+         'text' => 'Information you provide when creating or managing your account, such as your name, email address, phone number, and account details.'],
+        ['faq' => 'order',   'icon' => 'bi-bag',             'title' => 'Order Information',
+         'text' => 'Information required to process purchases, deliveries, payments, returns, and other marketplace transactions.'],
+        ['faq' => 'support', 'icon' => 'bi-chat-left-text',  'title' => 'Communication',
+         'text' => 'Information you provide when contacting support, submitting requests, sending messages, or communicating with SecondBook.'],
+        ['faq' => 'privacy', 'icon' => 'bi-bar-chart',       'title' => 'Usage Information',
+         'text' => 'Technical and usage information may be collected to help maintain website functionality, security, and overall service performance.'],
+    ];
+
+    $uses = [
+        ['title' => 'Provide our services',
+         'text'  => 'To create accounts, process orders, support marketplace features, and provide requested services.'],
+        ['title' => 'Process transactions',
+         'text'  => 'To manage purchases, payments, shipping, refunds, and related order activities.'],
+        ['title' => 'Improve SecondBook',
+         'text'  => 'To understand how our services are used and improve functionality and usability.'],
+        ['title' => 'Protect our platform',
+         'text'  => 'To detect suspicious activity, maintain security, and help prevent misuse.'],
+    ];
+
+    $protections = [
+        ['icon' => 'bi-lock',         'title' => 'Account security',
+         'text' => 'Account information is handled with security measures designed to help protect your access.'],
+        ['icon' => 'bi-shield-check', 'title' => 'Limited access',
+         'text' => 'Access to information should be limited to purposes connected with providing our services.'],
+        ['icon' => 'bi-eye-slash',    'title' => 'Responsible handling',
+         'text' => 'We aim to handle personal information in a transparent and responsible manner.'],
+    ];
+
+    $rights = [
+        ['faq' => 'access',  'icon' => 'bi-person-lines-fill', 'title' => 'Access',
+         'text' => 'Request information about the personal data associated with your account.'],
+        ['faq' => 'account', 'icon' => 'bi-pencil-square',     'title' => 'Update',
+         'text' => 'Review and update certain account information through your profile and account settings.'],
+        ['faq' => 'privacy', 'icon' => 'bi-trash3',            'title' => 'Deletion',
+         'text' => 'Depending on applicable requirements, you may request deletion of certain personal information.'],
+        ['faq' => 'privacy', 'icon' => 'bi-envelope',          'title' => 'Questions',
+         'text' => 'Contact us if you have questions about how your information is handled.'],
+    ];
+@endphp
+
+
+<div class="sb-privacy-progress" aria-hidden="true"></div>
+
 <main class="sb-privacy-page">
+
+
+    {{-- =========================================================
+         HERO
+    ========================================================== --}}
+
+    <section class="sb-privacy-hero">
+
+        <div class="sb-privacy-hero-bg" aria-hidden="true">
+            <i class="sb-privacy-orb sb-privacy-orb-1"></i>
+            <i class="sb-privacy-orb sb-privacy-orb-2"></i>
+            <i class="sb-privacy-ring sb-privacy-ring-1"></i>
+            <i class="sb-privacy-ring sb-privacy-ring-2"></i>
+        </div>
+
+        <div class="container">
+
+            <div class="sb-privacy-hero-inner">
+
+                <div class="sb-privacy-eyebrow">
+                    <span class="sb-privacy-eyebrow-line"></span>
+
+                    <i class="bi bi-shield-check"></i>
+
+                    <span>PRIVACY INFORMATION</span>
+
+                    <span class="sb-privacy-eyebrow-line"></span>
+                </div>
+
+                <h1>
+                    Privacy <em>Policy</em>
+                </h1>
+
+                <p>
+                    Learn how SecondBook collects, uses, protects, and manages
+                    your information while you use our marketplace.
+                </p>
+
+                <div class="sb-privacy-meta">
+
+                    <span>
+                        <i class="bi bi-calendar3"></i>
+                        Last updated: September 2026
+                    </span>
+
+                    <span class="sb-privacy-meta-divider"></span>
+
+                    <span>
+                        <i class="bi bi-shield-check"></i>
+                        Your privacy matters
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
 
     <div class="container">
 
-        {{-- =========================================================
-             HERO
-        ========================================================== --}}
-        <section class="sb-privacy-hero">
-
-            <div class="sb-privacy-eyebrow">
-                <span class="sb-privacy-eyebrow-line"></span>
-
-                <i class="bi bi-shield-check"></i>
-
-                <span>PRIVACY INFORMATION</span>
-
-                <span class="sb-privacy-eyebrow-line"></span>
-            </div>
-
-            <h1>
-                Privacy <em>Policy</em>
-            </h1>
-
-            <p>
-                Learn how SecondBook collects, uses, protects, and manages
-                your information while you use our marketplace.
-            </p>
-
-            <div class="sb-privacy-meta">
-
-                <span>
-                    <i class="bi bi-calendar3"></i>
-                    Last updated: September 2026
-                </span>
-
-                <span class="sb-privacy-meta-divider"></span>
-
-                <span>
-                    <i class="bi bi-shield-check"></i>
-                    Your privacy matters
-                </span>
-
-            </div>
-
-        </section>
-
-
-        {{-- =========================================================
+        {{-- =====================================================
              INTRO
-        ========================================================== --}}
-        <section class="sb-privacy-intro">
+        ====================================================== --}}
+
+        <section class="sb-privacy-intro sb-privacy-intro-main">
 
             <div class="sb-privacy-intro-icon">
                 <i class="bi bi-lock"></i>
@@ -85,9 +156,10 @@
         </section>
 
 
-        {{-- =========================================================
+        {{-- =====================================================
              INFORMATION WE COLLECT
-        ========================================================== --}}
+        ====================================================== --}}
+
         <section class="sb-privacy-section">
 
             <div class="sb-privacy-section-heading">
@@ -111,92 +183,42 @@
 
             <div class="sb-privacy-card-grid">
 
-                <article class="sb-privacy-card"
-                         data-faq-url="{{ route('frontend.faq', ['search' => 'account']) }}#faqSearch">
+                @foreach($collectCards as $card)
 
-                    <span class="sb-privacy-card-number">01</span>
+                    <article
+                        class="sb-privacy-card"
+                        data-faq-url="{{ route('frontend.faq', ['search' => $card['faq']]) }}#faqSearch"
+                        role="link"
+                        tabindex="0"
+                    >
 
-                    <div class="sb-privacy-card-icon">
-                        <i class="bi bi-person"></i>
-                    </div>
+                        <span class="sb-privacy-card-number">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
 
-                    <h3>Account Information</h3>
+                        <div class="sb-privacy-card-icon">
+                            <i class="bi {{ $card['icon'] }}"></i>
+                        </div>
 
-                    <p>
-                        Information you provide when creating or managing
-                        your account, such as your name, email address,
-                        phone number, and account details.
-                    </p>
+                        <h3>{{ $card['title'] }}</h3>
 
-                </article>
+                        <p>{{ $card['text'] }}</p>
 
+                        <span class="sb-privacy-card-arrow" aria-hidden="true">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
 
-                <article class="sb-privacy-card"
-                         data-faq-url="{{ route('frontend.faq', ['search' => 'order']) }}#faqSearch">
+                    </article>
 
-                    <span class="sb-privacy-card-number">02</span>
-
-                    <div class="sb-privacy-card-icon">
-                        <i class="bi bi-bag"></i>
-                    </div>
-
-                    <h3>Order Information</h3>
-
-                    <p>
-                        Information required to process purchases, deliveries,
-                        payments, returns, and other marketplace transactions.
-                    </p>
-
-                </article>
-
-
-                <article class="sb-privacy-card"
-                         data-faq-url="{{ route('frontend.faq', ['search' => 'support']) }}#faqSearch">
-
-                    <span class="sb-privacy-card-number">03</span>
-
-                    <div class="sb-privacy-card-icon">
-                        <i class="bi bi-chat-left-text"></i>
-                    </div>
-
-                    <h3>Communication</h3>
-
-                    <p>
-                        Information you provide when contacting support,
-                        submitting requests, sending messages, or communicating
-                        with SecondBook.
-                    </p>
-
-                </article>
-
-
-                <article class="sb-privacy-card"
-                         data-faq-url="{{ route('frontend.faq', ['search' => 'privacy']) }}#faqSearch">
-
-                    <span class="sb-privacy-card-number">04</span>
-
-                    <div class="sb-privacy-card-icon">
-                        <i class="bi bi-bar-chart"></i>
-                    </div>
-
-                    <h3>Usage Information</h3>
-
-                    <p>
-                        Technical and usage information may be collected to
-                        help maintain website functionality, security, and
-                        overall service performance.
-                    </p>
-
-                </article>
+                @endforeach
 
             </div>
 
         </section>
 
 
-        {{-- =========================================================
+        {{-- =====================================================
              HOW WE USE INFORMATION
-        ========================================================== --}}
+        ====================================================== --}}
+
         <section class="sb-privacy-feature">
 
             <div class="sb-privacy-feature-icon">
@@ -215,69 +237,21 @@
 
                 <div class="sb-privacy-feature-grid">
 
-                    <div class="sb-privacy-feature-item">
+                    @foreach($uses as $use)
 
-                        <span class="sb-privacy-feature-number">01</span>
+                        <div class="sb-privacy-feature-item">
 
-                        <div>
-                            <h3>Provide our services</h3>
+                            <span class="sb-privacy-feature-number">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
 
-                            <p>
-                                To create accounts, process orders,
-                                support marketplace features, and provide
-                                requested services.
-                            </p>
+                            <div>
+                                <h3>{{ $use['title'] }}</h3>
+
+                                <p>{{ $use['text'] }}</p>
+                            </div>
+
                         </div>
 
-                    </div>
-
-
-                    <div class="sb-privacy-feature-item">
-
-                        <span class="sb-privacy-feature-number">02</span>
-
-                        <div>
-                            <h3>Process transactions</h3>
-
-                            <p>
-                                To manage purchases, payments, shipping,
-                                refunds, and related order activities.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="sb-privacy-feature-item">
-
-                        <span class="sb-privacy-feature-number">03</span>
-
-                        <div>
-                            <h3>Improve SecondBook</h3>
-
-                            <p>
-                                To understand how our services are used
-                                and improve functionality and usability.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="sb-privacy-feature-item">
-
-                        <span class="sb-privacy-feature-number">04</span>
-
-                        <div>
-                            <h3>Protect our platform</h3>
-
-                            <p>
-                                To detect suspicious activity, maintain
-                                security, and help prevent misuse.
-                            </p>
-                        </div>
-
-                    </div>
+                    @endforeach
 
                 </div>
 
@@ -286,9 +260,10 @@
         </section>
 
 
-        {{-- =========================================================
+        {{-- =====================================================
              DATA PROTECTION
-        ========================================================== --}}
+        ====================================================== --}}
+
         <section class="sb-privacy-section sb-privacy-protection">
 
             <div class="sb-privacy-protection-heading">
@@ -313,67 +288,33 @@
 
             <div class="sb-privacy-protection-list">
 
-                <div class="sb-privacy-protection-item">
+                @foreach($protections as $item)
 
-                    <span class="sb-privacy-protection-icon">
-                        <i class="bi bi-lock"></i>
-                    </span>
+                    <div class="sb-privacy-protection-item">
 
-                    <div>
-                        <h3>Account security</h3>
+                        <span class="sb-privacy-protection-icon">
+                            <i class="bi {{ $item['icon'] }}"></i>
+                        </span>
 
-                        <p>
-                            Account information is handled with security
-                            measures designed to help protect your access.
-                        </p>
+                        <div>
+                            <h3>{{ $item['title'] }}</h3>
+
+                            <p>{{ $item['text'] }}</p>
+                        </div>
+
                     </div>
 
-                </div>
-
-
-                <div class="sb-privacy-protection-item">
-
-                    <span class="sb-privacy-protection-icon">
-                        <i class="bi bi-shield-check"></i>
-                    </span>
-
-                    <div>
-                        <h3>Limited access</h3>
-
-                        <p>
-                            Access to information should be limited to
-                            purposes connected with providing our services.
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <div class="sb-privacy-protection-item">
-
-                    <span class="sb-privacy-protection-icon">
-                        <i class="bi bi-eye-slash"></i>
-                    </span>
-
-                    <div>
-                        <h3>Responsible handling</h3>
-
-                        <p>
-                            We aim to handle personal information in a
-                            transparent and responsible manner.
-                        </p>
-                    </div>
-
-                </div>
+                @endforeach
 
             </div>
 
         </section>
 
 
-        {{-- =========================================================
+        {{-- =====================================================
              COOKIES
-        ========================================================== --}}
+        ====================================================== --}}
+
         <section class="sb-privacy-intro sb-privacy-cookies">
 
             <div class="sb-privacy-intro-icon">
@@ -408,9 +349,10 @@
         </section>
 
 
-        {{-- =========================================================
+        {{-- =====================================================
              YOUR RIGHTS
-        ========================================================== --}}
+        ====================================================== --}}
+
         <section class="sb-privacy-section">
 
             <div class="sb-privacy-section-heading">
@@ -434,89 +376,42 @@
 
             <div class="sb-privacy-card-grid">
 
-                <article class="sb-privacy-card"
-                         data-faq-url="{{ route('frontend.faq', ['search' => 'access']) }}#faqSearch">
+                @foreach($rights as $right)
 
-                    <span class="sb-privacy-card-number">01</span>
+                    <article
+                        class="sb-privacy-card"
+                        data-faq-url="{{ route('frontend.faq', ['search' => $right['faq']]) }}#faqSearch"
+                        role="link"
+                        tabindex="0"
+                    >
 
-                    <div class="sb-privacy-card-icon">
-                        <i class="bi bi-person-lines-fill"></i>
-                    </div>
+                        <span class="sb-privacy-card-number">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
 
-                    <h3>Access</h3>
+                        <div class="sb-privacy-card-icon">
+                            <i class="bi {{ $right['icon'] }}"></i>
+                        </div>
 
-                    <p>
-                        Request information about the personal data associated
-                        with your account.
-                    </p>
+                        <h3>{{ $right['title'] }}</h3>
 
-                </article>
+                        <p>{{ $right['text'] }}</p>
 
+                        <span class="sb-privacy-card-arrow" aria-hidden="true">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
 
-                <article class="sb-privacy-card"
-                         data-faq-url="{{ route('frontend.faq', ['search' => 'account']) }}#faqSearch">
+                    </article>
 
-                    <span class="sb-privacy-card-number">02</span>
-
-                    <div class="sb-privacy-card-icon">
-                        <i class="bi bi-pencil-square"></i>
-                    </div>
-
-                    <h3>Update</h3>
-
-                    <p>
-                        Review and update certain account information through
-                        your profile and account settings.
-                    </p>
-
-                </article>
-
-
-                <article class="sb-privacy-card"
-                         data-faq-url="{{ route('frontend.faq', ['search' => 'privacy']) }}#faqSearch">
-
-                    <span class="sb-privacy-card-number">03</span>
-
-                    <div class="sb-privacy-card-icon">
-                        <i class="bi bi-trash3"></i>
-                    </div>
-
-                    <h3>Deletion</h3>
-
-                    <p>
-                        Depending on applicable requirements, you may request
-                        deletion of certain personal information.
-                    </p>
-
-                </article>
-
-
-                <article class="sb-privacy-card"
-                         data-faq-url="{{ route('frontend.faq', ['search' => 'privacy']) }}#faqSearch">
-
-                    <span class="sb-privacy-card-number">04</span>
-
-                    <div class="sb-privacy-card-icon">
-                        <i class="bi bi-envelope"></i>
-                    </div>
-
-                    <h3>Questions</h3>
-
-                    <p>
-                        Contact us if you have questions about how your
-                        information is handled.
-                    </p>
-
-                </article>
+                @endforeach
 
             </div>
 
         </section>
 
 
-        {{-- =========================================================
+        {{-- =====================================================
              POLICY NOTE
-        ========================================================== --}}
+        ====================================================== --}}
+
         <section class="sb-privacy-note">
 
             <div class="sb-privacy-note-icon">
@@ -545,9 +440,10 @@
         </section>
 
 
-        {{-- =========================================================
+        {{-- =====================================================
              CONTACT
-        ========================================================== --}}
+        ====================================================== --}}
+
         <section class="sb-privacy-contact">
 
             <div class="sb-privacy-contact-icon">
@@ -571,18 +467,21 @@
 
             </div>
 
-            <a href="{{ route('frontend.contact') }}"
-               class="sb-privacy-contact-btn">
-                Contact Support
+            <a
+                href="{{ route('frontend.contact') }}"
+                class="sb-privacy-contact-btn"
+            >
+                <span>Contact Support</span>
                 <i class="bi bi-arrow-right"></i>
             </a>
 
         </section>
 
 
-        {{-- =========================================================
+        {{-- =====================================================
              BOTTOM META
-        ========================================================== --}}
+        ====================================================== --}}
+
         <div class="sb-privacy-bottom">
 
             <span>
@@ -644,4 +543,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
-```

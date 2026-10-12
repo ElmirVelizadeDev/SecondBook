@@ -674,26 +674,18 @@ document.addEventListener('DOMContentLoaded', function () {
     ) {
 
         fetch(
-            "{{ url('/frontend-assets/notifications') }}/" +
-            notificationId,
-            {
-                method: 'DELETE',
+        "{{ url('/frontend/notifications') }}/" +
+        notificationId,
+        {
+            method: 'DELETE',
 
-                headers: {
-
-                    'X-CSRF-TOKEN':
-                        '{{ csrf_token() }}',
-
-                    'Accept':
-                        'application/json',
-
-                    'X-Requested-With':
-                        'XMLHttpRequest'
-
-                }
-
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             }
-        )
+        }
+    )
 
         .then(function (response) {
 

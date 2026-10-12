@@ -1,1362 +1,1285 @@
 /* =========================================================
-   SELLER APPLICATION
+   SECOND BOOK — BECOME A SELLER
+   Obsidian Editorial Premium
 ========================================================= */
 
-:root {
-    --sb-seller-bg: #fbf8f5;
-    --sb-seller-surface: #ffffff;
-    --sb-seller-surface-soft: #f7f2ed;
-
-    --sb-seller-brown: #8b5e3c;
-    --sb-seller-brown-dark: #70472d;
-    --sb-seller-brown-light: #a87852;
-
-    --sb-seller-text: #241c17;
-    --sb-seller-muted: #746a63;
-    --sb-seller-light-text: #988e86;
-
-    --sb-seller-border: #e8dfd8;
-    --sb-seller-border-light: #eee7e1;
-
-    --sb-seller-success: #47745c;
-    --sb-seller-success-bg: #eef7f1;
-
-    --sb-seller-info: #60758b;
-    --sb-seller-info-bg: #f0f5f9;
-
-    --sb-seller-danger: #a04d45;
-    --sb-seller-danger-bg: #fff2f0;
-
-    --sb-seller-shadow:
-        0 14px 40px rgba(54, 39, 29, .07);
-
-    --sb-seller-shadow-hover:
-        0 20px 48px rgba(54, 39, 29, .11);
-
-    --sb-seller-radius: 19px;
-    --sb-seller-small-radius: 13px;
-}
-
-
 /* =========================================================
-   PAGE
+   1. VARIABLES AND BASE STYLES
 ========================================================= */
 
 .sb-seller-page {
-    background:
-        radial-gradient(
-            circle at 10% 5%,
-            rgba(139, 94, 60, .055),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 90% 20%,
-            rgba(139, 94, 60, .045),
-            transparent 25%
-        ),
-        var(--sb-seller-bg);
-
-    min-height: 100vh;
-    padding: 72px 0 100px;
+    --sb-seller-espresso: #241812;
+    --sb-seller-walnut: #38251c;
+    --sb-seller-brown: #8b5e3c;
+    --sb-seller-caramel: #b9825d;
+    --sb-seller-gold: #d7aa83;
+    --sb-seller-cream: #f8f3ed;
+    --sb-seller-beige: #ede2d6;
+    --sb-seller-white: #fff;
+    --sb-seller-text: #30251f;
+    --sb-seller-muted: #796a60;
+    --sb-seller-border: rgba(84, 58, 41, 0.14);
+    --sb-seller-shadow: 0 24px 70px rgba(48, 31, 20, 0.09);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 42px 0 96px;
     color: var(--sb-seller-text);
+    background:
+        radial-gradient(ellipse at 8% 22%, rgba(215, 170, 131, 0.13), transparent 32%),
+        linear-gradient(180deg, #fcf9f5 0%, var(--sb-seller-cream) 62%, #f5eee6 100%);
+    font-family: inherit;
 }
 
+.sb-seller-page *,
+.sb-seller-page *::before,
+.sb-seller-page *::after {
+    box-sizing: border-box;
+}
+
+.sb-seller-page .container {
+    position: relative;
+    z-index: 1;
+    width: min(1180px, calc(100% - 48px));
+    max-width: 1180px;
+    margin-inline: auto;
+}
 
 /* =========================================================
-   HERO
+   2. PAGE LAYOUT
+========================================================= */
+
+.sb-seller-application-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+    align-items: stretch;
+    gap: 28px;
+    margin-top: 34px;
+}
+
+.sb-seller-section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--sb-seller-brown);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.sb-seller-section-label::before {
+    width: 22px;
+    height: 1px;
+    background: currentColor;
+    content: "";
+}
+
+/* =========================================================
+   3. HERO
 ========================================================= */
 
 .sb-seller-hero {
+    position: relative;
     display: flex;
+    min-height: 350px;
     align-items: center;
     justify-content: space-between;
-    gap: 60px;
+    gap: 42px;
+    overflow: hidden;
+    padding: clamp(38px, 6vw, 76px) clamp(28px, 6vw, 72px);
+    border: 1px solid rgba(215, 170, 131, 0.2);
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at 78% 20%, rgba(185, 130, 93, 0.2), transparent 30%),
+        radial-gradient(circle at 10% 100%, rgba(139, 94, 60, 0.22), transparent 38%),
+        linear-gradient(118deg, var(--sb-seller-espresso) 0%, #302017 52%, var(--sb-seller-walnut) 100%);
+    box-shadow: 0 26px 65px rgba(36, 24, 18, 0.18);
+    color: var(--sb-seller-cream);
+    animation: sb-seller-rise-in 0.75s cubic-bezier(.2, .7, .2, 1) both;
+}
 
-    padding: 20px 0 72px;
+.sb-seller-hero::before,
+.sb-seller-hero::after {
+    position: absolute;
+    pointer-events: none;
+    content: "";
+}
+
+.sb-seller-hero::before {
+    top: -160px;
+    right: 12%;
+    width: 360px;
+    height: 360px;
+    border: 1px solid rgba(215, 170, 131, 0.15);
+    border-radius: 50%;
+    box-shadow: 0 0 0 28px rgba(215, 170, 131, 0.025), 0 0 0 62px rgba(215, 170, 131, 0.02);
+    animation: sb-seller-orbit 18s linear infinite;
+}
+
+.sb-seller-hero::after {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(215, 170, 131, 0.55), transparent);
 }
 
 .sb-seller-hero-content {
-    max-width: 760px;
+    position: relative;
+    z-index: 1;
+    max-width: 690px;
+    animation: sb-seller-content-in 0.8s 0.08s both;
 }
 
 .sb-seller-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-
-    color: var(--sb-seller-brown);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .16em;
+    margin-bottom: 22px;
+    color: var(--sb-seller-gold);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.19em;
     text-transform: uppercase;
 }
 
 .sb-seller-eyebrow-icon {
-    width: 34px;
-    height: 34px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid var(--sb-seller-border);
+    display: inline-grid;
+    width: 31px;
+    height: 31px;
+    place-items: center;
+    border: 1px solid rgba(215, 170, 131, 0.35);
     border-radius: 50%;
-
-    background: rgba(255, 255, 255, .7);
-    box-shadow: 0 7px 20px rgba(54, 39, 29, .06);
+    background: rgba(215, 170, 131, 0.09);
+    font-size: 0;
 }
 
 .sb-seller-eyebrow-icon i {
-    font-size: 15px;
+    font-size: 0.9rem;
+}
+
+.sb-seller-hero h1,
+.sb-seller-info h2,
+.sb-seller-form-heading h2,
+.sb-seller-status h2 {
+    margin: 0;
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.045em;
 }
 
 .sb-seller-hero h1 {
-    margin: 24px 0 20px;
-
-    font-family: "Prata", Georgia, serif;
-    font-size: clamp(42px, 5vw, 70px);
-    font-weight: 400;
-    line-height: 1.08;
-    letter-spacing: -.035em;
+    max-width: 680px;
+    color: #fffaf5;
+    font-size: clamp(2.65rem, 5vw, 4.55rem);
+    line-height: 1.04;
 }
 
 .sb-seller-hero h1 span {
     display: block;
-    color: var(--sb-seller-brown);
+    color: var(--sb-seller-gold);
+    font-style: italic;
 }
 
-.sb-seller-hero p {
-    max-width: 650px;
-    margin: 0;
-
-    color: var(--sb-seller-muted);
-    font-size: 16px;
-    line-height: 1.8;
+.sb-seller-hero-content > p {
+    max-width: 570px;
+    margin: 23px 0 0;
+    color: rgba(248, 243, 237, 0.76);
+    font-size: 1rem;
+    line-height: 1.85;
 }
-
-
-/* =========================================================
-   HERO MARK
-========================================================= */
 
 .sb-seller-hero-mark {
     position: relative;
-
-    width: 190px;
-    min-width: 190px;
-    height: 190px;
-
+    z-index: 1;
     display: flex;
+    width: 190px;
+    min-width: 160px;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-
-    border: 1px solid var(--sb-seller-border);
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle,
-            #fff 0%,
-            #faf5f0 65%,
-            #f2e9e2 100%
-        );
-
-    box-shadow:
-        0 20px 50px rgba(54, 39, 29, .08);
-
-    transform: rotate(-5deg);
+    gap: 17px;
+    color: rgba(215, 170, 131, 0.9);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.35em;
+    line-height: 1.9;
+    text-align: center;
+    animation: sb-seller-float 6s ease-in-out infinite;
 }
 
 .sb-seller-hero-circle {
-    width: 88px;
-    height: 88px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+    display: grid;
+    width: 142px;
+    height: 142px;
+    place-items: center;
+    border: 1px solid rgba(215, 170, 131, 0.52);
     border-radius: 50%;
-
-    background: var(--sb-seller-brown);
-    color: #fff;
-
-    box-shadow: 0 15px 30px rgba(139, 94, 60, .24);
+    background:
+        radial-gradient(circle at 35% 28%, rgba(215, 170, 131, 0.2), transparent 56%),
+        rgba(255, 255, 255, 0.025);
+    box-shadow: 0 0 0 12px rgba(215, 170, 131, 0.045), inset 0 0 35px rgba(215, 170, 131, 0.05);
 }
 
 .sb-seller-hero-circle i {
-    font-size: 34px;
+    color: var(--sb-seller-gold);
+    font-size: 3.5rem;
 }
-
-.sb-seller-hero-mark > span {
-    position: absolute;
-    right: -18px;
-    bottom: 18px;
-
-    padding: 9px 13px;
-
-    background: var(--sb-seller-text);
-    color: #fff;
-
-    border-radius: 8px;
-
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: .2em;
-    line-height: 1.45;
-
-    transform: rotate(5deg);
-}
-
 
 /* =========================================================
-   ALERTS
+   4. ALERTS
 ========================================================= */
 
 .sb-seller-alert {
     display: flex;
     align-items: flex-start;
     gap: 15px;
-
-    margin-bottom: 28px;
-    padding: 17px 20px;
-
-    border: 1px solid;
-    border-radius: var(--sb-seller-small-radius);
+    margin-top: 22px;
+    padding: 19px 22px;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(48, 31, 20, 0.045);
+    animation: sb-seller-rise-in 0.45s ease both;
 }
 
 .sb-seller-alert-icon {
+    display: grid;
     width: 38px;
-    min-width: 38px;
     height: 38px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
+    min-width: 38px;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 1.15rem;
 }
 
 .sb-seller-alert strong {
     display: block;
-    margin-bottom: 3px;
-
-    font-size: 14px;
+    margin: 1px 0 4px;
+    font-size: 0.9rem;
+    font-weight: 800;
 }
 
-.sb-seller-alert p {
-    margin: 0;
-
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-.sb-seller-alert-success {
-    border-color: #d6e8dc;
-    background: var(--sb-seller-success-bg);
-    color: #3e654f;
-}
-
-.sb-seller-alert-success .sb-seller-alert-icon {
-    background: #dcefe3;
-}
-
-.sb-seller-alert-info {
-    border-color: #d9e4ec;
-    background: var(--sb-seller-info-bg);
-    color: #526b80;
-}
-
-.sb-seller-alert-info .sb-seller-alert-icon {
-    background: #e1ebf2;
-}
-
-.sb-seller-alert-danger {
-    border-color: #efd6d2;
-    background: var(--sb-seller-danger-bg);
-    color: var(--sb-seller-danger);
-}
-
-.sb-seller-alert-danger .sb-seller-alert-icon {
-    background: #f9dfdc;
-}
-
+.sb-seller-alert p,
 .sb-seller-alert ul {
-    margin: 7px 0 0;
-    padding-left: 18px;
-
-    font-size: 13px;
+    margin: 0;
+    font-size: 0.88rem;
     line-height: 1.7;
 }
 
-
-/* =========================================================
-   APPLICATION GRID
-========================================================= */
-
-.sb-seller-application-grid {
-    display: grid;
-    grid-template-columns: minmax(280px, .82fr) minmax(0, 1.5fr);
-    gap: 26px;
-
-    align-items: stretch;
+.sb-seller-alert ul {
+    padding-left: 18px;
 }
 
+.sb-seller-alert-success {
+    border-color: #c8dfce;
+    background: #f0f8f1;
+    color: #245a35;
+}
+
+.sb-seller-alert-success .sb-seller-alert-icon {
+    background: #dcefe0;
+}
+
+.sb-seller-alert-info {
+    border-color: #cbd9e0;
+    background: #f1f6f8;
+    color: #284c5a;
+}
+
+.sb-seller-alert-info .sb-seller-alert-icon {
+    background: #dcebf0;
+}
+
+.sb-seller-alert-danger {
+    border-color: #e8c8c0;
+    background: #fff4f1;
+    color: #8c3429;
+}
+
+.sb-seller-alert-danger .sb-seller-alert-icon {
+    background: #f9e0da;
+}
 
 /* =========================================================
-   INFORMATION PANEL
+   5. APPLICATION STATUS
+========================================================= */
+
+.sb-seller-status {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    overflow: hidden;
+    margin-top: 28px;
+    padding: clamp(28px, 5vw, 48px);
+    border: 1px solid rgba(185, 130, 93, 0.28);
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at 0 0, rgba(215, 170, 131, 0.18), transparent 40%),
+        #fffaf5;
+    box-shadow: var(--sb-seller-shadow);
+    animation: sb-seller-rise-in 0.6s ease both;
+}
+
+.sb-seller-status::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    background: var(--sb-seller-caramel);
+    content: "";
+}
+
+.sb-seller-status.rejected {
+    border-color: #e8c8c0;
+    background:
+        radial-gradient(circle at 0 0, rgba(181, 84, 67, 0.08), transparent 42%),
+        #fffaf8;
+}
+
+.sb-seller-status.rejected::after {
+    background: #b65c4b;
+}
+
+.sb-seller-status-visual {
+    position: relative;
+    display: grid;
+    width: 82px;
+    height: 82px;
+    min-width: 82px;
+    place-items: center;
+}
+
+.sb-seller-status-icon {
+    display: grid;
+    width: 72px;
+    height: 72px;
+    place-items: center;
+    border: 1px solid rgba(185, 130, 93, 0.3);
+    border-radius: 23px;
+    background: #f2e4d7;
+    color: var(--sb-seller-brown);
+    font-size: 1.75rem;
+}
+
+.sb-seller-status.rejected .sb-seller-status-icon {
+    border-color: #edcfc8;
+    background: #f9e7e2;
+    color: #a74435;
+}
+
+.sb-seller-status-pulse {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #fffaf5;
+    border-radius: 50%;
+    background: #c28a47;
+    box-shadow: 0 0 0 4px rgba(194, 138, 71, 0.14);
+    animation: sb-seller-pulse 2.2s ease-in-out infinite;
+}
+
+.sb-seller-status-content {
+    min-width: 0;
+}
+
+.sb-seller-status h2 {
+    margin-top: 9px;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.15;
+}
+
+.sb-seller-status h2 span {
+    color: var(--sb-seller-brown);
+    font-style: italic;
+}
+
+.sb-seller-status-content > p {
+    max-width: 760px;
+    margin: 13px 0 0;
+    color: var(--sb-seller-muted);
+    font-size: 0.93rem;
+    line-height: 1.8;
+}
+
+.sb-seller-status-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.sb-seller-status-badge,
+.sb-seller-status-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.77rem;
+    font-weight: 700;
+}
+
+.sb-seller-status-badge {
+    padding: 8px 12px;
+    border: 1px solid #e7d1b3;
+    border-radius: 999px;
+    background: #fbf0df;
+    color: #805321;
+}
+
+.sb-seller-status-note {
+    color: var(--sb-seller-muted);
+}
+
+.sb-seller-rejection {
+    margin-top: 20px;
+    padding: 16px 18px;
+    border: 1px solid #edcfc8;
+    border-radius: 14px;
+    background: rgba(249, 231, 226, 0.68);
+}
+
+.sb-seller-rejection > span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    color: #8f3d31;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.sb-seller-rejection p {
+    margin: 0;
+    color: #67433d;
+    font-size: 0.88rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   6. BENEFITS PANEL
 ========================================================= */
 
 .sb-seller-info {
     position: relative;
-    overflow: hidden;
-
     display: flex;
+    min-width: 0;
     flex-direction: column;
-
-    min-height: 650px;
-    padding: 38px;
-
-    border-radius: var(--sb-seller-radius);
-
+    overflow: hidden;
+    padding: 34px 30px 25px;
+    border: 1px solid rgba(215, 170, 131, 0.22);
+    border-radius: 24px;
     background:
-        radial-gradient(
-            circle at 90% 5%,
-            rgba(255, 255, 255, .13),
-            transparent 28%
-        ),
-        linear-gradient(
-            145deg,
-            #2b211b,
-            #211914
-        );
-
-    color: #fff;
-
-    box-shadow: var(--sb-seller-shadow);
+        radial-gradient(circle at 100% 0, rgba(185, 130, 93, 0.2), transparent 34%),
+        linear-gradient(145deg, var(--sb-seller-espresso), #302017 60%, var(--sb-seller-walnut));
+    box-shadow: 0 22px 60px rgba(36, 24, 18, 0.14);
+    color: var(--sb-seller-cream);
+    animation: sb-seller-rise-in 0.7s 0.1s both;
 }
 
 .sb-seller-info::before {
-    content: "";
     position: absolute;
-
-    width: 260px;
-    height: 260px;
-
-    top: -100px;
-    right: -90px;
-
-    border: 1px solid rgba(255, 255, 255, .09);
+    right: -100px;
+    bottom: 60px;
+    width: 230px;
+    height: 230px;
+    border: 1px solid rgba(215, 170, 131, 0.12);
     border-radius: 50%;
+    box-shadow: 0 0 0 22px rgba(215, 170, 131, 0.025);
+    content: "";
+    pointer-events: none;
 }
 
-.sb-seller-info::after {
-    content: "";
-    position: absolute;
-
-    width: 190px;
-    height: 190px;
-
-    top: -65px;
-    right: -55px;
-
-    border: 1px solid rgba(255, 255, 255, .06);
-    border-radius: 50%;
-}
-
-.sb-seller-info-top {
+.sb-seller-info-top,
+.sb-seller-benefits,
+.sb-seller-info-footer {
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }
 
 .sb-seller-info-label {
-    display: block;
-
-    margin-bottom: 26px;
-
-    color: #c7a991;
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .16em;
+    color: var(--sb-seller-gold);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
 }
 
 .sb-seller-info-icon {
+    display: grid;
     width: 48px;
     height: 48px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin-bottom: 22px;
-
-    border: 1px solid rgba(255, 255, 255, .14);
-    border-radius: 14px;
-
-    background: rgba(255, 255, 255, .07);
-
-    color: #d8b89c;
-}
-
-.sb-seller-info-icon i {
-    font-size: 21px;
+    margin-top: 22px;
+    place-items: center;
+    border: 1px solid rgba(215, 170, 131, 0.32);
+    border-radius: 15px;
+    background: rgba(215, 170, 131, 0.09);
+    color: var(--sb-seller-gold);
+    font-size: 1.35rem;
 }
 
 .sb-seller-info h2 {
-    margin: 0 0 17px;
-
-    font-family: "Prata", Georgia, serif;
-    font-size: 31px;
-    font-weight: 400;
-    line-height: 1.25;
+    margin-top: 21px;
+    color: #fffaf5;
+    font-size: clamp(2rem, 3vw, 2.65rem);
+    line-height: 1.12;
 }
 
 .sb-seller-info h2 span {
     display: block;
-    color: #c49b79;
+    color: var(--sb-seller-gold);
+    font-style: italic;
 }
 
-.sb-seller-info-top p {
-    max-width: 400px;
-    margin: 0;
-
-    color: rgba(255, 255, 255, .62);
-
-    font-size: 14px;
-    line-height: 1.75;
+.sb-seller-info-top > p {
+    margin: 15px 0 0;
+    color: rgba(248, 243, 237, 0.69);
+    font-size: 0.9rem;
+    line-height: 1.8;
 }
-
-
-/* =========================================================
-   BENEFITS
-========================================================= */
 
 .sb-seller-benefits {
-    position: relative;
-    z-index: 2;
-
-    margin-top: 45px;
+    display: grid;
+    gap: 0;
+    margin-top: 27px;
 }
 
 .sb-seller-benefit {
     display: grid;
-    grid-template-columns: 28px 42px 1fr;
-    gap: 14px;
+    grid-template-columns: 25px 42px minmax(0, 1fr);
     align-items: start;
+    gap: 12px;
+    padding: 20px 0;
+    border-top: 1px solid rgba(237, 226, 214, 0.13);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
 
-    padding: 18px 0;
-
-    border-top: 1px solid rgba(255, 255, 255, .09);
+.sb-seller-benefit:hover {
+    transform: translateX(4px);
+    border-color: rgba(215, 170, 131, 0.42);
 }
 
 .sb-seller-benefit-number {
-    padding-top: 4px;
-
-    color: rgba(255, 255, 255, .28);
-
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .08em;
+    padding-top: 3px;
+    color: var(--sb-seller-gold);
+    font-size: 0.67rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
 }
 
 .sb-seller-benefit-icon {
+    display: grid;
     width: 42px;
     height: 42px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 11px;
-
-    background: rgba(255, 255, 255, .07);
-    color: #c49b79;
+    place-items: center;
+    border: 1px solid rgba(215, 170, 131, 0.24);
+    border-radius: 13px;
+    background: rgba(215, 170, 131, 0.08);
+    color: var(--sb-seller-gold);
+    font-size: 1rem;
+    transition: color 0.25s ease, background 0.25s ease, transform 0.25s ease;
 }
 
-.sb-seller-benefit-icon i {
-    font-size: 17px;
+.sb-seller-benefit:hover .sb-seller-benefit-icon {
+    transform: translateY(-2px);
+    background: rgba(215, 170, 131, 0.17);
+    color: #fff0df;
+}
+
+.sb-seller-benefit-content {
+    min-width: 0;
 }
 
 .sb-seller-benefit-content h3 {
-    margin: 1px 0 5px;
-
-    color: #fff;
-
-    font-size: 14px;
-    font-weight: 600;
+    margin: 1px 0 6px;
+    color: #fffaf5;
+    font-size: 0.94rem;
+    font-weight: 750;
 }
 
 .sb-seller-benefit-content p {
     margin: 0;
+    color: rgba(248, 243, 237, 0.65);
+    font-size: 0.81rem;
+    line-height: 1.7;
+}
 
-    color: rgba(255, 255, 255, .48);
-
-    font-size: 12px;
+.sb-seller-info-footer {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 22px;
+    border-top: 1px solid rgba(237, 226, 214, 0.13);
+    color: rgba(248, 243, 237, 0.72);
+    font-size: 0.78rem;
     line-height: 1.6;
 }
 
-
-/* =========================================================
-   INFO FOOTER
-========================================================= */
-
-.sb-seller-info-footer {
-    position: relative;
-    z-index: 2;
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    margin-top: auto;
-    padding-top: 28px;
-
-    border-top: 1px solid rgba(255, 255, 255, .09);
-
-    color: rgba(255, 255, 255, .4);
-
-    font-size: 11px;
-    line-height: 1.5;
-}
-
 .sb-seller-info-footer i {
-    color: #c49b79;
-    font-size: 15px;
+    margin-top: 2px;
+    color: var(--sb-seller-gold);
 }
 
-
 /* =========================================================
-   FORM CARD
+   7. FORM CARD
 ========================================================= */
 
 .sb-seller-form-card {
-    padding: 42px;
-
-    border: 1px solid var(--sb-seller-border);
-    border-radius: var(--sb-seller-radius);
-
-    background: var(--sb-seller-surface);
-
+    min-width: 0;
+    padding: clamp(25px, 4vw, 42px);
+    border: 1px solid rgba(84, 58, 41, 0.1);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.94);
     box-shadow: var(--sb-seller-shadow);
+    animation: sb-seller-rise-in 0.7s 0.16s both;
 }
-
-
-/* =========================================================
-   FORM HEADING
-========================================================= */
 
 .sb-seller-form-heading {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 30px;
-
-    padding-bottom: 28px;
-
-    border-bottom: 1px solid var(--sb-seller-border-light);
-}
-
-.sb-seller-section-label {
-    display: block;
-
-    margin-bottom: 11px;
-
-    color: var(--sb-seller-brown);
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .16em;
-    text-transform: uppercase;
+    gap: 20px;
 }
 
 .sb-seller-form-heading h2 {
-    margin: 0;
-
-    font-family: "Prata", Georgia, serif;
-    font-size: 31px;
-    font-weight: 400;
-    line-height: 1.25;
+    margin-top: 10px;
+    color: var(--sb-seller-espresso);
+    font-size: clamp(1.9rem, 3vw, 2.55rem);
+    line-height: 1.12;
 }
 
 .sb-seller-form-heading h2 span {
+    display: block;
     color: var(--sb-seller-brown);
+    font-style: italic;
 }
 
 .sb-seller-form-step {
     display: flex;
+    min-width: 86px;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 3px;
+    align-items: center;
+    gap: 5px;
+    padding: 11px 12px;
+    border: 1px solid var(--sb-seller-border);
+    border-radius: 14px;
+    background: var(--sb-seller-cream);
 }
 
-.sb-seller-form-step span {
+.sb-seller-form-step > span {
     color: var(--sb-seller-brown);
-
-    font-family: "Prata", Georgia, serif;
-    font-size: 23px;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 1.5rem;
+    line-height: 1;
 }
 
 .sb-seller-form-step small {
-    color: var(--sb-seller-light-text);
-
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
+    color: var(--sb-seller-muted);
+    font-size: 0.61rem;
+    font-weight: 750;
+    text-align: center;
 }
 
-
-/* =========================================================
-   FORM INTRO
-========================================================= */
-
 .sb-seller-form-intro {
-    margin: 24px 0 31px;
-
+    margin: 17px 0 26px;
+    padding-bottom: 23px;
+    border-bottom: 1px solid var(--sb-seller-border);
     color: var(--sb-seller-muted);
-
-    font-size: 13px;
+    font-size: 0.88rem;
     line-height: 1.7;
 }
 
-
 /* =========================================================
-   FORM
+   8. FORM FIELDS
 ========================================================= */
 
 .sb-seller-form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
+    display: grid;
+    gap: 21px;
 }
 
 .sb-seller-field {
-    margin: 0;
+    min-width: 0;
 }
 
-.sb-seller-field label {
+.sb-seller-field > label {
     display: block;
-
     margin-bottom: 9px;
-
     color: var(--sb-seller-text);
-
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
 }
 
-.sb-seller-field label span {
-    color: var(--sb-seller-brown);
+.sb-seller-field > label span {
+    color: #a44b3e;
 }
 
-
-/* =========================================================
-   INPUT
-========================================================= */
-
-.sb-seller-input {
+.sb-seller-input,
+.sb-seller-textarea {
     position: relative;
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    border: 1px solid #e4d9cf;
+    border-radius: 13px;
+    background: #fcf9f5;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 
 .sb-seller-input > i {
     position: absolute;
-    left: 17px;
-    top: 50%;
-
-    z-index: 2;
-
-    color: var(--sb-seller-light-text);
-
-    font-size: 15px;
-
-    transform: translateY(-50%);
-    transition: color .2s ease;
+    left: 16px;
+    color: #9b7a62;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: color 0.22s ease;
 }
 
 .sb-seller-input input,
 .sb-seller-textarea textarea {
+    display: block;
     width: 100%;
-
-    border: 1px solid var(--sb-seller-border);
-    border-radius: var(--sb-seller-small-radius);
-
-    background: #fff;
-
+    min-width: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
     color: var(--sb-seller-text);
-
-    font-family: inherit;
-    font-size: 13px;
-
-    outline: none;
-
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
+    font: inherit;
+    font-size: 0.87rem;
 }
 
 .sb-seller-input input {
-    height: 53px;
-    padding: 0 17px 0 46px;
+    min-height: 54px;
+    padding: 14px 15px 14px 44px;
 }
-
-.sb-seller-input input::placeholder,
-.sb-seller-textarea textarea::placeholder {
-    color: #aaa09a;
-}
-
-.sb-seller-input:focus-within > i {
-    color: var(--sb-seller-brown);
-}
-
-.sb-seller-input:focus-within input,
-.sb-seller-textarea:focus-within textarea {
-    border-color: rgba(139, 94, 60, .55);
-
-    box-shadow:
-        0 0 0 4px rgba(139, 94, 60, .07);
-}
-
-
-/* =========================================================
-   TEXTAREA
-========================================================= */
 
 .sb-seller-textarea {
-    position: relative;
+    align-items: stretch;
 }
 
 .sb-seller-textarea textarea {
-    min-height: 138px;
-
-    padding: 16px 45px 16px 17px;
-
+    min-height: 132px;
+    padding: 15px 45px 15px 16px;
     resize: vertical;
     line-height: 1.7;
 }
 
 .sb-seller-textarea > span {
     position: absolute;
-    top: 17px;
-    right: 17px;
-
-    color: #b1a7a0;
-
-    font-size: 13px;
+    top: 15px;
+    right: 15px;
+    color: #9b7a62;
+    pointer-events: none;
 }
 
-
-/* =========================================================
-   TWO COLUMN FIELDS
-========================================================= */
-
-.sb-seller-fields-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+.sb-seller-input:focus-within,
+.sb-seller-textarea:focus-within {
+    border-color: var(--sb-seller-brown);
+    background: #fffdfa;
+    box-shadow: 0 0 0 4px rgba(139, 94, 60, 0.12);
 }
 
+.sb-seller-input:focus-within > i,
+.sb-seller-textarea:focus-within > span {
+    color: var(--sb-seller-brown);
+}
 
-/* =========================================================
-   VALIDATION ERROR
-========================================================= */
+.sb-seller-input input::placeholder,
+.sb-seller-textarea textarea::placeholder {
+    color: #a29489;
+    opacity: 1;
+}
+
+.sb-seller-input input:focus,
+.sb-seller-textarea textarea:focus {
+    outline: none;
+}
 
 .sb-seller-field-error {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 6px;
-
     margin-top: 8px;
-
-    color: var(--sb-seller-danger);
-
-    font-size: 11px;
-    line-height: 1.5;
+    color: #a33c30;
+    font-size: 0.76rem;
+    line-height: 1.55;
 }
 
 .sb-seller-field-error i {
-    font-size: 12px;
+    margin-top: 2px;
 }
 
+.sb-seller-fields-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
 
 /* =========================================================
-   FORM FOOTER
+   9. SUBMIT BUTTON
 ========================================================= */
 
 .sb-seller-form-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 25px;
-
-    margin-top: 5px;
-    padding-top: 28px;
-
-    border-top: 1px solid var(--sb-seller-border-light);
+    display: grid;
+    gap: 23px;
+    margin-top: 2px;
+    padding-top: 23px;
+    border-top: 1px solid var(--sb-seller-border);
 }
 
 .sb-seller-security {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 11px;
-
-    max-width: 330px;
 }
 
 .sb-seller-security-icon {
-    width: 36px;
-    min-width: 36px;
-    height: 36px;
+    display: grid;
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    place-items: center;
+    border: 1px solid #e5d4c5;
+    border-radius: 11px;
+    background: var(--sb-seller-cream);
+    color: var(--sb-seller-brown);
+    font-size: 0.95rem;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: var(--sb-seller-success-bg);
-    color: var(--sb-seller-success);
+.sb-seller-security > div {
+    display: grid;
+    gap: 4px;
+    padding-top: 1px;
 }
 
 .sb-seller-security strong {
-    display: block;
-
-    margin-bottom: 2px;
-
     color: var(--sb-seller-text);
-
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 0.76rem;
+    line-height: 1.5;
 }
 
-.sb-seller-security span:last-child {
-    display: block;
-
-    color: var(--sb-seller-light-text);
-
-    font-size: 10px;
-    line-height: 1.45;
+.sb-seller-security > div > span {
+    color: var(--sb-seller-muted);
+    font-size: 0.75rem;
+    line-height: 1.65;
 }
-
-
-/* =========================================================
-   SUBMIT BUTTON
-========================================================= */
 
 .sb-seller-submit {
-    display: inline-flex;
+    display: flex;
+    width: 100%;
+    min-height: 57px;
     align-items: center;
-    justify-content: center;
-    gap: 16px;
-
-    min-height: 53px;
-    padding: 0 21px;
-
+    justify-content: space-between;
+    gap: 18px;
+    padding: 14px 18px 14px 22px;
     border: 1px solid var(--sb-seller-brown);
-    border-radius: 12px;
-
-    background: var(--sb-seller-brown);
-    color: #fff;
-
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-
+    border-radius: 13px;
+    background: linear-gradient(110deg, var(--sb-seller-brown), #754a30);
+    box-shadow: 0 10px 22px rgba(139, 94, 60, 0.2);
+    color: #fffaf5;
     cursor: pointer;
-
-    box-shadow:
-        0 9px 22px rgba(139, 94, 60, .18);
-
-    transition:
-        background .2s ease,
-        border-color .2s ease,
-        transform .2s ease,
-        box-shadow .2s ease;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-align: left;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 
-.sb-seller-submit i {
-    font-size: 14px;
-
-    transition: transform .2s ease;
+.sb-seller-submit > i {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    font-size: 0.95rem;
+    transition: transform 0.22s ease, background 0.22s ease;
 }
 
 .sb-seller-submit:hover {
-    background: var(--sb-seller-brown-dark);
-    border-color: var(--sb-seller-brown-dark);
-
     transform: translateY(-2px);
-
-    box-shadow:
-        0 13px 27px rgba(139, 94, 60, .23);
+    background: linear-gradient(110deg, #754a30, #5c3826);
+    box-shadow: 0 15px 28px rgba(139, 94, 60, 0.27);
 }
 
-.sb-seller-submit:hover i {
+.sb-seller-submit:hover > i {
     transform: translate(2px, -2px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sb-seller-submit:focus-visible {
+    outline: 3px solid rgba(139, 94, 60, 0.38);
+    outline-offset: 4px;
 }
 
 .sb-seller-submit:active {
     transform: translateY(0);
 }
 
-
 /* =========================================================
-   STATUS CARD
+   10. ANIMATIONS
 ========================================================= */
 
-.sb-seller-status {
-    display: grid;
-    grid-template-columns: 150px 1fr;
-    gap: 42px;
-    align-items: center;
+@keyframes sb-seller-rise-in {
+    from {
+        transform: translateY(16px);
+        opacity: 0;
+    }
 
-    padding: 55px;
-
-    border: 1px solid var(--sb-seller-border);
-    border-radius: var(--sb-seller-radius);
-
-    background: #fff;
-
-    box-shadow: var(--sb-seller-shadow);
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-.sb-seller-status-visual {
-    position: relative;
+@keyframes sb-seller-content-in {
+    from {
+        transform: translateY(12px);
+        opacity: 0;
+    }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-.sb-seller-status-icon {
-    width: 116px;
-    height: 116px;
+@keyframes sb-seller-float {
+    0%, 100% {
+        transform: translateY(0);
+    }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: var(--sb-seller-surface-soft);
-    color: var(--sb-seller-brown);
-
-    font-size: 38px;
-
-    box-shadow:
-        inset 0 0 0 1px var(--sb-seller-border);
+    50% {
+        transform: translateY(-7px);
+    }
 }
 
-.sb-seller-status-pulse {
-    position: absolute;
+@keyframes sb-seller-orbit {
+    from {
+        transform: rotate(0deg);
+    }
 
-    width: 136px;
-    height: 136px;
-
-    border: 1px solid rgba(139, 94, 60, .16);
-    border-radius: 50%;
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-.sb-seller-status-content {
-    max-width: 700px;
+@keyframes sb-seller-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 4px rgba(194, 138, 71, 0.13);
+    }
+
+    50% {
+        box-shadow: 0 0 0 7px rgba(194, 138, 71, 0.04);
+    }
 }
-
-.sb-seller-status-content h2 {
-    margin: 0 0 15px;
-
-    font-family: "Prata", Georgia, serif;
-    font-size: 34px;
-    font-weight: 400;
-    line-height: 1.3;
-}
-
-.sb-seller-status-content h2 span {
-    color: var(--sb-seller-brown);
-}
-
-.sb-seller-status-content > p {
-    max-width: 650px;
-    margin: 0;
-
-    color: var(--sb-seller-muted);
-
-    font-size: 14px;
-    line-height: 1.8;
-}
-
-.sb-seller-status-meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 18px;
-
-    margin-top: 25px;
-}
-
-.sb-seller-status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-
-    padding: 8px 12px;
-
-    border-radius: 999px;
-
-    font-size: 10px;
-    font-weight: 700;
-}
-
-.sb-seller-status-badge.pending {
-    background: #fbf1df;
-    color: #9a6d35;
-}
-
-.sb-seller-status-note {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-
-    color: var(--sb-seller-light-text);
-
-    font-size: 10px;
-}
-
-.sb-seller-status-note i {
-    color: var(--sb-seller-success);
-}
-
 
 /* =========================================================
-   REJECTED
+   11. RESPONSIVE BREAKPOINTS
 ========================================================= */
 
-.sb-seller-status.rejected .sb-seller-status-icon {
-    background: var(--sb-seller-danger-bg);
-    color: var(--sb-seller-danger);
-}
-
-.sb-seller-rejection {
-    margin-top: 24px;
-    padding: 17px 19px;
-
-    border: 1px solid #efd9d5;
-    border-radius: var(--sb-seller-small-radius);
-
-    background: #fff8f7;
-}
-
-.sb-seller-rejection > span {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-
-    margin-bottom: 7px;
-
-    color: var(--sb-seller-danger);
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-}
-
-.sb-seller-rejection p {
-    margin: 0;
-
-    color: #765d58;
-
-    font-size: 13px;
-    line-height: 1.7;
-}
-
-
-/* =========================================================
-   RESPONSIVE — 1199
-========================================================= */
-
-@media (max-width: 1199px) {
-
+@media (max-width: 991.98px) {
     .sb-seller-page {
-        padding-top: 60px;
+        padding-top: 30px;
+        padding-bottom: 72px;
     }
 
     .sb-seller-hero {
-        padding-bottom: 55px;
-    }
-
-    .sb-seller-info {
-        padding: 32px;
-    }
-
-    .sb-seller-form-card {
-        padding: 34px;
-    }
-
-    .sb-seller-status {
-        padding: 45px;
-    }
-
-}
-
-
-/* =========================================================
-   RESPONSIVE — 991
-========================================================= */
-
-@media (max-width: 991px) {
-
-    .sb-seller-hero {
-        align-items: flex-start;
+        min-height: 320px;
+        gap: 20px;
     }
 
     .sb-seller-hero-mark {
         width: 145px;
-        min-width: 145px;
-        height: 145px;
+        min-width: 130px;
     }
 
     .sb-seller-hero-circle {
-        width: 70px;
-        height: 70px;
+        width: 116px;
+        height: 116px;
     }
 
     .sb-seller-hero-circle i {
-        font-size: 27px;
-    }
-
-    .sb-seller-hero-mark > span {
-        right: -12px;
-        bottom: 8px;
+        font-size: 2.9rem;
     }
 
     .sb-seller-application-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
     }
 
     .sb-seller-info {
-        min-height: auto;
+        padding: 30px;
+    }
+
+    .sb-seller-info h2 span {
+        display: inline;
+        margin-left: 5px;
     }
 
     .sb-seller-benefits {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
     }
 
     .sb-seller-benefit {
-        display: block;
-        border-top: 0;
-        padding: 0;
+        grid-template-columns: 26px minmax(0, 1fr);
+        gap: 10px;
+        align-content: start;
+        padding: 18px 0 0;
     }
 
     .sb-seller-benefit-number {
-        margin-bottom: 9px;
+        grid-column: 1 / -1;
     }
 
     .sb-seller-benefit-icon {
-        margin-bottom: 12px;
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .sb-seller-benefit-content {
+        grid-column: 2;
+        grid-row: 2;
     }
 
     .sb-seller-info-footer {
-        margin-top: 35px;
+        margin-top: 22px;
     }
-
 }
 
-
-/* =========================================================
-   RESPONSIVE — 767
-========================================================= */
-
-@media (max-width: 767px) {
-
-    .sb-seller-page {
-        padding: 45px 0 70px;
+@media (max-width: 767.98px) {
+    .sb-seller-page .container {
+        width: min(100% - 32px, 600px);
     }
 
     .sb-seller-hero {
-        flex-direction: column;
-        gap: 35px;
-
-        padding-bottom: 45px;
-    }
-
-    .sb-seller-hero h1 {
-        font-size: 42px;
+        min-height: auto;
+        padding: 36px 27px 32px;
+        border-radius: 22px;
     }
 
     .sb-seller-hero-mark {
-        align-self: flex-end;
+        display: none;
     }
 
-    .sb-seller-form-card {
-        padding: 28px 24px;
+    .sb-seller-hero h1 {
+        font-size: clamp(2.45rem, 9vw, 3.6rem);
     }
 
-    .sb-seller-form-heading h2 {
-        font-size: 27px;
-    }
-
-    .sb-seller-fields-row {
-        grid-template-columns: 1fr;
-        gap: 25px;
-    }
-
-    .sb-seller-form-footer {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .sb-seller-security {
-        max-width: none;
-    }
-
-    .sb-seller-submit {
-        width: 100%;
+    .sb-seller-hero-content > p {
+        margin-top: 17px;
+        font-size: 0.91rem;
+        line-height: 1.75;
     }
 
     .sb-seller-status {
-        grid-template-columns: 1fr;
-        gap: 28px;
-
-        padding: 35px 28px;
-
-        text-align: center;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 26px 22px;
+        border-radius: 20px;
     }
 
-    .sb-seller-status-content {
-        max-width: none;
+    .sb-seller-status-visual {
+        width: 58px;
+        height: 58px;
+        min-width: 58px;
     }
 
-    .sb-seller-status-content > p {
-        margin-left: auto;
-        margin-right: auto;
+    .sb-seller-status-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 17px;
+        font-size: 1.35rem;
     }
 
-    .sb-seller-status-meta {
-        justify-content: center;
+    .sb-seller-status h2 {
+        font-size: clamp(1.65rem, 6vw, 2.1rem);
     }
 
     .sb-seller-benefits {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 0;
     }
 
     .sb-seller-benefit {
-        display: grid;
-        grid-template-columns: 28px 42px 1fr;
-        gap: 14px;
-
+        grid-template-columns: 25px 42px minmax(0, 1fr);
         padding: 17px 0;
-
-        border-top: 1px solid rgba(255, 255, 255, .09);
     }
 
     .sb-seller-benefit-number {
-        margin: 0;
+        grid-column: auto;
     }
 
-}
-
-
-/* =========================================================
-   RESPONSIVE — 575
-========================================================= */
-
-@media (max-width: 575px) {
-
-    .sb-seller-page {
-        padding-top: 35px;
+    .sb-seller-benefit-icon {
+        grid-column: auto;
+        grid-row: auto;
     }
 
-    .sb-seller-hero h1 {
-        margin-top: 20px;
-
-        font-size: 36px;
-    }
-
-    .sb-seller-hero p {
-        font-size: 14px;
-    }
-
-    .sb-seller-hero-mark {
-        width: 125px;
-        min-width: 125px;
-        height: 125px;
-    }
-
-    .sb-seller-hero-circle {
-        width: 61px;
-        height: 61px;
-    }
-
-    .sb-seller-hero-circle i {
-        font-size: 23px;
-    }
-
-    .sb-seller-info {
-        padding: 28px 24px;
-    }
-
-    .sb-seller-info h2 {
-        font-size: 27px;
+    .sb-seller-benefit-content {
+        grid-column: auto;
+        grid-row: auto;
     }
 
     .sb-seller-form-card {
-        padding: 25px 19px;
+        padding: 27px 23px;
+        border-radius: 20px;
     }
 
     .sb-seller-form-heading {
-        gap: 15px;
-    }
-
-    .sb-seller-form-step {
-        display: none;
+        gap: 12px;
     }
 
     .sb-seller-form-heading h2 {
-        font-size: 25px;
+        font-size: clamp(1.8rem, 6vw, 2.3rem);
     }
 
-    .sb-seller-status {
-        padding: 30px 20px;
+    .sb-seller-form-step {
+        min-width: 72px;
+        padding: 10px 8px;
     }
-
-    .sb-seller-status-content h2 {
-        font-size: 27px;
-    }
-
 }
 
-
-/* =========================================================
-   RESPONSIVE — 390
-========================================================= */
-
-@media (max-width: 390px) {
-
-    .sb-seller-hero h1 {
-        font-size: 32px;
+@media (max-width: 480px) {
+    .sb-seller-page {
+        padding-top: 20px;
+        padding-bottom: 52px;
     }
 
-    .sb-seller-form-card {
-        padding: 22px 16px;
+    .sb-seller-page .container {
+        width: calc(100% - 24px);
+    }
+
+    .sb-seller-hero {
+        padding: 30px 21px 28px;
+        border-radius: 18px;
+    }
+
+    .sb-seller-eyebrow {
+        margin-bottom: 17px;
+        font-size: 0.64rem;
+        letter-spacing: 0.14em;
+    }
+
+    .sb-seller-hero h1 {
+        font-size: clamp(2.1rem, 10vw, 2.8rem);
+    }
+
+    .sb-seller-hero-content > p {
+        font-size: 0.86rem;
+    }
+
+    .sb-seller-application-grid {
+        gap: 16px;
+        margin-top: 20px;
     }
 
     .sb-seller-info {
-        padding: 25px 19px;
+        padding: 26px 21px 22px;
+        border-radius: 19px;
+    }
+
+    .sb-seller-info h2 {
+        font-size: 2rem;
+    }
+
+    .sb-seller-status {
+        display: block;
+        margin-top: 20px;
+        padding: 24px 20px;
+    }
+
+    .sb-seller-status-visual {
+        margin-bottom: 18px;
+    }
+
+    .sb-seller-status-meta {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .sb-seller-form-card {
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+
+    .sb-seller-form-heading {
+        align-items: flex-start;
+    }
+
+    .sb-seller-form-heading h2 {
+        font-size: 1.8rem;
+    }
+
+    .sb-seller-form-step {
+        min-width: 62px;
+        padding: 9px 6px;
+    }
+
+    .sb-seller-form-step > span {
+        font-size: 1.25rem;
+    }
+
+    .sb-seller-form-step small {
+        font-size: 0.56rem;
+    }
+
+    .sb-seller-form-intro {
+        margin-bottom: 21px;
+        font-size: 0.83rem;
+    }
+
+    .sb-seller-form {
+        gap: 18px;
+    }
+
+    .sb-seller-fields-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    .sb-seller-input input {
+        min-height: 52px;
     }
 
     .sb-seller-submit {
-        min-height: 50px;
+        min-height: 54px;
     }
-
 }
 
 /* =========================================================
-   RE-APPLICATION SPACING
+   12. REDUCED-MOTION ACCESSIBILITY
 ========================================================= */
 
-.sb-seller-status.rejected + .sb-seller-application-grid {
-    margin-top: 32px;
+@media (prefers-reduced-motion: reduce) {
+    .sb-seller-page *,
+    .sb-seller-page *::before,
+    .sb-seller-page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .sb-seller-hero,
+    .sb-seller-hero-content,
+    .sb-seller-hero-mark,
+    .sb-seller-status,
+    .sb-seller-alert,
+    .sb-seller-info,
+    .sb-seller-form-card {
+        animation: none;
+    }
 }

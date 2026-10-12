@@ -273,20 +273,18 @@
                                         <div class="seller-book-info">
 
                                             <div class="seller-book-cover">
-
                                                 @if($book->cover)
-
                                                     <img
-                                                        src="{{ asset('storage/' . $book->cover) }}"
+                                                        src="{{ \Illuminate\Support\Str::startsWith($book->cover, ['http://', 'https://']) ? $book->cover : asset('storage/' . ltrim($book->cover, '/')) }}"
                                                         alt="{{ $book->title }}"
+                                                        loading="lazy"
+                                                        onerror="this.hidden = true; this.nextElementSibling.hidden = false;"
                                                     >
 
+                                                    <i class="bi bi-book" hidden></i>
                                                 @else
-
                                                     <i class="bi bi-book"></i>
-
                                                 @endif
-
                                             </div>
 
                                             <div>
