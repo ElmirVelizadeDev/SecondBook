@@ -1,900 +1,939 @@
+
 /* =========================================================
-   COOKIES
+   COOKIE POLICY
 ========================================================= */
 
 .sb-cookies-page {
+    --ck-accent: #8b5e3c;
+    --ck-accent-light: #b9825d;
+    --ck-gold: #c9a074;
+    --ck-gold-light: #e6c9a6;
+    --ck-bg: #fbf8f4;
+    --ck-bg-soft: #f5eee7;
+    --ck-surface: #ffffff;
+    --ck-surface-soft: #faf6f1;
+    --ck-text: #30251e;
+    --ck-text-soft: #74665b;
+    --ck-border: rgba(139, 94, 60, 0.14);
+    --ck-shadow: 0 18px 50px rgba(67, 43, 27, 0.07);
+    --ck-shadow-hover: 0 25px 55px rgba(67, 43, 27, 0.14);
     position: relative;
-    padding: 95px 0 110px;
-    background: #fbf8f5;
+    overflow: clip;
+    padding: 44px 0 30px;
+    color: var(--ck-text);
+    background:
+        radial-gradient(ellipse at 0% 8%, rgba(201, 160, 116, 0.09), transparent 30%),
+        radial-gradient(ellipse at 100% 42%, rgba(139, 94, 60, 0.055), transparent 28%),
+        var(--ck-bg);
+    font-family: 'DM Sans', sans-serif;
+}
+
+.sb-cookies-page *,
+.sb-cookies-page *::before,
+.sb-cookies-page *::after {
+    box-sizing: border-box;
+}
+
+.sb-cookies-page .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1160px;
+}
+
+/* SCROLL PROGRESS */
+
+.sb-cookies-progress {
+    position: absolute;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
     overflow: hidden;
+    background: rgba(139, 94, 60, 0.08);
 }
 
-.sb-cookies-page::before {
-    content: "";
-    position: absolute;
-    top: -180px;
-    left: -180px;
-    width: 420px;
-    height: 420px;
-    border-radius: 50%;
-    background: rgba(139, 94, 60, 0.035);
-    pointer-events: none;
+.sb-cookies-progress span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--ck-accent), var(--ck-gold), var(--ck-gold-light));
+    box-shadow: 0 0 12px rgba(201, 160, 116, 0.4);
+    transition: width 0.08s linear;
 }
 
-.sb-cookies-page::after {
-    content: "";
-    position: absolute;
-    right: -180px;
-    bottom: 220px;
-    width: 420px;
-    height: 420px;
-    border-radius: 50%;
-    background: rgba(139, 94, 60, 0.025);
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   HERO
-   ========================================================= */
+/* HERO */
 
 .sb-cookies-hero {
     position: relative;
-    z-index: 1;
-    max-width: 760px;
-    margin: 0 auto 58px;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 82px 50px 76px;
+    margin-bottom: 34px;
+    border: 1px solid rgba(230, 201, 166, 0.15);
+    border-radius: 28px;
     text-align: center;
+    color: #fff8f0;
+    background:
+        radial-gradient(ellipse at 15% 15%, rgba(201, 160, 116, 0.17), transparent 38%),
+        radial-gradient(ellipse at 90% 90%, rgba(139, 94, 60, 0.3), transparent 36%),
+        linear-gradient(135deg, #211812 0%, #38271d 52%, #4b3021 100%);
+    box-shadow: 0 25px 65px rgba(43, 28, 19, 0.17);
+}
+
+.sb-cookies-hero::before,
+.sb-cookies-hero::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    pointer-events: none;
+    border: 1px solid rgba(230, 201, 166, 0.11);
+    border-radius: 50%;
+}
+
+.sb-cookies-hero::before {
+    top: -190px;
+    right: -105px;
+    width: 440px;
+    height: 440px;
+    box-shadow:
+        0 0 0 35px rgba(230, 201, 166, 0.025),
+        0 0 0 75px rgba(230, 201, 166, 0.02);
+    animation: sbCookiesOrbit 24s linear infinite;
+}
+
+.sb-cookies-hero::after {
+    bottom: -260px;
+    left: -120px;
+    width: 430px;
+    height: 430px;
+    box-shadow: 0 0 0 45px rgba(230, 201, 166, 0.025);
+}
+
+.sb-cookies-hero-orb {
+    position: absolute;
+    z-index: -1;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(201, 160, 116, 0.12);
+    filter: blur(65px);
+    pointer-events: none;
+    animation: sbCookiesFloat 8s ease-in-out infinite;
+}
+
+.sb-cookies-hero-orb-one {
+    top: 5%;
+    left: 14%;
+}
+
+.sb-cookies-hero-orb-two {
+    right: 12%;
+    bottom: 0;
+    animation-delay: -4s;
 }
 
 .sb-cookies-eyebrow {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 9px;
-    color: #a07859;
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 2.5px;
+    gap: 13px;
+    margin-bottom: 24px;
+    color: var(--ck-gold-light);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
 }
 
 .sb-cookies-eyebrow i {
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .sb-cookies-eyebrow-line {
-    width: 28px;
+    display: block;
+    width: 31px;
     height: 1px;
-    background: #d9c5b4;
+    background: linear-gradient(90deg, transparent, var(--ck-gold));
+}
+
+.sb-cookies-eyebrow-line:last-child {
+    transform: rotate(180deg);
 }
 
 .sb-cookies-hero h1 {
-    margin: 18px 0 15px;
-    color: #29231f;
-    font-size: clamp(42px, 5vw, 62px);
-    font-weight: 700;
-    line-height: 1.05;
-    letter-spacing: -2.5px;
+    position: relative;
+    margin: 0;
+    color: #fffaf5;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(42px, 5.3vw, 68px);
+    font-weight: 500;
+    letter-spacing: -1.8px;
+    line-height: 1.12;
 }
 
 .sb-cookies-hero h1 em {
-    color: #8b5e3c;
-    font-family: Georgia, "Times New Roman", serif;
-    font-style: italic;
+    color: var(--ck-gold-light);
     font-weight: 500;
 }
 
 .sb-cookies-hero > p {
-    max-width: 590px;
-    margin: 0 auto;
-    color: #877b72;
-    font-size: 13px;
-    line-height: 1.8;
+    max-width: 650px;
+    margin: 23px auto 0;
+    color: rgba(255, 248, 240, 0.76);
+    font-size: 15px;
+    line-height: 1.9;
 }
 
 .sb-cookies-meta {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    margin-top: 23px;
-    color: #9a8d83;
-    font-size: 9px;
-    font-weight: 600;
+    gap: 17px;
+    margin-top: 31px;
+    color: rgba(255, 248, 240, 0.76);
+    font-size: 11px;
+    letter-spacing: 0.2px;
 }
 
-.sb-cookies-meta span {
+.sb-cookies-meta > span:not(.sb-cookies-meta-divider) {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 .sb-cookies-meta i {
-    color: #8b5e3c;
-    font-size: 11px;
+    color: var(--ck-gold-light);
+    font-size: 14px;
 }
 
 .sb-cookies-meta-divider {
-    width: 3px;
-    height: 3px;
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
-    background: #cdb9a8;
+    background: var(--ck-gold);
 }
 
+.sb-cookies-hero-decoration {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 32px;
+}
 
-/* =========================================================
-   INTRO / FEATURE BOX
-   ========================================================= */
+.sb-cookies-hero-decoration span {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ck-gold);
+    opacity: 0.6;
+}
+
+.sb-cookies-hero-decoration span:nth-child(2) {
+    width: 24px;
+    border-radius: 5px;
+    opacity: 1;
+}
+
+/* INTRO */
 
 .sb-cookies-intro {
     position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    max-width: 950px;
-    margin: 0 auto 35px;
-    padding: 25px 28px;
-    border: 1px solid #e7ddd5;
-    border-radius: 18px;
-    background:
-        linear-gradient(
-            135deg,
-            #fffdfa 0%,
-            #f8f0e9 100%
-        );
-    box-shadow:
-        0 15px 40px rgba(53, 39, 29, 0.045);
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    align-items: start;
+    gap: 23px;
+    padding: 34px 36px;
+    margin-bottom: 82px;
+    overflow: hidden;
+    border: 1px solid var(--ck-border);
+    border-radius: 22px;
+    background: var(--ck-surface);
+    box-shadow: var(--ck-shadow);
 }
 
-.sb-cookies-intro-icon {
-    width: 55px;
-    height: 55px;
-    flex: 0 0 55px;
+.sb-cookies-intro::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    content: "";
+    background: linear-gradient(180deg, var(--ck-gold), var(--ck-accent));
+    transform: scaleY(0.35);
+    transform-origin: top;
+    transition: transform 0.45s ease;
+}
+
+.sb-cookies-intro:hover::before {
+    transform: scaleY(1);
+}
+
+.sb-cookies-intro-icon,
+.sb-cookies-note-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 15px;
-    background: #8b5e3c;
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    border: 1px solid rgba(139, 94, 60, 0.12);
+    border-radius: 17px;
+    color: var(--ck-accent);
+    background: linear-gradient(145deg, #fbf1e6, #f2e2d1);
+    font-size: 23px;
+    transition: color 0.35s ease, background 0.35s ease, transform 0.35s ease;
+}
+
+.sb-cookies-intro:hover .sb-cookies-intro-icon {
     color: #fff;
-    font-size: 21px;
-    box-shadow: 0 10px 22px rgba(139, 94, 60, 0.18);
+    background: var(--ck-accent);
+    transform: rotate(-5deg) scale(1.04);
 }
 
-.sb-cookies-intro-label,
-.sb-cookies-section-label {
-    display: block;
-    margin-bottom: 5px;
-    color: #a07859;
-    font-size: 8px;
-    font-weight: 800;
-    letter-spacing: 1.7px;
-}
-
-.sb-cookies-intro h2 {
-    margin: 0 0 5px;
-    color: #302923;
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.sb-cookies-intro p {
-    max-width: 760px;
-    margin: 0;
-    color: #8c8178;
+.sb-cookies-intro-label {
+    display: inline-block;
+    margin-bottom: 11px;
+    color: var(--ck-accent);
     font-size: 10px;
-    line-height: 1.7;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.sb-cookies-intro h2,
+.sb-cookies-note h2,
+.sb-cookies-contact h2 {
+    margin: 0;
+    color: var(--ck-text);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(23px, 2.4vw, 31px);
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    line-height: 1.35;
+}
+
+.sb-cookies-intro p,
+.sb-cookies-note p,
+.sb-cookies-contact p {
+    margin: 13px 0 0;
+    color: var(--ck-text-soft);
+    font-size: 13px;
+    line-height: 1.9;
 }
 
 .sb-cookies-secondary-text {
-    margin-top: 8px !important;
+    padding-top: 13px;
+    margin-top: 15px !important;
+    border-top: 1px solid var(--ck-border);
+    font-size: 12px !important;
 }
 
-
-/* =========================================================
-   GENERAL SECTION
-   ========================================================= */
+/* SECTION HEADINGS */
 
 .sb-cookies-section {
-    position: relative;
-    z-index: 1;
-    max-width: 950px;
-    margin: 0 auto 58px;
+    margin-bottom: 82px;
 }
 
-.sb-cookies-section-heading {
-    max-width: 650px;
-    margin-bottom: 28px;
+.sb-cookies-section-heading,
+.sb-cookies-types-heading {
+    max-width: 670px;
+    margin: 0 auto 35px;
+    text-align: center;
+}
+
+.sb-cookies-section-label {
+    display: inline-block;
+    margin-bottom: 13px;
+    color: var(--ck-accent);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.2px;
 }
 
 .sb-cookies-section-heading h2,
-.sb-cookies-types-heading h2 {
-    margin: 0 0 11px;
-    color: #302923;
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.8px;
-}
-
-.sb-cookies-section-heading p,
-.sb-cookies-types-heading p {
-    max-width: 590px;
+.sb-cookies-types-heading h2,
+.sb-cookies-feature-content > h2 {
     margin: 0;
-    color: #8b8179;
-    font-size: 10.5px;
-    line-height: 1.85;
+    color: var(--ck-text);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(29px, 3.2vw, 40px);
+    font-weight: 500;
+    letter-spacing: -0.8px;
+    line-height: 1.28;
 }
 
+.sb-cookies-section-heading > p,
+.sb-cookies-types-heading > p {
+    max-width: 590px;
+    margin: 16px auto 0;
+    color: var(--ck-text-soft);
+    font-size: 13px;
+    line-height: 1.9;
+}
 
-/* =========================================================
-   CARD GRID
-   ========================================================= */
+/* COOKIE CARDS */
 
 .sb-cookies-card-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 18px;
 }
 
 .sb-cookies-card {
     position: relative;
-    min-height: 235px;
-    padding: 28px;
-    border: 1px solid #e9dfd7;
-    border-radius: 17px;
-    background: #fff;
-    box-shadow:
-        0 9px 30px rgba(53, 39, 29, 0.035);
+    isolation: isolate;
+    min-height: 285px;
+    padding: 28px 23px 30px;
     overflow: hidden;
+    border: 1px solid var(--ck-border);
+    border-radius: 21px;
+    background: var(--ck-surface);
+    box-shadow: 0 8px 28px rgba(67, 43, 27, 0.035);
     transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+        border-color 0.4s ease,
+        box-shadow 0.4s ease;
 }
 
-.sb-cookies-card:hover {
-    border-color: #dbc8b8;
-    transform: translateY(-4px);
-    box-shadow:
-        0 17px 38px rgba(53, 39, 29, 0.07);
+.sb-cookies-card::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    content: "";
+    background: linear-gradient(145deg, #4a3021, #211812);
+    transform: translateY(101%);
+    transition: transform 0.48s cubic-bezier(0.22, 0.68, 0, 1);
 }
 
 .sb-cookies-card-number {
     position: absolute;
-    top: 20px;
-    right: 23px;
-    color: #eaded4;
-    font-size: 28px;
-    font-weight: 800;
-    line-height: 1;
+    top: 21px;
+    right: 21px;
+    color: rgba(139, 94, 60, 0.48);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    transition: color 0.35s ease;
 }
 
 .sb-cookies-card-icon {
-    width: 42px;
-    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 17px;
-    border-radius: 11px;
-    background: #f6eee7;
-    color: #8b5e3c;
-    font-size: 16px;
+    width: 54px;
+    height: 54px;
+    margin-bottom: 26px;
+    border: 1px solid rgba(139, 94, 60, 0.12);
+    border-radius: 16px;
+    color: var(--ck-accent);
+    background: var(--ck-bg-soft);
+    font-size: 22px;
     transition:
-        background 0.25s ease,
-        color 0.25s ease;
+        color 0.4s ease,
+        background 0.4s ease,
+        transform 0.4s ease,
+        border-color 0.4s ease;
+}
+
+.sb-cookies-card h3,
+.sb-cookies-feature-item h3,
+.sb-cookies-types-item h3 {
+    margin: 0;
+    color: var(--ck-text);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.5;
+    transition: color 0.35s ease;
+}
+
+.sb-cookies-card p,
+.sb-cookies-feature-item p,
+.sb-cookies-types-item p {
+    margin: 11px 0 0;
+    color: var(--ck-text-soft);
+    font-size: 12px;
+    line-height: 1.85;
+    transition: color 0.35s ease;
+}
+
+.sb-cookies-card-line {
+    position: absolute;
+    right: 23px;
+    bottom: 0;
+    left: 23px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ck-gold), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.sb-cookies-card:hover {
+    border-color: rgba(201, 160, 116, 0.5);
+    box-shadow: var(--ck-shadow-hover);
+    transform: translateY(-9px);
+}
+
+.sb-cookies-card:hover::before {
+    transform: translateY(0);
+}
+
+.sb-cookies-card:hover .sb-cookies-card-number {
+    color: rgba(230, 201, 166, 0.7);
 }
 
 .sb-cookies-card:hover .sb-cookies-card-icon {
-    background: #8b5e3c;
-    color: #fff;
+    border-color: rgba(230, 201, 166, 0.2);
+    color: #fff8f0;
+    background: rgba(201, 160, 116, 0.2);
+    transform: rotate(-5deg) scale(1.06);
 }
 
-.sb-cookies-card h3 {
-    position: relative;
-    z-index: 1;
-    margin: 0 0 10px;
-    color: #332c27;
-    font-size: 14px;
-    font-weight: 750;
+.sb-cookies-card:hover h3 {
+    color: #fff8f0;
 }
 
-.sb-cookies-card p {
-    position: relative;
-    z-index: 1;
-    margin: 0;
-    color: #8b8179;
-    font-size: 10.5px;
-    line-height: 1.85;
+.sb-cookies-card:hover p {
+    color: rgba(255, 248, 240, 0.72);
 }
 
+.sb-cookies-card:hover .sb-cookies-card-line {
+    transform: scaleX(1);
+}
 
-/* =========================================================
-   USAGE FEATURE
-   ========================================================= */
+/* HOW WE USE COOKIES */
 
 .sb-cookies-feature {
     position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: flex-start;
-    gap: 22px;
-    max-width: 950px;
-    margin: 0 auto 58px;
-    padding: 28px;
-    border: 1px solid #e7ddd5;
-    border-radius: 18px;
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 25px;
+    padding: 43px;
+    margin-bottom: 82px;
+    border: 1px solid var(--ck-border);
+    border-radius: 25px;
     background:
-        linear-gradient(
-            135deg,
-            #fffdfa 0%,
-            #f8f0e9 100%
-        );
-    box-shadow:
-        0 15px 40px rgba(53, 39, 29, 0.045);
+        radial-gradient(ellipse at 100% 0%, rgba(201, 160, 116, 0.09), transparent 40%),
+        var(--ck-surface);
+    box-shadow: var(--ck-shadow);
 }
 
 .sb-cookies-feature-icon {
-    width: 48px;
-    height: 48px;
-    flex: 0 0 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 13px;
-    background: #8b5e3c;
+    width: 64px;
+    height: 64px;
+    border: 1px solid rgba(139, 94, 60, 0.15);
+    border-radius: 19px;
+    color: var(--ck-accent);
+    background: linear-gradient(145deg, #fbf1e6, #f0dfcc);
+    font-size: 25px;
+    transition: transform 0.45s ease, background 0.35s ease, color 0.35s ease;
+}
+
+.sb-cookies-feature:hover .sb-cookies-feature-icon {
     color: #fff;
-    font-size: 18px;
-    box-shadow: 0 9px 20px rgba(139, 94, 60, 0.16);
+    background: var(--ck-accent);
+    transform: rotate(12deg);
 }
 
-.sb-cookies-feature-content {
-    flex: 1;
-    min-width: 0;
+.sb-cookies-feature-content > .sb-cookies-section-label {
+    margin-bottom: 12px;
 }
 
-.sb-cookies-feature-content h2 {
-    margin: 0 0 23px;
-    color: #302923;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.25;
+.sb-cookies-feature-content > h2 {
+    font-size: clamp(26px, 2.8vw, 35px);
 }
 
 .sb-cookies-feature-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px 28px;
+    gap: 0 28px;
+    margin-top: 30px;
 }
 
 .sb-cookies-feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    align-items: start;
+    gap: 14px;
+    padding: 21px 0;
+    border-top: 1px solid var(--ck-border);
 }
 
 .sb-cookies-feature-number {
-    flex: 0 0 auto;
-    color: #c6aa93;
-    font-size: 9px;
-    font-weight: 800;
-    line-height: 1.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--ck-border);
+    border-radius: 11px;
+    color: var(--ck-accent);
+    background: var(--ck-bg-soft);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 12px;
+    transition: color 0.3s ease, background 0.3s ease;
 }
 
-.sb-cookies-feature-item h3 {
-    margin: 0 0 5px;
-    color: #443932;
-    font-size: 11px;
-    font-weight: 750;
+.sb-cookies-feature-item:hover .sb-cookies-feature-number {
+    color: #fff;
+    background: var(--ck-accent);
 }
 
-.sb-cookies-feature-item p {
-    margin: 0;
-    color: #8b8179;
-    font-size: 9.5px;
-    line-height: 1.7;
-}
-
-
-/* =========================================================
-   COOKIE TYPES
-   ========================================================= */
+/* TYPES OF COOKIES */
 
 .sb-cookies-types {
-    display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-    align-items: start;
-    gap: 55px;
-}
-
-.sb-cookies-types-heading {
-    max-width: 430px;
+    margin-bottom: 82px;
 }
 
 .sb-cookies-types-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 13px;
 }
 
 .sb-cookies-types-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    padding: 19px;
-    border: 1px solid #e9dfd7;
-    border-radius: 14px;
-    background: #fff;
-    box-shadow:
-        0 7px 24px rgba(53, 39, 29, 0.028);
+    position: relative;
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr) 28px;
+    align-items: center;
+    gap: 21px;
+    padding: 23px 26px;
+    border: 1px solid var(--ck-border);
+    border-radius: 19px;
+    background: var(--ck-surface);
+    box-shadow: 0 7px 24px rgba(67, 43, 27, 0.025);
+    transition:
+        transform 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.sb-cookies-types-item:hover {
+    border-color: rgba(139, 94, 60, 0.32);
+    box-shadow: var(--ck-shadow);
+    transform: translateX(5px);
 }
 
 .sb-cookies-types-icon {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    background: #f6eee7;
-    color: #8b5e3c;
-    font-size: 14px;
+    width: 54px;
+    height: 54px;
+    border: 1px solid var(--ck-border);
+    border-radius: 16px;
+    color: var(--ck-accent);
+    background: var(--ck-bg-soft);
+    font-size: 21px;
+    transition: color 0.35s ease, background 0.35s ease, transform 0.35s ease;
+}
+
+.sb-cookies-types-item:hover .sb-cookies-types-icon {
+    color: #fff;
+    background: var(--ck-accent);
+    transform: scale(1.05);
 }
 
 .sb-cookies-types-item h3 {
-    margin: 0 0 4px;
-    color: #443932;
-    font-size: 11px;
-    font-weight: 750;
-}
-
-.sb-cookies-types-item p {
-    margin: 0;
-    color: #8b8179;
-    font-size: 9.5px;
-    line-height: 1.7;
-}
-
-
-/* =========================================================
-   COOKIE MANAGEMENT
-   ========================================================= */
-
-.sb-cookies-management {
-    margin-bottom: 58px;
-}
-
-.sb-cookies-management p {
-    max-width: 800px;
-}
-
-
-/* =========================================================
-   POLICY NOTE
-   ========================================================= */
-
-.sb-cookies-note {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    max-width: 950px;
-    margin: 0 auto 34px;
-    padding: 20px 23px;
-    border: 1px solid #e5d9d0;
-    border-radius: 15px;
-    background: #f8f1eb;
-}
-
-.sb-cookies-note-icon {
-    width: 39px;
-    height: 39px;
-    flex: 0 0 39px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    background: #fff;
-    color: #8b5e3c;
     font-size: 15px;
 }
 
+.sb-cookies-types-item p {
+    max-width: 690px;
+    margin-top: 6px;
+}
+
+.sb-cookies-types-arrow {
+    color: var(--ck-accent-light);
+    font-size: 17px;
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.sb-cookies-types-item:hover .sb-cookies-types-arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+/* COOKIE MANAGEMENT */
+
+.sb-cookies-management {
+    margin-bottom: 28px;
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(201, 160, 116, 0.11), transparent 42%),
+        var(--ck-surface);
+}
+
+/* POLICY NOTE */
+
+.sb-cookies-note {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr);
+    align-items: start;
+    gap: 22px;
+    padding: 30px 34px;
+    margin-bottom: 82px;
+    border: 1px solid rgba(201, 160, 116, 0.28);
+    border-radius: 21px;
+    background: linear-gradient(125deg, var(--ck-surface-soft), var(--ck-surface));
+    box-shadow: 0 10px 35px rgba(67, 43, 27, 0.045);
+}
+
+.sb-cookies-note-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    font-size: 21px;
+}
+
 .sb-cookies-note h2 {
-    margin: 0 0 4px;
-    color: #443932;
-    font-size: 12px;
-    font-weight: 750;
+    font-size: clamp(23px, 2.2vw, 29px);
 }
 
-.sb-cookies-note p {
-    max-width: 760px;
-    margin: 0;
-    color: #92857b;
-    font-size: 9px;
-    line-height: 1.6;
-}
-
-
-/* =========================================================
-   CONTACT CTA
-   ========================================================= */
+/* CONTACT */
 
 .sb-cookies-contact {
     position: relative;
-    z-index: 1;
-    display: flex;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: 62px minmax(0, 1fr) auto;
     align-items: center;
-    gap: 16px;
-    max-width: 950px;
-    margin: 0 auto;
-    padding: 24px 25px;
-    border: 1px solid #e3d5ca;
-    border-radius: 17px;
-    background:
-        linear-gradient(
-            135deg,
-            #fffdfa 0%,
-            #f7eee7 100%
-        );
-    box-shadow:
-        0 12px 32px rgba(53, 39, 29, 0.04);
+    gap: 25px;
+    padding: 37px 39px;
+    margin-bottom: 25px;
     overflow: hidden;
+    border: 1px solid rgba(230, 201, 166, 0.14);
+    border-radius: 24px;
+    color: #fff8f0;
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(201, 160, 116, 0.17), transparent 38%),
+        linear-gradient(125deg, #241a14, #493020);
+    box-shadow: 0 20px 50px rgba(43, 28, 19, 0.13);
 }
 
-.sb-cookies-contact::after {
-    content: "";
+.sb-cookies-contact-decoration {
     position: absolute;
-    right: -80px;
-    top: -90px;
-    width: 210px;
-    height: 210px;
+    z-index: -1;
+    top: -105px;
+    right: 90px;
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgba(230, 201, 166, 0.13);
     border-radius: 50%;
-    background: rgba(139, 94, 60, 0.035);
+    box-shadow: 0 0 0 25px rgba(230, 201, 166, 0.025);
     pointer-events: none;
+    transition: transform 0.8s ease;
+}
+
+.sb-cookies-contact:hover .sb-cookies-contact-decoration {
+    transform: scale(1.18) rotate(18deg);
 }
 
 .sb-cookies-contact-icon {
-    position: relative;
-    z-index: 1;
-    width: 43px;
-    height: 43px;
-    flex: 0 0 43px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 11px;
-    background: #8b5e3c;
-    color: #fff;
-    font-size: 17px;
-    box-shadow: 0 8px 19px rgba(139, 94, 60, 0.16);
+    width: 62px;
+    height: 62px;
+    border: 1px solid rgba(230, 201, 166, 0.2);
+    border-radius: 18px;
+    color: var(--ck-gold-light);
+    background: rgba(201, 160, 116, 0.13);
+    font-size: 25px;
+    transition: transform 0.4s ease, background 0.4s ease;
 }
 
-.sb-cookies-contact-content {
-    position: relative;
-    z-index: 1;
-    min-width: 0;
+.sb-cookies-contact:hover .sb-cookies-contact-icon {
+    background: rgba(201, 160, 116, 0.24);
+    transform: translateY(-3px) rotate(-5deg);
 }
 
-.sb-cookies-contact-content .sb-cookies-section-label {
-    margin-bottom: 4px;
+.sb-cookies-contact .sb-cookies-section-label {
+    color: var(--ck-gold-light);
 }
 
-.sb-cookies-contact-content h2 {
-    margin: 0 0 4px;
-    color: #3d332c;
-    font-size: 14px;
-    font-weight: 750;
+.sb-cookies-contact h2 {
+    color: #fff8f0;
+    font-size: clamp(23px, 2.5vw, 31px);
 }
 
-.sb-cookies-contact-content p {
-    max-width: 650px;
-    margin: 0;
-    color: #8b8179;
-    font-size: 9.5px;
-    line-height: 1.7;
+.sb-cookies-contact p {
+    max-width: 570px;
+    color: rgba(255, 248, 240, 0.72);
 }
 
 .sb-cookies-contact-btn {
     position: relative;
-    z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    height: 35px;
-    margin-left: auto;
-    padding: 0 14px;
-    flex: 0 0 auto;
-    border-radius: 8px;
-    background: #8b5e3c;
-    color: #fff;
-    font-size: 9px;
+    gap: 14px;
+    min-height: 49px;
+    padding: 0 21px;
+    border: 1px solid var(--ck-gold-light);
+    border-radius: 12px;
+    color: #2a1d14;
+    background: var(--ck-gold-light);
+    font-size: 12px;
     font-weight: 700;
     text-decoration: none;
+    white-space: nowrap;
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+        color 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease;
 }
 
 .sb-cookies-contact-btn i {
-    font-size: 10px;
+    font-size: 15px;
+    transition: transform 0.3s ease;
 }
 
 .sb-cookies-contact-btn:hover {
-    background: #71482d;
-    color: #fff;
-    transform: translateY(-2px);
+    border-color: #fff2df;
+    color: #2a1d14;
+    background: #fff2df;
+    transform: translateY(-3px);
 }
 
+.sb-cookies-contact-btn:hover i {
+    transform: translateX(4px);
+}
 
-/* =========================================================
-   BOTTOM META
-   ========================================================= */
+/* BOTTOM META */
 
 .sb-cookies-bottom {
-    position: relative;
-    z-index: 1;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    max-width: 950px;
-    margin: 20px auto 0;
-    padding: 0 3px;
-    color: #a09288;
-    font-size: 8px;
+    gap: 12px 20px;
+    padding: 20px 2px 5px;
+    color: var(--ck-text-soft);
+    font-size: 11px;
 }
 
 .sb-cookies-bottom span {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 .sb-cookies-bottom i {
-    color: #8b5e3c;
-    font-size: 10px;
+    color: var(--ck-accent);
+    font-size: 14px;
+}
+
+/* SCROLL REVEAL */
+
+.sb-cookies-page.sb-cookies-reveal-enabled [data-reveal] {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+.sb-cookies-page.sb-cookies-reveal-enabled [data-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ANIMATIONS */
+
+@keyframes sbCookiesFloat {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(18px, -16px, 0);
+    }
+}
+
+@keyframes sbCookiesOrbit {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 
-/* =========================================================
-   TABLET
-   ========================================================= */
+/* RESPONSIVE */
 
-@media (max-width: 991px) {
-
-    .sb-cookies-page {
-        padding: 75px 0 90px;
-    }
-
-    .sb-cookies-hero {
-        margin-bottom: 48px;
-    }
-
-    .sb-cookies-intro,
-    .sb-cookies-feature,
-    .sb-cookies-section,
-    .sb-cookies-note,
-    .sb-cookies-contact,
-    .sb-cookies-bottom {
-        max-width: 100%;
-    }
-
-    .sb-cookies-types {
-        gap: 35px;
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 767px) {
-
-    .sb-cookies-page {
-        padding: 60px 0 75px;
-    }
-
-    .sb-cookies-hero {
-        margin-bottom: 40px;
-    }
-
-    .sb-cookies-hero h1 {
-        font-size: 40px;
-        letter-spacing: -1.7px;
-    }
-
-    .sb-cookies-hero > p {
-        padding: 0 10px;
-        font-size: 12px;
-    }
-
-    .sb-cookies-meta {
-        flex-direction: column;
-        gap: 7px;
-    }
-
-    .sb-cookies-meta-divider {
-        display: none;
-    }
-
-    .sb-cookies-intro {
-        align-items: flex-start;
-        gap: 15px;
-        padding: 20px;
-        border-radius: 15px;
-    }
-
-    .sb-cookies-intro-icon {
-        width: 45px;
-        height: 45px;
-        flex-basis: 45px;
-        border-radius: 12px;
-        font-size: 17px;
-    }
-
-    .sb-cookies-intro h2 {
-        font-size: 14px;
-    }
-
-    .sb-cookies-intro p {
-        font-size: 9.5px;
-    }
-
-    .sb-cookies-section {
-        margin-bottom: 45px;
-    }
-
-    .sb-cookies-section-heading {
-        margin-bottom: 23px;
-    }
-
-    .sb-cookies-section-heading h2,
-    .sb-cookies-types-heading h2 {
-        font-size: 23px;
-        letter-spacing: -0.5px;
+@media (max-width: 1199px) {
+    .sb-cookies-page .container {
+        max-width: 960px;
     }
 
     .sb-cookies-card-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .sb-cookies-card {
-        min-height: auto;
-        padding: 23px;
-    }
-
-    .sb-cookies-card-number {
-        top: 17px;
-        right: 18px;
-        font-size: 24px;
-    }
-
-    .sb-cookies-card h3 {
-        font-size: 13px;
-    }
-
-    .sb-cookies-card p {
-        font-size: 10px;
-        line-height: 1.8;
-    }
-
-    .sb-cookies-feature {
-        align-items: flex-start;
-        gap: 15px;
-        margin-bottom: 45px;
-        padding: 20px;
-        border-radius: 15px;
-    }
-
-    .sb-cookies-feature-icon {
-        width: 45px;
-        height: 45px;
-        flex-basis: 45px;
-        border-radius: 12px;
-        font-size: 17px;
-    }
-
-    .sb-cookies-feature-content h2 {
-        font-size: 16px;
-        margin-bottom: 20px;
-    }
-
-    .sb-cookies-feature-grid {
-        grid-template-columns: 1fr;
-        gap: 17px;
-    }
-
-    .sb-cookies-feature-item {
-        gap: 10px;
-    }
-
-    .sb-cookies-feature-item h3 {
-        font-size: 10.5px;
-    }
-
-    .sb-cookies-feature-item p {
-        font-size: 9px;
-    }
-
-    .sb-cookies-types {
-        grid-template-columns: 1fr;
-        gap: 25px;
-    }
-
-    .sb-cookies-types-heading {
-        max-width: 100%;
-    }
-
-    .sb-cookies-types-list {
-        gap: 11px;
-    }
-
-    .sb-cookies-types-item {
-        padding: 17px;
-    }
-
-    .sb-cookies-note {
-        align-items: flex-start;
-        padding: 18px;
-        border-radius: 14px;
-    }
-
-    .sb-cookies-note h2 {
-        font-size: 11px;
-    }
-
-    .sb-cookies-note p {
-        font-size: 9px;
+        min-height: 245px;
     }
 
     .sb-cookies-contact {
-        align-items: flex-start;
-        flex-wrap: wrap;
-        padding: 19px;
-        border-radius: 15px;
-    }
-
-    .sb-cookies-contact-content {
-        flex: 1;
-    }
-
-    .sb-cookies-contact-content h2 {
-        font-size: 13px;
+        grid-template-columns: 58px minmax(0, 1fr);
     }
 
     .sb-cookies-contact-btn {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 4px;
+        grid-column: 2;
+        justify-self: start;
     }
-
-    .sb-cookies-bottom {
-        align-items: center;
-        flex-direction: column;
-        gap: 8px;
-        text-align: center;
-    }
-
 }
 
-
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 480px) {
-
+@media (max-width: 991px) {
     .sb-cookies-page {
-        padding-top: 50px;
+        padding-top: 30px;
+    }
+
+    .sb-cookies-hero {
+        padding: 70px 35px 62px;
+    }
+
+    .sb-cookies-intro,
+    .sb-cookies-section,
+    .sb-cookies-feature,
+    .sb-cookies-types,
+    .sb-cookies-note {
+        margin-bottom: 60px;
+    }
+
+    .sb-cookies-feature {
+        padding: 32px;
+    }
+
+    .sb-cookies-feature-grid {
+        gap: 0 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .sb-cookies-page {
+        padding: 22px 0 20px;
+    }
+
+    .sb-cookies-hero {
+        padding: 57px 23px 47px;
+        margin-bottom: 23px;
+        border-radius: 22px;
     }
 
     .sb-cookies-eyebrow {
-        font-size: 8px;
+        gap: 9px;
+        margin-bottom: 20px;
+        font-size: 9px;
         letter-spacing: 2px;
     }
 
@@ -903,57 +942,324 @@
     }
 
     .sb-cookies-hero h1 {
-        font-size: 34px;
+        font-size: clamp(39px, 9vw, 54px);
+        letter-spacing: -1px;
     }
 
     .sb-cookies-hero > p {
-        font-size: 11.5px;
+        margin-top: 17px;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .sb-cookies-meta {
+        gap: 11px;
+        margin-top: 23px;
+        font-size: 10px;
     }
 
     .sb-cookies-intro {
-        flex-direction: column;
+        grid-template-columns: 46px minmax(0, 1fr);
+        gap: 16px;
+        padding: 25px 22px;
+        margin-bottom: 54px;
+        border-radius: 19px;
     }
 
     .sb-cookies-intro-icon {
-        margin-bottom: 1px;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        font-size: 19px;
+    }
+
+    .sb-cookies-intro h2 {
+        font-size: 25px;
+    }
+
+    .sb-cookies-intro p {
+        font-size: 12px;
+    }
+
+    .sb-cookies-section-heading,
+    .sb-cookies-types-heading {
+        margin-bottom: 26px;
+    }
+
+    .sb-cookies-section-heading h2,
+    .sb-cookies-types-heading h2 {
+        font-size: 31px;
+    }
+
+    .sb-cookies-section-heading > p,
+    .sb-cookies-types-heading > p {
+        font-size: 12px;
+    }
+
+    .sb-cookies-card-grid {
+        gap: 13px;
+    }
+
+    .sb-cookies-card {
+        min-height: 250px;
+        padding: 23px 18px 26px;
+        border-radius: 17px;
+    }
+
+    .sb-cookies-card-icon {
+        width: 47px;
+        height: 47px;
+        margin-bottom: 22px;
+        border-radius: 14px;
+        font-size: 20px;
+    }
+
+    .sb-cookies-card h3 {
+        font-size: 14px;
+    }
+
+    .sb-cookies-card p {
+        font-size: 11px;
     }
 
     .sb-cookies-feature {
-        flex-direction: column;
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 17px;
+        padding: 26px 22px;
+        margin-bottom: 54px;
+        border-radius: 20px;
+    }
+
+    .sb-cookies-feature-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        font-size: 20px;
+    }
+
+    .sb-cookies-feature-content > h2 {
+        font-size: 28px;
     }
 
     .sb-cookies-feature-grid {
-        gap: 15px;
+        grid-template-columns: 1fr;
+        margin-top: 23px;
+    }
+
+    .sb-cookies-feature-item {
+        padding: 17px 0;
     }
 
     .sb-cookies-types-item {
-        gap: 12px;
+        grid-template-columns: 45px minmax(0, 1fr) 15px;
+        gap: 14px;
+        padding: 19px 17px;
+        border-radius: 16px;
     }
 
     .sb-cookies-types-icon {
-        width: 35px;
-        height: 35px;
-        flex-basis: 35px;
-        font-size: 13px;
+        width: 45px;
+        height: 45px;
+        border-radius: 13px;
+        font-size: 19px;
+    }
+
+    .sb-cookies-types-item h3 {
+        font-size: 14px;
+    }
+
+    .sb-cookies-types-item p {
+        font-size: 11px;
+    }
+
+    .sb-cookies-types-arrow {
+        font-size: 14px;
     }
 
     .sb-cookies-note {
-        gap: 12px;
+        grid-template-columns: 45px minmax(0, 1fr);
+        gap: 16px;
+        padding: 25px 22px;
+        margin-bottom: 54px;
+        border-radius: 19px;
+    }
+
+    .sb-cookies-note-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 13px;
+        font-size: 19px;
+    }
+
+    .sb-cookies-note h2 {
+        font-size: 25px;
     }
 
     .sb-cookies-contact {
-        gap: 12px;
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 17px;
+        padding: 27px 22px;
+        border-radius: 20px;
     }
 
     .sb-cookies-contact-icon {
-        width: 39px;
-        height: 39px;
-        flex-basis: 39px;
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        font-size: 21px;
     }
 
-    .sb-cookies-contact-content {
-        flex-basis: calc(100% - 51px);
+    .sb-cookies-contact h2 {
+        font-size: 25px;
     }
 
+    .sb-cookies-contact p {
+        font-size: 12px;
+    }
+
+    .sb-cookies-contact-btn {
+        grid-column: 1 / -1;
+        justify-self: start;
+        min-height: 46px;
+    }
+
+    .sb-cookies-bottom {
+        padding-top: 17px;
+        font-size: 10px;
+    }
 }
 
+@media (max-width: 575px) {
+    .sb-cookies-page .container {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+
+    .sb-cookies-hero {
+        padding: 48px 18px 40px;
+        border-radius: 19px;
+    }
+
+    .sb-cookies-hero h1 {
+        font-size: 39px;
+    }
+
+    .sb-cookies-hero > p {
+        font-size: 12px;
+    }
+
+    .sb-cookies-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .sb-cookies-meta-divider {
+        display: none;
+    }
+
+    .sb-cookies-intro {
+        grid-template-columns: 1fr;
+        gap: 17px;
+        padding: 24px 20px;
+    }
+
+    .sb-cookies-intro h2 {
+        font-size: 24px;
+    }
+
+    .sb-cookies-section-heading h2,
+    .sb-cookies-types-heading h2 {
+        font-size: 28px;
+    }
+
+    .sb-cookies-card-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .sb-cookies-card {
+        min-height: auto;
+        padding: 24px 22px 27px;
+    }
+
+    .sb-cookies-card-icon {
+        margin-bottom: 18px;
+    }
+
+    .sb-cookies-card p {
+        max-width: 340px;
+    }
+
+    .sb-cookies-feature {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        padding: 25px 20px;
+    }
+
+    .sb-cookies-feature-content > h2 {
+        font-size: 27px;
+    }
+
+    .sb-cookies-types-item {
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 13px;
+        padding: 18px 15px;
+    }
+
+    .sb-cookies-types-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .sb-cookies-types-arrow {
+        display: none;
+    }
+
+    .sb-cookies-note {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 24px 20px;
+    }
+
+    .sb-cookies-note h2 {
+        font-size: 24px;
+    }
+
+    .sb-cookies-contact {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 25px 20px;
+    }
+
+    .sb-cookies-contact h2 {
+        font-size: 25px;
+    }
+
+    .sb-cookies-contact-btn {
+        grid-column: auto;
+    }
+
+    .sb-cookies-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+    .sb-cookies-page *,
+    .sb-cookies-page *::before,
+    .sb-cookies-page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .sb-cookies-page.sb-cookies-reveal-enabled [data-reveal] {
+        opacity: 1;
+        transform: none;
+    }
+}
