@@ -97,6 +97,12 @@ class SellerApplicationController extends Controller
          * User email is not verified.
          */
         if (is_null($user->email_verified_at)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Please verify your email address before becoming a seller.',
+                ], 403);
+            }
+
             return redirect()
                 ->route('frontend.auth.email.verify')
                 ->with(
@@ -109,6 +115,12 @@ class SellerApplicationController extends Controller
          * User is already a seller.
          */
         if ($user->isSeller()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'You are already a seller.',
+                ], 409);
+            }
+
             return redirect()
                 ->route('frontend.home')
                 ->with(
@@ -125,6 +137,12 @@ class SellerApplicationController extends Controller
             ->exists();
 
         if ($existingApplication) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'You already have a pending seller application.',
+                ], 409);
+            }
+
             return back()
                 ->with(
                     'info',
@@ -240,6 +258,19 @@ class SellerApplicationController extends Controller
         /*
          * Redirect back to seller application page.
          */
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Your seller application has been submitted.',
+                'data' => $application->only([
+                    'id',
+                    'store_name',
+                    'status',
+                    'created_at',
+                ]),
+            ], 201);
+        }
+
         return redirect()
             ->route('frontend.seller-application')
             ->with(
@@ -248,4 +279,3 @@ class SellerApplicationController extends Controller
             );
     }
 }
-

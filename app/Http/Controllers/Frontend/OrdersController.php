@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Review;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
@@ -87,7 +88,7 @@ class OrdersController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function cancel(Order $order)
+    public function cancel(Order $order, Request $request)
     {
         abort_unless(
             $order->user_id === auth()->id(),
@@ -100,6 +101,12 @@ class OrdersController extends Controller
         );
 
         if ($cancelOrderPeriod <= 0) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Order cancellation is currently disabled.',
+                ], 422);
+            }
+
             return back()->with(
                 'error',
                 'Order cancellation is currently disabled.'
@@ -113,6 +120,12 @@ class OrdersController extends Controller
                 true
             )
         ) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'This order can no longer be cancelled.',
+                ], 422);
+            }
+
             return back()->with(
                 'error',
                 'This order can no longer be cancelled.'
@@ -125,6 +138,12 @@ class OrdersController extends Controller
                 ->addDays($cancelOrderPeriod)
                 ->isPast()
         ) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'The cancellation period for this order has expired.',
+                ], 422);
+            }
+
             return back()->with(
                 'error',
                 'The cancellation period for this order has expired.'
@@ -165,12 +184,25 @@ class OrdersController extends Controller
                 ]);
             });
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Order cancelled successfully.',
+                ]);
+            }
+
             return back()->with(
                 'success',
                 'Order cancelled successfully.'
             );
 
         } catch (\RuntimeException $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                ], 422);
+            }
+
             return back()->with(
                 'error',
                 $e->getMessage()
@@ -178,6 +210,12 @@ class OrdersController extends Controller
 
         } catch (\Throwable $e) {
             report($e);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Something went wrong while cancelling the order.',
+                ], 500);
+            }
 
             return back()->with(
                 'error',

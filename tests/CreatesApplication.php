@@ -16,6 +16,13 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
+        $this->serverVariables = array_merge($this->serverVariables, [
+            'SCRIPT_NAME' => '/index.php',
+            'PHP_SELF' => '/index.php',
+        ]);
+
+        \Illuminate\Support\Facades\URL::forceRootUrl('http://localhost');
+
         return $app;
     }
 }

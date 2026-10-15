@@ -2,11 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class ForgotPasswordRouteTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -22,13 +26,17 @@ class ForgotPasswordRouteTest extends TestCase
         $response = $this->get(route('frontend.auth.password.request'));
 
         $response->assertStatus(200);
-        $response->assertSee('name="email"');
-        $response->assertSee(route('frontend.auth.password.send.otp'));
+        $response->assertSee('data-vue-page="auth-page"', false);
+        $response->assertSee('data-mode="password-request"', false);
+        $response->assertSee('data-password-verify-url="' . route('frontend.auth.password.verify') . '"', false);
     }
 
     public function test_sending_otp_redirects_to_verify_page_without_dropping_csrf_session(): void
     {
         Mail::fake();
+        User::factory()->create([
+            'email' => 'user@example.com',
+        ]);
 
         $this->get(route('frontend.auth.password.request'));
 
@@ -37,6 +45,6 @@ class ForgotPasswordRouteTest extends TestCase
         ]);
 
         $response->assertRedirect(route('frontend.auth.password.verify'));
-        $this->assertSessionHas('reset_email', 'user@example.com');
+        $response->assertSessionHas('reset_email', 'user@example.com');
     }
 }

@@ -3,10 +3,33 @@
 namespace Tests\Feature;
 
 use App\Models\Book;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class BookConditionControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $role = Role::create([
+            'name' => 'super-admin',
+            'display_name' => 'Super Admin',
+            'is_system' => true,
+        ]);
+        $user = User::factory()->create([
+            'role' => 'admin',
+            'status' => 'active',
+        ]);
+        $user->roles()->attach($role);
+
+        $this->actingAs($user);
+    }
+
     public function test_index_displays_conditions_with_action_controls(): void
     {
         $response = $this->get(route('admin.book.conditions.index'));

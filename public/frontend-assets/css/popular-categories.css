@@ -175,6 +175,17 @@
     gap: 26px;
 }
 
+#categories .categories-empty-state {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 32px;
+    border: 1px solid var(--ct-line);
+    border-radius: 20px;
+    background: var(--ct-cream);
+    color: var(--ct-muted);
+    text-align: center;
+}
+
 
 /* =========================================================
    CARD

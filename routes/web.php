@@ -88,6 +88,17 @@ use App\Http\Controllers\Auth\AuthController;
 
 Route::redirect('/', '/frontend');
 
+
+
+Route::get('/vue-test', function () {
+    return view('vue.test');
+});
+
+Route::get('/catalog', function () {
+    return view('vue.catalog');
+})->name('vue.catalog');
+
+
 // =========================================================
 // ADMIN PANEL
 // =========================================================

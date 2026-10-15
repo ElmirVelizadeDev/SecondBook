@@ -2,10 +2,34 @@
 
 namespace Tests\Feature;
 
+use App\Models\Book;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class BookRequestControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $role = Role::create([
+            'name' => 'super-admin',
+            'display_name' => 'Super Admin',
+            'is_system' => true,
+        ]);
+        $user = User::factory()->create([
+            'role' => 'admin',
+            'status' => 'active',
+        ]);
+        $user->roles()->attach($role);
+
+        $this->actingAs($user);
+    }
+
     public function test_store_creates_book_request(): void
     {
         $response = $this->withSession(['admin_book_requests' => []])
@@ -19,33 +43,35 @@ class BookRequestControllerTest extends TestCase
             ]);
 
         $response->assertRedirect(route('admin.book.requests.index'));
-        $response->assertSessionHas('success', 'Book request created successfully.');
+        $response->assertSessionHas(
+            'error',
+            'Book requests are created by sellers from the Sell a Book page.'
+        );
     }
 
     public function test_update_changes_existing_request(): void
     {
-        $response = $this->withSession([
-            'admin_book_requests' => [[
-                'id' => 'req_1',
-                'title' => 'Old title',
-                'requester' => 'Tester',
-                'category' => 'fiction',
-                'budget' => 10,
-                'note' => 'Old note',
-                'status' => 'pending',
-                'created_at' => '2026-07-28',
-                'updated_at' => '2026-07-28',
-            ]],
-        ])->put(route('admin.book.requests.update', ['request' => 'req_1']), [
-            'title' => 'Updated title',
-            'requester' => 'Updated user',
-            'category' => 'business',
-            'budget' => '25.00',
-            'note' => 'Updated note',
-            'status' => 'approved',
+        $book = Book::create([
+            'title' => 'Pending seller book',
+            'status' => 'pending',
         ]);
 
+        $response = $this->put(
+            route('admin.book.requests.update', ['book' => $book->id]),
+            [
+                'status' => 'approved',
+                'message' => 'The book has been approved.',
+            ]
+        );
+
         $response->assertRedirect(route('admin.book.requests.index'));
-        $response->assertSessionHas('success', 'Book request #req_1 updated successfully.');
+        $response->assertSessionHas(
+            'success',
+            'Book request approved successfully.'
+        );
+        $this->assertDatabaseHas('books', [
+            'id' => $book->id,
+            'status' => 'approved',
+        ]);
     }
 }

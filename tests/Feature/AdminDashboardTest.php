@@ -12,25 +12,17 @@ class AdminDashboardTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        config([
-            'database.default' => 'sqlite',
-            'database.connections.sqlite.database' => ':memory:',
-        ]);
-
-        $this->artisan('migrate:fresh');
-    }
-
     public function test_admin_user_can_access_dashboard(): void
     {
         $user = User::create([
             'name' => 'Alice Johnson',
+            'first_name' => 'Alice',
+            'last_name' => 'Johnson',
+            'username' => 'alice-admin',
             'email' => 'alice@example.com',
             'password' => bcrypt('password123'),
             'role' => 'admin',
+            'status' => 'active',
         ]);
 
         $this->actingAs($user);
@@ -44,9 +36,15 @@ class AdminDashboardTest extends TestCase
     {
         $user = User::create([
             'name' => 'Alice Johnson',
+            'first_name' => 'Alice',
+            'last_name' => 'Johnson',
+            'username' => 'alice-activity',
             'email' => 'alice@example.com',
             'password' => bcrypt('password123'),
+            'role' => 'admin',
+            'status' => 'active',
         ]);
+        $this->actingAs($user);
 
         $category = Category::create([
             'name' => 'Fantasy',

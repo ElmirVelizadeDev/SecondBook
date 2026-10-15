@@ -73,6 +73,24 @@ class CartController extends Controller
 
         $totalItems = collect($cart)->sum('quantity');
 
+        if (request()->expectsJson()) {
+            $shippingEnabled = (bool) Setting::get('shipping_enabled', true);
+            $defaultShippingFee = (float) Setting::get('default_shipping_fee', 0);
+            $freeShippingThreshold = (float) Setting::get('free_shipping_threshold', 0);
+            $shippingFee = $shippingEnabled
+                && !($freeShippingThreshold > 0 && $subtotal >= $freeShippingThreshold)
+                ? $defaultShippingFee
+                : 0;
+
+            return response()->json([
+                'data' => array_values($cart),
+                'total_items' => $totalItems,
+                'subtotal' => $subtotal,
+                'shipping_fee' => $shippingFee,
+                'total' => $subtotal + $shippingFee,
+            ]);
+        }
+
         return view('Frontend.cart', compact(
             'cart',
             'subtotal',
@@ -617,7 +635,7 @@ class CartController extends Controller
     /**
      * Remove a book from the cart.
      */
-    public function remove($bookId)
+    public function remove(Request $request, $bookId)
     {
         if (!Setting::get('marketplace_enabled', true)) {
             abort(503);
@@ -629,6 +647,12 @@ class CartController extends Controller
 
 
         if (!isset($cart[$bookId])) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This book is not in your cart.',
+                ], 404);
+            }
 
             return back()->with(
                 'error',
@@ -645,6 +669,13 @@ class CartController extends Controller
             $cart
         );
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Book removed from your cart.',
+                'total_items' => collect($cart)->sum('quantity'),
+            ]);
+        }
 
         return back()->with(
             'success',
@@ -656,7 +687,7 @@ class CartController extends Controller
     /**
      * Empty the entire cart.
      */
-    public function clear()
+    public function clear(Request $request)
     {
         if (!Setting::get('marketplace_enabled', true)) {
             abort(503);
@@ -665,6 +696,17 @@ class CartController extends Controller
 
         session()->forget('cart');
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Your cart has been emptied.',
+                'data' => [],
+                'total_items' => 0,
+                'subtotal' => 0,
+                'shipping_fee' => 0,
+                'total' => 0,
+            ]);
+        }
 
         return redirect()
             ->route('frontend.cart')
@@ -892,4 +934,3 @@ class CartController extends Controller
         return null;
     }
 }
-

@@ -343,6 +343,13 @@ class AuthController extends Controller
         */
 
         if (!Setting::get('user_registration_enabled', true)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User registration is currently disabled.',
+                ], 403);
+            }
+
             return back()->with(
                 'error',
                 'User registration is currently disabled.'
@@ -2856,6 +2863,13 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Signed out successfully.',
+            ]);
+        }
+
         return redirect()
             ->route(
                 'frontend.auth.login'
@@ -3710,7 +3724,7 @@ class AuthController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function removeProfilePhoto()
+    public function removeProfilePhoto(Request $request)
     {
         $user = Auth::user();
 
@@ -3721,6 +3735,14 @@ class AuthController extends Controller
 
             $user->update([
                 'profile_photo' => null,
+            ]);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile photo removed successfully.',
+                'profile_photo_url' => null,
             ]);
         }
 
@@ -4326,4 +4348,3 @@ class AuthController extends Controller
         return view('auth.admin-2fa');
     }
 }
-

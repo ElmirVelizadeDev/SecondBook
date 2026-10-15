@@ -2,11 +2,14 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic test example.
      */
@@ -14,6 +17,38 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertRedirect('/frontend');
+    }
+
+    public function test_frontend_home_route_is_available(): void
+    {
+        $this->get('/frontend')->assertOk();
+    }
+
+    public function test_featured_books_route_redirects_to_the_home_section(): void
+    {
+        $this->get('/frontend/featured-books')
+            ->assertRedirect(route('frontend.home') . '#featured-books');
+    }
+
+    public function test_vue_pages_mount_only_on_their_designated_routes(): void
+    {
+        $this->withoutVite()
+            ->get('/vue-test')
+            ->assertOk()
+            ->assertSee('data-vue-page="catalog-preview"', false);
+
+        $this->get('/frontend')
+            ->assertOk()
+            ->assertSee('data-vue-page="home"', false);
+
+        $this->get('/frontend/books')
+            ->assertOk()
+            ->assertSee('data-vue-page="books-page"', false);
+
+        $this->actingAs(User::factory()->create())
+            ->get('/frontend/cart')
+            ->assertOk()
+            ->assertSee('data-vue-page="cart-page"', false);
     }
 }

@@ -15,7 +15,7 @@ class ReviewController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function create(Order $order)
+    public function create(Order $order, Request $request)
     {
         /*
         |--------------------------------------------------------------------------
@@ -63,12 +63,27 @@ class ReviewController extends Controller
             ->first();
 
         if ($existingReview) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'You have already reviewed this book.',
+                ], 409);
+            }
+
             return redirect()
                 ->route('frontend.orders.show', $order->id)
                 ->with(
                     'error',
                     'You have already reviewed this book.'
                 );
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'data' => [
+                    'order_id' => $order->id,
+                    'book' => $order->book->only(['id', 'title', 'cover']),
+                ],
+            ]);
         }
 
         return view(
@@ -129,6 +144,12 @@ class ReviewController extends Controller
             ->exists();
 
         if ($existingReview) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'You have already reviewed this book.',
+                ], 409);
+            }
+
             return redirect()
                 ->route('frontend.orders.show', $order->id)
                 ->with(
@@ -177,6 +198,14 @@ class ReviewController extends Controller
         | Success
         |--------------------------------------------------------------------------
         */
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Your review has been submitted and is awaiting approval.',
+                'status' => 'pending',
+            ], 201);
+        }
 
         return redirect()
             ->route('frontend.orders.show', $order->id)

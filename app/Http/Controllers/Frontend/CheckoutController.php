@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Exceptions\CheckoutRejected;
 use App\Models\Book;
 use App\Models\Order;
 use App\Models\Payment;
@@ -14,15 +15,44 @@ use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (!Setting::get('marketplace_enabled', true)) {
             abort(503);
         }
 
         $cart = session()->get('cart', []);
+        $books = Book::whereKey(array_keys($cart))
+            ->get()
+            ->keyBy('id');
+
+        foreach ($cart as $bookId => &$item) {
+            $book = $books->get($bookId);
+
+            if (!$book || $book->status !== 'approved') {
+                unset($cart[$bookId]);
+                continue;
+            }
+
+            $item['id'] = $book->id;
+            $item['title'] = $book->title;
+            $item['cover'] = $book->cover;
+            $item['stock'] = $book->stock;
+            $item['original_price'] = (float) $book->price;
+            $item['price'] = $this->getActiveBookPrice($book);
+            $item['discount_label'] = $book->discount_label;
+        }
+
+        unset($item);
+        session()->put('cart', $cart);
 
         if (empty($cart)) {
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'message' => 'Your cart is empty.',
+                ], 422);
+            }
+
             return redirect()
                 ->route('frontend.cart')
                 ->with('error', 'Your cart is empty.');
@@ -94,7 +124,10 @@ class CheckoutController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $selectedShippingId = old('shipping_id');
+        $selectedShippingId = old(
+            'shipping_id',
+            $request->query('shipping_id')
+        );
 
         if (
             !$selectedShippingId &&
@@ -114,6 +147,18 @@ class CheckoutController extends Controller
                 );
         }
 
+        if (
+            $request->expectsJson() &&
+            $request->query->has('shipping_id') &&
+            !$selectedShipping
+        ) {
+            return response()->json([
+                'message' => 'The selected shipping method is no longer available.',
+            ], 422);
+        }
+
+        $selectedShippingId = $selectedShipping?->id;
+
         /*
         |--------------------------------------------------------------------------
         | Shipping Fee
@@ -126,14 +171,11 @@ class CheckoutController extends Controller
             $shippingEnabled &&
             $selectedShipping
         ) {
-            if (
-                $freeShippingThreshold > 0 &&
-                $subtotal >= $freeShippingThreshold
-            ) {
-                $shippingFee = 0;
-            } else {
-                $shippingFee = $defaultShippingFee;
-            }
+            $shippingFee = $this->calculateShippingFee(
+                $selectedShipping,
+                $subtotal,
+                $freeShippingThreshold
+            );
         }
 
         /*
@@ -155,7 +197,7 @@ class CheckoutController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $paymentsEnabled = Setting::get(
+        $paymentsEnabled = (bool) Setting::get(
             'payments_enabled',
             true
         );
@@ -179,10 +221,33 @@ class CheckoutController extends Controller
             ];
         }
 
-        $defaultPaymentMethod = Setting::get(
-            'default_payment_method',
-            'cash_on_delivery'
-        );
+        $paymentMethods = array_values(array_intersect(
+            $paymentMethods,
+            ['cash_on_delivery']
+        ));
+        $paymentsEnabled = $paymentsEnabled && $paymentMethods !== [];
+        $defaultPaymentMethod = $paymentMethods[0] ?? null;
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'cart' => array_values($cart),
+                'subtotal' => $subtotal,
+                'total_items' => $totalItems,
+                'shipping_enabled' => $shippingEnabled,
+                'shipping_methods' => $shippingMethods,
+                'default_shipping_fee' => $defaultShippingFee,
+                'selected_shipping_id' => $selectedShippingId,
+                'shipping_fee' => $shippingFee,
+                'free_shipping_threshold' => $freeShippingThreshold,
+                'default_country' => $defaultCountry,
+                'estimated_delivery_message' => $estimatedDeliveryMessage,
+                'delivery_estimate' => $checkoutDeliveryEstimate,
+                'grand_total' => $grandTotal,
+                'payments_enabled' => $paymentsEnabled,
+                'payment_methods' => $paymentMethods,
+                'default_payment_method' => $defaultPaymentMethod,
+            ]);
+        }
 
         return view(
             'Frontend.checkout',
@@ -216,6 +281,12 @@ class CheckoutController extends Controller
         $cart = session()->get('cart', []);
 
         if (empty($cart)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Your cart is empty.',
+                ], 422);
+            }
+
             return redirect()
                 ->route('frontend.cart')
                 ->with(
@@ -230,7 +301,7 @@ class CheckoutController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $paymentsEnabled = Setting::get(
+        $paymentsEnabled = (bool) Setting::get(
             'payments_enabled',
             true
         );
@@ -253,6 +324,12 @@ class CheckoutController extends Controller
                 'paypal',
             ];
         }
+
+        $allowedPaymentMethods = array_values(array_intersect(
+            $allowedPaymentMethods,
+            ['cash_on_delivery']
+        ));
+        $paymentsEnabled = $paymentsEnabled && $allowedPaymentMethods !== [];
 
         /*
         |--------------------------------------------------------------------------
@@ -323,11 +400,17 @@ class CheckoutController extends Controller
         */
 
         if (!$paymentsEnabled) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'No supported payment method is currently available.',
+                ], 422);
+            }
+
             return back()
                 ->withInput()
                 ->with(
                     'error',
-                    'Payments are currently disabled.'
+                    'No supported payment method is currently available.'
                 );
         }
 
@@ -338,6 +421,12 @@ class CheckoutController extends Controller
                 true
             )
         ) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'The selected payment method is currently unavailable.',
+                ], 422);
+            }
+
             return back()
                 ->withInput()
                 ->with(
@@ -362,11 +451,6 @@ class CheckoutController extends Controller
             0
         );
 
-        $defaultShippingFee = (float) Setting::get(
-            'default_shipping_fee',
-            0
-        );
-
         $estimatedDeliveryMessage = Setting::get(
             'estimated_delivery_message',
             ''
@@ -383,6 +467,12 @@ class CheckoutController extends Controller
         if ($shippingEnabled) {
 
             if (empty($validated['shipping_id'])) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'message' => 'Please select a shipping method.',
+                    ], 422);
+                }
+
                 return back()
                     ->withInput()
                     ->with(
@@ -399,6 +489,12 @@ class CheckoutController extends Controller
             );
 
             if (!$selectedShipping) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'message' => 'The selected shipping method is no longer available.',
+                    ], 422);
+                }
+
                 return back()
                     ->withInput()
                     ->with(
@@ -414,11 +510,6 @@ class CheckoutController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $cartSubtotal = collect($cart)->sum(function ($item) {
-            return (float) $item['price'] *
-                (int) $item['quantity'];
-        });
-
         /*
         |--------------------------------------------------------------------------
         | Shipping Fee
@@ -432,33 +523,11 @@ class CheckoutController extends Controller
         |
         */
 
-        $cartShippingFee = 0;
-
-        if (
-            $shippingEnabled &&
-            $selectedShipping
-        ) {
-
-            if (
-                $freeShippingThreshold > 0 &&
-                $cartSubtotal >= $freeShippingThreshold
-            ) {
-                $cartShippingFee = 0;
-            } else {
-                $cartShippingFee =
-                    $defaultShippingFee;
-            }
-        }
-
         /*
         |--------------------------------------------------------------------------
         | Delivery Estimate
         |--------------------------------------------------------------------------
         */
-
-        $deliveryEstimate =
-            $selectedShipping?->delivery_time
-            ?: $estimatedDeliveryMessage;
 
         $createdOrders = [];
 
@@ -470,9 +539,52 @@ class CheckoutController extends Controller
                 &$createdOrders,
                 $shippingEnabled,
                 $selectedShipping,
-                $cartShippingFee,
-                $deliveryEstimate
+                $freeShippingThreshold,
+                $estimatedDeliveryMessage
             ) {
+                $cartSubtotal = 0;
+
+                foreach ($cart as $bookId => $item) {
+                    $book = Book::whereKey($bookId)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (!$book) {
+                        throw new CheckoutRejected(
+                            'One of the books in your cart no longer exists.'
+                        );
+                    }
+
+                    $cartSubtotal += $this->getActiveBookPrice($book)
+                        * (int) $item['quantity'];
+                }
+
+                $checkoutShipping = null;
+
+                if ($shippingEnabled) {
+                    $checkoutShipping = Shipping::where('status', true)
+                        ->whereKey($selectedShipping->id)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (!$checkoutShipping) {
+                        throw new CheckoutRejected(
+                            'The selected shipping method is no longer available.'
+                        );
+                    }
+                }
+
+                $cartShippingFee = $checkoutShipping
+                    ? $this->calculateShippingFee(
+                        $checkoutShipping,
+                        $cartSubtotal,
+                        $freeShippingThreshold
+                    )
+                    : 0;
+
+                $deliveryEstimate =
+                    $checkoutShipping?->delivery_time
+                    ?: $estimatedDeliveryMessage;
 
                 $orderIndex = 0;
 
@@ -492,7 +604,7 @@ class CheckoutController extends Controller
                         ->first();
 
                     if (!$book) {
-                        throw new \Exception(
+                        throw new CheckoutRejected(
                             'One of the books in your cart no longer exists.'
                         );
                     }
@@ -504,13 +616,13 @@ class CheckoutController extends Controller
                     */
 
                     if ($book->status !== 'approved') {
-                        throw new \Exception(
+                        throw new CheckoutRejected(
                             "\"{$book->title}\" is no longer available."
                         );
                     }
 
                     if (!$book->seller) {
-                        throw new \Exception(
+                        throw new CheckoutRejected(
                             "\"{$book->title}\" does not have an active seller."
                         );
                     }
@@ -518,13 +630,13 @@ class CheckoutController extends Controller
                     $store = $book->seller->store;
 
                     if (!$store) {
-                        throw new \Exception(
+                        throw new CheckoutRejected(
                             "\"{$book->title}\" seller store could not be found."
                         );
                     }
 
                     if (!$store->accept_orders) {
-                        throw new \Exception(
+                        throw new CheckoutRejected(
                             "This store is currently not accepting orders for \"{$book->title}\"."
                         );
                     }
@@ -538,13 +650,13 @@ class CheckoutController extends Controller
                     $quantity = (int) $item['quantity'];
 
                     if ($quantity <= 0) {
-                        throw new \Exception(
+                        throw new CheckoutRejected(
                             "Invalid quantity for \"{$book->title}\"."
                         );
                     }
 
                     if ($book->stock < $quantity) {
-                        throw new \Exception(
+                        throw new CheckoutRejected(
                             "There is not enough stock for \"{$book->title}\"."
                         );
                     }
@@ -591,7 +703,7 @@ class CheckoutController extends Controller
                         $bookTotal <
                         $effectiveMinimumOrderAmount
                     ) {
-                        throw new \Exception(
+                        throw new CheckoutRejected(
                             'The minimum order amount is ₼' .
                             number_format(
                                 $effectiveMinimumOrderAmount,
@@ -758,7 +870,7 @@ class CheckoutController extends Controller
                             $grandTotal,
 
                         'shipping_id' =>
-                            $selectedShipping?->id,
+                            $checkoutShipping?->id,
 
                         'shipping_fee' =>
                             $shippingFee,
@@ -877,6 +989,19 @@ class CheckoutController extends Controller
                 $validated['payment_method'] ===
                 'cash_on_delivery'
             ) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Your order has been placed successfully.',
+                        'orders' => collect($createdOrders)->map(fn (Order $order) => [
+                            'id' => $order->id,
+                            'order_number' => $order->order_number,
+                            'total_price' => $order->total_price,
+                            'order_status' => $order->order_status,
+                        ])->values(),
+                    ], 201);
+                }
+
                 return redirect()
                     ->route(
                         'frontend.orders'
@@ -897,6 +1022,12 @@ class CheckoutController extends Controller
                 $createdOrders[0] ?? null;
 
             if (!$firstOrder) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'message' => 'Order could not be created.',
+                    ], 500);
+                }
+
                 return redirect()
                     ->route(
                         'frontend.orders'
@@ -907,6 +1038,20 @@ class CheckoutController extends Controller
                     );
             }
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Your order has been created.',
+                    'orders' => collect($createdOrders)->map(fn (Order $order) => [
+                        'id' => $order->id,
+                        'order_number' => $order->order_number,
+                        'total_price' => $order->total_price,
+                        'order_status' => $order->order_status,
+                    ])->values(),
+                    'payment_url' => route('frontend.payment', $firstOrder->id),
+                ], 201);
+            }
+
             return redirect()
                 ->route(
                     'frontend.payment',
@@ -914,6 +1059,19 @@ class CheckoutController extends Controller
                 );
 
         } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                if ($e instanceof CheckoutRejected) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                    ], 422);
+                }
+
+                report($e);
+
+                return response()->json([
+                    'message' => 'An error occurred while placing your order.',
+                ], 500);
+            }
 
             return redirect()
                 ->route(
@@ -934,6 +1092,21 @@ class CheckoutController extends Controller
     | This method makes sure future/expired discounts are not applied.
     |
     */
+
+    private function calculateShippingFee(
+        Shipping $shipping,
+        float $subtotal,
+        float $freeShippingThreshold
+    ): float {
+        if (
+            $freeShippingThreshold > 0 &&
+            $subtotal >= $freeShippingThreshold
+        ) {
+            return 0;
+        }
+
+        return (float) $shipping->price;
+    }
 
     private function getActiveBookPrice(Book $book): float
     {
@@ -1041,4 +1214,3 @@ class CheckoutController extends Controller
         return $originalPrice;
     }
 }
-
