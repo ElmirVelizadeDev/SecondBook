@@ -42,7 +42,7 @@ onMounted(loadReview);
 </script>
 
 <template>
-    <main class="sb-review-page">
+    <main class="review-page sb-review-page">
         <section class="review-hero"><div class="container"><nav class="review-breadcrumb"><a href="/frontend">Home</a><i class="bi bi-chevron-right"></i><a :href="ordersUrl">My Orders</a><i class="bi bi-chevron-right"></i><span>Write a Review</span></nav><span class="review-eyebrow"><i class="bi bi-star"></i>Share your experience</span><h1>Your words help <span>other readers.</span></h1><p>Tell us what you thought of your purchase.</p></div></section>
         <section class="review-section"><div class="container">
             <div v-if="loading" class="review-card" role="status">Checking review eligibility…</div>

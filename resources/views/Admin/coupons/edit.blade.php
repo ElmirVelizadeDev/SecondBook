@@ -3,7 +3,7 @@
 @section('title', 'Edit Coupon')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/coupons.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/pages/coupons.css') }}">
 @endpush
 
 @section('content')

@@ -8,7 +8,7 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('admin/css/backup.css') }}"
+        href="{{ asset('admin/css/pages/backup.css') }}"
     >
 
 @endpush

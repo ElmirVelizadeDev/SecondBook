@@ -2,7 +2,7 @@
 
 @section('title', 'Notifications')
 
-@push('css') <link rel="stylesheet" href="{{ asset('seller/css/notifications.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('seller/css/pages/notifications.css') }}">
 @endpush
 
 @section('content')

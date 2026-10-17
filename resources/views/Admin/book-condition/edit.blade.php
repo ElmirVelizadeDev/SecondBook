@@ -3,7 +3,7 @@
 @section('title', 'Edit Condition')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/book-condition.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/pages/book-condition.css') }}">
 @endpush
 
 @section('content')

@@ -4,7 +4,7 @@
 @section('title', 'FAQ')
 
 @push('css')
-<link rel="stylesheet" href="{{ asset('admin/css/faq.css') }}">
+<link rel="stylesheet" href="{{ asset('admin/css/pages/faq.css') }}">
 @endpush
 
 @section('content')

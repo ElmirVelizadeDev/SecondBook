@@ -88,6 +88,8 @@ class CartController extends Controller
                 'subtotal' => $subtotal,
                 'shipping_fee' => $shippingFee,
                 'total' => $subtotal + $shippingFee,
+                'shipping_enabled' => $shippingEnabled,
+                'free_shipping_threshold' => $freeShippingThreshold,
             ]);
         }
 

@@ -67,10 +67,10 @@ onMounted(loadOrder);
         <section class="order-details-section"><div class="container">
             <div v-if="notice" class="order-alert order-alert-success" role="status"><i class="bi bi-check-lg"></i><span>{{ notice }}</span></div>
             <div v-if="error" class="order-alert order-alert-error" role="alert"><i class="bi bi-exclamation-circle"></i><span>{{ error }}</span><button type="button" @click="loadOrder">Retry</button></div>
-            <div v-if="loading" class="order-details-card" role="status">Loading order details…</div>
+            <div v-if="loading" class="order-details-card order-note-card" role="status">Loading order details…</div>
             <template v-else-if="order">
                 <div class="order-details-grid">
-                    <article class="order-details-card">
+                    <article class="order-details-card order-note-card">
                         <span class="order-details-section-kicker">PURCHASE SUMMARY</span>
                         <h2>{{ order.book?.title || 'Book unavailable' }}</h2>
                         <p>Order #{{ order.order_number }}</p>
@@ -84,7 +84,7 @@ onMounted(loadOrder);
                             <div><dt>Total</dt><dd>${{ currency(order.total_price) }}</dd></div>
                         </dl>
                     </article>
-                    <article class="order-details-card">
+                    <article class="order-details-card order-note-card">
                         <span class="order-details-section-kicker">DELIVERY DETAILS</span>
                         <h2>{{ order.full_name }}</h2>
                         <p>{{ order.address }}</p>
@@ -99,8 +99,8 @@ onMounted(loadOrder);
                     </article>
                 </div>
                 <div class="order-details-actions">
-                    <a :href="trackingUrl.replace('__ORDER__', encodeURIComponent(order.id))" class="order-action-btn"><i class="bi bi-truck"></i>Track order</a>
-                    <a v-if="order.order_status === 'delivered' && !order.reviewed" :href="reviewUrl.replace('__ORDER__', encodeURIComponent(order.id))" class="order-action-btn"><i class="bi bi-star"></i>Write a review</a>
+                    <a :href="trackingUrl.replace('__ORDER__', encodeURIComponent(order.id))" class="order-action-btn order-action"><i class="bi bi-truck"></i>Track order</a>
+                    <a v-if="order.order_status === 'delivered' && !order.reviewed" :href="reviewUrl.replace('__ORDER__', encodeURIComponent(order.id))" class="order-action-btn order-action"><i class="bi bi-star"></i>Write a review</a>
                     <button v-if="canCancel" type="button" class="order-cancel-btn" :disabled="cancelling" @click="cancelOrder">{{ cancelling ? 'Cancelling…' : 'Cancel order' }}</button>
                 </div>
             </template>

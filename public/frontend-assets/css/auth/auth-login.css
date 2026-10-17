@@ -1835,7 +1835,7 @@
     width: 100%;
 
     background-image:
-        url('../images/arxaplan.jpg');
+        url('/arxaplan.jpg');
 
     background-size: cover;
     background-position: center;
@@ -1866,7 +1866,7 @@
     z-index: -3;
 
     background-image:
-        url('../images/arxaplan.jpg');
+        url('/arxaplan.jpg');
 
     background-size: cover;
     background-position: center;

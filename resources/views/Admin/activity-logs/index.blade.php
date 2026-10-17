@@ -2,7 +2,7 @@
 
 @section('title', 'Activity Logs')
 
-@push('css') <link rel="stylesheet" href="{{ asset('admin/css/activity-logs.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/pages/activity-logs.css') }}">
 @endpush
 
 @section('content')

@@ -648,7 +648,7 @@
 
 .sb-order-card-body {
     display: grid;
-    grid-template-columns: minmax(240px, 1.8fr) repeat(3, minmax(110px, 0.8fr));
+    grid-template-columns: minmax(240px, 1.8fr) repeat(2, minmax(110px, 0.8fr));
     align-items: stretch;
     gap: 15px;
     padding: 25px 28px;
@@ -1119,6 +1119,20 @@
     animation: sbOrdersFadeUp 0.7s ease both;
 }
 
+.sb-orders-loading {
+    display: grid;
+    min-height: 220px;
+    place-items: center;
+    padding: 30px;
+    border: 1px dashed var(--orders-border-hover);
+    border-radius: var(--orders-radius);
+    background: rgba(48, 32, 24, 0.42);
+    color: var(--orders-text-soft);
+    font-size: 13px;
+    line-height: 1.7;
+    text-align: center;
+}
+
 .sb-orders-empty::before {
     position: absolute;
     top: -130px;
@@ -1300,7 +1314,7 @@
     }
 
     .sb-order-card-body {
-        grid-template-columns: minmax(270px, 1.9fr) repeat(3, minmax(125px, 0.8fr));
+        grid-template-columns: minmax(270px, 1.9fr) repeat(2, minmax(125px, 0.8fr));
     }
 }
 
@@ -1319,7 +1333,7 @@
     }
 
     .sb-order-card-body {
-        grid-template-columns: minmax(220px, 1.5fr) repeat(3, minmax(100px, 0.8fr));
+        grid-template-columns: minmax(220px, 1.5fr) repeat(2, minmax(100px, 0.8fr));
         gap: 11px;
         padding: 22px;
     }
@@ -1362,7 +1376,7 @@
     }
 
     .sb-order-card-body {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .sb-order-book {

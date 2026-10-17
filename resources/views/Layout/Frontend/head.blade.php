@@ -232,7 +232,7 @@
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/normalize.css') }}"
+    href="{{ asset('frontend-assets/css/core/normalize.css') }}"
 >
 
 <link
@@ -244,73 +244,73 @@
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/vendor.css') }}"
+    href="{{ asset('frontend-assets/css/core/vendor.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/popular-books.css') }}"
+    href="{{ asset('frontend-assets/css/home/popular-books.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/popular-categories.css') }}"
+    href="{{ asset('frontend-assets/css/home/popular-categories.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/billboard.css') }}"
+    href="{{ asset('frontend-assets/css/home/billboard.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/subscribe.css') }}"
+    href="{{ asset('frontend-assets/css/home/subscribe.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/latest-articles.css') }}"
+    href="{{ asset('frontend-assets/css/home/latest-articles.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/categories.css') }}"
+    href="{{ asset('frontend-assets/css/pages/categories.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/special-offer.css') }}"
+    href="{{ asset('frontend-assets/css/home/special-offer.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/why-choose.blade.css') }}"
+    href="{{ asset('frontend-assets/css/home/why-choose.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/featured-books.css') }}"
+    href="{{ asset('frontend-assets/css/home/featured-books.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/quotation.css') }}"
+    href="{{ asset('frontend-assets/css/home/quotation.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/cart-alert.css') }}"
+    href="{{ asset('frontend-assets/css/home/cart-alert.css') }}"
 >
 
 {{-- =========================================================
@@ -320,7 +320,7 @@
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/header.css') }}"
+    href="{{ asset('frontend-assets/css/core/header.css') }}"
 >
 
 
@@ -331,13 +331,13 @@
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/footer.css') }}"
+    href="{{ asset('frontend-assets/css/core/footer.css') }}"
 >
 
 <link
     rel="stylesheet"
     type="text/css"
-    href="{{ asset('frontend-assets/css/footer-bottom.css') }}"
+    href="{{ asset('frontend-assets/css/core/footer-bottom.css') }}"
 >
 
 

@@ -9,7 +9,7 @@
 @section('title', 'Edit Book')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/books.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/pages/books.css') }}">
 @endpush
 
 @section('content')

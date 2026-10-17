@@ -92,30 +92,30 @@ async function requestDeletion() {
             </header>
             <div v-if="error" class="account-alert account-alert-error" role="alert"><i class="bi bi-exclamation-circle-fill"></i><span>{{ error }}</span></div>
             <div v-if="notice" class="account-alert account-alert-success" role="status"><i class="bi bi-check-circle-fill"></i><span>{{ notice }}</span></div>
-            <div v-if="loading" class="account-settings-card" role="status">Loading your settings…</div>
+            <div v-if="loading" class="account-settings-card settings-card" role="status">Loading your settings…</div>
             <div v-else class="account-settings-layout">
                 <aside class="account-settings-sidebar">
                     <div class="account-mini-profile"><div class="account-avatar">{{ (name || 'U').slice(0, 1).toUpperCase() }}</div><div><strong>{{ name || 'User' }}</strong><span>{{ email }}</span></div></div>
                     <nav class="account-settings-nav"><a :href="profileUrl"><i class="bi bi-person"></i>Profile information</a><a href="#preferences"><i class="bi bi-bell"></i>Preferences</a><a href="#security"><i class="bi bi-shield-lock"></i>Security</a></nav>
                 </aside>
                 <div class="account-settings-content">
-                    <section id="preferences" class="account-settings-card">
-                        <div class="account-card-heading"><span class="account-card-icon"><i class="bi bi-bell"></i></span><div><h2>Notifications & Privacy</h2><p>Choose how SecondBook keeps you informed.</p></div></div>
+                    <section id="preferences" class="account-settings-card settings-card">
+                        <div class="account-card-heading settings-card-header"><span class="account-card-icon settings-card-icon"><i class="bi bi-bell"></i></span><div><h2>Notifications & Privacy</h2><p>Choose how SecondBook keeps you informed.</p></div></div>
                         <form @submit.prevent="savePreferences">
-                            <label class="account-toggle-row"><span><strong>Email notifications</strong><small>Receive account messages by email.</small></span><input v-model="preferences.email_notifications" type="checkbox" name="email_notifications"></label>
-                            <label class="account-toggle-row"><span><strong>Order updates</strong><small>Receive important updates about your orders.</small></span><input v-model="preferences.order_updates" type="checkbox" name="order_updates"></label>
-                            <label class="account-toggle-row"><span><strong>Promotional emails</strong><small>Receive occasional news and offers.</small></span><input v-model="preferences.promotional_emails" type="checkbox" name="promotional_emails"></label>
-                            <label class="account-toggle-row"><span><strong>Profile visibility</strong><small>Allow your public profile to be visible.</small></span><input v-model="preferences.profile_visible" type="checkbox" name="profile_visible"></label>
-                            <button type="submit" class="account-save-btn" :disabled="savingPreferences">{{ savingPreferences ? 'Saving…' : 'Save preferences' }}</button>
+                            <label class="account-toggle-row settings-toggle-row"><span class="settings-toggle-text"><strong>Email notifications</strong><small>Receive account messages by email.</small></span><input v-model="preferences.email_notifications" type="checkbox" name="email_notifications"><span class="settings-switch" aria-hidden="true"></span></label>
+                            <label class="account-toggle-row settings-toggle-row"><span class="settings-toggle-text"><strong>Order updates</strong><small>Receive important updates about your orders.</small></span><input v-model="preferences.order_updates" type="checkbox" name="order_updates"><span class="settings-switch" aria-hidden="true"></span></label>
+                            <label class="account-toggle-row settings-toggle-row"><span class="settings-toggle-text"><strong>Promotional emails</strong><small>Receive occasional news and offers.</small></span><input v-model="preferences.promotional_emails" type="checkbox" name="promotional_emails"><span class="settings-switch" aria-hidden="true"></span></label>
+                            <label class="account-toggle-row settings-toggle-row"><span class="settings-toggle-text"><strong>Profile visibility</strong><small>Allow your public profile to be visible.</small></span><input v-model="preferences.profile_visible" type="checkbox" name="profile_visible"><span class="settings-switch" aria-hidden="true"></span></label>
+                            <button type="submit" class="account-save-btn settings-primary-btn" :disabled="savingPreferences">{{ savingPreferences ? 'Saving…' : 'Save preferences' }}</button>
                         </form>
                     </section>
-                    <section id="security" class="account-settings-card">
-                        <div class="account-card-heading"><span class="account-card-icon"><i class="bi bi-shield-lock"></i></span><div><h2>Change Password</h2><p>Verify your current password to receive a secure email code.</p></div></div>
-                        <form class="account-security-form" @submit.prevent="requestPasswordChange"><label for="current_password">Current password</label><input id="current_password" v-model="currentPassword" type="password" name="current_password" autocomplete="current-password" required><button type="submit" class="account-save-btn" :disabled="requestingPasswordChange">{{ requestingPasswordChange ? 'Sending code…' : 'Continue password change' }}</button></form>
+                    <section id="security" class="account-settings-card settings-card">
+                        <div class="account-card-heading settings-card-header"><span class="account-card-icon settings-card-icon"><i class="bi bi-shield-lock"></i></span><div><h2>Change Password</h2><p>Verify your current password to receive a secure email code.</p></div></div>
+                        <form class="account-security-form" @submit.prevent="requestPasswordChange"><label for="current_password">Current password</label><input id="current_password" v-model="currentPassword" type="password" name="current_password" autocomplete="current-password" required><button type="submit" class="account-save-btn settings-primary-btn" :disabled="requestingPasswordChange">{{ requestingPasswordChange ? 'Sending code…' : 'Continue password change' }}</button></form>
                     </section>
-                    <section class="account-settings-card account-danger-zone">
-                        <div class="account-card-heading"><span class="account-card-icon"><i class="bi bi-exclamation-triangle"></i></span><div><h2>Delete Account</h2><p>Account deletion requires password and email verification.</p></div></div>
-                        <button type="button" class="account-delete-btn" :disabled="requestingDeletion" @click="requestDeletion">{{ requestingDeletion ? 'Starting verification…' : 'Start account deletion' }}</button>
+                    <section class="account-settings-card settings-card account-danger-zone settings-danger-card">
+                        <div class="account-card-heading settings-card-header"><span class="account-card-icon settings-card-icon danger"><i class="bi bi-exclamation-triangle"></i></span><div><h2>Delete Account</h2><p>Account deletion requires password and email verification.</p></div></div>
+                        <button type="button" class="account-delete-btn danger-delete-btn" :disabled="requestingDeletion" @click="requestDeletion">{{ requestingDeletion ? 'Starting verification…' : 'Start account deletion' }}</button>
                     </section>
                 </div>
             </div>

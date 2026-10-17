@@ -6,7 +6,7 @@
 @section('hideScripts', '1')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/auth-login.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/auth/auth-login.css') }}">
 @endpush
 
 @section('content')

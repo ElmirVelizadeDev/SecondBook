@@ -63,22 +63,22 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('admin/css/style.css') }}"
+        href="{{ asset('admin/css/core/style.css') }}"
     >
 
     <link
         rel="stylesheet"
-        href="{{ asset('admin/css/header.css') }}"
+        href="{{ asset('admin/css/core/header.css') }}"
     >
 
     <link
         rel="stylesheet"
-        href="{{ asset('admin/css/sidebar.css') }}"
+        href="{{ asset('admin/css/core/sidebar.css') }}"
     >
 
     <link
         rel="stylesheet"
-        href="{{ asset('admin/css/responsive.css') }}"
+        href="{{ asset('admin/css/core/responsive.css') }}"
     >
 
     @stack('css')

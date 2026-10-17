@@ -29,9 +29,9 @@
     >
 
     {{-- Seller CSS --}}
-    <link rel="stylesheet" href="{{ asset('seller/css/sidebar.css') }}">
-    <link rel="stylesheet" href="{{ asset('seller/css/header.css') }}">
-    <link rel="stylesheet" href="{{ asset('seller/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('seller/css/core/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('seller/css/core/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('seller/css/core/style.css') }}">
 
     @stack('css')
 

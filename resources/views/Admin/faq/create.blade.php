@@ -2,7 +2,7 @@
 
 @section('title', 'Create FAQ')
 
-@push('css') <link rel="stylesheet" href="{{ asset('admin/css/faq.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/pages/faq.css') }}">
 @endpush
 
 @section('content')

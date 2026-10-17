@@ -1,7 +1,7 @@
 @extends('layout.admin.master')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/roles.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/pages/roles.css') }}">
 @endpush
 
 @section('title', 'Edit Role')

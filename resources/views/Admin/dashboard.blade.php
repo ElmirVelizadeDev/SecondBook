@@ -1,7 +1,7 @@
 @extends('layout.admin.master')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/pages/dashboard.css') }}">
 @endpush
 
 @section('title', 'Dashboard')

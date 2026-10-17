@@ -3,7 +3,7 @@
 @section('title', 'Edit Publisher')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/publishers.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/pages/publishers.css') }}">
 @endpush
 
 @section('content')

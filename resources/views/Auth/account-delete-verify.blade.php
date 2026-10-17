@@ -6,7 +6,7 @@
 @section('hideScripts', '1')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/auth-account-delete-verify.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/auth/auth-account-delete-verify.css') }}">
 @endpush
 
 @section('content')

@@ -699,7 +699,7 @@ Route::prefix('frontend')
 
         // TERMS
         Route::get('/auth/terms', function () {
-            return view('auth.terms');
+            return view('Frontend.terms');
         })->name('auth.terms');
 
         // LOGGED USERS - AUTHENTICATION

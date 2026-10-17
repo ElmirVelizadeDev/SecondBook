@@ -3,7 +3,7 @@
 @section('title', $book->title . ' | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/book-details.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/pages/book-details.css') }}">
 @endpush
 
 @section('content')
@@ -14,7 +14,7 @@
         data-books-url="{{ route('frontend.books') }}"
         data-details-url="{{ url('/frontend/books/__BOOK__') }}"
         data-login-url="{{ route('frontend.auth.login') }}"
-        data-placeholder-url="{{ asset('frontend-assets/images/book-placeholder.jpg') }}"
+        data-placeholder-url="{{ asset('frontend-assets/images/book-placeholder.svg') }}"
         data-authenticated="{{ auth()->check() ? 'true' : 'false' }}"
     ></div>
 @endsection

@@ -3,7 +3,7 @@
 @section('title', 'Categories | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/categories.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend-assets/css/pages/categories.css') }}">
 @endpush
 
 @section('content')

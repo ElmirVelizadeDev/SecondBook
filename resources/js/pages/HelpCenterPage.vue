@@ -32,15 +32,15 @@ onMounted(async () => {
                 <form class="sb-help-search-wrapper" @submit.prevent><div class="sb-help-search"><span class="sb-help-search-icon"><i class="bi bi-search"></i></span><input v-model="search" type="search" placeholder="Search for help…" aria-label="Search Help Center"><button type="submit" class="sb-help-search-button"><span>Search</span><i class="bi bi-arrow-right"></i></button></div></form>
             </div>
         </div></section>
-        <section class="sb-help-section"><div class="container">
-            <div class="sb-help-heading"><span>QUICK ANSWERS</span><h2>Popular help topics</h2></div>
+        <section class="sb-help-section sb-help-popular-section"><div class="container">
+            <div class="sb-help-heading sb-help-section-heading"><div><span class="sb-help-section-label">QUICK ANSWERS</span><h2>Popular help topics</h2></div></div>
             <div v-if="loading" class="sb-help-empty" role="status">Loading help topics…</div>
             <div v-else-if="error" class="alert alert-warning" role="alert">{{ error }}</div>
             <div v-else class="sb-help-results">
-                <article v-for="faq in results" :key="faq.id" class="sb-help-card"><span class="sb-help-card-category">{{ faq.category || 'Help' }}</span><h3>{{ faq.question }}</h3><p>{{ faq.answer }}</p></article>
+                <article v-for="faq in results" :key="faq.id" class="sb-help-card sb-help-category-card"><div class="sb-help-category-content"><span class="sb-help-card-category">{{ faq.category || 'Help' }}</span><h3>{{ faq.question }}</h3><p>{{ faq.answer }}</p></div></article>
                 <div v-if="!results.length" class="sb-help-empty"><h3>No results found</h3><p>Try a different phrase or contact our support team.</p></div>
             </div>
-            <div class="sb-help-contact"><a :href="faqUrl">Browse all FAQs<i class="bi bi-arrow-right"></i></a><a :href="contactUrl">Contact support<i class="bi bi-arrow-right"></i></a></div>
+            <div class="sb-help-contact-links"><a :href="faqUrl" class="sb-help-outline-btn">Browse all FAQs<i class="bi bi-arrow-right"></i></a><a :href="contactUrl" class="sb-help-outline-btn">Contact support<i class="bi bi-arrow-right"></i></a></div>
         </div></section>
     </main>
 </template>

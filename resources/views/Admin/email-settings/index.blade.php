@@ -3,7 +3,7 @@
 @section('title', 'Email Settings')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/email-settings.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/pages/email-settings.css') }}">
 @endpush
 
 @section('content')

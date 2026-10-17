@@ -3,7 +3,7 @@
 @section('title', 'Seller Apply')
 
 @push('css')
-<link rel="stylesheet" href="{{ asset('admin/css/seller-applications.css') }}">
+<link rel="stylesheet" href="{{ asset('admin/css/pages/seller-applications.css') }}">
 @endpush
 
 @section('content')

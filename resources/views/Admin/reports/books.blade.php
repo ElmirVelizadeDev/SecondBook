@@ -2,7 +2,7 @@
 
 @section('title', 'Books Report')
 
-@push('css') <link rel="stylesheet" href="{{ asset('admin/css/reports.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/pages/reports.css') }}">
 @endpush
 
 @section('content')

@@ -11,6 +11,8 @@ const cart = ref([]);
 const subtotal = ref(0);
 const shippingFee = ref(0);
 const total = ref(0);
+const shippingEnabled = ref(true);
+const freeShippingThreshold = ref(0);
 const totalItems = computed(() => cart.value.reduce(
     (sum, item) => sum + Number(item.quantity || 0),
     0
@@ -41,6 +43,16 @@ async function loadCart() {
         subtotal.value = Number(response.subtotal || 0);
         shippingFee.value = Number(response.shipping_fee || 0);
         total.value = Number(response.total || subtotal.value + shippingFee.value);
+        shippingEnabled.value = response.shipping_enabled !== false;
+        freeShippingThreshold.value = Number(response.free_shipping_threshold || 0);
+
+        const headerCartCount = document.getElementById('header-cart-count');
+        if (headerCartCount) {
+            headerCartCount.textContent = totalItems.value > 99
+                ? '99+'
+                : String(totalItems.value);
+            headerCartCount.style.display = totalItems.value > 0 ? '' : 'none';
+        }
     } catch (exception) {
         error.value = exception.response?.data?.message
             || 'Your cart could not be loaded. Please try again.';
@@ -191,7 +203,11 @@ onMounted(loadCart);
                         <div class="sb-summary-content">
                             <div class="sb-summary-row"><span>Items</span><strong>{{ totalItems }} {{ totalItems === 1 ? 'item' : 'items' }}</strong></div>
                             <div class="sb-summary-row"><span>Subtotal</span><strong>${{ currency(subtotal) }}</strong></div>
-                            <div class="sb-summary-row"><span>Shipping</span><strong :class="{ 'sb-free-shipping': !shippingFee }">{{ shippingFee ? `$${currency(shippingFee)}` : '$0.00' }}</strong></div>
+                            <div class="sb-summary-row"><span>Shipping</span><strong :class="{ 'sb-free-shipping': shippingEnabled && !shippingFee }">{{ !shippingEnabled ? 'Disabled' : shippingFee ? `$${currency(shippingFee)}` : 'Free' }}</strong></div>
+                            <div v-if="shippingEnabled && freeShippingThreshold > 0" class="sb-shipping-note">
+                                <span class="sb-shipping-note-icon"><i class="bi bi-truck"></i></span>
+                                <span>{{ shippingFee > 0 ? `Free shipping on orders over $${currency(freeShippingThreshold)}.` : 'Free shipping is included with your order.' }}</span>
+                            </div>
                             <div class="sb-summary-divider"></div>
                             <div class="sb-summary-total"><span>Total</span><strong>${{ currency(total) }}</strong></div>
                             <a :href="checkoutUrl" class="sb-checkout-btn"><span>Proceed to Checkout</span><i class="bi bi-arrow-right"></i></a>

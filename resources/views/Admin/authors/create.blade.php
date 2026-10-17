@@ -2,7 +2,7 @@
 
 @section('title', 'Add Author')
 
-@push('css') <link rel="stylesheet" href="{{ asset('admin/css/authors.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/pages/authors.css') }}">
 @endpush
 
 @section('content')

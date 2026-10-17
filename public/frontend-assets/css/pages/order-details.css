@@ -1556,3 +1556,155 @@
         transition-duration: 0.01ms !important;
     }
 }
+
+/* Compatibility rules for the current Vue order details view */
+.order-details-card {
+    position: relative;
+    min-width: 0;
+    padding: 25px;
+    overflow: hidden;
+    border: 1px solid var(--od-border);
+    border-radius: var(--od-radius);
+    background: linear-gradient(145deg, rgba(57, 39, 29, 0.94), rgba(35, 23, 17, 0.97));
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.13);
+    animation: odFadeUp 0.65s ease both;
+}
+
+.order-details-card::before {
+    position: absolute;
+    top: 0;
+    left: 7%;
+    width: 86%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(215, 170, 131, 0.3), transparent);
+    content: "";
+    pointer-events: none;
+}
+
+.order-details-section-kicker {
+    display: inline-block;
+    margin-bottom: 11px;
+    color: var(--od-accent-light);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.order-details-card h2 {
+    margin: 0;
+    color: var(--od-text);
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2.4vw, 27px);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.order-details-card > p {
+    margin: 8px 0 0;
+    color: var(--od-muted);
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.order-details-list {
+    display: grid;
+    gap: 0;
+    margin: 22px 0 0;
+    padding-top: 8px;
+    border-top: 1px solid rgba(205, 165, 125, 0.12);
+}
+
+.order-details-list > div {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(205, 165, 125, 0.08);
+}
+
+.order-details-list > div:last-child {
+    border-bottom: 0;
+}
+
+.order-details-list dt {
+    color: var(--od-muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.order-details-list dd {
+    margin: 0;
+    color: var(--od-text-soft);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.order-action-btn,
+.order-cancel-btn {
+    display: inline-flex;
+    min-height: 45px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 11px 16px;
+    border: 1px solid var(--od-border);
+    border-radius: 11px;
+    background: rgba(48, 32, 24, 0.62);
+    color: var(--od-text-soft);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    transition: transform .25s ease, border-color .25s ease, background .25s ease, color .25s ease;
+}
+
+.order-action-btn:hover,
+.order-cancel-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: var(--od-border-hover);
+    background: rgba(62, 42, 31, 0.9);
+    color: var(--od-text);
+}
+
+.order-cancel-btn {
+    border-color: rgba(231, 127, 116, 0.25);
+    color: #ed9b91;
+    cursor: pointer;
+}
+
+.order-cancel-btn:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+@media (max-width: 767.98px) {
+    .order-details-card {
+        padding: 20px;
+    }
+
+    .order-details-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .order-action-btn,
+    .order-cancel-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 390px) {
+    .order-details-card {
+        padding: 17px 14px;
+    }
+
+    .order-details-list > div {
+        gap: 9px;
+    }
+}

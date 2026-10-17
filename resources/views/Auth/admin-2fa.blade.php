@@ -9,7 +9,7 @@
 @push('css')
 <link
     rel="stylesheet"
-    href="{{ asset('frontend-assets/css/auth-login.css') }}"
+    href="{{ asset('frontend-assets/css/auth/auth-login.css') }}"
 >
 @endpush
 

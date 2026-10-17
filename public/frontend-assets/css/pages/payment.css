@@ -889,6 +889,7 @@
 }
 
 .sb-payment-back,
+.sb-payment-back-btn,
 .sb-payment-submit {
     display: inline-flex;
     align-items: center;
@@ -911,6 +912,19 @@
     border-color: rgba(139, 94, 60, 0.18);
     background: #fffdfb;
     color: var(--payment-brown);
+}
+
+.sb-payment-back-btn {
+    border-color: rgba(139, 94, 60, 0.18);
+    background: #fffdfb;
+    color: var(--payment-brown);
+}
+
+.sb-payment-back-btn:hover {
+    transform: translateY(-2px);
+    border-color: rgba(139, 94, 60, 0.35);
+    background: #f7eee5;
+    color: var(--payment-brown-dark);
 }
 
 .sb-payment-back:hover {
@@ -951,7 +965,8 @@
 }
 
 .sb-payment-submit:focus-visible,
-.sb-payment-back:focus-visible {
+.sb-payment-back:focus-visible,
+.sb-payment-back-btn:focus-visible {
     outline: 3px solid rgba(185, 130, 93, 0.35);
     outline-offset: 3px;
 }
@@ -1566,6 +1581,7 @@
     }
 
     .sb-payment-back,
+.sb-payment-back-btn,
     .sb-payment-submit {
         padding: 12px 15px;
     }

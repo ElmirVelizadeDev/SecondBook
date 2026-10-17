@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 640" role="img" aria-labelledby="title">
+  <title id="title">Book cover unavailable</title>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8f3eb"/>
+      <stop offset="1" stop-color="#e9ddcb"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="640" rx="20" fill="url(#paper)"/>
+  <rect x="54" y="48" width="372" height="544" rx="12" fill="none" stroke="#c6ad91" stroke-width="4"/>
+  <path d="M164 196c0-18 15-33 33-33h119v220H197c-18 0-33 15-33 33V196Zm152-33h-24v220h24V163Z" fill="#8b5e3c"/>
+  <path d="M197 185h76M197 207h76M197 359h76" fill="none" stroke="#f8f3eb" stroke-linecap="round" stroke-width="8"/>
+  <text x="240" y="478" fill="#5f3d24" font-family="Georgia,serif" font-size="28" text-anchor="middle">Cover unavailable</text>
+  <text x="240" y="518" fill="#8b5e3c" font-family="Arial,sans-serif" font-size="18" letter-spacing="4" text-anchor="middle">SECONDBOOK</text>
+</svg>

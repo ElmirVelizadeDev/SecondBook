@@ -2,7 +2,7 @@
 
 @section('title', 'Category Details')
 
-@push('css') <link rel="stylesheet" href="{{ asset('admin/css/category.css') }}">
+@push('css') <link rel="stylesheet" href="{{ asset('admin/css/pages/category.css') }}">
 @endpush
 
 @section('content')
