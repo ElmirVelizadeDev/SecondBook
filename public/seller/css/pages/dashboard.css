@@ -294,12 +294,17 @@
 .seller-dashboard-stat-card {
     position: relative;
     min-height: 168px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     padding: 22px;
     overflow: hidden;
     border: 1px solid var(--seller-border);
     border-radius: 20px;
     background: var(--seller-card);
     box-shadow: 0 10px 26px rgba(17, 24, 39, .035);
+    color: var(--seller-text);
+    text-decoration: none;
     animation: dbFadeUp .55s cubic-bezier(.22, 1, .36, 1) both;
     transition:
         transform .3s cubic-bezier(.34, 1.56, .64, 1),
@@ -430,7 +435,7 @@
 .seller-dashboard-stat-footer {
     position: relative;
     z-index: 1;
-    margin-top: 16px;
+    margin-top: auto;
     padding-top: 14px;
     display: flex;
     align-items: center;
@@ -448,20 +453,16 @@
     font-weight: 600;
 }
 
-.seller-dashboard-stat-footer a {
+.seller-dashboard-stat-footer > i {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
     color: var(--db-accent);
     font-size: 11px;
     font-weight: 800;
-}
-
-.seller-dashboard-stat-footer a i {
     transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
 }
 
-.seller-dashboard-stat-footer a:hover i {
+.seller-dashboard-stat-card:hover .seller-dashboard-stat-footer > i {
     transform: translateX(4px);
 }
 

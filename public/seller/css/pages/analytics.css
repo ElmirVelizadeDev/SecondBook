@@ -352,6 +352,13 @@
     height: 300px;
 }
 
+.seller-analytics-chart-message {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--seller-card);
+}
+
 /* Secondary Grid */
 .seller-analytics-grid {
     margin-bottom: 24px;

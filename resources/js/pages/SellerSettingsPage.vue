@@ -1,0 +1,32 @@
+<script setup>
+import { computed, reactive } from 'vue';
+import { decodeSellerPageData } from '../utils/sellerPageData';
+
+const props = defineProps({ pageData: { type: String, default: '' } });
+const data = decodeSellerPageData(props.pageData);
+const store = reactive({ ...data.store });
+const errors = computed(() => Object.values(data.errors || {}).flat());
+</script>
+
+<template>
+    <div class="seller-settings-page">
+        <div class="seller-page-heading"><div><h1>Store Settings</h1><p>Manage how your store handles orders and sales.</p></div></div>
+        <div v-if="data.success" class="seller-settings-alert seller-settings-alert-success"><div class="seller-settings-alert-icon"><i class="bi bi-check-lg"></i></div><div class="seller-settings-alert-content"><strong>Changes saved</strong><span>{{ data.success }}</span></div></div>
+        <div v-if="errors.length" class="seller-settings-alert seller-settings-alert-danger"><div class="seller-settings-alert-icon"><i class="bi bi-exclamation-lg"></i></div><div class="seller-settings-alert-content"><strong>Please check the following:</strong><ul><li v-for="(error, index) in errors" :key="index">{{ error }}</li></ul></div></div>
+
+        <form :action="data.updateUrl" method="POST">
+            <input type="hidden" name="_token" :value="data.csrfToken"><input type="hidden" name="_method" value="PUT">
+            <div class="seller-settings-card">
+                <div class="seller-settings-card-header"><div class="seller-settings-card-title"><div class="seller-settings-card-icon"><i class="bi bi-bag-check"></i></div><div><h5>Order Settings</h5><p>Control how your store receives and processes customer orders.</p></div></div><span class="seller-settings-section-badge"><i class="bi bi-sliders"></i> Store</span></div>
+                <div class="seller-settings-card-body">
+                    <div class="seller-setting-row"><div class="seller-setting-info"><div class="seller-setting-label"><div class="seller-setting-small-icon"><i class="bi bi-cart-check"></i></div><div><h6>Accept Orders</h6><p>Allow customers to place new orders from your store.</p></div></div></div><label class="seller-settings-toggle"><input type="checkbox" name="accept_orders" value="1" id="acceptOrders" :checked="!!store.accept_orders"><span class="seller-settings-toggle-slider"></span></label></div>
+                    <div class="seller-setting-row"><div class="seller-setting-info"><div class="seller-setting-label"><div class="seller-setting-small-icon"><i class="bi bi-lightning-charge"></i></div><div><h6>Auto Approve Orders</h6><p>Automatically approve new orders without manual confirmation.</p></div></div></div><label class="seller-settings-toggle"><input type="checkbox" name="auto_approve_orders" value="1" id="autoApproveOrders" :checked="!!store.auto_approve_orders"><span class="seller-settings-toggle-slider"></span></label></div>
+                    <div class="seller-setting-field"><div class="seller-setting-field-header"><div><label for="processingTime">Processing Time</label><small>Preparation time for new orders.</small></div><span class="seller-settings-field-icon"><i class="bi bi-clock-history"></i></span></div><div class="seller-input-group"><input type="number" name="processing_time" id="processingTime" class="seller-settings-input" min="1" max="30" v-model="store.processing_time"><span>days</span></div><p class="seller-setting-help">How many days you usually need to prepare an order.</p></div>
+                    <div class="seller-setting-field"><div class="seller-setting-field-header"><div><label for="minimumOrderAmount">Minimum Order Amount</label><small>Set the minimum purchase amount required.</small></div><span class="seller-settings-field-icon"><i class="bi bi-cash-stack"></i></span></div><div class="seller-input-group"><span>₼</span><input type="number" name="minimum_order_amount" id="minimumOrderAmount" class="seller-settings-input" min="0" step="0.01" v-model="store.minimum_order_amount"></div><p class="seller-setting-help">Use <strong>0</strong> to disable the minimum order requirement.</p></div>
+                    <div class="seller-setting-field seller-setting-field-last"><div class="seller-setting-field-header"><div><label for="orderNote">Order Note</label><small>Add useful instructions related to customer orders.</small></div><span class="seller-settings-field-icon"><i class="bi bi-card-text"></i></span></div><textarea name="order_note" id="orderNote" class="seller-settings-textarea" rows="5" maxlength="2000" placeholder="Add instructions or information related to customer orders..." v-model="store.order_note"></textarea><div class="seller-settings-textarea-footer"><p class="seller-setting-help">This note can be used for internal order-related instructions.</p><span class="seller-settings-character-limit">Max 2000 characters</span></div></div>
+                </div>
+            </div>
+            <div class="seller-settings-actions"><div class="seller-settings-actions-info"><div class="seller-settings-actions-icon"><i class="bi bi-shield-check"></i></div><div><strong>Keep your store preferences up to date</strong><span>Changes will apply to your store after saving.</span></div></div><button type="submit" class="seller-save-button"><i class="bi bi-check2-circle"></i><span>Save Changes</span></button></div>
+        </form>
+    </div>
+</template>

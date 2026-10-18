@@ -57,6 +57,22 @@ a {
     padding: 30px;
 }
 
+.seller-vue-mount-status {
+    padding: 18px 22px;
+    border: 1px solid var(--seller-border);
+    border-radius: 14px;
+    background: var(--seller-card);
+    color: var(--seller-muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.seller-vue-mount-status.is-error {
+    border-color: #f3c4c4;
+    background: #fff7f7;
+    color: #a33737;
+}
+
 /* =========================================================
    HEADER
 ========================================================= */

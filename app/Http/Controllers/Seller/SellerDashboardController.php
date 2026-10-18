@@ -11,7 +11,14 @@ class SellerDashboardController extends Controller
 {
     public function index()
     {
-        $sellerId = auth()->id();
+        $seller = auth()->user();
+        $sellerId = $seller->id;
+        $sellerName = $seller->full_name ?: $seller->name;
+
+        $hour = (int) now()->format('H');
+        $greeting = $hour < 12
+            ? 'Good morning'
+            : ($hour < 18 ? 'Good afternoon' : 'Good evening');
 
         $sixMonthsAgo = now()->subMonths(6);
 
@@ -78,6 +85,8 @@ class SellerDashboardController extends Controller
             ->get();
 
         return view('Seller.dashboard', compact(
+            'sellerName',
+            'greeting',
             'totalBooks',
             'pendingBooks',
             'totalOrders',

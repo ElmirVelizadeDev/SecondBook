@@ -1,0 +1,49 @@
+<script setup>
+import { computed, onBeforeUnmount, reactive, ref } from 'vue';
+import { decodeSellerPageData } from '../utils/sellerPageData';
+const props = defineProps({ pageData: { type: String, default: '' } });
+const d = decodeSellerPageData(props.pageData);
+const fields = reactive({ ...d.fields });
+const errors = computed(() => Object.values(d.errors || {}).flat());
+const preview = ref(d.coverUrl || '');
+const fileError = ref('');
+let objectUrl = null;
+function selectCover(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    fileError.value = '';
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) { fileError.value = 'Choose a JPG, JPEG, PNG or WEBP image.'; event.target.value = ''; return; }
+    if (file.size > 2 * 1024 * 1024) { fileError.value = 'The selected file is larger than 2MB.'; event.target.value = ''; return; }
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = URL.createObjectURL(file);
+    preview.value = objectUrl;
+}
+function dropCover(event) {
+    const file = event.dataTransfer?.files?.[0];
+    if (!file) return;
+    const input = document.getElementById('cover');
+    const transfer = new DataTransfer(); transfer.items.add(file); input.files = transfer.files;
+    selectCover({ target: input });
+}
+onBeforeUnmount(() => { if (objectUrl) URL.revokeObjectURL(objectUrl); });
+</script>
+
+<template>
+    <div class="seller-books-page">
+        <div class="seller-page-heading"><div><h1>{{ d.edit ? 'Edit Book' : 'Add New Book' }}</h1><p>{{ d.edit ? 'Update your book information.' : 'Add a new book to your store for admin approval.' }}</p></div><a :href="d.backUrl" class="seller-outline-button"><i class="bi bi-arrow-left"></i><span>{{ d.edit ? 'Back to Book' : 'Back to My Books' }}</span></a></div>
+        <div v-if="errors.length" class="seller-alert seller-alert-danger"><div class="seller-alert-icon"><i class="bi bi-exclamation-lg"></i></div><div><strong>{{ d.edit ? 'Please check the following errors:' : 'Please fix the following errors:' }}</strong><ul><li v-for="(error,index) in errors" :key="index">{{ error }}</li></ul></div></div>
+        <form :action="d.action" method="POST" enctype="multipart/form-data" id="sellerBookForm"><input type="hidden" name="_token" :value="d.csrfToken"><input v-if="d.edit" type="hidden" name="_method" value="PUT">
+            <div class="row g-4"><div class="col-xl-8"><div class="seller-books-form-card"><div class="seller-form-header"><div class="seller-form-header-main"><div class="seller-form-header-icon"><i class="bi bi-book"></i></div><div><h5>Book Information</h5><p>{{ d.edit ? 'Update the basic information of your book.' : 'Enter the main information about your book.' }}</p></div></div></div><div class="seller-form-body">
+                <div class="seller-form-group" :class="{ 'has-error': d.errors?.title?.length }"><label for="title">Book Title <span>*</span></label><input type="text" id="title" name="title" v-model="fields.title" placeholder="Enter book title" required><div v-for="error in d.errors?.title || []" :key="error" class="seller-field-error"><i class="bi bi-exclamation-circle"></i>{{ error }}</div></div>
+                <div class="row g-3"><div class="col-md-6"><div class="seller-form-group" :class="{ 'has-error': d.errors?.isbn?.length }"><label for="isbn">ISBN</label><input type="text" id="isbn" name="isbn" v-model="fields.isbn" placeholder="Enter ISBN"><div v-for="error in d.errors?.isbn || []" :key="error" class="seller-field-error"><i class="bi bi-exclamation-circle"></i>{{ error }}</div></div></div><div class="col-md-6"><div class="seller-form-group"><label for="language">Language</label><input type="text" id="language" name="language" v-model="fields.language" :placeholder="d.edit ? 'Enter language' : 'e.g. English'"></div></div></div>
+                <div class="row g-3"><div v-for="list in d.selectLists" :key="list.name" class="col-md-4"><div class="seller-form-group" :class="{ 'has-error': d.errors?.[list.name]?.length }"><label :for="list.name">{{ list.label }}</label><select :id="list.name" :name="list.name" v-model="fields[list.name]"><option value="">{{ list.placeholder }}</option><option v-for="option in list.options" :key="option.id" :value="String(option.id)">{{ option.name }}</option></select><div v-for="error in d.errors?.[list.name] || []" :key="error" class="seller-field-error"><i class="bi bi-exclamation-circle"></i>{{ error }}</div></div></div></div>
+                <div class="seller-form-group" :class="{ 'has-error': d.errors?.description?.length }"><label for="description">Description</label><textarea id="description" name="description" :rows="d.edit ? 6 : 7" v-model="fields.description" placeholder="Write a description about the book..."></textarea><div v-for="error in d.errors?.description || []" :key="error" class="seller-field-error"><i class="bi bi-exclamation-circle"></i>{{ error }}</div></div>
+            </div></div></div>
+            <div class="col-xl-4"><div class="seller-books-form-card mb-4"><div class="seller-form-header"><div class="seller-form-header-main"><div class="seller-form-header-icon"><i class="bi bi-image"></i></div><div><h5>Book Cover</h5><p>{{ d.edit ? 'Update the book cover.' : 'Upload the cover image.' }}</p></div></div></div><div class="seller-form-body"><div class="seller-book-cover-upload" id="coverDropzone" @dragover.prevent @drop.prevent="dropCover"><div class="seller-book-cover-preview" :class="{ 'has-image': preview }"><div v-if="!preview" class="seller-cover-placeholder" id="coverPlaceholder"><i class="bi bi-book"></i><span>{{ d.edit ? 'No Cover' : 'Preview' }}</span></div><img v-if="preview" id="coverPreview" :src="preview" alt="Cover Preview"></div><label for="cover" class="seller-cover-upload-button"><i class="bi bi-cloud-arrow-up"></i><span>{{ d.edit ? 'Change Cover' : 'Choose Cover' }}</span><small id="coverHint">JPG, PNG or WEBP · Max 2MB</small></label><input type="file" id="cover" name="cover" accept=".jpg,.jpeg,.png,.webp" hidden @change="selectCover"></div><div v-for="error in d.errors?.cover || []" :key="error" class="seller-field-error"><i class="bi bi-exclamation-circle"></i>{{ error }}</div><div v-if="fileError" class="seller-field-error" id="coverClientError"><i class="bi bi-exclamation-circle"></i>{{ fileError }}</div></div></div>
+                <div v-if="!d.edit" class="seller-books-form-card"><div class="seller-form-header"><div class="seller-form-header-main"><div class="seller-form-header-icon"><i class="bi bi-box-seam"></i></div><div><h5>Pricing &amp; Inventory</h5><p>Set price and stock information.</p></div></div></div><div class="seller-form-body"><div class="seller-form-group"><label for="price">Price <span>*</span></label><div class="seller-input-prefix"><span>$</span><input type="number" id="price" name="price" v-model="fields.price" min="0" step="0.01" placeholder="0.00" required></div></div><div class="seller-form-group"><label for="stock">Stock <span>*</span></label><input type="number" id="stock" name="stock" v-model="fields.stock" min="1" placeholder="Enter stock quantity" required></div><div class="seller-form-group"><label for="condition">Condition <span>*</span></label><select id="condition" name="condition" v-model="fields.condition" required><option value="">Select Condition</option><option value="new">New</option><option value="like_new">Like New</option><option value="good">Good</option><option value="fair">Fair</option></select></div><div class="seller-form-group"><label for="publication_year">Publication Year</label><input type="number" id="publication_year" name="publication_year" v-model="fields.publication_year" min="1000" :max="d.currentYear" placeholder="e.g. 2024"></div><div class="seller-form-group"><label for="pages">Pages</label><input type="number" id="pages" name="pages" v-model="fields.pages" min="1" placeholder="e.g. 320"></div></div></div></div>
+            </div>
+            <div v-if="d.edit" class="seller-books-form-card mt-4"><div class="seller-form-header"><div class="seller-form-header-main"><div class="seller-form-header-icon"><i class="bi bi-box-seam"></i></div><div><h5>Pricing &amp; Inventory</h5><p>Update pricing, stock and book condition.</p></div></div></div><div class="seller-form-body"><div class="row g-3"><div class="col-md-3"><div class="seller-form-group"><label for="price">Price <span>*</span></label><div class="seller-input-prefix"><span>$</span><input type="number" id="price" name="price" step="0.01" min="0" v-model="fields.price" required></div></div></div><div class="col-md-3"><div class="seller-form-group"><label for="stock">Stock <span>*</span></label><input type="number" id="stock" name="stock" min="1" v-model="fields.stock" required></div></div><div class="col-md-3"><div class="seller-form-group"><label for="condition">Condition <span>*</span></label><select id="condition" name="condition" v-model="fields.condition" required><option v-for="option in d.conditions" :key="option.value" :value="option.value">{{ option.label }}</option></select></div></div><div class="col-md-3"><div class="seller-form-group"><label for="publication_year">Publication Year</label><input type="number" id="publication_year" name="publication_year" min="1000" :max="d.currentYear" v-model="fields.publication_year"></div></div><div class="col-md-3"><div class="seller-form-group"><label for="pages">Pages</label><input type="number" id="pages" name="pages" min="1" v-model="fields.pages"></div></div></div></div></div>
+            <div class="seller-books-form-actions"><a :href="d.cancelUrl" class="seller-cancel-button">{{ d.edit ? 'Cancel' : 'Cancel' }}</a><button type="submit" class="seller-save-button"><i class="bi" :class="d.edit ? 'bi-check2' : 'bi-check-lg'"></i><span>{{ d.edit ? 'Update Book' : 'Add Book' }}</span></button></div>
+        </form>
+    </div>
+</template>

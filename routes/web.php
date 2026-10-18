@@ -488,6 +488,8 @@ Route::prefix('seller')
 
         // REVIEWS
         Route::get('/reviews', [SellerReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/reviews/data', [SellerReviewController::class, 'indexData'])->name('reviews.list-data');
+        Route::get('/reviews/{review}/data', [SellerReviewController::class, 'showData'])->name('reviews.data');
         Route::get('/reviews/{review}', [SellerReviewController::class, 'show'])->name('reviews.show');
 
         // ANALYTICS

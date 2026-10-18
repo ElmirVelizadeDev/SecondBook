@@ -1,9 +1,8 @@
 import { createApp } from 'vue';
 
-const modules = import.meta.glob('./pages/*.vue', {
-    eager: true,
-    import: 'default',
-});
+// Keep page components in separate Vite chunks so a page only downloads its
+// own UI code. This uses the existing page discovery/mount mechanism.
+const modules = import.meta.glob('./pages/*.vue');
 
 const pages = Object.fromEntries(
     Object.entries(modules).map(([path, component]) => {
@@ -21,7 +20,7 @@ pages.home = modules['./pages/HomePage.vue'];
 function pageProps(element) {
     return Object.fromEntries(
         Object.entries(element.dataset)
-            .filter(([key]) => key !== 'vuePage' && key !== 'vueMounted')
+            .filter(([key]) => !['vuePage', 'vueMounted', 'vueLoading'].includes(key))
             .map(([key, value]) => {
                 const propValue = value === 'true'
                     ? true
@@ -37,21 +36,60 @@ function pageProps(element) {
     );
 }
 
+function setSellerMountStatus(element, className, message, role) {
+    const status = document.createElement('div');
+    status.className = className;
+    status.setAttribute('role', role);
+    status.textContent = message;
+    element.replaceChildren(status);
+}
+
 export function mountVuePages() {
     document.querySelectorAll('[data-vue-page]').forEach((element) => {
         const pageName = element.dataset.vuePage;
-        const component = pages[pageName];
+        const loadComponent = pages[pageName];
 
-        if (!component) {
+        if (!loadComponent) {
             console.error(`No Vue page is registered for "${pageName}".`);
             return;
         }
 
-        if (element.dataset.vueMounted === 'true') {
+        if (element.dataset.vueMounted === 'true' || element.dataset.vueLoading === 'true') {
             return;
         }
 
-        createApp(component, pageProps(element)).mount(element);
-        element.dataset.vueMounted = 'true';
+        element.dataset.vueLoading = 'true';
+        if (pageName.startsWith('seller-')) {
+            setSellerMountStatus(
+                element,
+                'seller-vue-mount-status is-loading',
+                'Loading Seller page…',
+                'status'
+            );
+        }
+
+        loadComponent()
+            .then((module) => {
+                if (!element.isConnected || element.dataset.vueMounted === 'true') {
+                    return;
+                }
+
+                createApp(module.default, pageProps(element)).mount(element);
+                element.dataset.vueMounted = 'true';
+            })
+            .catch((error) => {
+                console.error(`Could not load Vue page "${pageName}".`, error);
+                if (pageName.startsWith('seller-')) {
+                    setSellerMountStatus(
+                        element,
+                        'seller-vue-mount-status is-error',
+                        'This Seller page could not be loaded. Reload the page to try again.',
+                        'alert'
+                    );
+                }
+            })
+            .finally(() => {
+                delete element.dataset.vueLoading;
+            });
     });
 }
