@@ -243,7 +243,7 @@ class AnalyticsController extends Controller
             ->get();
 
 
-        return view('seller.analytics.index', compact(
+        return view('Seller.analytics.index', compact(
             'range',
             'startDate',
             'endDate',

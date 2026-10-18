@@ -41,7 +41,7 @@ class BackupController extends Controller
             ->values();
 
         return view(
-            'admin.backup.index',
+            'Admin.backup.index',
             compact('backups')
         );
     }

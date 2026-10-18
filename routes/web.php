@@ -90,15 +90,6 @@ Route::redirect('/', '/frontend');
 
 
 
-Route::get('/vue-test', function () {
-    return view('vue.test');
-});
-
-Route::get('/catalog', function () {
-    return view('vue.catalog');
-})->name('vue.catalog');
-
-
 // =========================================================
 // ADMIN PANEL
 // =========================================================
@@ -639,7 +630,7 @@ Route::prefix('frontend')
                 Route::get('/password/request', function () {
                     session()->forget('reset_email');
 
-                    return view('auth.password-request');
+                    return view('Auth.password-request');
                 })->name('password.request');
 
                 // SEND OTP
@@ -671,7 +662,7 @@ Route::prefix('frontend')
                 return redirect()->route('frontend.auth.password.request');
             }
 
-            return view('auth.password-verify');
+            return view('Auth.password-verify');
         })->name('auth.password.verify');
 
         // RESEND PASSWORD VERIFICATION OTP

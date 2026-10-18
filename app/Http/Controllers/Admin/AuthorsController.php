@@ -31,12 +31,12 @@ class AuthorsController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.authors.index', compact('authors'));
+        return view('Admin.authors.index', compact('authors'));
     }
 
     public function create()
     {
-        return view('admin.authors.create');
+        return view('Admin.authors.create');
     }
 
     public function store(Request $request)
@@ -92,7 +92,7 @@ class AuthorsController extends Controller
 
     public function show(Author $author)
     {
-        return view('admin.authors.show', compact('author'));
+        return view('Admin.authors.show', compact('author'));
     }
 
     public function toggleStatus(Author $author)
@@ -126,7 +126,7 @@ class AuthorsController extends Controller
 
     public function edit(Author $author)
     {
-        return view('admin.authors.edit', compact('author'));
+        return view('Admin.authors.edit', compact('author'));
     }
 
     public function update(Request $request, Author $author)

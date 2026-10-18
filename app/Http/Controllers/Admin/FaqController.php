@@ -107,7 +107,7 @@ class FaqController extends Controller
             ->pluck('category');
 
         return view(
-            'admin.faq.index',
+            'Admin.faq.index',
             compact(
                 'faqs',
                 'categories'
@@ -120,7 +120,7 @@ class FaqController extends Controller
      */
     public function create()
     {
-        return view('admin.faq.create');
+        return view('Admin.faq.create');
     }
 
     /**
@@ -187,7 +187,7 @@ class FaqController extends Controller
     public function edit(Faq $faq)
     {
         return view(
-            'admin.faq.edit',
+            'Admin.faq.edit',
             compact('faq')
         );
     }

@@ -52,7 +52,7 @@ class ActivityLogController extends Controller
             ->orderBy('module')
             ->pluck('module');
 
-        return view('admin.activity-logs.index', compact(
+        return view('Admin.activity-logs.index', compact(
             'logs',
             'actions',
             'modules'

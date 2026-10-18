@@ -141,7 +141,7 @@ class ReviewController extends Controller
             ->count();
 
         return view(
-            'seller.reviews.index',
+            'Seller.reviews.index',
             compact(
                 'reviews',
                 'totalReviews',
@@ -194,7 +194,7 @@ class ReviewController extends Controller
         */
 
         return view(
-            'seller.reviews.show',
+            'Seller.reviews.show',
             compact('review')
         );
     }

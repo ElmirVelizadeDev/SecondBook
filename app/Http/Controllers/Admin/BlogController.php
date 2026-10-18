@@ -53,14 +53,14 @@ class BlogController extends Controller
             ->withQueryString();
 
         return view(
-            'admin.blogs.index',
+            'Admin.blogs.index',
             compact('blogs')
         );
     }
 
     public function create()
     {
-        return view('admin.blogs.create');
+        return view('Admin.blogs.create');
     }
 
     public function store(Request $request)
@@ -122,7 +122,7 @@ class BlogController extends Controller
     public function edit(Blog $blog)
     {
         return view(
-            'admin.blogs.edit',
+            'Admin.blogs.edit',
             compact('blog')
         );
     }

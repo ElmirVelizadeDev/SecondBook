@@ -92,7 +92,7 @@ class ReviewsController extends Controller
         )->count();
 
         return view(
-            'admin.reviews.index',
+            'Admin.reviews.index',
             compact(
                 'reviews',
                 'totalReviews',
@@ -114,7 +114,7 @@ class ReviewsController extends Controller
         ]);
 
         return view(
-            'admin.reviews.show',
+            'Admin.reviews.show',
             compact('review')
         );
     }

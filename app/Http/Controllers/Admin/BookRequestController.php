@@ -83,7 +83,7 @@ class BookRequestController extends Controller
         $bookRequests = $query->get();
 
         return view(
-            'admin.book-requests.index',
+            'Admin.book-requests.index',
             compact('bookRequests')
         );
     }
@@ -114,7 +114,7 @@ class BookRequestController extends Controller
         ]);
 
         return view(
-            'admin.book-requests.edit',
+            'Admin.book-requests.edit',
             [
                 'bookRequest' => $book,
             ]

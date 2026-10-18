@@ -88,7 +88,7 @@ class NotificationController extends Controller
         */
 
         return view(
-            'seller.notifications.index',
+            'Seller.notifications.index',
             compact(
                 'notifications',
                 'totalNotifications',

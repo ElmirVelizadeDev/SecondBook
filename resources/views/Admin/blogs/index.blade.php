@@ -1,5 +1,5 @@
 
-@extends('layout.admin.master')
+@extends('Layout.Admin.master')
 
 @section('title', 'Blogs')
 

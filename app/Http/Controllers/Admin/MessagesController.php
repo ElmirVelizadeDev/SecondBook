@@ -82,7 +82,7 @@ class MessagesController extends Controller
         )->count();
 
         return view(
-            'admin.messages.index',
+            'Admin.messages.index',
             compact(
                 'messages',
                 'totalMessages',
@@ -139,7 +139,7 @@ class MessagesController extends Controller
         }
 
         return view(
-            'admin.messages.show',
+            'Admin.messages.show',
             compact(
                 'message',
                 'messageUser'
@@ -181,7 +181,7 @@ class MessagesController extends Controller
     public function reply(Message $message)
     {
         return view(
-            'admin.messages.reply',
+            'Admin.messages.reply',
             compact('message')
         );
     }
@@ -282,7 +282,7 @@ class MessagesController extends Controller
         abort_unless($messageUser, 403);
 
         return view(
-            'admin.messages.site-reply',
+            'Admin.messages.site-reply',
             compact(
                 'message',
                 'messageUser'

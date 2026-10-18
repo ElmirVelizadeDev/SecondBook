@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
         $mailConfigurationService->apply();
 
-        view()->composer('layout.admin.master', function ($view) {
+        view()->composer('Layout.Admin.master', function ($view) {
             /*
              * Unread Messages
              */

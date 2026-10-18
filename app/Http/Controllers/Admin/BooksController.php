@@ -77,7 +77,7 @@ class BooksController extends Controller
             ->withQueryString();
 
         return view(
-            'admin.books.index',
+            'Admin.books.index',
             compact('books')
         );
     }
@@ -95,7 +95,7 @@ class BooksController extends Controller
             ->get();
 
         return view(
-            'admin.books.create',
+            'Admin.books.create',
             compact(
                 'categories',
                 'authors',
@@ -251,7 +251,7 @@ class BooksController extends Controller
         ]);
 
         return view(
-            'admin.books.show',
+            'Admin.books.show',
             compact('book')
         );
     }
@@ -269,7 +269,7 @@ class BooksController extends Controller
             ->get();
 
         return view(
-            'admin.books.edit',
+            'Admin.books.edit',
             compact(
                 'book',
                 'categories',

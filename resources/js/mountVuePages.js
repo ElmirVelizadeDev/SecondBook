@@ -17,7 +17,6 @@ const pages = Object.fromEntries(
 );
 
 pages.home = modules['./pages/HomePage.vue'];
-pages['catalog-preview'] = modules['./pages/CatalogPreview.vue'];
 
 function pageProps(element) {
     return Object.fromEntries(

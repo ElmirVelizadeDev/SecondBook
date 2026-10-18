@@ -22,7 +22,7 @@ class StoreController extends Controller
                 ->with('error', 'Your store could not be found.');
         }
 
-        return view('seller.store', compact('store'));
+        return view('Seller.store', compact('store'));
     }
 
     /**

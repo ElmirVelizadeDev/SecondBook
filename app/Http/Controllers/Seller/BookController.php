@@ -64,7 +64,7 @@ class BookController extends Controller
             ->where('status', 'rejected')
             ->count();
 
-        return view('seller.books.index', compact(
+        return view('Seller.books.index', compact(
             'books',
             'totalBooks',
             'approvedBooks',
@@ -82,7 +82,7 @@ class BookController extends Controller
         $authors = Author::orderBy('name')->get();
         $publishers = Publisher::orderBy('name')->get();
 
-        return view('seller.books.create', compact(
+        return view('Seller.books.create', compact(
             'categories',
             'authors',
             'publishers'
@@ -236,7 +236,7 @@ class BookController extends Controller
             'publisher',
         ]);
 
-        return view('seller.books.show', compact('book'));
+        return view('Seller.books.show', compact('book'));
     }
 
     /**
@@ -252,7 +252,7 @@ class BookController extends Controller
         $authors = Author::orderBy('name')->get();
         $publishers = Publisher::orderBy('name')->get();
 
-        return view('seller.books.edit', compact(
+        return view('Seller.books.edit', compact(
             'book',
             'categories',
             'authors',

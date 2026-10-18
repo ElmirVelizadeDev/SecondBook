@@ -280,7 +280,7 @@ onBeforeUnmount(() => cleanup.splice(0).forEach((dispose) => dispose()));
 
             <div class="sb-privacy-protection-list">
 
-                <template v-for="(item, index) in protections" :key="item.title">
+                <template v-for="(item) in protections" :key="item.title">
 
                     <div class="sb-privacy-protection-item">
 

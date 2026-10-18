@@ -58,7 +58,7 @@ class BannerController extends Controller
             ->withQueryString();
 
         return view(
-            'admin.banners.index',
+            'Admin.banners.index',
             compact('banners')
         );
     }
@@ -68,7 +68,7 @@ class BannerController extends Controller
      */
     public function create()
     {
-        return view('admin.banners.create');
+        return view('Admin.banners.create');
     }
 
     /**
@@ -128,7 +128,7 @@ class BannerController extends Controller
     public function edit(Banner $banner)
     {
         return view(
-            'admin.banners.edit',
+            'Admin.banners.edit',
             compact('banner')
         );
     }

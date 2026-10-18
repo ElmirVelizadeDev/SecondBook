@@ -101,7 +101,7 @@ class PaymentsController extends Controller
         )->sum('amount');
 
         return view(
-            'admin.payments.index',
+            'Admin.payments.index',
             compact(
                 'payments',
                 'totalPayments',
@@ -122,7 +122,7 @@ class PaymentsController extends Controller
             ->get();
 
         return view(
-            'admin.payments.create',
+            'Admin.payments.create',
             compact('orders')
         );
     }
@@ -193,7 +193,7 @@ class PaymentsController extends Controller
         ]);
 
         return view(
-            'admin.payments.show',
+            'Admin.payments.show',
             compact('payment')
         );
     }
@@ -208,7 +208,7 @@ class PaymentsController extends Controller
             ->get();
 
         return view(
-            'admin.payments.edit',
+            'Admin.payments.edit',
             compact(
                 'payment',
                 'orders'

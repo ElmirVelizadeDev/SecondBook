@@ -128,7 +128,7 @@ class OrdersController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('admin.orders.index', compact(
+        return view('Admin.orders.index', compact(
             'orders',
             'totalOrders',
             'totalPending',
@@ -146,7 +146,7 @@ class OrdersController extends Controller
         $books = Book::orderBy('title')->get();
 
         return view(
-            'admin.orders.create',
+            'Admin.orders.create',
             compact('users', 'books')
         );
     }
@@ -226,7 +226,7 @@ class OrdersController extends Controller
         ]);
 
         return view(
-            'admin.orders.show',
+            'Admin.orders.show',
             compact('order')
         );
     }
@@ -240,7 +240,7 @@ class OrdersController extends Controller
         $books = Book::orderBy('title')->get();
 
         return view(
-            'admin.orders.edit',
+            'Admin.orders.edit',
             compact(
                 'order',
                 'users',

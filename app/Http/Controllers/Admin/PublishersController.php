@@ -33,12 +33,12 @@ class PublishersController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.publishers.index', compact('publishers'));
+        return view('Admin.publishers.index', compact('publishers'));
     }
 
     public function create()
     {
-        return view('admin.publishers.create');
+        return view('Admin.publishers.create');
     }
 
     public function store(Request $request)
@@ -106,7 +106,7 @@ class PublishersController extends Controller
 
     public function show(Publisher $publisher)
     {
-        return view('admin.publishers.show', compact('publisher'));
+        return view('Admin.publishers.show', compact('publisher'));
     }
 
     public function toggleStatus(Publisher $publisher)
@@ -140,7 +140,7 @@ class PublishersController extends Controller
 
     public function edit(Publisher $publisher)
     {
-        return view('admin.publishers.edit', compact('publisher'));
+        return view('Admin.publishers.edit', compact('publisher'));
     }
 
     public function update(Request $request, Publisher $publisher)

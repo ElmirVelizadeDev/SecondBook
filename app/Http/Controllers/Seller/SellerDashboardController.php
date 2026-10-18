@@ -77,7 +77,7 @@ class SellerDashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('seller.dashboard', compact(
+        return view('Seller.dashboard', compact(
             'totalBooks',
             'pendingBooks',
             'totalOrders',

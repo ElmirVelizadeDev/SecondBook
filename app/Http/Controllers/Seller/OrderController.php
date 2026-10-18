@@ -126,7 +126,7 @@ class OrderController extends Controller
             ->where('order_status', 'delivered')
             ->count();
 
-        return view('seller.orders.index', compact(
+        return view('Seller.orders.index', compact(
             'orders',
             'totalOrders',
             'pendingOrders',
@@ -158,7 +158,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        return view('seller.orders.show', compact('order'));
+        return view('Seller.orders.show', compact('order'));
     }
 
     /**

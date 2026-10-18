@@ -31,14 +31,10 @@ class ExampleTest extends TestCase
             ->assertRedirect(route('frontend.home') . '#featured-books');
     }
 
-    public function test_vue_pages_mount_only_on_their_designated_routes(): void
+    public function test_real_vue_pages_mount_on_their_designated_routes(): void
     {
         $this->withoutVite()
-            ->get('/vue-test')
-            ->assertOk()
-            ->assertSee('data-vue-page="catalog-preview"', false);
-
-        $this->get('/frontend')
+            ->get('/frontend')
             ->assertOk()
             ->assertSee('data-vue-page="home"', false);
 

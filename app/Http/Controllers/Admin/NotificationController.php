@@ -62,7 +62,7 @@ class NotificationController extends Controller
                 'email',
             ]);
 
-        return view('admin.notifications.index', compact(
+        return view('Admin.notifications.index', compact(
             'notifications',
             'filter',
             'totalNotifications',

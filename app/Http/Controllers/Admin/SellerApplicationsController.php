@@ -83,7 +83,7 @@ class SellerApplicationsController extends Controller
         $totalCount = SellerApplication::count();
 
         return view(
-            'admin.seller-applications.index',
+            'Admin.seller-applications.index',
             compact(
                 'applications',
                 'pendingCount',
@@ -102,7 +102,7 @@ class SellerApplicationsController extends Controller
         $application->load('user');
 
         return view(
-            'admin.seller-applications.show',
+            'Admin.seller-applications.show',
             compact('application')
         );
     }

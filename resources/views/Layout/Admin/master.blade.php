@@ -957,7 +957,7 @@
          SIDEBAR
     ========================================================== --}}
 
-    @include('layout.admin.sidebar')
+    @include('Layout.Admin.sidebar')
 
 
     {{-- =========================================================
@@ -981,7 +981,7 @@
              HEADER
         ====================================================== --}}
 
-        @include('layout.admin.header')
+        @include('Layout.Admin.header')
 
 
         {{-- =====================================================
@@ -999,7 +999,7 @@
              FOOTER
         ====================================================== --}}
 
-        @include('layout.admin.footer')
+        @include('Layout.Admin.footer')
 
     </div>
 
@@ -1010,7 +1010,7 @@
      COMMON SCRIPTS
 ========================================================= --}}
 
-@include('layout.admin.scripts')
+@include('Layout.Admin.scripts')
 
 <script src="{{ asset('admin/js/sidebar.js') }}"></script>
 

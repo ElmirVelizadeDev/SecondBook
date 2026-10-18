@@ -18,7 +18,7 @@ class StoreSettingsController extends Controller
                 ->with('error', 'Your store could not be found.');
         }
 
-        return view('seller.settings.index', compact('store'));
+        return view('Seller.settings.index', compact('store'));
     }
 
     public function update(Request $request)

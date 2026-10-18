@@ -30,7 +30,7 @@ class AuthController extends Controller
 
     public function register()
     {
-        return view('auth.register');
+        return view('Auth.register');
     }
 
     public function emailVerify()
@@ -41,7 +41,7 @@ class AuthController extends Controller
             return redirect()->route('frontend.auth.login');
         }
 
-        return view('auth.email-verify', compact('email'));
+        return view('Auth.email-verify', compact('email'));
     }
 
     public function verifyEmailOtp(Request $request)
@@ -663,7 +663,7 @@ class AuthController extends Controller
 
     public function login()
     {
-        return view('auth.login');
+        return view('Auth.login');
     }
 
     public function storeLogin(Request $request)
@@ -1320,7 +1320,7 @@ class AuthController extends Controller
         }
 
         return view(
-            'auth.admin-2fa-verify',
+            'Auth.admin-2fa-verify',
             compact('email')
         );
     }
@@ -1964,7 +1964,7 @@ class AuthController extends Controller
     public function passwordRequest()
     {
         return view(
-            'auth.password-request'
+            'Auth.password-request'
         );
     }
 
@@ -3863,7 +3863,7 @@ class AuthController extends Controller
                 );
         }
 
-        return view('auth.account-delete-verify');
+        return view('Auth.account-delete-verify');
     }
 
     public function verifyAccountDeletePassword(Request $request)
@@ -4345,6 +4345,6 @@ class AuthController extends Controller
                 );
         }
 
-        return view('auth.admin-2fa');
+        return view('Auth.admin-2fa');
     }
 }

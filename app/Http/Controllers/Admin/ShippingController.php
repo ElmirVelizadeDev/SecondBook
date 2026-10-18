@@ -44,7 +44,7 @@ class ShippingController extends Controller
         $inactiveShippings = Shipping::where('status', false)->count();
         $freeShippings = Shipping::where('price', 0)->count();
 
-        return view('admin.shipping.index', compact(
+        return view('Admin.shipping.index', compact(
             'shippings',
             'totalShippings',
             'activeShippings',
@@ -55,7 +55,7 @@ class ShippingController extends Controller
 
     public function create()
     {
-        return view('admin.shipping.create');
+        return view('Admin.shipping.create');
     }
 
     public function store(Request $request)
@@ -83,7 +83,7 @@ class ShippingController extends Controller
 
     public function edit(Shipping $shipping)
     {
-        return view('admin.shipping.edit', compact('shipping'));
+        return view('Admin.shipping.edit', compact('shipping'));
     }
 
     public function update(Request $request, Shipping $shipping)

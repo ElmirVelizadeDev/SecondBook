@@ -227,7 +227,7 @@ class AnalyticsController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('admin.analytics.index', compact(
+        return view('Admin.analytics.index', compact(
             'startDate',
             'endDate',
             'totalOrders',

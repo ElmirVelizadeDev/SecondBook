@@ -4,7 +4,7 @@
  * @Last Modified by:   mikey.zhaopeng 
  * @Last Modified time: 2026-10-10 11:22:31 
  */
-@extends('layout.admin.master')
+@extends('Layout.Admin.master')
 
 @section('title', 'Edit Book')
 

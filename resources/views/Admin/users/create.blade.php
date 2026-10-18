@@ -1,4 +1,4 @@
-@extends('layout.admin.master')
+@extends('Layout.Admin.master')
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('admin/css/pages/users.css') }}">

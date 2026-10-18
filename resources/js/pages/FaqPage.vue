@@ -298,7 +298,7 @@ onUnmounted(() => {
                             class="sb-faq-list"
                         >
                             <article
-                                v-for="(faq, index) in filtered"
+                                v-for="(faq) in filtered"
                                 :key="faq.id"
                                 class="sb-faq-item"
                                 :class="{

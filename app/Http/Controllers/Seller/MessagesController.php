@@ -80,7 +80,7 @@ class MessagesController extends Controller
         $unreadMessagesCount = $unreadMessages;
 
         return view(
-            'seller.messages.index',
+            'Seller.messages.index',
             compact(
                 'messages',
                 'totalMessages',
@@ -129,7 +129,7 @@ class MessagesController extends Controller
             ->count();
 
         return view(
-            'seller.messages.show',
+            'Seller.messages.show',
             compact(
                 'message',
                 'unreadMessagesCount'

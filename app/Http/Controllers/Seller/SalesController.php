@@ -89,7 +89,7 @@ class SalesController extends Controller
             ? $totalRevenue / $totalSales
             : 0;
 
-        return view('seller.sales.index', compact(
+        return view('Seller.sales.index', compact(
             'sales',
             'totalSales',
             'totalItemsSold',

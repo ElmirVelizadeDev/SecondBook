@@ -77,7 +77,7 @@ class AdminController extends Controller
             $monthlyRevenue[] = $revenue;
         }
 
-        return view('admin.dashboard', [
+        return view('Admin.dashboard', [
 
             // Statistics
             'totalBooks' => Book::count(),

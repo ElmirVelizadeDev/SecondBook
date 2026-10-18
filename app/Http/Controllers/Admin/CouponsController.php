@@ -70,7 +70,7 @@ class CouponsController extends Controller
         $totalUsed = Coupon::sum('used_count');
 
         return view(
-            'admin.coupons.index',
+            'Admin.coupons.index',
             compact(
                 'coupons',
                 'totalCoupons',
@@ -83,7 +83,7 @@ class CouponsController extends Controller
 
     public function create()
     {
-        return view('admin.coupons.create');
+        return view('Admin.coupons.create');
     }
 
     public function store(Request $request)
@@ -174,7 +174,7 @@ class CouponsController extends Controller
     public function show(Coupon $coupon)
     {
         return view(
-            'admin.coupons.show',
+            'Admin.coupons.show',
             compact('coupon')
         );
     }
@@ -182,7 +182,7 @@ class CouponsController extends Controller
     public function edit(Coupon $coupon)
     {
         return view(
-            'admin.coupons.edit',
+            'Admin.coupons.edit',
             compact('coupon')
         );
     }

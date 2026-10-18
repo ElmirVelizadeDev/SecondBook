@@ -233,7 +233,7 @@ class ReportsController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('admin.reports.index', compact(
+        return view('Admin.reports.index', compact(
             'startDate',
             'endDate',
             'totalOrders',
@@ -323,7 +323,7 @@ class ReportsController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('admin.reports.sales', compact(
+        return view('Admin.reports.sales', compact(
             'startDate',
             'endDate',
             'orders',
@@ -443,7 +443,7 @@ class ReportsController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('admin.reports.books', compact(
+        return view('Admin.reports.books', compact(
             'books',
             'startDate',
             'endDate',

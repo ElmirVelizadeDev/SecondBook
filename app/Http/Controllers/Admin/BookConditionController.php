@@ -168,7 +168,7 @@ class BookConditionController extends Controller
         }
 
         return view(
-            'admin.book-condition.index',
+            'Admin.book-condition.index',
             compact('conditions')
         );
     }
@@ -178,7 +178,7 @@ class BookConditionController extends Controller
      */
     public function create()
     {
-        return view('admin.book-condition.create');
+        return view('Admin.book-condition.create');
     }
 
     /**
@@ -233,7 +233,7 @@ class BookConditionController extends Controller
         }
 
         return view(
-            'admin.book-condition.edit',
+            'Admin.book-condition.edit',
             compact('selectedCondition')
         );
     }
