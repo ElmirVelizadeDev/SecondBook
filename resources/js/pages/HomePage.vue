@@ -1,5 +1,5 @@
 <template>
-    <div class="home-page">
+    <div ref="homeRoot" class="home-page">
         <section id="billboard" class="billboard-section">
             <div class="container">
                 <div ref="billboardSlider" class="billboard-slider">
@@ -172,13 +172,14 @@
                                         </span>
                                         <div class="popular-book-cover">
                                             <img
-                                                v-if="bookImage(book)"
+                                                v-if="hasBookImage(book)"
                                                 :src="bookImage(book)"
                                                 :alt="book.title"
                                                 loading="lazy"
+                                                @error="markBookImageFailed(book)"
                                             >
                                             <div v-else class="popular-book-cover-placeholder" aria-hidden="true">
-                                                <i class="bi bi-book-half"></i>
+                                                <img :src="'/frontend-assets/images/book-placeholder.svg'" alt="">
                                             </div>
                                         </div>
                                         <form class="add-to-cart-form" @click.stop>
@@ -319,17 +320,18 @@
                             <div class="featured-book-image-wrap">
                                 <a
                                     :href="bookUrl(book)"
-                                    :class="['featured-book-image', { 'featured-book-placeholder': !bookImage(book) }]"
-                                    :aria-label="!bookImage(book) ? `View ${book.title} details` : null"
+                                    :class="['featured-book-image', { 'featured-book-placeholder': !hasBookImage(book) }]"
+                                    :aria-label="!hasBookImage(book) ? `View ${book.title} details` : null"
                                     @click.stop
                                 >
                                     <img
-                                        v-if="bookImage(book)"
+                                        v-if="hasBookImage(book)"
                                         :src="bookImage(book)"
                                         :alt="book.title"
                                         loading="lazy"
+                                        @error="markBookImageFailed(book)"
                                     >
-                                    <i v-else class="bi bi-book"></i>
+                                    <img v-else :src="'/frontend-assets/images/book-placeholder.svg'" alt="">
                                 </a>
                                 <span v-if="hasDiscount(book)" class="featured-book-discount">
                                     {{ book.discount_label }}
@@ -445,17 +447,18 @@
                             <div class="special-offer-image-wrap">
                                 <a
                                     :href="bookUrl(book)"
-                                    :class="['special-offer-image', { 'special-offer-placeholder': !bookImage(book) }]"
-                                    :aria-label="!bookImage(book) ? `View ${book.title} details` : null"
+                                    :class="['special-offer-image', { 'special-offer-placeholder': !hasBookImage(book) }]"
+                                    :aria-label="!hasBookImage(book) ? `View ${book.title} details` : null"
                                     @click.stop
                                 >
                                     <img
-                                        v-if="bookImage(book)"
+                                        v-if="hasBookImage(book)"
                                         :src="bookImage(book)"
                                         :alt="book.title"
                                         loading="lazy"
+                                        @error="markBookImageFailed(book)"
                                     >
-                                    <i v-else class="bi bi-book"></i>
+                                    <img v-else :src="'/frontend-assets/images/book-placeholder.svg'" alt="">
                                 </a>
                                 <span class="special-offer-discount">{{ book.discount_label }}</span>
                                 <form class="add-to-cart-form" @click.stop>
@@ -636,6 +639,9 @@ const error = ref('');
 const addingBookId = ref(null);
 const addedBookId = ref(null);
 const billboardSlider = ref(null);
+const homeRoot = ref(null);
+const failedBookImages = ref(new Set());
+const revealObservers = [];
 let addedTimer;
 
 const emptyHome = () => ({
@@ -817,22 +823,73 @@ async function loadHome() {
 }
 
 function bookImage(book) {
-    if (book.cover_url) {
-        return book.cover_url;
-    }
+    const path = book.cover || book.cover_url;
 
-    if (!book.cover) {
+    if (!path) {
         return null;
     }
 
-    return /^https?:\/\//i.test(book.cover)
-        ? book.cover
-        : `/storage/${book.cover}`;
+    if (/^(https?:)?\/\//i.test(path)) {
+        return path;
+    }
+
+    const normalizedPath = String(path).replace(/^\/+/, '');
+
+    return /^(storage|uploads)\//i.test(normalizedPath)
+        ? `/${normalizedPath}`
+        : `/storage/${normalizedPath}`;
+}
+
+function hasBookImage(book) {
+    return Boolean(bookImage(book)) && !failedBookImages.value.has(book.id);
+}
+
+function markBookImageFailed(book) {
+    failedBookImages.value = new Set(failedBookImages.value).add(book.id);
+}
+
+function observeHomeReveal(target, reveal) {
+    if (!target) return;
+
+    if (!('IntersectionObserver' in window)) {
+        reveal();
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        reveal();
+        observer.disconnect();
+        const index = revealObservers.indexOf(observer);
+        if (index !== -1) revealObservers.splice(index, 1);
+    }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
+
+    revealObservers.push(observer);
+    observer.observe(target);
+}
+
+function initializeHomeScrollAnimations() {
+    const root = homeRoot.value;
+    if (!root) return;
+
+    const categories = root.querySelector('#categories');
+    observeHomeReveal(categories, () => {
+        categories.querySelector('.categories-header')?.classList.add('is-visible');
+        categories.querySelectorAll('.category-card').forEach((card) => card.classList.add('is-visible'));
+    });
+
+    const featured = root.querySelector('#featured-books');
+    observeHomeReveal(featured, () => featured.querySelector('.featured-books-list')?.classList.add('is-visible'));
+
+    ['#why-choose', '#special-offer', '#quotation', '#latest-blog', '#subscribe'].forEach((selector) => {
+        const section = root.querySelector(selector);
+        observeHomeReveal(section, () => section.classList.add('is-visible'));
+    });
 }
 
 function imageUrl(path) {
     if (!path) return '';
-    if (/^https?:\/\//i.test(path)) return path;
+    if (/^(https?:)?\/\//i.test(path)) return path;
     if (/^(storage|uploads)\//.test(path)) return `/${path}`;
     return `/storage/${String(path).replace(/^\/+/, '')}`;
 }
@@ -1036,10 +1093,14 @@ onMounted(async () => {
     }
 
     await loadHome();
+    await nextTick();
+    initializeHomeScrollAnimations();
 });
 
 onBeforeUnmount(() => {
     window.clearTimeout(addedTimer);
+    revealObservers.forEach((observer) => observer.disconnect());
+    revealObservers.length = 0;
 
     const jquery = window.jQuery;
     const slider = billboardSlider.value;

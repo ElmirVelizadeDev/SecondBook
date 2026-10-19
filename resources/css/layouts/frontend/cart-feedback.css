@@ -1,0 +1,68 @@
+.book-cart-btn.is-adding::before,
+        .book-cart-btn.is-adding::after,
+        .book-cart-btn.is-added::before,
+        .book-cart-btn.is-added::after {
+            content: none !important;
+            display: none !important;
+        }
+
+        .book-cart-btn.is-added {
+            color: #198754 !important;
+        }
+
+        .book-cart-btn.is-added .cart-success-icon {
+            color: #198754 !important;
+            font-size: 24px !important;
+            font-weight: 700;
+            width: 100%;
+            height: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            animation: cartSuccessPop 0.25s ease-out both;
+        }
+
+        .book-cart-btn .cart-loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: cartButtonSpin 0.65s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes cartButtonSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes cartSuccessPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.55);
+            }
+
+            70% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .book-cart-btn .cart-success-icon {
+                animation: none;
+            }
+
+            .book-cart-btn .cart-loading-spinner {
+                animation-duration: 1.5s;
+            }
+        }

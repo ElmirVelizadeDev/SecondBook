@@ -62,7 +62,7 @@ class AdminDashboardTest extends TestCase
         $response = $this->get('/admin/dashboard');
 
         $response->assertStatus(200);
-        $response->assertSee('Recent Activity');
+        $response->assertSee('data-vue-page="admin-dashboard"', false);
         $response->assertSee('New Book Added');
         $response->assertSee($book->title);
         $response->assertSee('New User');

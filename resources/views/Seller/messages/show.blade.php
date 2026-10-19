@@ -2,7 +2,7 @@
 
 @section('title', 'Message Details')
 
-@push('css') <link rel="stylesheet" href="{{ asset('seller/css/pages/messages.css') }}">
+@push('css') @vite('resources/css/seller/pages/messages.css')
 @endpush
 
 @section('content')

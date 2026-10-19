@@ -16,6 +16,9 @@ const pages = Object.fromEntries(
 );
 
 pages.home = modules['./pages/HomePage.vue'];
+// Numeric suffixes are not separated by the filename-to-page-name rule.
+// Register the maintenance page's Blade id explicitly as `error-503`.
+pages['error-503'] = modules['./pages/Error503.vue'];
 
 function pageProps(element) {
     return Object.fromEntries(

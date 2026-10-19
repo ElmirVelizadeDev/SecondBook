@@ -72,13 +72,58 @@ class BooksController extends Controller
 
             })
 
+            ->when(request('category'), function ($query, $category) {
+                $query->where('category_id', $category);
+            })
+
             ->latest()
             ->paginate(20)
             ->withQueryString();
 
+        $categories = Category::orderBy('name')->get(['id', 'name']);
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'books' => $books->getCollection()->map(fn ($book, $index) => [
+                    'id' => $book->id,
+                    'number' => $books->firstItem() + $index,
+                    'title' => $book->title,
+                    'isbn' => $book->isbn,
+                    'cover_url' => $book->cover
+                        ? (filter_var($book->cover, FILTER_VALIDATE_URL) ? $book->cover : asset('storage/' . $book->cover))
+                        : null,
+                    'category' => $book->category?->name,
+                    'author' => $book->author?->name,
+                    'seller' => $book->seller?->name ?? $book->seller?->username ?? 'Unknown seller',
+                    'price' => number_format((float) ($book->price ?? 0), 2),
+                    'condition' => $book->condition,
+                    'status' => $book->status,
+                    'show_url' => route('admin.books.show', $book),
+                    'edit_url' => route('admin.books.edit', $book),
+                    'delete_url' => route('admin.books.destroy', $book),
+                ]),
+                'pagination' => [
+                    'first_item' => $books->firstItem(),
+                    'last_item' => $books->lastItem(),
+                    'total' => $books->total(),
+                    'current_page' => $books->currentPage(),
+                    'last_page' => $books->lastPage(),
+                    'links' => $books->linkCollection()->toArray(),
+                ],
+                'stats' => [
+                    'total' => $books->total(),
+                    'approved' => Book::where('status', 'approved')->count(),
+                    'pending' => Book::where('status', 'pending')->count(),
+                    'out_of_stock' => Book::where('stock', '<=', 0)->count(),
+                ],
+                'categories' => $categories,
+                'filters' => request()->only(['search', 'status', 'condition', 'category']),
+            ]);
+        }
+
         return view(
             'Admin.books.index',
-            compact('books')
+            compact('books', 'categories')
         );
     }
 

@@ -76,16 +76,31 @@ class RefundsController extends Controller
         ];
 
         if ($request->expectsJson()) {
-            $html = view(
-                'Admin.refunds.partials.table',
-                compact('refunds')
-            )->render();
-
             return response()->json([
                 'success' => true,
-                'html' => $html,
+                'refunds' => $refunds->getCollection()->map(fn ($refund) => [
+                    'id' => $refund->id,
+                    'refund_number' => $refund->refund_number,
+                    'order_number' => $refund->order?->order_number,
+                    'customer' => $refund->user?->name ?? $refund->user?->username ?? 'Customer',
+                    'email' => $refund->user?->email,
+                    'amount' => number_format((float) $refund->amount, 2),
+                    'reason' => $refund->reason,
+                    'status' => $refund->status,
+                    'requested_date' => $refund->requested_at?->format('d M Y'),
+                    'requested_time' => $refund->requested_at?->format('H:i'),
+                    'show_url' => route('admin.refunds.show', $refund),
+                    'edit_url' => $refund->status !== 'processed' ? route('admin.refunds.edit', $refund) : null,
+                    'status_url' => route('admin.refunds.status', $refund),
+                    'delete_url' => route('admin.refunds.destroy', $refund),
+                ]),
                 'stats' => $stats,
-                'pagination' => $refunds->links()->render(),
+                'pagination' => [
+                    'first_item' => $refunds->firstItem(),
+                    'last_item' => $refunds->lastItem(),
+                    'total' => $refunds->total(),
+                    'links' => $refunds->linkCollection()->toArray(),
+                ],
             ]);
         }
 

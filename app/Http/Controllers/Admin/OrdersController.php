@@ -23,7 +23,7 @@ class OrdersController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Order::with(['user', 'book']);
+        $query = Order::with(['user', 'book'])->withCount('refunds');
 
         /*
         |--------------------------------------------------------------------------
@@ -121,6 +121,33 @@ class OrdersController extends Controller
             'order_status',
             'delivered'
         )->sum('total_price');
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'orders' => $orders->getCollection()->map(fn ($order) => [
+                    'id' => $order->id,
+                    'number' => $order->order_number,
+                    'customer' => $order->full_name ?: $order->user?->name,
+                    'email' => $order->user?->email,
+                    'book' => $order->book?->title,
+                    'quantity' => $order->quantity,
+                    'total' => number_format((float) $order->total_price, 2),
+                    'order_status' => $order->order_status,
+                    'payment_status' => $order->payment_status,
+                    'date' => $order->created_at?->format('d M Y'),
+                    'show_url' => route('admin.orders.show', $order),
+                    'edit_url' => route('admin.orders.edit', $order),
+                    'delete_url' => route('admin.orders.destroy', $order),
+                    'has_refunds' => $order->refunds_count > 0,
+                ]),
+                'pagination' => [
+                    'first_item' => $orders->firstItem(), 'last_item' => $orders->lastItem(),
+                    'total' => $orders->total(), 'links' => $orders->linkCollection()->toArray(),
+                ],
+                'stats' => ['total' => $totalOrders, 'pending' => $totalPending, 'delivered' => $totalDelivered, 'revenue' => $revenue],
+                'filters' => $request->only(['search', 'status', 'payment', 'date']),
+            ]);
+        }
 
         /*
         |--------------------------------------------------------------------------

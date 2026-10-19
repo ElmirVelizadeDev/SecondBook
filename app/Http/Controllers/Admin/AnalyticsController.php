@@ -227,6 +227,21 @@ class AnalyticsController extends Controller
         |--------------------------------------------------------------------------
         */
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'startDate' => $startDate->toDateString(), 'endDate' => $endDate->toDateString(),
+                'totalOrders' => $totalOrders, 'deliveredOrders' => $deliveredOrders,
+                'pendingOrders' => $pendingOrders, 'cancelledOrders' => $cancelledOrders,
+                'totalRevenue' => $totalRevenue, 'booksSold' => $booksSold,
+                'averageOrderValue' => $averageOrderValue, 'newUsers' => $newUsers,
+                'totalBooks' => $totalBooks, 'lowStockBooks' => $lowStockBooks,
+                'outOfStockBooks' => $outOfStockBooks, 'revenueByDay' => $revenueByDay,
+                'ordersByStatus' => $ordersByStatus,
+                'topBooks' => $topBooks->map(fn ($row) => ['title' => $row->book?->title ?? 'Deleted Book', 'total_sold' => $row->total_sold, 'revenue' => $row->revenue]),
+                'recentOrders' => $recentOrders->map(fn ($row) => ['order_number' => $row->order_number, 'customer' => $row->user?->name ?? 'Guest', 'book' => $row->book?->title ?? 'Deleted Book', 'status' => $row->order_status, 'total_price' => $row->total_price]),
+            ]);
+        }
+
         return view('Admin.analytics.index', compact(
             'startDate',
             'endDate',

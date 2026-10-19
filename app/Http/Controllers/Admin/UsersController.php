@@ -27,7 +27,7 @@ class UsersController extends Controller
 
         $status = $request->query('status');
 
-        $usersQuery = User::query()->latest();
+        $usersQuery = User::with('roles')->latest();
 
         if ($search !== '') {
             $usersQuery->where(function ($query) use ($search) {
@@ -69,6 +69,30 @@ class UsersController extends Controller
         ];
 
         $roles = Role::orderBy('display_name')->get();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'users' => $users->getCollection()->map(fn ($user) => [
+                    'id' => $user->id, 'name' => $user->name,
+                    'username' => $user->username, 'email' => $user->email,
+                    'phone' => $user->phone, 'role' => $user->roles->first()?->name ?? $user->role,
+                    'role_display' => $user->roles->first()?->display_name ?? ucfirst($user->role ?? 'user'),
+                    'status' => $user->status,
+                    'email_verified_at' => $user->email_verified_at?->format('d M Y'),
+                    'registered_at' => $user->created_at?->format('d M Y'),
+                    'photo_url' => $user->profile_photo ? asset('storage/' . $user->profile_photo) : null,
+                    'show_url' => route('admin.users.show', $user),
+                    'edit_url' => route('admin.users.edit', $user),
+                    'status_url' => route('admin.users.status', $user),
+                    'delete_url' => route('admin.users.destroy', $user),
+                    'is_current' => auth()->id() === $user->id,
+                ]),
+                'pagination' => ['first_item'=>$users->firstItem(),'last_item'=>$users->lastItem(),'total'=>$users->total(),'links'=>$users->linkCollection()->toArray()],
+                'stats' => $stats,
+                'roles' => $roles->map->only(['name','display_name']),
+                'filters' => $request->only(['search','role','status']),
+            ]);
+        }
 
         return view(
             'Admin.users.index',

@@ -120,7 +120,7 @@ For a Vue-backed page, Laravel resolves the route, applies middleware, runs the 
 
 Admin CSS and images live under `public/admin/`; Seller shared styles are in `public/seller/css/core/` and page styles in `public/seller/css/pages/`; customer assets live under `public/frontend-assets/` in CSS, JavaScript, images and icon-font folders. Layouts load Bootstrap 5.3.7, Bootstrap Icons and Plus Jakarta Sans from external CDNs; panel layouts also load SweetAlert2. Seller Analytics fetches Chart.js dynamically.
 
-Seller styles use shared CSS custom properties in `public/seller/css/core/style.css`; page CSS supplies cards, tables, forms and responsive breakpoints. Bootstrap grid classes and page-specific media queries provide responsive behavior. Preserve existing selectors, layouts and tokens when migrating or adding a page; compare desktop, tablet and mobile in a browser before changing visual rules.
+Seller styles use shared CSS custom properties in `resources/css/seller/core/style.css`; page CSS supplies cards, tables, forms and responsive breakpoints. Bootstrap grid classes and page-specific media queries provide responsive behavior. Preserve existing selectors, layouts and tokens when migrating or adding a page; compare desktop, tablet and mobile in a browser before changing visual rules.
 
 `resources/css/app.css` is zero bytes while still configured as a Vite input, so the build can emit an empty CSS asset. Current page styling is supplied by the public CSS files linked from Blade layouts/views.
 

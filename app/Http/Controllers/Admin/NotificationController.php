@@ -62,6 +62,37 @@ class NotificationController extends Controller
                 'email',
             ]);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'notifications' => $notifications->getCollection()->map(fn ($notification) => [
+                    'id' => $notification->id,
+                    'type' => $notification->type,
+                    'title' => $notification->title,
+                    'message' => $notification->message,
+                    'read_at' => $notification->read_at,
+                    'created_at' => $notification->created_at?->format('d M Y, H:i'),
+                    'created_human' => $notification->created_at?->diffForHumans(),
+                    'user' => $notification->user ? [
+                        'name' => $notification->user->name,
+                        'email' => $notification->user->email,
+                    ] : null,
+                ]),
+                'pagination' => [
+                    'current_page' => $notifications->currentPage(),
+                    'last_page' => $notifications->lastPage(),
+                    'links' => $notifications->linkCollection()->toArray(),
+                ],
+                'filter' => $filter,
+                'stats' => [
+                    'total' => $totalNotifications,
+                    'unread' => $unreadNotifications,
+                    'read' => $readNotifications,
+                    'users_notified' => $usersNotified,
+                ],
+                'users' => $users,
+            ]);
+        }
+
         return view('Admin.notifications.index', compact(
             'notifications',
             'filter',

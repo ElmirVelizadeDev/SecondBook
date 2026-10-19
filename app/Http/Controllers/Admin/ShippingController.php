@@ -44,6 +44,38 @@ class ShippingController extends Controller
         $inactiveShippings = Shipping::where('status', false)->count();
         $freeShippings = Shipping::where('price', 0)->count();
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'shippings' => $shippings->getCollection()->map(fn (Shipping $shipping) => [
+                    'id' => $shipping->id,
+                    'name' => $shipping->name,
+                    'description' => $shipping->description,
+                    'price' => $shipping->price,
+                    'delivery_time' => $shipping->delivery_time,
+                    'status' => $shipping->status,
+                ])->values(),
+                'pagination' => [
+                    'from' => $shippings->firstItem(),
+                    'to' => $shippings->lastItem(),
+                    'total' => $shippings->total(),
+                    'current_page' => $shippings->currentPage(),
+                    'last_page' => $shippings->lastPage(),
+                    'pages' => collect($shippings->getUrlRange(
+                        max(1, $shippings->currentPage() - 2),
+                        min($shippings->lastPage(), $shippings->currentPage() + 2)
+                    ))->map(fn ($url, $page) => ['page' => $page, 'url' => $url])->values(),
+                    'previous_url' => $shippings->previousPageUrl(),
+                    'next_url' => $shippings->nextPageUrl(),
+                ],
+                'stats' => [
+                    'total' => $totalShippings,
+                    'active' => $activeShippings,
+                    'inactive' => $inactiveShippings,
+                    'free' => $freeShippings,
+                ],
+            ]);
+        }
+
         return view('Admin.shipping.index', compact(
             'shippings',
             'totalShippings',
@@ -109,7 +141,7 @@ class ShippingController extends Controller
             ->with('success', 'Shipping method updated successfully.');
     }
 
-    public function destroy(Shipping $shipping)
+    public function destroy(Request $request, Shipping $shipping)
     {
         $shippingName = $shipping->name;
 
@@ -120,6 +152,13 @@ class ShippingController extends Controller
         );
 
         $shipping->delete();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'The shipping method has been deleted successfully.',
+                'id' => $shipping->id,
+            ]);
+        }
 
         return redirect()
             ->route('admin.shipping.index')

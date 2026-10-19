@@ -30,9 +30,9 @@
 
     {{-- Seller CSS --}}
     @vite('resources/js/app.js')
-    <link rel="stylesheet" href="{{ asset('seller/css/core/sidebar.css') }}">
-    <link rel="stylesheet" href="{{ asset('seller/css/core/header.css') }}">
-    <link rel="stylesheet" href="{{ asset('seller/css/core/style.css') }}">
+    @vite('resources/css/seller/core/sidebar.css')
+    @vite('resources/css/seller/core/header.css')
+    @vite('resources/css/seller/core/style.css')
 
     @stack('css')
 

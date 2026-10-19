@@ -233,6 +233,20 @@ class ReportsController extends Controller
         |--------------------------------------------------------------------------
         */
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'startDate' => $startDate->toDateString(), 'endDate' => $endDate->toDateString(),
+                'totalOrders' => $totalOrders, 'pendingOrders' => $pendingOrders,
+                'deliveredOrders' => $deliveredOrders, 'cancelledOrders' => $cancelledOrders,
+                'totalRevenue' => $totalRevenue, 'booksSold' => $booksSold,
+                'totalCustomers' => $totalCustomers, 'averageOrderValue' => $averageOrderValue,
+                'topBooks' => $topBooks->map(fn ($row) => ['title' => $row->book?->title ?? 'Unknown Book', 'total_sold' => $row->total_sold, 'revenue' => $row->revenue]),
+                'recentOrders' => $recentOrders->map(fn ($row) => ['order_number' => $row->order_number, 'customer' => $row->user?->name ?? 'Unknown', 'book' => $row->book?->title ?? 'Unknown Book', 'status' => $row->order_status, 'total_price' => $row->total_price, 'date' => $row->created_at?->format('d M Y')]),
+                'lowStockBooks' => $lowStockBooks->map(fn ($book) => ['title' => $book->title, 'stock' => $book->stock]),
+                'salesByDay' => $salesByDay,
+            ]);
+        }
+
         return view('Admin.reports.index', compact(
             'startDate',
             'endDate',
@@ -322,6 +336,16 @@ class ReportsController extends Controller
         | View
         |--------------------------------------------------------------------------
         */
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'startDate' => $startDate->toDateString(), 'endDate' => $endDate->toDateString(),
+                'totalOrders' => $totalOrders, 'totalRevenue' => $totalRevenue,
+                'booksSold' => $booksSold, 'averageOrderValue' => $averageOrderValue,
+                'orders' => $orders->getCollection()->map(fn ($row) => ['order_number' => $row->order_number, 'customer' => $row->user?->name ?? 'Unknown', 'book' => $row->book?->title ?? 'Unknown Book', 'quantity' => $row->quantity, 'total_price' => $row->total_price, 'payment_method' => $row->payment_method, 'date' => $row->created_at?->format('d M Y')]),
+                'pagination' => ['current_page' => $orders->currentPage(), 'last_page' => $orders->lastPage(), 'total' => $orders->total()],
+            ]);
+        }
 
         return view('Admin.reports.sales', compact(
             'startDate',
@@ -442,6 +466,16 @@ class ReportsController extends Controller
         | View
         |--------------------------------------------------------------------------
         */
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'startDate' => $startDate->toDateString(), 'endDate' => $endDate->toDateString(),
+                'totalBooks' => $totalBooks, 'activeBooks' => $activeBooks, 'outOfStock' => $outOfStock,
+                'lowStock' => $lowStock, 'totalSold' => $totalSold, 'totalRevenue' => $totalRevenue,
+                'books' => $books->getCollection()->map(fn ($book) => ['title' => $book->title, 'cover' => $book->cover ? asset('storage/' . $book->cover) : null, 'isbn' => $book->isbn, 'category' => $book->category?->name ?? 'Uncategorized', 'seller' => $book->seller?->name ?? 'Platform', 'price' => $book->price, 'stock' => $book->stock, 'sold_count' => $book->sold_count ?? 0, 'revenue' => $book->revenue ?? 0, 'status' => $book->status]),
+                'pagination' => ['current_page' => $books->currentPage(), 'last_page' => $books->lastPage(), 'total' => $books->total()],
+            ]);
+        }
 
         return view('Admin.reports.books', compact(
             'books',

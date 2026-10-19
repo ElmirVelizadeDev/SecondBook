@@ -3,7 +3,7 @@
 @section('title', $book->title . ' | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/pages/book-details.css') }}">
+    @vite('resources/css/pages/book-details.css')
 @endpush
 
 @section('content')

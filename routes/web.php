@@ -715,7 +715,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
     Route::delete('/profile/photo', [AuthController::class, 'removeProfilePhoto'])->name('profile.photo.destroy');
     Route::put('/profile/password', [AuthController::class, 'updatePassword'])->name('profile.password.update');
-    Route::delete('/profile', [AuthController::class, 'destroyProfile'])->name('profile.destroy');
+    Route::delete('/profile', [AuthController::class, 'destroyProfile'])
+        ->middleware('throttle:3,1')
+        ->name('profile.destroy');
 });
 
 // =========================================================
@@ -788,5 +790,6 @@ Route::middleware('auth')
             ->name('settings.preferences');
 
         Route::put('/settings/password', [AccountSettingsController::class, 'updatePassword'])
-            ->name('settings.password');
+            ->name('settings.password')
+            ->middleware('throttle:3,1');
     });

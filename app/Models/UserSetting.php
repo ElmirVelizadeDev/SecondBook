@@ -14,6 +14,7 @@ class UserSetting extends Model
         'user_id',
         'email_notifications',
         'order_updates',
+        'message_updates',
         'promotional_emails',
         'profile_visible',
     ];
@@ -21,6 +22,7 @@ class UserSetting extends Model
     protected $casts = [
         'email_notifications' => 'boolean',
         'order_updates' => 'boolean',
+        'message_updates' => 'boolean',
         'promotional_emails' => 'boolean',
         'profile_visible' => 'boolean',
     ];

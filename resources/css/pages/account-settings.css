@@ -1,0 +1,1776 @@
+/* =========================================================
+   Account Settings 
+========================================================= */
+
+/* =========================================================
+   TOKENS
+========================================================= */
+
+.account-settings-page {
+    --ab-bg: #faf6f1;
+    --ab-surface: #ffffff;
+    --ab-ink: #2a221c;
+    --ab-text: #4a3f37;
+    --ab-muted: #8f8379;
+    --ab-faint: #b3a79d;
+    --ab-line: #eee4da;
+    --ab-line-strong: #e2d3c4;
+
+    --ab-brown: #8b5e3c;
+    --ab-brown-deep: #6b4529;
+    --ab-gold: #c9a074;
+    --ab-cream: #f7eee4;
+    --ab-cream-2: #fbf5ee;
+
+    --ab-danger: #b84a4a;
+    --ab-danger-soft: #fff4f3;
+    --ab-danger-line: #efd5d3;
+    --ab-success: #3f7a55;
+
+    --ab-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ab-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --ab-shadow-sm: 0 1px 2px rgba(60, 40, 25, 0.04),
+                    0 8px 24px rgba(60, 40, 25, 0.05);
+    --ab-shadow-md: 0 2px 4px rgba(60, 40, 25, 0.04),
+                    0 18px 44px rgba(60, 40, 25, 0.09);
+}
+
+
+/* =========================================================
+   KEYFRAMES
+========================================================= */
+
+@keyframes abFadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes abFadeLeft {
+    from { opacity: 0; transform: translateX(-22px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes abPop {
+    from { opacity: 0; transform: scale(0.94) translateY(8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes abFloat {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50%      { transform: translate3d(0, -18px, 0); }
+}
+
+@keyframes abPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(63, 122, 85, 0.35); }
+    100% { box-shadow: 0 0 0 9px rgba(63, 122, 85, 0); }
+}
+
+@keyframes abShine {
+    from { transform: translateX(-130%) skewX(-20deg); }
+    to   { transform: translateX(260%) skewX(-20deg); }
+}
+
+@keyframes abGradientMove {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.account-settings-page {
+    position: relative;
+    overflow: hidden;
+    padding: 90px 0 120px;
+    background-color: #f8f6f3;
+    background-image: url('/arxaplan.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.account-settings-page .container {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.account-settings-page .account-settings-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 44px;
+    animation: abFadeUp 0.8s var(--ab-ease) both;
+}
+
+.account-settings-page .account-settings-overline {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 14px;
+    border: 1px solid var(--ab-line-strong);
+    border-radius: 100px;
+    background: #fffdfa;
+    color: var(--ab-brown);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2.2px;
+    box-shadow: 0 4px 14px rgba(139, 94, 60, 0.08);
+}
+
+.account-settings-page .account-settings-overline i {
+    font-size: 13px;
+    animation: abSpin 8s linear infinite;
+}
+
+@keyframes abSpin {
+    to { transform: rotate(360deg); }
+}
+
+.account-settings-page .account-settings-header h1 {
+    margin: 16px 0 14px;
+    color: var(--ab-ink);
+    font-size: clamp(40px, 4.4vw, 60px);
+    line-height: 1.04;
+    font-weight: 700;
+    letter-spacing: -2.2px;
+}
+
+.account-settings-page .account-settings-header h1 em {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-weight: 500;
+    background: linear-gradient(90deg, #8b5e3c, #c9a074, #8b5e3c);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--ab-brown);
+    animation: abGradientMove 5s linear infinite;
+}
+
+.account-settings-page .account-settings-header p {
+    max-width: 560px;
+    margin: 0;
+    color: var(--ab-muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   BUTTON BASE
+========================================================= */
+
+.account-settings-page .account-back-profile,
+.account-settings-page .settings-outline-btn,
+.account-settings-page .settings-primary-btn,
+.account-settings-page .danger-delete-btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   BACK TO PROFILE
+========================================================= */
+
+.account-settings-page .account-back-profile {
+    gap: 8px;
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    padding: 0 18px;
+    border: 1px solid var(--ab-line-strong);
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--ab-brown-deep);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: var(--ab-shadow-sm);
+    transition:
+        border-color 0.3s var(--ab-ease),
+        background 0.3s var(--ab-ease),
+        color 0.3s var(--ab-ease),
+        transform 0.3s var(--ab-ease),
+        box-shadow 0.3s var(--ab-ease);
+}
+
+.account-settings-page .account-back-profile i {
+    font-size: 13px;
+    line-height: 1;
+    transition: transform 0.3s var(--ab-ease);
+}
+
+.account-settings-page .account-back-profile:hover {
+    border-color: var(--ab-brown);
+    background: linear-gradient(135deg, #9a6a45, #6b4529);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(107, 69, 41, 0.25);
+}
+
+.account-settings-page .account-back-profile:hover i {
+    transform: translateX(-4px);
+}
+
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
+.account-settings-page .account-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 26px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.55;
+    box-shadow: var(--ab-shadow-sm);
+    animation: abPop 0.55s var(--ab-spring) both;
+}
+
+.account-settings-page .account-alert > i {
+    margin-top: 2px;
+    font-size: 15px;
+}
+
+.account-settings-page .account-alert-success {
+    border: 1px solid #d3e8da;
+    background: linear-gradient(135deg, #f3faf5, #eaf5ee);
+    color: var(--ab-success);
+}
+
+.account-settings-page .account-alert-success > i {
+    border-radius: 50%;
+    animation: abPulse 1.6s ease-out 2;
+}
+
+.account-settings-page .account-alert-error {
+    border: 1px solid var(--ab-danger-line);
+    background: linear-gradient(135deg, #fff7f6, #fff0ee);
+    color: #8d4343;
+}
+
+.account-settings-page .account-alert-error strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.account-settings-page .account-alert-error ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.account-settings-page .account-alert-error li {
+    margin-bottom: 2px;
+}
+
+/* AJAX mesajları kartın içində düzgün görünsün */
+.account-settings-page .settings-card > .account-alert {
+    margin: 20px 25px 0;
+}
+
+.account-settings-page .danger-action > .account-alert {
+    flex: 0 0 100%;
+    margin: 0;
+}
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.account-settings-page .account-settings-layout {
+    display: grid;
+    grid-template-columns: 265px minmax(0, 1fr);
+    gap: 30px;
+    align-items: start;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.account-settings-page .account-settings-sidebar {
+    position: sticky;
+    top: 30px;
+    overflow: hidden;
+    border: 1px solid var(--ab-line);
+    border-radius: 22px;
+    background: var(--ab-surface);
+    box-shadow: var(--ab-shadow-md);
+    animation: abFadeLeft 0.8s var(--ab-ease) 0.15s both;
+}
+
+.account-settings-page .account-mini-profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 22px 20px;
+    border-bottom: 1px solid var(--ab-line);
+    background:
+        radial-gradient(220px 120px at 100% 0%, rgba(201, 160, 116, 0.28), transparent 70%),
+        linear-gradient(135deg, #f9f0e6, #f4e7d9);
+}
+
+.account-settings-page .account-avatar {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c9a074, #8b5e3c);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.9),
+        0 10px 22px rgba(139, 94, 60, 0.3);
+    transition: transform 0.5s var(--ab-spring);
+}
+
+.account-settings-page .account-mini-profile:hover .account-avatar {
+    transform: rotate(-8deg) scale(1.08);
+}
+
+.account-settings-page .account-mini-profile strong,
+.account-settings-page .account-mini-profile span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.account-settings-page .account-mini-profile strong {
+    max-width: 150px;
+    color: var(--ab-ink);
+    font-size: 13px;
+}
+
+.account-settings-page .account-mini-profile span {
+    max-width: 150px;
+    margin-top: 4px;
+    color: var(--ab-muted);
+    font-size: 10.5px;
+}
+
+.account-settings-page .account-settings-nav {
+    padding: 12px;
+}
+
+.account-settings-page .account-settings-nav a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 46px;
+    margin-bottom: 4px;
+    padding: 0 14px;
+    border-radius: 12px;
+    color: #6a5e55;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+        background 0.3s var(--ab-ease),
+        color 0.3s var(--ab-ease),
+        transform 0.3s var(--ab-ease),
+        padding 0.3s var(--ab-ease);
+}
+
+.account-settings-page .account-settings-nav a::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 3px;
+    height: 0;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, var(--ab-gold), var(--ab-brown));
+    transform: translateY(-50%);
+    transition: height 0.35s var(--ab-spring);
+}
+
+.account-settings-page .account-settings-nav a i {
+    width: 18px;
+    color: #9a8d83;
+    font-size: 15px;
+    transition: color 0.3s var(--ab-ease), transform 0.35s var(--ab-spring);
+}
+
+.account-settings-page .account-settings-nav a:hover {
+    background: var(--ab-cream-2);
+    color: var(--ab-brown);
+    padding-left: 18px;
+}
+
+.account-settings-page .account-settings-nav a:hover i {
+    color: var(--ab-brown);
+    transform: scale(1.18);
+}
+
+.account-settings-page .account-settings-nav a.active {
+    background: linear-gradient(90deg, #f6e9dc, #fbf3ea);
+    color: var(--ab-brown-deep);
+    font-weight: 700;
+}
+
+.account-settings-page .account-settings-nav a.active::before {
+    height: 24px;
+}
+
+.account-settings-page .account-settings-nav a.active i {
+    color: var(--ab-brown);
+}
+
+/* Danger Zone linki */
+.account-settings-page .account-settings-nav a[href="#danger"]:hover,
+.account-settings-page .account-settings-nav a[href="#danger"].active {
+    background: var(--ab-danger-soft);
+    color: var(--ab-danger);
+}
+
+.account-settings-page .account-settings-nav a[href="#danger"]:hover i,
+.account-settings-page .account-settings-nav a[href="#danger"].active i {
+    color: var(--ab-danger);
+}
+
+.account-settings-page .account-settings-nav a[href="#danger"].active::before {
+    background: var(--ab-danger);
+}
+
+
+/* =========================================================
+   CONTENT / CARDS
+========================================================= */
+
+.account-settings-page .account-settings-content {
+    min-width: 0;
+}
+
+.account-settings-page .settings-card {
+    position: relative;
+    margin-bottom: 24px;
+    overflow: hidden;
+    border: 1px solid var(--ab-line);
+    border-radius: 22px;
+    background: var(--ab-surface);
+    box-shadow: var(--ab-shadow-sm);
+    transition:
+        transform 0.45s var(--ab-ease),
+        box-shadow 0.45s var(--ab-ease),
+        border-color 0.45s var(--ab-ease);
+    animation: abFadeUp 0.8s var(--ab-ease) both;
+}
+
+.account-settings-page .settings-card:nth-child(1) { animation-delay: 0.20s; }
+.account-settings-page .settings-card:nth-child(2) { animation-delay: 0.32s; }
+.account-settings-page .settings-card:nth-child(3) { animation-delay: 0.44s; }
+.account-settings-page .settings-card:nth-child(4) { animation-delay: 0.56s; }
+.account-settings-page .settings-card:nth-child(5) { animation-delay: 0.68s; }
+
+.account-settings-page .settings-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ab-brown), var(--ab-gold), var(--ab-brown));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s var(--ab-ease);
+}
+
+.account-settings-page .settings-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--ab-line-strong);
+    box-shadow: var(--ab-shadow-md);
+}
+
+.account-settings-page .settings-card:hover::before {
+    transform: scaleX(1);
+}
+
+.account-settings-page .settings-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 26px 28px;
+    border-bottom: 1px solid var(--ab-line);
+    background: linear-gradient(180deg, #fffdfb, #fff);
+}
+
+.account-settings-page .settings-card-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f8ecdf, #f1e0cf);
+    color: var(--ab-brown);
+    font-size: 19px;
+    box-shadow: inset 0 0 0 1px rgba(139, 94, 60, 0.1);
+    transition:
+        transform 0.5s var(--ab-spring),
+        background 0.3s var(--ab-ease),
+        color 0.3s var(--ab-ease);
+}
+
+.account-settings-page .settings-card:hover .settings-card-icon {
+    transform: rotate(-8deg) scale(1.08);
+    background: linear-gradient(135deg, #9a6a45, #6b4529);
+    color: #fff;
+}
+
+.account-settings-page .settings-card-icon.danger {
+    background: linear-gradient(135deg, #fff1ef, #fde4e1);
+    color: #c25a5a;
+    box-shadow: inset 0 0 0 1px rgba(184, 74, 74, 0.12);
+}
+
+.account-settings-page .settings-card:hover .settings-card-icon.danger {
+    background: linear-gradient(135deg, #cf6a6a, #a53f3f);
+    color: #fff;
+}
+
+.account-settings-page .settings-card-header h2 {
+    margin: 0;
+    color: var(--ab-ink);
+    font-size: 17px;
+    font-weight: 750;
+    letter-spacing: -0.2px;
+}
+
+.account-settings-page .settings-card-header p {
+    margin: 5px 0 0;
+    color: var(--ab-muted);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   ACCOUNT INFO
+========================================================= */
+
+.account-settings-page .settings-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.account-settings-page .settings-info-item {
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--ab-line);
+    transition: background 0.35s var(--ab-ease), padding-left 0.35s var(--ab-ease);
+}
+
+.account-settings-page .settings-info-item:hover {
+    background: var(--ab-cream-2);
+    padding-left: 33px;
+}
+
+.account-settings-page .settings-info-item:nth-child(odd) {
+    border-right: 1px solid var(--ab-line);
+}
+
+.account-settings-page .settings-info-item:nth-child(3),
+.account-settings-page .settings-info-item:nth-child(4) {
+    border-bottom: 0;
+}
+
+.account-settings-page .settings-info-item span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--ab-faint);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+}
+
+.account-settings-page .settings-info-item strong {
+    color: var(--ab-ink);
+    font-size: 14px;
+    font-weight: 650;
+    word-break: break-word;
+}
+
+.account-settings-page .settings-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border-radius: 100px;
+    background: #eaf5ee;
+    color: var(--ab-success) !important;
+    font-size: 12px !important;
+}
+
+.account-settings-page .settings-status i {
+    border-radius: 50%;
+    font-size: 11px;
+    animation: abPulse 2s ease-out infinite;
+}
+
+.account-settings-page .settings-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 18px 28px;
+    border-top: 1px solid var(--ab-line);
+    background: linear-gradient(180deg, #fcfaf7, #faf5ef);
+}
+
+.account-settings-page .settings-card-footer > span {
+    color: var(--ab-muted);
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   OUTLINE BUTTON
+========================================================= */
+
+.account-settings-page .settings-outline-btn {
+    gap: 8px;
+    height: 38px;
+    min-height: 38px;
+    max-height: 38px;
+    padding: 0 16px;
+    border: 1px solid var(--ab-line-strong);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ab-brown-deep);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        border-color 0.3s var(--ab-ease),
+        background 0.3s var(--ab-ease),
+        color 0.3s var(--ab-ease),
+        transform 0.3s var(--ab-ease),
+        box-shadow 0.3s var(--ab-ease);
+}
+
+.account-settings-page .settings-outline-btn i {
+    font-size: 12px;
+    line-height: 1;
+    transition: transform 0.3s var(--ab-ease);
+}
+
+.account-settings-page .settings-outline-btn:hover {
+    border-color: var(--ab-brown);
+    background: linear-gradient(135deg, #9a6a45, #6b4529);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(107, 69, 41, 0.22);
+}
+
+.account-settings-page .settings-outline-btn:hover i {
+    transform: translateX(4px);
+}
+
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.account-settings-page .settings-form {
+    padding: 28px;
+}
+
+.account-settings-page .settings-form-group {
+    margin-bottom: 22px;
+}
+
+.account-settings-page .settings-form-group label {
+    display: block;
+    margin-bottom: 9px;
+    color: var(--ab-text);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.account-settings-page .settings-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 54px;
+    border: 1.5px solid var(--ab-line-strong);
+    border-radius: 14px;
+    background: #fffdfb;
+    transition:
+        border-color 0.3s var(--ab-ease),
+        box-shadow 0.3s var(--ab-ease),
+        background 0.3s var(--ab-ease),
+        transform 0.3s var(--ab-ease);
+}
+
+.account-settings-page .settings-input:hover {
+    border-color: #d5c0ab;
+}
+
+.account-settings-page .settings-input:focus-within {
+    border-color: var(--ab-brown);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(139, 94, 60, 0.12), 0 10px 24px rgba(139, 94, 60, 0.08);
+    transform: translateY(-1px);
+}
+
+.account-settings-page .settings-input > i {
+    flex: 0 0 auto;
+    margin-left: 16px;
+    color: #a99a8e;
+    font-size: 15px;
+    transition: color 0.3s var(--ab-ease), transform 0.3s var(--ab-spring);
+}
+
+.account-settings-page .settings-input:focus-within > i {
+    color: var(--ab-brown);
+    transform: scale(1.15);
+}
+
+.account-settings-page .settings-input input {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    padding: 0 56px 0 12px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ab-ink);
+    font-size: 13px;
+    line-height: 1;
+}
+
+.account-settings-page .settings-input input::placeholder {
+    color: #b5aaa1;
+    opacity: 1;
+}
+
+.account-settings-page .settings-input input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   PASSWORD TOGGLE
+========================================================= */
+
+.account-settings-page .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #9a8f87;
+    cursor: pointer;
+    transition: color 0.3s var(--ab-ease), background 0.3s var(--ab-ease);
+}
+
+.account-settings-page .password-toggle i {
+    margin: 0;
+    font-size: 16px;
+    transition: transform 0.3s var(--ab-spring);
+}
+
+.account-settings-page .password-toggle:hover {
+    background: var(--ab-cream);
+    color: var(--ab-brown);
+}
+
+.account-settings-page .password-toggle:hover i {
+    transform: scale(1.15);
+}
+
+.account-settings-page .password-toggle:focus,
+.account-settings-page .password-toggle:active {
+    outline: none;
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   FORM FOOTER
+========================================================= */
+
+.account-settings-page .settings-form-footer,
+.account-settings-page .settings-preferences-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding-top: 6px;
+}
+
+.account-settings-page .account-preferences-fields {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.account-settings-page .account-preferences-fields:disabled {
+    opacity: 0.72;
+}
+
+.account-settings-page .account-preferences-unavailable {
+    margin: 0 0 12px;
+    color: var(--ab-danger);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.account-settings-page .account-preferences-unavailable button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ab-brown);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.account-settings-page .account-email-state {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    max-width: 150px;
+    margin-top: 6px;
+    font-size: 9px !important;
+    font-weight: 700;
+}
+
+.account-settings-page .account-email-state.is-verified {
+    color: var(--ab-success);
+}
+
+.account-settings-page .account-email-state.is-unverified {
+    color: var(--ab-danger);
+}
+
+.account-settings-page .account-delete-blocked {
+    margin: 0 28px 18px;
+    color: var(--ab-danger);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+@media (max-width: 575px) {
+    .account-settings-page .account-delete-blocked {
+        margin-right: 18px;
+        margin-left: 18px;
+    }
+}
+
+.account-settings-page .settings-form-footer > span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ab-muted);
+    font-size: 11.5px;
+}
+
+.account-settings-page .settings-form-footer > span i {
+    color: var(--ab-brown);
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.account-settings-page .settings-primary-btn {
+    gap: 9px;
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #a06c46, #8b5e3c 50%, #6b4529);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(107, 69, 41, 0.22);
+    transition:
+        transform 0.3s var(--ab-ease),
+        box-shadow 0.3s var(--ab-ease),
+        filter 0.3s var(--ab-ease);
+}
+
+.account-settings-page .settings-primary-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: translateX(-130%) skewX(-20deg);
+    pointer-events: none;
+}
+
+.account-settings-page .settings-primary-btn i {
+    font-size: 13px;
+    line-height: 1;
+    transition: transform 0.3s var(--ab-ease);
+}
+
+.account-settings-page .settings-primary-btn:hover {
+    color: #fff;
+    transform: translateY(-3px);
+    filter: brightness(1.05);
+    box-shadow: 0 16px 30px rgba(107, 69, 41, 0.32);
+}
+
+.account-settings-page .settings-primary-btn:hover::after {
+    animation: abShine 0.9s var(--ab-ease);
+}
+
+.account-settings-page .settings-primary-btn:hover i {
+    transform: translateX(4px);
+}
+
+.account-settings-page .settings-primary-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.account-settings-page .settings-primary-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(139, 94, 60, 0.2);
+}
+
+.account-settings-page .settings-primary-btn:disabled {
+    opacity: 0.75;
+    cursor: wait;
+    transform: none;
+}
+
+
+/* =========================================================
+   TOGGLES
+========================================================= */
+
+.account-settings-page .settings-preferences-form,
+.account-settings-page .privacy-form {
+    padding: 10px 28px 26px;
+}
+
+.account-settings-page .settings-toggle-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 84px;
+    margin: 0 -14px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--ab-line);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.3s var(--ab-ease);
+}
+
+.account-settings-page .settings-toggle-row:hover {
+    background: var(--ab-cream-2);
+}
+
+.account-settings-page .settings-toggle-row:last-of-type {
+    border-bottom: 0;
+}
+
+.account-settings-page .settings-toggle-text {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.account-settings-page .settings-toggle-icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--ab-cream);
+    color: var(--ab-brown);
+    font-size: 16px;
+    transition:
+        background 0.35s var(--ab-ease),
+        color 0.35s var(--ab-ease),
+        transform 0.4s var(--ab-spring);
+}
+
+.account-settings-page .settings-toggle-row:hover .settings-toggle-icon {
+    transform: scale(1.08) rotate(-6deg);
+}
+
+/* Aktiv olan sətrin ikonu rənglənsin */
+.account-settings-page .settings-toggle-row:has(input:checked) .settings-toggle-icon {
+    background: linear-gradient(135deg, #a06c46, #6b4529);
+    color: #fff;
+}
+
+.account-settings-page .settings-toggle-text strong,
+.account-settings-page .settings-toggle-text span {
+    display: block;
+}
+
+.account-settings-page .settings-toggle-text small {
+    display: block;
+    margin-top: 4px;
+    color: var(--ab-muted);
+    font-size: 11.5px;
+    line-height: 1.55;
+}
+
+.account-settings-page .settings-toggle-text strong {
+    color: var(--ab-ink);
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.account-settings-page .settings-toggle-text span {
+    margin-top: 4px;
+    color: var(--ab-muted);
+    font-size: 11.5px;
+    line-height: 1.55;
+}
+
+.account-settings-page .settings-toggle-row input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.account-settings-page .settings-switch {
+    position: relative;
+    width: 50px;
+    height: 28px;
+    flex: 0 0 50px;
+    border-radius: 100px;
+    background: #ddd3ca;
+    box-shadow: inset 0 2px 5px rgba(60, 40, 25, 0.12);
+    transition: background 0.35s var(--ab-ease), box-shadow 0.35s var(--ab-ease);
+}
+
+.account-settings-page .settings-switch::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.45s var(--ab-spring), width 0.25s var(--ab-ease);
+}
+
+.account-settings-page .settings-toggle-row:active .settings-switch::after {
+    width: 27px;
+}
+
+.account-settings-page .settings-toggle-row input:checked + .settings-switch {
+    background: linear-gradient(135deg, #b07b4e, #7a4f30);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.18), 0 0 0 4px rgba(139, 94, 60, 0.12);
+}
+
+.account-settings-page .settings-toggle-row input:checked + .settings-switch::after {
+    transform: translateX(22px);
+}
+
+.account-settings-page .settings-toggle-row:active input:checked + .settings-switch::after {
+    transform: translateX(17px);
+}
+
+.account-settings-page .settings-toggle-row input:focus-visible + .settings-switch {
+    box-shadow: 0 0 0 4px rgba(139, 94, 60, 0.3);
+}
+
+/* Current Vue account settings form structure */
+.account-settings-page .account-security-form {
+    display: grid;
+    gap: 11px;
+    padding: 26px 28px;
+}
+
+.account-settings-page .account-security-form label {
+    color: var(--ab-text);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.account-settings-page .account-security-form > input {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 15px;
+    border: 1.5px solid var(--ab-line-strong);
+    border-radius: 13px;
+    background: #fffdfb;
+    color: var(--ab-ink);
+    font: inherit;
+    font-size: 13px;
+}
+
+.account-settings-page .account-security-form > input:focus {
+    border-color: var(--ab-brown);
+    outline: 0;
+    box-shadow: 0 0 0 4px rgba(139, 94, 60, 0.12);
+}
+
+.account-settings-page .account-settings-card > .settings-primary-btn,
+.account-settings-page .account-settings-card > .danger-delete-btn {
+    margin: 0 28px 25px;
+}
+
+@media (max-width: 575px) {
+    .account-settings-page .account-security-form {
+        padding: 22px 18px;
+    }
+
+    .account-settings-page .account-settings-card > .settings-primary-btn,
+.account-settings-page .account-settings-card > .danger-delete-btn {
+        width: calc(100% - 36px);
+        margin-right: 18px;
+        margin-left: 18px;
+    }
+}
+
+.account-settings-page .settings-preferences-footer {
+    justify-content: flex-end;
+    padding-top: 20px;
+}
+
+/* Account settings additions: completion, sessions, security history, export. */
+.account-settings-page .account-completion-card {
+    padding: 22px 28px;
+}
+
+.account-settings-page .account-completion-heading,
+.account-settings-page .account-security-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.account-settings-page .account-completion-heading > div {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.account-settings-page .account-completion-heading span {
+    color: var(--ab-muted);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.account-settings-page .account-completion-heading strong {
+    color: var(--ab-brown);
+    font-size: 24px;
+}
+
+.account-settings-page .account-completion-heading a,
+.account-settings-page .account-completion-card > p a {
+    color: var(--ab-brown);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.account-settings-page .account-completion-track {
+    height: 8px;
+    margin-top: 14px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--ab-cream);
+}
+
+.account-settings-page .account-completion-track span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--ab-brown), var(--ab-gold));
+    transition: width 0.35s var(--ab-ease);
+}
+
+.account-settings-page .account-completion-card > p {
+    margin: 10px 0 0;
+    color: var(--ab-muted);
+    font-size: 11.5px;
+    line-height: 1.55;
+}
+
+.account-settings-page .account-security-list {
+    padding: 8px 28px 20px;
+}
+
+.account-settings-page .account-security-row {
+    min-width: 0;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--ab-line);
+}
+
+.account-settings-page .account-security-row:last-child {
+    border-bottom: 0;
+}
+
+.account-settings-page .account-security-row > div {
+    display: grid;
+    min-width: 0;
+    gap: 4px;
+}
+
+.account-settings-page .account-security-row strong {
+    color: var(--ab-ink);
+    font-size: 12px;
+}
+
+.account-settings-page .account-security-row span,
+.account-settings-page .account-security-row small,
+.account-settings-page .account-security-empty {
+    color: var(--ab-muted);
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+
+.account-settings-page .account-current-session {
+    flex: 0 0 auto;
+    padding: 5px 10px;
+    border-radius: 99px;
+    background: #eaf5ee;
+    color: var(--ab-success) !important;
+    font-size: 10px !important;
+    font-weight: 700;
+}
+
+.account-settings-page .account-session-revoke {
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    border: 1px solid var(--ab-danger-line);
+    border-radius: 9px;
+    background: var(--ab-danger-soft);
+    color: var(--ab-danger);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.account-settings-page .account-session-revoke:focus-visible,
+.account-settings-page .account-completion-heading a:focus-visible,
+.account-settings-page .account-completion-card > p a:focus-visible {
+    outline: 3px solid rgba(139, 94, 60, 0.3);
+    outline-offset: 3px;
+}
+
+.account-settings-page .account-security-empty {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.account-settings-page .account-export-card > a {
+    margin: 0 28px 25px;
+    text-decoration: none;
+}
+
+@media (max-width: 575px) {
+    .account-settings-page .account-completion-card {
+        padding: 20px 18px;
+    }
+
+    .account-settings-page .account-security-list {
+        padding: 6px 18px 18px;
+    }
+
+    .account-settings-page .account-security-row {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .account-settings-page .account-security-row > div {
+        flex: 1 1 100%;
+    }
+
+    .account-settings-page .account-export-card > a {
+        width: calc(100% - 36px);
+        margin-right: 18px;
+        margin-left: 18px;
+    }
+}
+
+
+/* =========================================================
+   DANGER ZONE
+========================================================= */
+
+.account-settings-page .settings-danger-card {
+    border-color: var(--ab-danger-line);
+}
+
+.account-settings-page .settings-danger-card::before {
+    background: linear-gradient(90deg, #b84a4a, #e08a85, #b84a4a);
+}
+
+.account-settings-page .settings-danger-card:hover {
+    border-color: #e6bcb8;
+    box-shadow: 0 2px 4px rgba(120, 40, 40, 0.04), 0 18px 44px rgba(150, 50, 50, 0.12);
+}
+
+.account-settings-page .settings-danger-card .settings-card-header {
+    background: linear-gradient(180deg, #fffafa, #fff);
+    border-bottom-color: #f3e2e0;
+}
+
+.account-settings-page .danger-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 26px 28px;
+    background: linear-gradient(135deg, #fffafa, #fff4f2);
+}
+
+.account-settings-page .danger-action strong,
+.account-settings-page .danger-action span {
+    display: block;
+}
+
+.account-settings-page .danger-action strong {
+    margin-bottom: 6px;
+    color: #7a3a3a;
+    font-size: 14px;
+}
+
+.account-settings-page .danger-action span {
+    max-width: 540px;
+    color: #a07f7c;
+    font-size: 11.5px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.account-settings-page .danger-delete-btn {
+    gap: 8px;
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    padding: 0 20px;
+    border: 1.5px solid #e8c4c1;
+    border-radius: 11px;
+    background: #fff;
+    color: var(--ab-danger);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        border-color 0.3s var(--ab-ease),
+        background 0.3s var(--ab-ease),
+        color 0.3s var(--ab-ease),
+        transform 0.3s var(--ab-ease),
+        box-shadow 0.3s var(--ab-ease);
+}
+
+.account-settings-page .danger-delete-btn i {
+    font-size: 13px;
+    line-height: 1;
+    transition: transform 0.4s var(--ab-spring);
+}
+
+.account-settings-page .danger-delete-btn:hover {
+    border-color: #b84a4a;
+    background: linear-gradient(135deg, #c95a5a, #a63f3f);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(166, 63, 63, 0.3);
+}
+
+.account-settings-page .danger-delete-btn:hover i {
+    transform: rotate(-12deg) scale(1.2);
+}
+
+.account-settings-page .danger-delete-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.account-settings-page .danger-delete-btn:disabled {
+    opacity: 0.75;
+    cursor: wait;
+}
+
+
+/* =========================================================
+   SWEETALERT2 (Delete confirmation)
+========================================================= */
+
+body:has(.account-settings-page) .swal2-popup {
+    padding: 32px 28px 28px !important;
+    border-radius: 24px !important;
+    box-shadow: 0 30px 80px rgba(60, 30, 20, 0.28) !important;
+}
+
+body:has(.account-settings-page) .swal2-title {
+    color: #2a221c !important;
+    font-weight: 750 !important;
+    letter-spacing: -0.4px;
+}
+
+body:has(.account-settings-page) .swal2-html-container {
+    color: #6b5f56 !important;
+}
+
+body:has(.account-settings-page) .swal2-actions {
+    gap: 12px !important;
+}
+
+body:has(.account-settings-page) .swal2-popup .btn {
+    min-width: 128px;
+    height: 44px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: transform 0.3s var(--ab-ease), box-shadow 0.3s var(--ab-ease), filter 0.3s var(--ab-ease);
+}
+
+body:has(.account-settings-page) .swal2-popup .btn-danger {
+    background: linear-gradient(135deg, #c95a5a, #a63f3f);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(166, 63, 63, 0.3);
+}
+
+body:has(.account-settings-page) .swal2-popup .btn-secondary {
+    background: #f4ece4;
+    color: #6b4529;
+}
+
+body:has(.account-settings-page) .swal2-popup .btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+.account-settings-page .delete-cancel-btn {
+    margin-left: 0 !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .account-settings-page .account-settings-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .account-settings-page .account-settings-sidebar {
+        position: static;
+        animation-name: abFadeUp;
+    }
+
+    .account-settings-page .account-settings-nav {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .account-settings-page .account-settings-nav a {
+        justify-content: center;
+        margin-bottom: 0;
+        padding: 0 7px;
+    }
+
+    .account-settings-page .account-settings-nav a:hover {
+        padding-left: 7px;
+    }
+
+    .account-settings-page .account-settings-nav a::before {
+        top: auto;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 3px;
+        border-radius: 4px 4px 0 0;
+        transform: translateX(-50%);
+        transition: width 0.35s var(--ab-spring);
+    }
+
+    .account-settings-page .account-settings-nav a.active::before {
+        width: 24px;
+        height: 3px;
+    }
+
+    .account-settings-page .account-settings-nav a span {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .account-settings-page .account-settings-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .account-settings-page {
+        padding: 60px 0 80px;
+    }
+
+    .account-settings-page .account-settings-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .account-settings-page .account-settings-header h1 {
+        font-size: 40px;
+    }
+
+    .account-settings-page .account-settings-layout {
+        gap: 18px;
+    }
+
+    .account-settings-page .settings-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-settings-page .settings-info-item,
+.account-settings-page .settings-info-item:nth-child(odd) {
+        border-right: 0;
+        border-bottom: 1px solid var(--ab-line);
+    }
+
+    .account-settings-page .settings-info-item:last-child {
+        border-bottom: 0;
+    }
+
+    .account-settings-page .settings-info-item:hover {
+        padding-left: 28px;
+    }
+
+    .account-settings-page .settings-card-header,
+.account-settings-page .settings-form,
+.account-settings-page .settings-preferences-form,
+.account-settings-page .privacy-form,
+.account-settings-page .danger-action {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .account-settings-page .settings-info-item {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .account-settings-page .settings-card > .account-alert {
+        margin: 16px 18px 0;
+    }
+
+    .account-settings-page .settings-form-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .account-settings-page .settings-form-footer .settings-primary-btn {
+        width: 100%;
+    }
+
+    .account-settings-page .settings-card-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .account-settings-page .settings-card-footer .settings-outline-btn {
+        width: 100%;
+    }
+
+    .account-settings-page .danger-action {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .account-settings-page .danger-delete-form,
+.account-settings-page .danger-delete-btn {
+        width: 100%;
+    }
+
+    .account-settings-page .settings-card:hover {
+        transform: none;
+    }
+
+    .account-settings-page #account,
+.account-settings-page #security,
+.account-settings-page #notifications,
+.account-settings-page #privacy,
+.account-settings-page #danger {
+        scroll-margin-top: 120px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .account-settings-page {
+        padding-top: 50px;
+    }
+
+    .account-settings-page .account-settings-header {
+        margin-bottom: 28px;
+    }
+
+    .account-settings-page .account-settings-header h1 {
+        font-size: 34px;
+        letter-spacing: -1.5px;
+    }
+
+    .account-settings-page .account-settings-header p {
+        font-size: 13px;
+    }
+
+    .account-settings-page .account-back-profile {
+        width: 100%;
+    }
+
+    .account-settings-page .account-settings-nav a {
+        min-height: 42px;
+    }
+
+    .account-settings-page .settings-card {
+        border-radius: 18px;
+    }
+
+    .account-settings-page .settings-card-header {
+        align-items: flex-start;
+        gap: 12px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .account-settings-page .settings-card-icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+        font-size: 16px;
+    }
+
+    .account-settings-page .settings-card-header h2 {
+        font-size: 15.5px;
+    }
+
+    .account-settings-page .settings-toggle-row {
+        gap: 10px;
+        margin: 0 -8px;
+        padding: 0 8px;
+    }
+
+    .account-settings-page .settings-toggle-text {
+        gap: 10px;
+    }
+
+    .account-settings-page .settings-toggle-icon {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    .account-settings-page .settings-toggle-text span {
+        max-width: 185px;
+    }
+
+    .account-settings-page .settings-primary-btn {
+        width: 100%;
+    }
+
+    .account-settings-page .settings-input {
+        height: 52px;
+    }
+
+    .account-settings-page .password-toggle {
+        right: 8px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .account-settings-page *,
+.account-settings-page *::before,
+.account-settings-page *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

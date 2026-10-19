@@ -229,11 +229,7 @@
    FRONTEND CSS
 ========================================================= --}}
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/core/normalize.css') }}"
->
+@vite('resources/css/app.css')
 
 <link
     rel="stylesheet"
@@ -247,98 +243,40 @@
     href="{{ asset('frontend-assets/css/core/vendor.css') }}"
 >
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/popular-books.css') }}"
->
+@vite('resources/css/pages/home/popular-books.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/popular-categories.css') }}"
->
+@vite('resources/css/pages/home/popular-categories.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/billboard.css') }}"
->
+@vite('resources/css/pages/home/billboard.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/subscribe.css') }}"
->
+@vite('resources/css/pages/home/subscribe.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/latest-articles.css') }}"
->
+@vite('resources/css/pages/home/latest-articles.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/pages/categories.css') }}"
->
+@vite('resources/css/pages/home/special-offer.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/special-offer.css') }}"
->
+@vite('resources/css/pages/home/why-choose.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/why-choose.css') }}"
->
+@vite('resources/css/pages/home/featured-books.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/featured-books.css') }}"
->
+@vite('resources/css/pages/home/quotation.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/quotation.css') }}"
->
-
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/home/cart-alert.css') }}"
->
+@vite('resources/css/pages/home/cart-alert.css')
 
 {{-- =========================================================
    HEADER CSS
 ========================================================= --}}
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/core/header.css') }}"
->
+@vite('resources/css/layouts/frontend/header.css')
 
 
 {{-- =========================================================
    FOOTER CSS
 ========================================================= --}}
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/core/footer.css') }}"
->
+@vite('resources/css/layouts/frontend/footer.css')
 
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="{{ asset('frontend-assets/css/core/footer-bottom.css') }}"
->
+@vite('resources/css/layouts/frontend/footer-bottom.css')
 
 
 {{-- =========================================================
@@ -382,5 +320,7 @@
 ========================================================= --}}
 
 @stack('css')
+
+@vite('resources/css/layouts/frontend/cart-feedback.css')
 
 </head>

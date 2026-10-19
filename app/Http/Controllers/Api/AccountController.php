@@ -39,8 +39,21 @@ class AccountController extends Controller
 
     public function notifications(Request $request)
     {
-        $notifications = Notification::where('user_id', $request->user()->id)
+        $settings = UserSetting::firstOrNew(
+            ['user_id' => $request->user()->id],
+            ['order_updates' => true, 'message_updates' => true]
+        );
+        $query = Notification::where('user_id', $request->user()->id)
             ->whereNull('archived_at')
+            ->when(!$settings->order_updates, fn ($query) => $query->whereNotIn('type', [
+                'order_status_updated', 'order_deleted', 'new_order', 'order_created',
+            ]))
+            ->when(!$settings->message_updates, fn ($query) => $query->whereNotIn('type', [
+                'new_message', 'seller_message_reply', 'message_reply',
+            ]));
+
+        $unreadCount = (clone $query)->whereNull('read_at')->count();
+        $notifications = (clone $query)
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -56,10 +69,7 @@ class AccountController extends Controller
 
         return response()->json([
             'notifications' => BookController::pagination($notifications),
-            'unread_count' => Notification::where('user_id', $request->user()->id)
-                ->whereNull('read_at')
-                ->whereNull('archived_at')
-                ->count(),
+            'unread_count' => $unreadCount,
         ]);
     }
 
@@ -96,6 +106,7 @@ class AccountController extends Controller
             [
                 'email_notifications' => true,
                 'order_updates' => true,
+                'message_updates' => true,
                 'promotional_emails' => false,
                 'profile_visible' => true,
             ]
@@ -105,6 +116,7 @@ class AccountController extends Controller
             'data' => $settings->only([
                 'email_notifications',
                 'order_updates',
+                'message_updates',
                 'promotional_emails',
                 'profile_visible',
             ]),

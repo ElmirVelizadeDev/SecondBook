@@ -3,7 +3,7 @@
 @section('title', 'Cookie Policy | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/pages/cookies.css') }}">
+    @vite('resources/css/pages/cookies.css')
 @endpush
 
 @section('content')

@@ -3,7 +3,7 @@
 @section('title', 'Help Center | SecondBook')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('frontend-assets/css/pages/help-center.css') }}">
+    @vite('resources/css/pages/help-center.css')
 @endpush
 
 @section('content')

@@ -70,6 +70,35 @@ class SellersController extends Controller
                 ->count(),
         ];
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'sellers' => $sellers->getCollection()->map(fn ($seller) => [
+                    'id' => $seller->id,
+                    'name' => $seller->name,
+                    'username' => $seller->username,
+                    'email' => $seller->email,
+                    'phone' => $seller->phone,
+                    'status' => $seller->status,
+                    'books_count' => $seller->books_count,
+                    'joined' => $seller->created_at?->format('d M Y'),
+                    'photo_url' => $seller->profile_photo ? asset('storage/' . $seller->profile_photo) : null,
+                    'is_current' => auth()->id() === $seller->id,
+                    'show_url' => route('admin.sellers.show', $seller),
+                    'edit_url' => route('admin.sellers.edit', $seller),
+                    'status_url' => route('admin.sellers.status', $seller),
+                    'delete_url' => route('admin.sellers.destroy', $seller),
+                ]),
+                'pagination' => [
+                    'first_item' => $sellers->firstItem(),
+                    'last_item' => $sellers->lastItem(),
+                    'total' => $sellers->total(),
+                    'links' => $sellers->linkCollection()->toArray(),
+                ],
+                'stats' => $stats,
+                'filters' => compact('search', 'status', 'sort'),
+            ]);
+        }
+
         return view(
             'Admin.sellers.index',
             compact(
@@ -149,6 +178,39 @@ class SellersController extends Controller
                 ->where('status', 'rejected')
                 ->count(),
         ];
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'seller' => [
+                    'id' => $seller->id,
+                    'name' => $seller->name,
+                    'username' => $seller->username,
+                    'email' => $seller->email,
+                    'phone' => $seller->phone,
+                    'status' => $seller->status,
+                    'email_verified_at' => $seller->email_verified_at?->format('d M Y H:i'),
+                    'created_at' => $seller->created_at?->format('d M Y H:i'),
+                    'photo_url' => $seller->profile_photo ? asset('storage/' . $seller->profile_photo) : null,
+                    'edit_url' => route('admin.sellers.edit', $seller),
+                ],
+                'books' => $books->getCollection()->map(fn ($book) => [
+                    'id' => $book->id,
+                    'title' => $book->title,
+                    'status' => $book->status,
+                    'price' => $book->price,
+                    'stock' => $book->stock,
+                    'cover_url' => $book->cover ? asset('storage/' . $book->cover) : null,
+                    'created_at' => $book->created_at?->format('d M Y'),
+                ]),
+                'book_stats' => $bookStats,
+                'pagination' => [
+                    'first_item' => $books->firstItem(),
+                    'last_item' => $books->lastItem(),
+                    'total' => $books->total(),
+                    'links' => $books->linkCollection()->toArray(),
+                ],
+            ]);
+        }
 
         return view(
             'Admin.sellers.show',

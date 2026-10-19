@@ -3,7 +3,7 @@
 @section('title', 'Sales')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('seller/css/pages/sales.css') }}">
+    @vite('resources/css/seller/pages/sales.css')
 @endpush
 
 @section('content')

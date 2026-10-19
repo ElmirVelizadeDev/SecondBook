@@ -104,7 +104,14 @@ Route::middleware('web')->group(function () {
 
         Route::get('/account/preferences', [ApiAccountController::class, 'preferences']);
         Route::put('/account/preferences', [AccountSettingsController::class, 'updatePreferences']);
-        Route::post('/account/password/change-request', [AccountSettingsController::class, 'updatePassword']);
+        Route::post('/account/password/change-request', [AccountSettingsController::class, 'updatePassword'])
+            ->middleware('throttle:3,1');
+        Route::get('/account/security-events', [AccountSettingsController::class, 'securityEvents']);
+        Route::get('/account/sessions', [AccountSettingsController::class, 'sessions']);
+        Route::delete('/account/sessions/{sessionKey}', [AccountSettingsController::class, 'revokeSession'])
+            ->middleware('throttle:10,1');
+        Route::get('/account/export', [AccountSettingsController::class, 'export'])
+            ->middleware('throttle:3,1');
 
         Route::get('/notifications', [ApiAccountController::class, 'notifications']);
         Route::post('/notifications/{notification}/read', [ApiAccountController::class, 'markNotificationRead']);

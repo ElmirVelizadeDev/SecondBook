@@ -40,6 +40,19 @@ class BackupController extends Controller
             })
             ->values();
 
+        if (request()->expectsJson()) {
+            return response()->json([
+                'backups' => $backups->map(fn ($file) => [
+                    'name' => $file->getFilename(),
+                    'size' => $file->getSize(),
+                    'modified_at' => date('d M Y H:i', $file->getMTime()),
+                    'download_url' => route('admin.backup.download', $file->getFilename()),
+                    'restore_url' => route('admin.backup.restore', $file->getFilename()),
+                    'delete_url' => route('admin.backup.delete', $file->getFilename()),
+                ]),
+            ]);
+        }
+
         return view(
             'Admin.backup.index',
             compact('backups')

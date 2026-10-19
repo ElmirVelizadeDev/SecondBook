@@ -100,6 +100,29 @@ class PaymentsController extends Controller
             'paid'
         )->sum('amount');
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'payments' => $payments->getCollection()->map(fn ($payment) => [
+                    'id' => $payment->id,
+                    'transaction_id' => $payment->transaction_id,
+                    'order_number' => $payment->order?->order_number,
+                    'customer' => $payment->order?->full_name ?? $payment->order?->user?->name,
+                    'email' => $payment->order?->user?->email,
+                    'book' => $payment->order?->book?->title,
+                    'amount' => number_format((float) $payment->amount, 2),
+                    'payment_method' => $payment->payment_method,
+                    'payment_status' => $payment->payment_status,
+                    'date' => $payment->created_at?->format('d M Y'),
+                    'show_url' => route('admin.payments.show', $payment),
+                    'edit_url' => route('admin.payments.edit', $payment),
+                    'delete_url' => route('admin.payments.destroy', $payment),
+                ]),
+                'pagination' => ['first_item'=>$payments->firstItem(),'last_item'=>$payments->lastItem(),'total'=>$payments->total(),'links'=>$payments->linkCollection()->toArray()],
+                'stats' => ['total'=>$totalPayments,'pending'=>$pendingPayments,'paid'=>$paidPayments,'revenue'=>$totalRevenue],
+                'filters' => $request->only(['search','payment_status','payment_method','date']),
+            ]);
+        }
+
         return view(
             'Admin.payments.index',
             compact(

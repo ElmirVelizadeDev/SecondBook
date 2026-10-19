@@ -106,6 +106,29 @@ class FaqController extends Controller
             ->orderBy('category')
             ->pluck('category');
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'faqs' => $faqs->getCollection()->map(fn (Faq $faq) => [
+                    'id' => $faq->id,
+                    'category' => $faq->category,
+                    'question' => $faq->question,
+                    'answer' => $faq->answer,
+                    'is_active' => $faq->is_active,
+                    'sort_order' => $faq->sort_order,
+                    'created_at' => $faq->created_at?->format('d M Y'),
+                ])->values(),
+                'categories' => $categories,
+                'pagination' => [
+                    'from' => $faqs->firstItem(),
+                    'to' => $faqs->lastItem(),
+                    'total' => $faqs->total(),
+                    'current_page' => $faqs->currentPage(),
+                    'last_page' => $faqs->lastPage(),
+                    'links' => $faqs->getUrlRange(1, $faqs->lastPage()),
+                ],
+            ]);
+        }
+
         return view(
             'Admin.faq.index',
             compact(

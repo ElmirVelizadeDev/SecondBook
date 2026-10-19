@@ -52,6 +52,30 @@ class BlogController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'blogs' => $blogs->getCollection()->map(fn ($blog) => [
+                    'id' => $blog->id,
+                    'title' => $blog->title,
+                    'excerpt' => $blog->excerpt,
+                    'slug' => $blog->slug,
+                    'status' => $blog->status,
+                    'image_url' => $blog->image ? asset('storage/' . $blog->image) : null,
+                    'author' => $blog->author?->name,
+                    'published_at' => $blog->published_at?->format('d M Y'),
+                    'edit_url' => route('admin.blogs.edit', $blog),
+                    'delete_url' => route('admin.blogs.destroy', $blog),
+                ]),
+                'pagination' => [
+                    'first_item' => $blogs->firstItem(),
+                    'last_item' => $blogs->lastItem(),
+                    'total' => $blogs->total(),
+                    'links' => $blogs->linkCollection()->toArray(),
+                ],
+                'filters' => $request->only(['search', 'status']),
+            ]);
+        }
+
         return view(
             'Admin.blogs.index',
             compact('blogs')

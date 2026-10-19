@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AccountSecurityEvent;
 use App\Models\Order;
 use App\Models\Otp;
+use App\Models\Refund;
 use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -53,8 +56,13 @@ class AuthController extends Controller
         */
 
         $pendingRegistration = session('pending_registration');
-
-        $email = session('email_verification_email');
+        $emailChange = Auth::user()
+            && session('sensitive_action') === 'email_change'
+            && strtolower((string) session('sensitive_action_email')) === strtolower((string) Auth::user()->email)
+            && session('pending_email');
+        $email = $emailChange
+            ? session('pending_email')
+            : session('email_verification_email');
 
         /*
         |--------------------------------------------------------------------------
@@ -62,7 +70,7 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if (!$pendingRegistration || !$email) {
+        if ((!$pendingRegistration && !$emailChange) || !$email) {
             return response()->json([
                 'success' => false,
                 'message' =>
@@ -117,7 +125,7 @@ class AuthController extends Controller
         )
             ->where(
                 'purpose',
-                'email_verification'
+                $emailChange ? 'email_change' : 'email_verification'
             )
             ->where(
                 'otp_code',
@@ -171,6 +179,43 @@ class AuthController extends Controller
                     ],
                 ],
             ], 422);
+        }
+
+        if ($emailChange) {
+            $user = Auth::user();
+            $newEmail = strtolower(trim((string) session('pending_email')));
+
+            if (User::query()->whereRaw('LOWER(email) = ?', [$newEmail])->where('id', '!=', $user->id)->exists()) {
+                $otp->delete();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This email address is already registered.',
+                    'errors' => ['email' => ['This email address is already registered.']],
+                ], 422);
+            }
+
+            $user->forceFill([
+                'email' => $newEmail,
+                'email_verified_at' => now(),
+            ])->save();
+            AccountSecurityEvent::create([
+                'user_id' => $user->id,
+                'event' => 'email_updated',
+                'ip_address' => $request->ip(),
+                'user_agent' => substr((string) $request->userAgent(), 0, 1000),
+            ]);
+            RateLimiter::clear('account-email-change:' . $user->id);
+            $otp->delete();
+            session()->forget([
+                'sensitive_action', 'sensitive_action_email',
+                'pending_email', 'email_verification_email',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Your new email address has been verified.',
+                'redirect' => route('frontend.account.settings'),
+            ]);
         }
 
         /*
@@ -2255,6 +2300,7 @@ class AuthController extends Controller
                     [
                         'password_change',
                         'account_delete',
+                        'email_change',
                     ],
                     true
                 ) &&
@@ -2262,10 +2308,9 @@ class AuthController extends Controller
             ) {
                 $purpose = $sensitiveAction;
 
-                $email =
-                    strtolower(
-                        $authenticatedUser->email
-                    );
+                $email = $sensitiveAction === 'email_change'
+                    ? strtolower((string) session('pending_email'))
+                    : strtolower($authenticatedUser->email);
             } else {
                 $purpose = 'password_reset';
 
@@ -2340,6 +2385,11 @@ class AuthController extends Controller
             $subject = 'SecondBook Password Change Verification';
 
             $message = "Your SecondBook password change verification code is: {$otp}\n\n"
+                . "This code will expire in 10 minutes.";
+        } elseif ($purpose === 'email_change') {
+            $subject = 'SecondBook Email Change Verification';
+
+            $message = "Your SecondBook email change verification code is: {$otp}\n\n"
                 . "This code will expire in 10 minutes.";
         } else {
             $subject = 'SecondBook Password Reset OTP';
@@ -2766,6 +2816,15 @@ class AuthController extends Controller
                 ),
         ]);
 
+        if ($purpose === 'password_change') {
+            AccountSecurityEvent::create([
+                'user_id' => $user->id,
+                'event' => 'password_changed',
+                'ip_address' => $request->ip(),
+                'user_agent' => substr((string) $request->userAgent(), 0, 1000),
+            ]);
+        }
+
         /*
         |--------------------------------------------------------------------------
         | Delete Used OTP
@@ -3112,7 +3171,7 @@ class AuthController extends Controller
         }
 
         return view(
-            'Auth.my-profile',
+            'Frontend.my-profile',
             compact(
                 'user',
                 'profileName',
@@ -3138,7 +3197,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         return view(
-            'Auth.edit-profile',
+            'Frontend.edit-profile',
             compact('user')
         );
     }
@@ -3174,6 +3233,9 @@ class AuthController extends Controller
                 )
             ),
         ]);
+
+        $pendingEmail = strtolower(trim((string) $request->email));
+        $emailChangeRequested = strtolower((string) $user->email) !== $pendingEmail;
 
         /*
         |--------------------------------------------------------------------------
@@ -3391,6 +3453,19 @@ class AuthController extends Controller
             ]
         );
 
+        if ($emailChangeRequested) {
+            $request->validateWithBag('profileUpdate', [
+                'current_password' => ['required', 'current_password'],
+            ]);
+
+            if (RateLimiter::tooManyAttempts('account-email-change:' . $user->id, 3)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Too many email change requests. Please try again later.',
+                ], 429);
+            }
+        }
+
         /*
         |--------------------------------------------------------------------------
         | Profile Photo
@@ -3592,6 +3667,8 @@ class AuthController extends Controller
                     $phoneNumber
                 : null;
 
+        $pendingEmail = strtolower(trim((string) $validated['email']));
+
         /*
         |--------------------------------------------------------------------------
         | Update User
@@ -3613,11 +3690,7 @@ class AuthController extends Controller
                 $username,
 
             'email' =>
-                strtolower(
-                    trim(
-                        $validated['email']
-                    )
-                ),
+                $emailChangeRequested ? $user->email : $pendingEmail,
 
             'phone' =>
                 $fullPhone,
@@ -3650,6 +3723,38 @@ class AuthController extends Controller
                 $profilePhotoPath,
         ]);
 
+        if ($emailChangeRequested) {
+            $otpCode = (string) random_int(100000, 999999);
+            Otp::updateOrCreate(
+                ['email' => $pendingEmail, 'purpose' => 'email_change'],
+                ['otp_code' => $otpCode, 'expires_at' => Carbon::now()->addMinutes(10)]
+            );
+            session([
+                'sensitive_action' => 'email_change',
+                'sensitive_action_email' => strtolower((string) $user->email),
+                'pending_email' => $pendingEmail,
+                'email_verification_email' => $pendingEmail,
+            ]);
+
+            try {
+                Mail::raw(
+                    "Your SecondBook email change verification code is: {$otpCode}\n\nThis code will expire in 10 minutes.",
+                    fn ($message) => $message->to($pendingEmail)->subject('SecondBook Email Change Verification')
+                );
+            } catch (Throwable $e) {
+                report($e);
+                Otp::where('email', $pendingEmail)->where('purpose', 'email_change')->delete();
+                session()->forget(['sensitive_action', 'sensitive_action_email', 'pending_email', 'email_verification_email']);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Your profile was saved, but the email verification message could not be sent. Please retry the email change.',
+                ], 500);
+            }
+
+            RateLimiter::hit('account-email-change:' . $user->id, 600);
+        }
+
         /*
         |--------------------------------------------------------------------------
         | Refresh User
@@ -3673,8 +3778,13 @@ class AuthController extends Controller
 
                 'success' => true,
 
-                'message' =>
-                    'Profile updated successfully.',
+                'message' => $emailChangeRequested
+                    ? 'Your profile was saved. Verify the code sent to your new email address to complete the email change.'
+                    : 'Profile updated successfully.',
+
+                'redirect' => $emailChangeRequested
+                    ? route('frontend.auth.email.verify')
+                    : null,
 
                 'user' => [
 
@@ -3711,7 +3821,7 @@ class AuthController extends Controller
         */
 
         return redirect()
-            ->route('profile.edit')
+            ->to($emailChangeRequested ? route('frontend.auth.email.verify') : route('profile.edit'))
             ->with(
                 'success',
                 'Profile updated successfully.'
@@ -4084,6 +4194,28 @@ class AuthController extends Controller
             ], 422);
         }
 
+        $deleted = DB::transaction(function () use ($user, $otp): bool {
+            if (Refund::query()
+                ->where('user_id', $user->id)
+                ->orWhereIn('order_id', $user->orders()->select('id'))
+                ->exists()
+            ) {
+                return false;
+            }
+
+            $otp->delete();
+            $user->delete();
+
+            return true;
+        });
+
+        if (!$deleted) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Account deletion is blocked while refund records are linked to this account or its orders. Please contact support.',
+            ], 409);
+        }
+
         /*
         |--------------------------------------------------------------------------
         | Delete Profile Photo
@@ -4098,27 +4230,11 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Delete Used OTP
-        |--------------------------------------------------------------------------
-        */
-
-        $otp->delete();
-
-        /*
-        |--------------------------------------------------------------------------
         | Logout
         |--------------------------------------------------------------------------
         */
 
         Auth::logout();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Delete Account
-        |--------------------------------------------------------------------------
-        */
-
-        $user->delete();
 
         /*
         |--------------------------------------------------------------------------
@@ -4179,6 +4295,20 @@ class AuthController extends Controller
 
             return redirect()
                 ->route('frontend.auth.login');
+        }
+
+        if (Refund::query()
+            ->where('user_id', $user->id)
+            ->orWhereIn('order_id', $user->orders()->select('id'))
+            ->exists()
+        ) {
+            $message = 'Account deletion is blocked while refund records are linked to this account or its orders. Please contact support.';
+
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => $message], 409);
+            }
+
+            return back()->withErrors(['delete_account' => $message]);
         }
 
         $email = strtolower(

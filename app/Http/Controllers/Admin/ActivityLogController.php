@@ -52,6 +52,44 @@ class ActivityLogController extends Controller
             ->orderBy('module')
             ->pluck('module');
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'logs' => $logs->getCollection()->map(fn (ActivityLog $log) => [
+                    'id' => $log->id,
+                    'action' => $log->action,
+                    'module' => $log->module,
+                    'description' => $log->description,
+                    'ip_address' => $log->ip_address,
+                    'date' => $log->created_at?->format('d M Y'),
+                    'time' => $log->created_at?->format('H:i'),
+                    'user' => [
+                        'name' => $log->user?->name ?? 'System',
+                        'email' => $log->user?->email ?? 'System activity',
+                        'avatar' => $log->user?->profile_photo
+                            ? asset('storage/' . $log->user->profile_photo)
+                            : null,
+                    ],
+                ])->values(),
+                'actions' => $actions,
+                'modules' => $modules,
+                'filters' => [
+                    'search' => $request->input('search', ''),
+                    'action' => $request->input('action', ''),
+                    'module' => $request->input('module', ''),
+                ],
+                'pagination' => [
+                    'total' => $logs->total(),
+                    'first_item' => $logs->firstItem(),
+                    'last_item' => $logs->lastItem(),
+                    'current_page' => $logs->currentPage(),
+                    'last_page' => $logs->lastPage(),
+                    'pages' => $logs->getUrlRange(1, $logs->lastPage()),
+                    'previous' => $logs->previousPageUrl(),
+                    'next' => $logs->nextPageUrl(),
+                ],
+            ]);
+        }
+
         return view('Admin.activity-logs.index', compact(
             'logs',
             'actions',

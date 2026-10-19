@@ -81,6 +81,35 @@ class MessagesController extends Controller
             today()
         )->count();
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'messages' => $messages->getCollection()->map(fn ($message) => [
+                    'id' => $message->id,
+                    'name' => $message->name,
+                    'email' => $message->email,
+                    'subject' => $message->subject,
+                    'preview' => \Illuminate\Support\Str::limit($message->message, 70),
+                    'status' => $message->status,
+                    'replies_count' => $message->replies_count,
+                    'date' => $message->created_at?->format('d M Y'),
+                    'time' => $message->created_at?->format('H:i'),
+                    'show_url' => route('admin.messages.show', $message),
+                    'reply_url' => route('admin.messages.reply', $message),
+                    'site_reply_url' => route('admin.messages.site-reply', $message),
+                    'unread_url' => route('admin.messages.unread', $message),
+                    'delete_url' => route('admin.messages.destroy', $message),
+                ]),
+                'pagination' => [
+                    'first_item' => $messages->firstItem(),
+                    'last_item' => $messages->lastItem(),
+                    'total' => $messages->total(),
+                    'links' => $messages->linkCollection()->toArray(),
+                ],
+                'stats' => ['total'=>$totalMessages,'unread'=>$unreadMessages,'read'=>$readMessages,'today'=>$todayMessages],
+                'filters' => $request->only(['search','status']),
+            ]);
+        }
+
         return view(
             'Admin.messages.index',
             compact(

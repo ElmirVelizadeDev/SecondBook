@@ -46,6 +46,18 @@ export default {
         const response = await api.put('/account/preferences', preferences);
         return response.data;
     },
+    async getSecurityEvents() {
+        const response = await api.get('/account/security-events');
+        return response.data;
+    },
+    async getSessions() {
+        const response = await api.get('/account/sessions');
+        return response.data;
+    },
+    async revokeSession(sessionKey) {
+        const response = await api.delete(`/account/sessions/${encodeURIComponent(sessionKey)}`);
+        return response.data;
+    },
     async requestPasswordChange(payload) {
         const response = await api.post('/account/password/change-request', payload);
         return response.data;

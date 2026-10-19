@@ -57,6 +57,33 @@ class BannerController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'banners' => $banners->getCollection()->map(fn ($banner) => [
+                    'id' => $banner->id,
+                    'title' => $banner->title,
+                    'subtitle' => $banner->subtitle,
+                    'image_url' => $banner->image ? asset('storage/' . $banner->image) : null,
+                    'position' => $banner->position,
+                    'status' => $banner->status,
+                    'start_date' => $banner->start_date?->format('d M Y'),
+                    'end_date' => $banner->end_date?->format('d M Y'),
+                    'edit_url' => route('admin.banners.edit', $banner),
+                    'delete_url' => route('admin.banners.destroy', $banner),
+                ]),
+                'pagination' => [
+                    'first_item' => $banners->firstItem(),
+                    'last_item' => $banners->lastItem(),
+                    'total' => $banners->total(),
+                    'current_page' => $banners->currentPage(),
+                    'last_page' => $banners->lastPage(),
+                    'links' => $banners->linkCollection()->toArray(),
+                ],
+                'search' => $request->input('search', ''),
+                'status' => $request->input('status', ''),
+            ]);
+        }
+
         return view(
             'Admin.banners.index',
             compact('banners')

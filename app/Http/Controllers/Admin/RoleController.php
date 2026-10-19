@@ -17,7 +17,7 @@ class RoleController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $roles = Role::query()
             ->withCount(['users', 'permissions'])
@@ -31,6 +31,20 @@ class RoleController extends Controller
             'system' => Role::where('is_system', true)->count(),
             'custom' => Role::where('is_system', false)->count(),
         ];
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'roles' => $roles->getCollection()->map(fn ($role) => [
+                    'id'=>$role->id,'name'=>$role->name,'display_name'=>$role->display_name,
+                    'description'=>$role->description,'is_system'=>$role->is_system,
+                    'users_count'=>$role->users_count,'permissions_count'=>$role->permissions_count,
+                    'show_url'=>route('admin.roles.show',$role),'edit_url'=>route('admin.roles.edit',$role),
+                    'delete_url'=>route('admin.roles.destroy',$role),
+                ]),
+                'pagination'=>['first_item'=>$roles->firstItem(),'last_item'=>$roles->lastItem(),'total'=>$roles->total(),'links'=>$roles->linkCollection()->toArray()],
+                'stats'=>$stats,
+            ]);
+        }
 
         return view(
             'Admin.roles.index',

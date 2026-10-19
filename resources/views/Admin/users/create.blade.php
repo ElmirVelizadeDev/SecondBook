@@ -1,29 +1,7 @@
 @extends('Layout.Admin.master')
-
-@push('css')
-    <link rel="stylesheet" href="{{ asset('admin/css/pages/users.css') }}">
-@endpush
-
-@section('title', 'Add User')
-
+@section('title','Create User')
+@push('css')@vite('resources/css/admin/pages/users.css')@endpush
 @section('content')
-<div class="dashboard-section users-page">
-    <div class="dashboard-panel mb-4">
-        <div class="panel-header mb-0">
-            <div>
-                <span class="eyebrow">Community directory</span>
-                <h5 class="mb-1">Add user</h5>
-                <p class="text-muted mb-0 small">Create a new SecondBook account.</p>
-            </div>
-            <a href="{{ route('admin.users.index') }}" class="btn btn-light border"><i class="bi bi-arrow-left me-2"></i>Back to users</a>
-        </div>
-    </div>
-
-    <div class="dashboard-panel user-form-panel">
-        <form action="{{ route('admin.users.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @include('Admin.users._form')
-        </form>
-    </div>
-</div>
+<div class="dashboard-section users-page" data-vue-page="users-admin" data-mode="create" data-index-url="{{ route('admin.users.index') }}" data-store-url="{{ route('admin.users.store') }}" data-csrf="{{ csrf_token() }}" data-payload="{{ json_encode(['roles'=>$roles->map->only(['name','display_name'])]) }}" data-errors="{{ json_encode($errors->toArray()) }}" data-old="{{ json_encode(old()) }}"></div>
 @endsection
+@push('scripts')@vite('resources/js/app.js')@endpush

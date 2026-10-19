@@ -36,9 +36,10 @@ class BookConditionControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertViewHas('conditions');
+        $response->assertSee('data-vue-page="book-condition-admin"', false);
         $response->assertSee('New');
-        $response->assertSee('Edit');
-        $response->assertSee('Delete');
+        $response->assertSee('editPattern', false);
+        $response->assertSee('deletePattern', false);
     }
 
     public function test_index_uses_real_book_counts_for_each_condition(): void

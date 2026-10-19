@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Otp;
-use App\Models\Setting;
+use App\Models\AccountSecurityEvent;
+use App\Models\Refund;
 use App\Models\UserSetting;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Throwable;
@@ -33,15 +36,157 @@ class AccountSettingsController extends Controller
             [
                 'email_notifications' => true,
                 'order_updates' => true,
+                'message_updates' => true,
                 'promotional_emails' => false,
                 'profile_visible' => true,
             ]
         );
 
-        return view(
-            'Frontend.account.settings',
-            compact('user', 'settings')
+        $profileFields = [
+            'first_name' => 'First name',
+            'last_name' => 'Last name',
+            'email' => 'Email address',
+            'phone' => 'Phone number',
+            'profile_photo' => 'Profile photo',
+            'bio' => 'About you',
+            'country' => 'Country',
+            'city' => 'City',
+        ];
+        $missingProfileFields = collect($profileFields)
+            ->filter(fn (string $label, string $field) => blank($user->{$field}))
+            ->values();
+        $profileCompletion = (int) round(
+            ((count($profileFields) - $missingProfileFields->count()) / count($profileFields)) * 100
         );
+        $accountDeletionBlocked = Refund::query()
+            ->where('user_id', $user->id)
+            ->orWhereIn('order_id', $user->orders()->select('id'))
+            ->exists();
+
+        return view(
+            'Frontend.settings',
+            compact('user', 'settings', 'profileCompletion', 'missingProfileFields', 'accountDeletionBlocked')
+        );
+    }
+
+    public function securityEvents(Request $request): JsonResponse
+    {
+        $events = AccountSecurityEvent::query()
+            ->where('user_id', $request->user()->id)
+            ->latest()
+            ->limit(20)
+            ->get(['id', 'event', 'ip_address', 'created_at']);
+
+        return response()->json(['data' => $events]);
+    }
+
+    public function export(Request $request)
+    {
+        $userId = $request->user()->id;
+        $filename = 'secondbook-account-' . now()->format('Ymd') . '.json';
+
+        return response()->streamDownload(function () use ($userId) {
+            $user = \App\Models\User::query()->findOrFail($userId);
+            $settings = UserSetting::query()->where('user_id', $userId)->first();
+
+            echo '{"exported_at":' . json_encode(now()->toIso8601String()) . ',"profile":';
+            echo json_encode($user->only([
+                'name', 'first_name', 'last_name', 'username', 'email', 'email_verified_at',
+                'phone', 'profile_photo', 'date_of_birth', 'gender', 'country', 'city',
+                'state', 'postal_code', 'address', 'bio', 'created_at', 'updated_at',
+            ]), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            echo ',"preferences":' . json_encode($settings?->only([
+                'email_notifications', 'order_updates', 'message_updates', 'promotional_emails', 'profile_visible',
+            ]), JSON_UNESCAPED_UNICODE);
+            echo ',"orders":[';
+            $first = true;
+            foreach ($user->orders()->select([
+                'id', 'order_number', 'book_id', 'book_price', 'quantity', 'total_price',
+                'payment_method', 'payment_status', 'order_status', 'full_name', 'phone',
+                'country', 'city', 'postal_code', 'address', 'note', 'created_at', 'updated_at',
+            ])->orderBy('id')->cursor() as $order) {
+                echo ($first ? '' : ',') . json_encode($order, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                $first = false;
+            }
+            echo '],"reviews":[';
+            $first = true;
+            foreach ($user->reviews()->select([
+                'id', 'book_id', 'rating', 'comment', 'status', 'created_at', 'updated_at',
+            ])->orderBy('id')->cursor() as $review) {
+                echo ($first ? '' : ',') . json_encode($review, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                $first = false;
+            }
+            echo '],"security_events":';
+            echo json_encode(AccountSecurityEvent::query()
+                ->where('user_id', $userId)
+                ->latest()
+                ->limit(20)
+                ->get(['event', 'ip_address', 'created_at']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            echo '}';
+        }, $filename, [
+            'Content-Type' => 'application/json; charset=UTF-8',
+            'Cache-Control' => 'private, no-store',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    public function sessions(Request $request): JsonResponse
+    {
+        if (config('session.driver') !== 'database'
+            || !Schema::hasTable(config('session.table', 'sessions'))
+        ) {
+            return response()->json([
+                'supported' => false,
+                'message' => 'This installation does not store sessions in a manageable database table.',
+                'data' => [],
+            ]);
+        }
+
+        $currentSessionId = $request->session()->getId();
+        $sessions = DB::table(config('session.table', 'sessions'))
+            ->where('user_id', $request->user()->id)
+            ->where('last_activity', '>=', now()->subMinutes((int) config('session.lifetime', 120))->timestamp)
+            ->orderByDesc('last_activity')
+            ->get(['id', 'ip_address', 'user_agent', 'last_activity'])
+            ->map(fn ($session) => [
+                'key' => hash('sha256', $session->id),
+                'current' => hash_equals((string) $currentSessionId, (string) $session->id),
+                'ip_address' => $session->ip_address,
+                'user_agent' => $session->user_agent,
+                'last_activity' => Carbon::createFromTimestamp($session->last_activity)->toIso8601String(),
+            ]);
+
+        return response()->json(['supported' => true, 'data' => $sessions]);
+    }
+
+    public function revokeSession(Request $request, string $sessionKey): JsonResponse
+    {
+        abort_unless(preg_match('/^[a-f0-9]{64}$/', $sessionKey) === 1, 404);
+
+        if (config('session.driver') !== 'database'
+            || !Schema::hasTable(config('session.table', 'sessions'))
+        ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Session management is not available for this session driver.',
+            ], 501);
+        }
+
+        $currentSessionId = $request->session()->getId();
+        $session = DB::table(config('session.table', 'sessions'))
+            ->where('user_id', $request->user()->id)
+            ->get(['id'])
+            ->first(fn ($row) => hash_equals($sessionKey, hash('sha256', $row->id)));
+
+        abort_unless($session, 404);
+        abort_if(hash_equals((string) $currentSessionId, (string) $session->id), 422, 'The current session cannot be revoked here.');
+
+        DB::table(config('session.table', 'sessions'))
+            ->where('id', $session->id)
+            ->where('user_id', $request->user()->id)
+            ->delete();
+
+        return response()->json(['success' => true, 'message' => 'The selected session was signed out.']);
     }
 
 
@@ -66,6 +211,11 @@ class AccountSettingsController extends Controller
                 ],
 
                 'order_updates' => [
+                    'nullable',
+                    'boolean',
+                ],
+
+                'message_updates' => [
                     'nullable',
                     'boolean',
                 ],
@@ -142,6 +292,10 @@ class AccountSettingsController extends Controller
 
             'order_updates' => $request->boolean(
                 'order_updates'
+            ),
+
+            'message_updates' => $request->boolean(
+                'message_updates'
             ),
 
             'promotional_emails' => $request->boolean(
