@@ -11,7 +11,7 @@ class ErrorAndMailRenderingTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_maintenance_page_keeps_http_503_and_server_rendered_fallback(): void
+    public function test_maintenance_page_keeps_http_503_and_renders_the_vue_mount_element(): void
     {
         Setting::create([
             'key' => 'maintenance_mode',
@@ -23,11 +23,10 @@ class ErrorAndMailRenderingTest extends TestCase
         $this->get('/')
             ->assertStatus(503)
             ->assertSee('data-vue-page="error-503"', false)
-            ->assertSee('error-503-', false)
-            ->assertSee('Temporarily offline')
-            ->assertSee('A new chapter')
-            ->assertSee("We're working on it", false)
-            ->assertDontSee('book-scene', false);
+            ->assertSee('data-year="'.now()->year.'"', false)
+            ->assertDontSee('Temporarily offline')
+            ->assertDontSee('A new chapter')
+            ->assertDontSee('error-503-fallback', false);
     }
 
     public function test_message_reply_email_renders_html_without_vue_runtime(): void

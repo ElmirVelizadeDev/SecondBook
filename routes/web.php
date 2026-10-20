@@ -80,7 +80,13 @@ use App\Http\Controllers\Seller\NotificationController as SellerNotificationCont
 // AUTH CONTROLLER
 // =========================================================
 
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\AccountDeletionController;
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerificationCodeController;
 
 // =========================================================
 // ROOT
@@ -606,27 +612,29 @@ Route::prefix('frontend')
             ->name('cookies');
 
         // AUTHENTICATION - GUEST
-        Route::controller(AuthController::class)
-            ->prefix('auth')
+        Route::prefix('auth')
             ->name('auth.')
             ->middleware('guest')
             ->group(function () {
+                Route::controller(LoginController::class)->group(function () {
+                    // LOGIN
+                    Route::get('/login', 'login')->name('login');
+                    Route::post('/login', 'storeLogin')->name('login.store');
 
-                // LOGIN
-                Route::get('/login', 'login')->name('login');
-                Route::post('/login', 'storeLogin')->name('login.store');
+                    // GOOGLE LOGIN
+                    Route::get('/google', 'redirectToGoogle')->name('google.redirect');
+                    Route::get('/google/callback', 'handleGoogleCallback')->name('google.callback');
 
-                // REGISTER
-                Route::get('/register', 'register')->name('register');
-                Route::post('/register', 'storeRegister')->name('register.store');
+                    // ADMIN TWO-FACTOR AUTHENTICATION
+                    Route::get('/admin/2fa', 'showAdminTwoFactor')->name('admin.2fa');
+                    Route::post('/admin/2fa', 'verifyAdminTwoFactor')->name('admin.2fa.verify');
+                });
 
-                // GOOGLE LOGIN
-                Route::get('/google', 'redirectToGoogle')->name('google.redirect');
-                Route::get('/google/callback', 'handleGoogleCallback')->name('google.callback');
-
-                // ADMIN TWO-FACTOR AUTHENTICATION
-                Route::get('/admin/2fa', 'showAdminTwoFactor')->name('admin.2fa');
-                Route::post('/admin/2fa', 'verifyAdminTwoFactor')->name('admin.2fa.verify');
+                Route::controller(RegisterController::class)->group(function () {
+                    // REGISTER
+                    Route::get('/register', 'register')->name('register');
+                    Route::post('/register', 'storeRegister')->name('register.store');
+                });
 
                 // FORGOT PASSWORD
                 Route::get('/password/request', function () {
@@ -636,18 +644,18 @@ Route::prefix('frontend')
                 })->name('password.request');
 
                 // SEND OTP
-                Route::post('/forgot-password/send-otp', 'sendOtp')
+                Route::post('/forgot-password/send-otp', [PasswordResetController::class, 'sendOtp'])
                     ->name('password.send.otp');
             });
 
         // EMAIL VERIFICATION
-        Route::get('/auth/email/verify', [AuthController::class, 'emailVerify'])
+        Route::get('/auth/email/verify', [EmailVerificationController::class, 'emailVerify'])
             ->name('auth.email.verify');
 
-        Route::post('/auth/email/verify', [AuthController::class, 'verifyEmailOtp'])
+        Route::post('/auth/email/verify', [EmailVerificationController::class, 'verifyEmailOtp'])
             ->name('auth.email.verify.otp');
 
-        Route::post('/auth/email/resend', [AuthController::class, 'resendEmailVerificationOtp'])
+        Route::post('/auth/email/resend', [VerificationCodeController::class, 'resendVerificationCode'])
             ->name('auth.email.verify.resend');
 
         // PASSWORD VERIFICATION PAGE
@@ -668,25 +676,25 @@ Route::prefix('frontend')
         })->name('auth.password.verify');
 
         // RESEND PASSWORD VERIFICATION OTP
-        Route::post('/auth/password/resend', [AuthController::class, 'resendVerificationCode'])
+        Route::post('/auth/password/resend', [VerificationCodeController::class, 'resendVerificationCode'])
             ->name('auth.password.resend');
 
         // VERIFY PASSWORD OTP
-        Route::post('/auth/password/verify', [AuthController::class, 'verifyOtp'])
+        Route::post('/auth/password/verify', [PasswordResetController::class, 'verifyOtp'])
             ->name('auth.password.verify.otp');
 
         // ACCOUNT DELETE VERIFICATION
         Route::middleware('auth')->group(function () {
-            Route::get('/auth/account/delete/verify', [AuthController::class, 'accountDeleteVerify'])
+            Route::get('/auth/account/delete/verify', [AccountDeletionController::class, 'accountDeleteVerify'])
                 ->name('auth.account.delete.verify');
 
-            Route::post('/auth/account/delete/verify-password', [AuthController::class, 'verifyAccountDeletePassword'])
+            Route::post('/auth/account/delete/verify-password', [AccountDeletionController::class, 'verifyAccountDeletePassword'])
                 ->name('auth.account.delete.verify.password');
 
-            Route::post('/auth/account/delete/verify-otp', [AuthController::class, 'verifyAccountDeleteOtp'])
+            Route::post('/auth/account/delete/verify-otp', [AccountDeletionController::class, 'verifyAccountDeleteOtp'])
                 ->name('auth.account.delete.verify.otp');
 
-            Route::post('/auth/account/delete/resend', [AuthController::class, 'resendVerificationCode'])
+            Route::post('/auth/account/delete/resend', [VerificationCodeController::class, 'resendVerificationCode'])
                 ->name('auth.account.delete.resend');
         });
 
@@ -696,7 +704,7 @@ Route::prefix('frontend')
         })->name('auth.terms');
 
         // LOGGED USERS - AUTHENTICATION
-        Route::controller(AuthController::class)
+        Route::controller(LoginController::class)
             ->prefix('auth')
             ->name('auth.')
             ->middleware('auth')
@@ -710,12 +718,12 @@ Route::prefix('frontend')
 // =========================================================
 
 Route::middleware('auth')->group(function () {
-    Route::get('/my-profile', [AuthController::class, 'myprofile'])->name('my.profile');
-    Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
-    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
-    Route::delete('/profile/photo', [AuthController::class, 'removeProfilePhoto'])->name('profile.photo.destroy');
-    Route::put('/profile/password', [AuthController::class, 'updatePassword'])->name('profile.password.update');
-    Route::delete('/profile', [AuthController::class, 'destroyProfile'])
+    Route::get('/my-profile', [ProfileController::class, 'myprofile'])->name('my.profile');
+    Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::delete('/profile/photo', [ProfileController::class, 'removeProfilePhoto'])->name('profile.photo.destroy');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::delete('/profile', [AccountDeletionController::class, 'destroyProfile'])
         ->middleware('throttle:3,1')
         ->name('profile.destroy');
 });

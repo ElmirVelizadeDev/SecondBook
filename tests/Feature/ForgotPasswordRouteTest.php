@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Otp;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -46,5 +47,29 @@ class ForgotPasswordRouteTest extends TestCase
 
         $response->assertRedirect(route('frontend.auth.password.verify'));
         $response->assertSessionHas('reset_email', 'user@example.com');
+    }
+
+    public function test_email_verification_resend_uses_the_active_registration_session(): void
+    {
+        Mail::fake();
+
+        $response = $this->withSession([
+            'pending_registration' => [
+                'first_name' => 'Test',
+                'last_name' => 'Reader',
+                'username' => 'test-reader',
+                'email' => 'test.reader@gmail.com',
+                'password' => bcrypt('test-password'),
+            ],
+            'email_verification_email' => 'test.reader@gmail.com',
+        ])->postJson(route('frontend.auth.email.verify.resend'));
+
+        $response->assertOk()
+            ->assertJsonPath('success', true);
+
+        $this->assertDatabaseHas('otps', [
+            'email' => 'test.reader@gmail.com',
+            'purpose' => 'email_verification',
+        ]);
     }
 }

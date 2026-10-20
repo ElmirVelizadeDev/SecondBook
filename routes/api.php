@@ -12,7 +12,13 @@ use App\Http\Controllers\Api\AccountController as ApiAccountController;
 use App\Http\Controllers\Api\OrderController as ApiOrderController;
 use App\Http\Controllers\Api\PaymentController as ApiPaymentController;
 use App\Http\Controllers\Api\ContactController as ApiContactController;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\AccountDeletionController;
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerificationCodeController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\WishlistController;
@@ -48,37 +54,37 @@ Route::get('/publishers', [ContentController::class, 'publishers']);
 Route::get('/shipping-information', [ContentController::class, 'shipping']);
 
 Route::middleware('web')->group(function () {
-    Route::post('/auth/login', [AuthController::class, 'storeLogin'])
+    Route::post('/auth/login', [LoginController::class, 'storeLogin'])
         ->middleware('guest');
-    Route::post('/auth/register', [AuthController::class, 'storeRegister'])
+    Route::post('/auth/register', [RegisterController::class, 'storeRegister'])
         ->middleware(['guest', 'throttle:5,1']);
-    Route::post('/auth/email/verify', [AuthController::class, 'verifyEmailOtp'])
+    Route::post('/auth/email/verify', [EmailVerificationController::class, 'verifyEmailOtp'])
         ->middleware('throttle:5,1');
-    Route::post('/auth/email/resend', [AuthController::class, 'resendVerificationCode'])
+    Route::post('/auth/email/resend', [VerificationCodeController::class, 'resendVerificationCode'])
         ->middleware('throttle:3,1');
-    Route::post('/auth/password/send-otp', [AuthController::class, 'sendOtp'])
+    Route::post('/auth/password/send-otp', [PasswordResetController::class, 'sendOtp'])
         ->middleware(['guest', 'throttle:3,1']);
-    Route::post('/auth/password/resend', [AuthController::class, 'resendVerificationCode'])
+    Route::post('/auth/password/resend', [VerificationCodeController::class, 'resendVerificationCode'])
         ->middleware('throttle:3,1');
-    Route::post('/auth/password/verify', [AuthController::class, 'verifyOtp'])
+    Route::post('/auth/password/verify', [PasswordResetController::class, 'verifyOtp'])
         ->middleware('throttle:5,1');
 
     Route::post('/contact', [ApiContactController::class, 'store'])
         ->middleware('throttle:10,1');
 
     Route::middleware('auth')->group(function () {
-        Route::post('/auth/logout', [AuthController::class, 'logout']);
+        Route::post('/auth/logout', [LoginController::class, 'logout']);
         Route::get('/user', [ApiAccountController::class, 'user']);
         Route::get('/me', [ApiAccountController::class, 'user']);
-        Route::put('/profile', [AuthController::class, 'updateProfile']);
-        Route::delete('/profile/photo', [AuthController::class, 'removeProfilePhoto']);
-        Route::post('/account/delete/request', [AuthController::class, 'destroyProfile'])
+        Route::put('/profile', [ProfileController::class, 'updateProfile']);
+        Route::delete('/profile/photo', [ProfileController::class, 'removeProfilePhoto']);
+        Route::post('/account/delete/request', [AccountDeletionController::class, 'destroyProfile'])
             ->middleware('throttle:3,1');
-        Route::post('/account/delete/verify-password', [AuthController::class, 'verifyAccountDeletePassword'])
+        Route::post('/account/delete/verify-password', [AccountDeletionController::class, 'verifyAccountDeletePassword'])
             ->middleware('throttle:5,1');
-        Route::post('/account/delete/resend', [AuthController::class, 'resendVerificationCode'])
+        Route::post('/account/delete/resend', [VerificationCodeController::class, 'resendVerificationCode'])
             ->middleware('throttle:3,1');
-        Route::post('/account/delete/verify-otp', [AuthController::class, 'verifyAccountDeleteOtp'])
+        Route::post('/account/delete/verify-otp', [AccountDeletionController::class, 'verifyAccountDeleteOtp'])
             ->middleware('throttle:5,1');
 
         Route::get('/cart', [CartController::class, 'index']);
